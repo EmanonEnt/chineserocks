@@ -6,13 +6,16 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/plain"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
+          "value": "text/plain; charset=utf-8"
         }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://chineserocks.net",
+      "permanent": true
     }
   ],
   "functions": {
