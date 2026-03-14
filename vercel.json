@@ -1,10 +1,4 @@
 {
-  "rewrites": [
-    {
-      "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
-      "destination": "/MP_verify_YJilisx0VRq4L4Bz.txt"
-    }
-  ],
   "headers": [
     {
       "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
