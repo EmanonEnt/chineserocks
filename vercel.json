@@ -1,9 +1,6 @@
 {
-  "rewrites": [],
-  "routes": [
-    {
-      "src": "/MP_verify_YJ1i1sx0VRq4L4Bz.txt",
-      "dest": "/MP_verify_YJ1i1sx0VRq4L4Bz.txt"
-    }
-  ]
+  "public": true,
+  "github": {
+    "enabled": false
+  }
 }
