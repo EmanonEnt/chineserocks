@@ -1,26 +1,8 @@
 {
-  "version": 2,
-  "headers": [
+  "rewrites": [
     {
       "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
+      "destination": "/api/verify"
     }
-  ],
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "https://livegigsasia.com/cn.html",
-      "permanent": true
-    }
-  ],
-  "functions": {
-    "api/wx-config.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
