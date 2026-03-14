@@ -1,11 +1,19 @@
 {
-  "routes": [
+  "rewrites": [
     {
-      "src": "/MP_verify_(.*)\\.txt",
-      "dest": "/MP_verify_$1.txt",
-      "headers": {
-        "Content-Type": "text/plain; charset=utf-8"
-      }
+      "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
+      "destination": "/MP_verify_YJilisx0VRq4L4Bz.txt"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        }
+      ]
     }
   ]
 }
