@@ -1,3 +1,11 @@
 {
-  "version": 2
+  "routes": [
+    {
+      "src": "/MP_verify_(.*)\\.txt",
+      "dest": "/MP_verify_$1.txt",
+      "headers": {
+        "Content-Type": "text/plain; charset=utf-8"
+      }
+    }
+  ]
 }
