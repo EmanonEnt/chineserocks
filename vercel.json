@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "headers": [
     {
       "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
@@ -9,5 +10,13 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/wechat-auth.js": {
+      "maxDuration": 10
+    },
+    "api/send-code.js": {
+      "maxDuration": 10
+    }
+  }
 }
