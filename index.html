@@ -610,6 +610,13 @@
         .hero-content {
             z-index: 2;
             position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
         
         .hero-tag {
@@ -1092,6 +1099,8 @@
                 display: block;
                 padding: 0.5rem;
                 margin-right: -0.5rem;
+                position: relative;
+                z-index: 1001;
             }
             .login-btn {
                 display: inline-block;
@@ -1099,13 +1108,116 @@
                 text-align: center;
                 margin: 0 auto;
             }
-            /* Hero - 保持1280*672比例 */
+            /* Hero - 移动端自适应 */
             .hero-section { 
-                aspect-ratio: 1280 / 672 !important;  /* 保持1280*672比例 */
+                aspect-ratio: auto !important;
+                height: auto !important;
+                min-height: auto !important;
                 position: relative;
-                overflow: hidden;
+                overflow: visible;
             }
-        
+
+            .hero-slider {
+                position: relative !important;
+                height: auto !important;
+            }
+
+            .hero-slide {
+                position: relative !important;
+                height: auto !important;
+                min-height: auto !important;
+                padding: 1rem;
+                display: flex !important;
+                align-items: center;
+            }
+
+            .hero-slide.active {
+                position: relative !important;
+            }
+
+            .hero-image-overlay {
+                position: absolute;
+                height: 100%;
+            }
+
+            .hero-content {
+                flex-direction: column !important;
+                justify-content: center !important;
+                padding: 1rem !important;
+                gap: 1rem;
+                height: auto !important;
+                width: 100%;
+            }
+
+            .hero-content > div:first-child {
+                max-width: 100% !important;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .hero-title {
+                font-size: 1.4rem !important;
+                line-height: 1.2;
+                margin-bottom: 0.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.8rem !important;
+                margin-bottom: 0.5rem;
+            }
+
+            .hero-meta {
+                font-size: 0.7rem !important;
+            }
+
+            .hero-vote-card {
+                position: relative !important;
+                right: auto !important;
+                top: auto !important;
+                transform: none !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+                padding: 1rem !important;
+            }
+
+            .hero-vote-header {
+                font-size: 0.75rem;
+            }
+
+            .hero-vote-title {
+                font-size: 1rem;
+            }
+
+            .hero-vote-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .hero-vote-option {
+                padding: 0.5rem;
+            }
+
+            .hero-vote-option img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .hero-vote-option-name {
+                font-size: 0.85rem;
+            }
+
+            .hero-vote-option-meta {
+                font-size: 0.7rem;
+            }
+
+            .hero-vote-btn {
+                padding: 0.75rem;
+                font-size: 0.85rem;
+            }
+
+            .hero-vote-weight {
+                font-size: 0.7rem;
+            }
 
             /* 风格按钮 - 2排4列 */
             .genre-container { 
@@ -1115,25 +1227,23 @@
                 gap: 1px;
                 background: rgba(255,255,255,0.1);
             }
-        
+
             .genre-btn:nth-child(4n) {
                 border-right: none !important;
             }
-        
+
             .genre-btn:nth-child(n+5) {
                 border-bottom: none !important;
             }
-        
+
             .genre-btn.active {
                 background: var(--pink-primary) !important;
             }
-        
 
             /* 其他移动端优化 */
             .top5-list { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        
+
             .news-grid-section, .charts-section, .shows-section { padding: 2rem 1rem; }
-        
         }
 
         /* 小屏幕手机 */
@@ -1155,7 +1265,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <img src="/image/chineserockslogo.png" alt="ChineseRocks">
+                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
             </a>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             <div class="nav-links" id="navLinks">
@@ -1167,7 +1277,7 @@
                 <span class="nav-separator">★</span>
                 <a href="shows.html">SHOWS</a>
                 <span class="nav-separator">★</span>
-                <a href="#" class="live-tv-link">LIVE TV</a>
+                <a href="#livetv" class="live-tv-link">LIVE TV</a>
                 <a href="#" class="login-btn" onclick="openLoginModal(); return false;">LOGIN</a>
             </div>
         </div>
@@ -1178,7 +1288,7 @@
         <div class="hero-slider">
             <div class="hero-slide active" data-genre="all">
                 <div class="hero-image-overlay"></div>
-                <div class="hero-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+                <div class="hero-content">
                     <div style="max-width: 500px;">
                         <span class="hero-tag">Official Chart</span>
                         <h1 class="hero-title">CHINESE ROCKS<br>OFFICIAL CHART</h1>
@@ -1488,7 +1598,7 @@
     </section>
 
     <!-- LIVE TV -->
-    <section class="livetv-section">
+    <section id="livetv" class="livetv-section" onclick="showLiveTVComingSoon()" style="cursor: pointer;">
         <div class="livetv-badge">COMING SOON</div>
         <h2 class="livetv-title">LIVE TV</h2>
         <p class="livetv-subtitle">24小時搖滾音樂直播 · 現場演出 · 獨家訪談 · 經典回放</p>
@@ -1687,6 +1797,11 @@
             document.getElementById('navLinks').classList.toggle('active');
         }
 
+        // LIVE TV点击提示
+        function showLiveTVComingSoon() {
+            alert('COMING SOON / 即將上線，敬請期待');
+        }
+
         let currentSlide = 0;
         const slides = document.querySelectorAll('.hero-slide');
         const genres = ['all', 'punk', 'indie'];
@@ -1716,78 +1831,7 @@
         <button class="invite-btn" onclick="showInvite()">🎁</button>
     </div>
 
-    <script>
-        // 倒计时功能
-        function updateCountdown() {
-            const now = new Date();
-            const end = new Date();
-            end.setDate(end.getDate() + 2);
-            end.setHours(10, 0, 0, 0);
-
-            const diff = end - now;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-            document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
-            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
-        }
-
-        setInterval(updateCountdown, 60000);
-        updateCountdown();
-
-        // 投票选择
-        function selectVote(el) {
-            document.querySelectorAll('.hero-vote-option').forEach(o => o.style.borderColor = 'transparent');
-            el.style.borderColor = '#FF0066';
-        }
-
-        // 邀请弹窗
-        function showInvite() {
-            alert('生成專屬邀請海報，分享到朋友圈！\n\n好友首月5折，你獲得30%返利積分\n100積分 = 7天會員');
-        }
-
-        // 原有函数
-        function switchGenre(genre, btn) {
-            document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.hero-slide').forEach(slide => {
-                slide.classList.remove('active');
-                if (slide.dataset.genre === genre) {
-                    slide.classList.add('active');
-                }
-            });
-        }
-
-        function switchChart(type, btn) {
-            document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.chart-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(type + 'Chart').classList.add('active');
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('navLinks').classList.toggle('active');
-        }
-
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.hero-slide');
-        const genres = ['all', 'punk', 'indie'];
-
-        setInterval(() => {
-            currentSlide = (currentSlide + 1) % slides.length;
-            const genre = genres[currentSlide];
-            document.querySelectorAll('.hero-slide').forEach(s => s.classList.remove('active'));
-            slides[currentSlide].classList.add('active');
-            document.querySelectorAll('.genre-btn').forEach(b => {
-                b.classList.remove('active');
-                if (b.textContent.toLowerCase().includes(genre) || (genre === 'all' && b.textContent.includes('全部'))) {
-                    b.classList.add('active');
-                }
-            });
-        }, 8000);
-    </script>
+    
 
 <!-- 登录弹窗 -->
 <div id="loginModal" class="login-modal">
@@ -2446,51 +2490,54 @@ function loginWithEmailModal(e) {
 
 // ==================== 微信登录 ====================
 function loginWithWechat() {
-    // 检测是否在微信内置浏览器
-    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+    const appId = 'wx019d141a63482cd8';
+    const redirectUri = encodeURIComponent('https://chineserocks.net');
+    const state = 'WX_' + Date.now();
 
-    if (isWechat) {
-        // 微信内置浏览器 - 使用微信网页授权
-        // 实际部署时需要：
-        // 1. 在微信公众平台注册账号
-        // 2. 获取 appid
-        // 3. 配置授权回调域名
+    // 保存 state 用于回调验证
+    localStorage.setItem('wx_state', state);
 
-        const appid = 'YOUR_WECHAT_APPID'; // 替换为实际的微信公众号 AppID
-        const redirect_uri = encodeURIComponent(window.location.origin + '/auth/wechat/callback');
-        const scope = 'snsapi_userinfo'; // 或 snsapi_base（静默授权）
-        const state = generateRandomState();
+    // 跳转到微信授权页
+    const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`;
 
-        // 保存 state 到 sessionStorage 防止 CSRF
-        sessionStorage.setItem('wechat_state', state);
+    window.location.href = authUrl;
+}
 
-        const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+// 页面加载时检查微信回调
+(function checkWechatCallback() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
 
-        // 演示模式
-        console.log('微信授权 URL:', authUrl);
+    if (code && state && state.startsWith('WX_')) {
+        // 验证 state
+        const savedState = localStorage.getItem('wx_state');
+        if (state === savedState) {
+            localStorage.removeItem('wx_state');
 
-        // 模拟登录成功（实际应跳转到 authUrl）
-        simulateWechatLogin();
-    } else {
-        // 非微信环境 - 使用微信开放平台扫码登录 或 提示用微信打开
-        alert('请使用微信扫一扫登录\n或点击确定使用演示账号登录');
-        simulateWechatLogin();
+            // 调用后端 API 获取用户信息
+            fetch(`/api/wechat-auth?code=${code}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        handleSocialLoginSuccess('wechat', {
+                            openid: data.user.openid,
+                            nickname: data.user.nickname,
+                            headimgurl: data.user.avatar
+                        });
+                        // 清除 URL 参数
+                        window.history.replaceState({}, document.title, '/');
+                    } else {
+                        showErrorModal('微信登录失败：' + data.error);
+                    }
+                })
+                .catch(err => {
+                    console.error('登录错误:', err);
+                    showErrorModal('登录请求失败');
+                });
+        }
     }
-}
-
-function simulateWechatLogin() {
-    // 模拟微信用户信息
-    const mockUser = {
-        openid: 'wx_' + Math.random().toString(36).substr(2, 9),
-        nickname: '摇滚青年',
-        headimgurl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop',
-        sex: 1,
-        province: '北京',
-        city: '北京'
-    };
-
-    handleSocialLoginSuccess('wechat', mockUser);
-}
+})();
 
 // ==================== Google 登录 ====================
 function loginWithGoogle() {
