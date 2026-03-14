@@ -1,15 +1,6 @@
-export const config = {
-  runtime: 'edge',
+// 不使用 Edge Runtime，使用标准 Node.js
+module.exports = (req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.status(200).send('YlllsxOVRq4LBz');
 };
-
-export default function handler(request) {
-  const content = 'YlllsxOVRq4LBz';
-  
-  return new Response(content, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=0, must-revalidate',
-    },
-  });
-}
