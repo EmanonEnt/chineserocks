@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChineseRocks - 中國搖滾官方榜單</title>
+    <link rel="icon" type="image/png" href="./image/tablogo.png">
+    <style>
+        
+        :root {
+        /* ===== 新增：引流和会员系统样式 ===== */
+
+        /* Hero投票卡片 */
+        .hero-vote-card {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 380px;
+            background: rgba(10,10,10,0.9);
+            border: 1px solid rgba(255,0,102,0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .hero-vote-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: #FFD700;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .hero-vote-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-vote-subtitle {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-vote-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .hero-vote-option:hover {
+            border-color: #FF0066;
+            background: rgba(255,0,102,0.1);
+        }
+
+        .hero-vote-option img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+            border: 2px solid #FF0066;
+        }
+
+        .hero-vote-option-info {
+            flex: 1;
+        }
+
+        .hero-vote-option-name {
+            font-weight: 700;
+            color: white;
+        }
+
+        .hero-vote-option-meta {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .hero-vote-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: #FF0066;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .hero-vote-weight {
+            text-align: center;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .hero-vote-weight a {
+            color: #FF0066;
+            text-decoration: none;
+        }
+
+        /* 倒计时横幅 */
+        .countdown-banner {
+            background: linear-gradient(90deg, #FF0066, #CC0052);
+            padding: 1rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .countdown-text {
+            color: white;
+            font-weight: 700;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .countdown-item {
+            background: rgba(0,0,0,0.3);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: white;
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .countdown-cta {
+            background: white;
+            color: #FF0066;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        /* 免费额度提示 */
+        .free-quota-bar {
+            background: linear-gradient(90deg, #FF0066, #CC0052);
+            color: white;
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .free-quota-text {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .free-quota-btn {
+            background: white;
+            color: #FF0066;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-decoration: none;
+        }
+
+        /* 会员墙 */
+        .paywall-card {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border: 2px dashed #444;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            grid-column: span 2;
+        }
+
+        .paywall-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .paywall-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .paywall-text {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .paywall-btn {
+            display: inline-block;
+            background: #FF0066;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 800;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* 会员定价区域 */
+        .pricing-section {
+            padding: 4rem 0;
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .pricing-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-header p {
+            color: #888;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border-color: #FF0066;
+            background: rgba(255,0,102,0.05);
+            transform: scale(1.05);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FF0066;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .pricing-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+        }
+
+        .pricing-price span {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .pricing-daily {
+            color: #FF0066;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        .pricing-features li {
+            padding: 0.3rem 0;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: #FF0066;
+            font-weight: 900;
+        }
+
+        .pricing-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 2px solid #FF0066;
+            color: #FF0066;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .pricing-card.featured .pricing-btn {
+            background: #FF0066;
+            color: white;
+        }
+
+        /* 邀请返利悬浮按钮 */
+        .invite-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+
+        .invite-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF0066, #CC0052);
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,0,102,0.4);
+            transition: all 0.3s;
+        }
+
+        .invite-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .invite-tooltip {
+            position: absolute;
+            bottom: 65px;
+            right: 0;
+            background: white;
+            color: #0a0a0a;
+            padding: 0.75rem;
+            border-radius: 10px;
+            width: 220px;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .invite-float:hover .invite-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .invite-tooltip strong {
+            color: #FF0066;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .hero-vote-card {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                max-width: 400px;
+                margin: 2rem auto 0;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .paywall-card {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 350px;
+                margin: 0 auto;
+            }
+
+            .paywall-card {
+                grid-column: span 1;
+            }
+
+            .countdown-content {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .free-quota-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* 原有CSS继续... */
+
+
+            --pink-primary: #FF0066;
+            --black: #0a0a0a;
+            --silver-text: #c0c0c0;
+            --text-secondary: #a0a0a0;
+            --silver-bg: #f0f0f0;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #c0c0c0;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: #000000;
+            border-bottom: none;
+        }
+        
+        .nav-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center; height: 70px;
+        }
+        
+        .logo { 
+            position: relative; 
+            z-index: 1001; 
+            display: inline-block;
+        }
+        .logo img { height: 40px; width: auto; display: block; }
+        
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+        
+        .nav-links a {
+            color: var(--silver-text); text-decoration: none; font-weight: 700;
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;
+            padding: 0.5rem 1.5rem;
+        }
+        
+        .nav-links a:hover, .nav-links a.active { color: var(--pink-primary); }
+        
+        .nav-separator { color: var(--pink-primary); font-size: 0.7rem; }
+        
+        .login-btn {
+            border: 1.5px solid var(--pink-primary); 
+            padding: 0.4rem 1rem;
+            color: var(--pink-primary) !important;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover { 
+            background: var(--pink-primary); 
+            color: white !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 0, 102, 0.3);
+        }
+        
+        .mobile-menu-btn {
+            display: none; background: none; border: none; color: white;
+            font-size: 1.5rem; cursor: pointer;
+        }
+        
+
+        /* Hero区域 - 桌面端固定高度 */
+        .hero-section {
+            position: relative; 
+            width: 100%; 
+            aspect-ratio: 1280 / 672;  /* 保持1280*672比例 */
+            margin: 0; 
+            overflow: hidden; 
+            background-color: #0a0a0a;
+        }
+        
+        .hero-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hero-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0; 
+            transition: opacity 0.8s ease; 
+            display: flex; 
+            align-items: center;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+        
+        .hero-slide[data-genre="all"] {
+            background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=672&fit=crop');
+        }
+        
+        .hero-slide[data-genre="punk"] {
+            background-image: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1280&h=672&fit=crop');
+        }
+        
+        .hero-slide[data-genre="indie"] {
+            background-image: url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=1280&h=672&fit=crop');
+        }
+        
+        .hero-slide.active { 
+            opacity: 1; 
+            z-index: 1;
+        }
+        
+        .hero-image {
+            display: none;  /* 使用background-image替代 */
+        }
+                .hero-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.4);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            position: relative;
+        }
+        
+        .hero-tag {
+            display: inline-block; 
+            background: var(--pink-primary); 
+            color: white;
+            padding: 0.5rem 1rem; 
+            font-size: 0.75rem; 
+            font-weight: 800;
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3.5rem); 
+            font-weight: 900; 
+            color: white;
+            line-height: 1.1; 
+            margin-bottom: 1rem; 
+            max-width: 600px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem; 
+            color: var(--silver-text); 
+            margin-bottom: 2rem;
+            max-width: 500px; 
+            line-height: 1.6;
+        }
+        
+        .hero-meta { 
+            color: var(--silver-text); 
+            font-size: 0.85rem; 
+        }
+        
+
+        /* 风格导航 */
+        .genre-nav {
+            background: var(--black); 
+            padding: 0; 
+            margin: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+        
+        .genre-container {
+            width: 100%; 
+            margin: 0 auto; 
+            padding: 0;
+            display: flex;
+        }
+        
+        .genre-btn {
+            flex: 1; 
+            background: transparent; 
+            border: none; 
+            color: var(--silver-text);
+            padding: 1.2rem 0.5rem; 
+            font-weight: 700; 
+            font-size: 0.75rem;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            cursor: pointer;
+            transition: all 0.3s; 
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center; 
+            line-height: 1.3;
+        }
+        
+        .genre-btn:last-child { border-right: none; }
+        
+        .genre-btn:hover, .genre-btn.active { background: var(--pink-primary); color: white; }
+        
+
+        /* 主要内容区域 */
+        .news-grid-section { 
+            padding: 4rem 0; 
+            background: #c0c0c0;
+        }
+        
+        .news-grid-section .section-header,
+        .news-grid-section .featured-news {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .news-grid-section .section-title,
+        .news-grid-section .view-all-link {
+            color: #0a0a0a;
+        }
+        
+        .news-grid-section .section-header {
+            border-bottom-color: #FF0066;
+        }
+        
+        .news-grid-section .sidebar-content h4 {
+            color: #0a0a0a;
+        }
+        
+        .news-grid-section .sidebar-content .meta {
+            color: #555;
+        }
+        
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: none;
+                padding-bottom: 2rem;
+        }
+        
+        .section-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: #c0c0c0; }
+        
+        .view-all-link { color: var(--pink-primary); text-decoration: none; font-weight: 700; font-size: 0.85rem; }
+        
+        .featured-news { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 4rem; }
+        
+        .featured-main { position: relative; aspect-ratio: 16/9; overflow: hidden; cursor: pointer; background: #000; }
+        
+        .featured-main img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        
+        .featured-main:hover img { transform: scale(1.05); }
+        
+        .featured-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3rem 2rem 2rem;
+            background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, transparent 100%); color: white;
+        }
+        
+        .featured-tag {
+            display: inline-block; background: var(--pink-primary); padding: 0.3rem 0.8rem;
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 1rem;
+        }
+        
+        .featured-title { font-size: 1.6rem; font-weight: 900; margin-bottom: 0.5rem; line-height: 1.2; }
+        
+        .featured-excerpt { color: var(--silver-text); font-size: 0.9rem; line-height: 1.5; }
+        
+        .featured-sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+        
+        .sidebar-item {
+            display: flex; gap: 1rem; cursor: pointer;
+            padding-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-item:last-child { border-bottom: none; }
+        
+        .sidebar-thumb { width: 100px; height: 75px; object-fit: cover; flex-shrink: 0; }
+        
+        .sidebar-content h4 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.3rem; line-height: 1.3; color: #c0c0c0; }
+        
+        .sidebar-content .meta { color: var(--text-secondary); font-size: 0.75rem; }
+        
+
+        /* 榜单区域 */
+        .charts-section { 
+            background: #c0c0c0; 
+            color: #0a0a0a; 
+            padding: 4rem 0; 
+        }
+        
+        .charts-section .charts-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .charts-section .charts-title,
+        .charts-section .top5-name,
+        .charts-section .top5-rank,
+        .charts-section .view-full-chart a {
+            color: #0a0a0a;
+        }
+        
+        .charts-section .top5-meta {
+            color: #333;
+        }
+        
+        .charts-section .chart-tabs {
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .charts-section .chart-tab {
+            color: #333;
+        }
+        
+        .charts-section .chart-tab:hover {
+            color: #0a0a0a;
+            background: rgba(0,0,0,0.15);
+        }
+        
+        .charts-section .view-full-chart a {
+            border-color: #FF0066;
+        }
+        
+        .charts-section .view-full-chart a:hover {
+            background: #FF0066;
+            color: white;
+        }
+        
+        .charts-container { max-width: 1400px; margin: 0 auto; }
+        
+        .charts-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+        }
+        
+        .charts-title { font-size: 1.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .chart-tabs { 
+            display: flex; 
+            gap: 0.5rem; 
+            background: rgba(255,255,255,0.05);
+            padding: 0.3rem;
+            border-radius: 8px;
+        }
+        
+        .chart-tab {
+            background: transparent; 
+            border: none; 
+            color: var(--silver-text); 
+            font-weight: 600;
+            cursor: pointer; 
+            padding: 0.5rem 1.2rem; 
+            font-size: 0.8rem; 
+            text-transform: uppercase;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        
+        .chart-tab:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .chart-tab.active { 
+            background: var(--pink-primary); 
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 0, 102, 0.4);
+        }
+        
+        .chart-content { display: none; }
+        
+        .chart-content.active { display: block; }
+        
+        .top5-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
+        
+        .top5-item { text-align: center; cursor: pointer; transition: transform 0.3s; }
+        
+        .top5-item:hover { transform: translateY(-5px); }
+        
+        .top5-rank { font-size: 2.5rem; font-weight: 900; color: var(--pink-primary); line-height: 1; margin-bottom: 0.5rem; }
+        
+        .top5-image {
+            width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%;
+            border: 3px solid var(--pink-primary); margin-bottom: 1rem;
+        }
+        
+        .top5-name { font-weight: 800; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        
+        .top5-meta { color: var(--silver-text); font-size: 0.75rem; }
+        
+        .view-full-chart { text-align: center; margin-top: 2rem; }
+        
+        .view-full-chart a {
+            display: inline-block; border: 2px solid var(--pink-primary); color: var(--pink-primary);
+            padding: 0.8rem 2rem; text-decoration: none; font-weight: 800; text-transform: uppercase; transition: all 0.3s;
+        }
+        
+        .view-full-chart a:hover { background: var(--pink-primary); color: white; }
+        
+
+        /* 演出区域 */
+        .shows-section { 
+            padding: 4rem 0; 
+            background: #c0c0c0; 
+        }
+        
+        .shows-section .section-header,
+        .shows-section .shows-grid,
+        .shows-section .view-full-chart {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .shows-section .section-title,
+        .shows-section .shows-source,
+        .shows-section .view-full-chart a {
+            color: #0a0a0a;
+        }
+        
+        .shows-section .shows-source strong {
+            color: #FF0066;
+        }
+        
+        .shows-section .view-full-chart a {
+            border-color: #FF0066;
+        }
+        
+        .shows-section .view-full-chart a:hover {
+            background: #FF0066;
+            color: white;
+        }
+        
+        .shows-source { color: var(--text-secondary); font-size: 0.8rem; }
+        
+        .shows-source strong { color: var(--pink-primary); }
+        
+        .shows-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        
+        .show-card { position: relative; aspect-ratio: 2/3; overflow: hidden; cursor: pointer; }
+        
+        .show-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        
+        .show-card:hover img { transform: scale(1.05); }
+        
+        .show-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 1rem 1rem;
+            background: linear-gradient(to top, rgba(10,10,10,0.98) 0%, transparent 100%); color: white;
+        }
+        
+        .show-date { color: var(--pink-primary); font-weight: 800; font-size: 0.8rem; margin-bottom: 0.3rem; }
+        
+        .show-title { font-weight: 800; font-size: 1rem; margin-bottom: 0.3rem; line-height: 1.2; }
+        
+        .show-venue { color: var(--silver-text); font-size: 0.8rem; }
+        
+        .show-price {
+            position: absolute; top: 1rem; right: 1rem; background: var(--pink-primary);
+            color: white; padding: 0.3rem 0.8rem; font-weight: 800; font-size: 0.8rem;
+        }
+        
+        .livetv-section { 
+            background: #c0c0c0; 
+            padding: 4rem 0; 
+            text-align: center; 
+            border-top: 1px solid #0a0a0a; 
+            border-bottom: 1px solid #0a0a0a; 
+        }
+        
+        .livetv-section .livetv-title,
+        .livetv-section .livetv-subtitle {
+            color: #0a0a0a;
+        }
+        
+        .livetv-section p {
+            color: #333;
+        }
+        
+        .livetv-badge { display: inline-block; background: var(--pink-primary); color: white; padding: 0.5rem 1.5rem; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; }
+        
+        .livetv-title { font-size: 2.5rem; font-weight: 900; color: white; margin-bottom: 1rem; letter-spacing: 3px; }
+        
+        .livetv-subtitle { color: var(--silver-text); margin-bottom: 2rem; }
+        
+
+        /* 社交媒体 */
+        .social-section {
+            background: #c0c0c0;
+            border-top: 1px solid #0a0a0a;
+            padding: 2.5rem 2rem; 
+            text-align: center;
+        }
+        
+        .social-section .social-title {
+            color: #0a0a0a;
+        }
+        
+        .social-section .social-link {
+            color: #333;
+        }
+        
+        .social-section .social-link:hover {
+            color: #FF0066;
+        }
+        
+        .social-section .social-icon {
+            fill: #333;
+        }
+        
+        .social-section .social-link:hover .social-icon {
+            fill: #FF0066;
+        }
+        
+        .social-title { color: #c0c0c0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 1.5rem; font-weight: 700; }
+        
+        .social-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        
+        .social-link {
+            color: #c0c0c0; text-decoration: none; transition: all 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+        }
+        
+        .social-link:hover { color: var(--pink-primary); transform: translateY(-3px); }
+        
+        .social-icon { width: 36px; height: 36px; fill: #c0c0c0; transition: fill 0.3s; }
+        
+        .social-link:hover .social-icon { fill: var(--pink-primary); }
+        
+        .social-link span { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; }
+        
+
+        /* 页脚 */
+        .footer { background: #000000; padding: 0; }
+        
+        .footer-content { max-width: 1400px; margin: 0 auto; padding: 4rem 2rem 2rem; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+        
+        .footer-desc { color: var(--silver-text); font-size: 0.9rem; line-height: 1.6; }
+        
+        .footer-title { color: white; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.2rem; }
+        
+        .footer-links { list-style: none; }
+        
+        .footer-links li { margin-bottom: 0.6rem; }
+        
+        .footer-links a { color: var(--silver-text); text-decoration: none; font-size: 0.85rem; transition: color 0.3s; }
+        
+        .footer-links a:hover { color: var(--pink-primary); }
+        
+        .footer-bottom { text-align: center; padding: 1rem 0; border-top: 1px solid #333; color: #888; font-size: 0.8rem; }
+        
+
+        /* 平板横屏/小桌面 */
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none; 
+                position: absolute; 
+                top: 70px; 
+                left: 0; 
+                right: 0;
+                background: rgba(10, 10, 10, 0.98); 
+                backdrop-filter: blur(20px);
+                flex-direction: column; 
+                padding: 1.5rem 0 4rem;
+                gap: 0;
+                border-bottom: none;
+                overflow: visible;
+            }
+        
+            .nav-links.active { display: flex; }
+
+            .nav-links .login-btn {
+                display: inline-block;
+                margin: 1rem auto 3rem;
+                width: 120px;
+                text-align: center;
+                box-sizing: content-box;
+                border: 2px solid #FF0066;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                line-height: 1;
+                height: auto;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        
+            .nav-links a:last-child {
+                border-bottom: none;
+                margin-top: 0.5rem;
+            }
+        
+            .mobile-menu-btn:hover {
+                background: rgba(255,255,255,0.1);
+            }
+        
+        }
+
+        /* 移动端 */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            .mobile-menu-btn {
+                display: block;
+                padding: 0.5rem;
+                margin-right: -0.5rem;
+            }
+            .login-btn {
+                display: inline-block;
+                width: auto;
+                text-align: center;
+                margin: 0 auto;
+            }
+            /* Hero - 保持1280*672比例 */
+            .hero-section { 
+                aspect-ratio: 1280 / 672 !important;  /* 保持1280*672比例 */
+                position: relative;
+                overflow: hidden;
+            }
+        
+
+            /* 风格按钮 - 2排4列 */
+            .genre-container { 
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                grid-template-rows: repeat(2, 1fr) !important;
+                gap: 1px;
+                background: rgba(255,255,255,0.1);
+            }
+        
+            .genre-btn:nth-child(4n) {
+                border-right: none !important;
+            }
+        
+            .genre-btn:nth-child(n+5) {
+                border-bottom: none !important;
+            }
+        
+            .genre-btn.active {
+                background: var(--pink-primary) !important;
+            }
+        
+
+            /* 其他移动端优化 */
+            .top5-list { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        
+            .news-grid-section, .charts-section, .shows-section { padding: 2rem 1rem; }
+        
+        }
+
+        /* 小屏幕手机 */
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 0.8rem;
+            }
+            .genre-btn { 
+                font-size: 0.5rem !important; 
+                padding: 0.3rem 0.05rem !important; 
+                min-height: 50px !important;
+                max-height: 50px !important;
+                line-height: 1.1 !important;
+            }</style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
+            </a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">NEWS</a>
+                <span class="nav-separator">★</span>
+                <a href="charts.html">CHARTS</a>
+                <span class="nav-separator">★</span>
+                <a href="magazine.html">MAGAZINE</a>
+                <span class="nav-separator">★</span>
+                <a href="shows.html">SHOWS</a>
+                <span class="nav-separator">★</span>
+                <a href="#" class="live-tv-link">LIVE TV</a>
+                <a href="#" class="login-btn" onclick="openLoginModal(); return false;">LOGIN</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero轮播区 - 满屏宽度 -->
+    <section class="hero-section">
+        <div class="hero-slider">
+            <div class="hero-slide active" data-genre="all">
+                <div class="hero-image-overlay"></div>
+                <div class="hero-content" style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 2rem;">
+                    <div style="max-width: 500px;">
+                        <span class="hero-tag">Official Chart</span>
+                        <h1 class="hero-title">CHINESE ROCKS<br>OFFICIAL CHART</h1>
+                        <p class="hero-subtitle">2025-2026年度榜單 · 會員投票決定排名 · 每週更新</p>
+                        <p class="hero-meta">搖滾萬歲 · NEWS ★ CHARTS ★ MAGAZINE</p>
+                    </div>
+
+                    <!-- 投票卡片 -->
+                    <div class="hero-vote-card">
+                        <div class="hero-vote-header">
+                            <span>🔥</span> 本周最热对决
+                        </div>
+                        <div class="hero-vote-title">谁是本周最佳现场？</div>
+                        <div class="hero-vote-subtitle">第12周官方榜单投票进行中</div>
+
+                        <div class="hero-vote-option" onclick="selectVote(this)">
+                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop" alt="崔健">
+                            <div class="hero-vote-option-info">
+                                <div class="hero-vote-option-name">崔健</div>
+                                <div class="hero-vote-option-meta">工体演唱会 · 58%</div>
+                            </div>
+                        </div>
+
+                        <div class="hero-vote-option" onclick="selectVote(this)">
+                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&h=100&fit=crop" alt="脑浊">
+                            <div class="hero-vote-option-info">
+                                <div class="hero-vote-option-name">脑浊</div>
+                                <div class="hero-vote-option-meta">巡演北京站 · 42%</div>
+                            </div>
+                        </div>
+
+                        <button class="hero-vote-btn" onclick="location.href='#pricing'">立即投票</button>
+                        <div class="hero-vote-weight">
+                            免费用户权重 ×0.3 | <a href="#pricing">升级会员 ×3.0</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 风格分类导航 - 满屏宽度，紧贴banner -->
+    <div class="genre-nav">
+        <div class="genre-container">
+            <button class="genre-btn active" onclick="switchGenre('all', this)">全部 ALL</button>
+            <button class="genre-btn" onclick="switchGenre('punk', this)">PUNK & HARDCORE</button>
+            <button class="genre-btn" onclick="switchGenre('indie', this)">INDIE & ALTERNATIVE</button>
+            <button class="genre-btn" onclick="switchGenre('folk', this)">FOLK & ROOTS ROCK</button>
+            <button class="genre-btn" onclick="switchGenre('art', this)">ART & EXPERIMENTAL</button>
+            <button class="genre-btn" onclick="switchGenre('pop', this)">POP ROCK</button>
+            <button class="genre-btn" onclick="switchGenre('metal', this)">HEAVY & METAL</button>
+            <button class="genre-btn" onclick="switchGenre('ska', this)">SKA & REGGAE</button>
+        </div>
+    </div>
+
+    <!-- 新闻区 -->
+    
+    <!-- 倒计时横幅 -->
+    <div class="countdown-banner">
+        <div class="countdown-content">
+            <span class="countdown-text">🎸 迷笛音乐节2026早鸟票开售倒计时</span>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="cd-days">02</span>
+                    <span class="countdown-label">天</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="cd-hours">14</span>
+                    <span class="countdown-label">时</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="cd-minutes">35</span>
+                    <span class="countdown-label">分</span>
+                </div>
+            </div>
+            <a href="#" class="countdown-cta">会员提前24小时抢购 →</a>
+        </div>
+    </div>
+
+    <!-- 免费额度提示 -->
+    <div class="free-quota-bar">
+        <div class="free-quota-text">
+            📱 今日免费阅读额度：3篇中的 <strong>第1篇</strong>（升级会员无限畅读）
+        </div>
+        <a href="#pricing" class="free-quota-btn">升级会员 ¥66/月</a>
+    </div>
+<section class="news-grid-section">
+        <div class="section-header">
+            <h2 class="section-title">Latest News 最新新聞</h2>
+            <a href="news.html" class="view-all-link">View All →</a>
+        </div>
+        <div class="featured-news">
+            <article class="featured-main" onclick="location.href='article.html?id=1'">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop" alt="Featured News">
+                <div class="featured-overlay">
+                    <span class="featured-tag">獨家 EXCLUSIVE</span>
+                    <h3 class="featured-title">重塑雕像的權利新專輯首發深度解析</h3>
+                    <p class="featured-excerpt">這張醞釀三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型，我們與華東深度對談...</p>
+                </div>
+            </article>
+            <div class="featured-sidebar">
+                <article class="sidebar-item" onclick="location.href='article.html?id=2'">
+                    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                    <div class="sidebar-content">
+                        <h4>Radiohead 宣佈2026年亞洲巡演</h4>
+                        <p class="meta">國際 · 5小時前</p>
+                    
+                <!-- 会员墙 -->
+                <article class="sidebar-item paywall-card" onclick="location.href='#pricing'">
+                    <div class="paywall-icon">🔒</div>
+                    <div class="paywall-title">今日限额已用完</div>
+                    <div class="paywall-text">您已免费阅读3篇新闻<br>升级会员，无限畅读</div>
+                    <div class="paywall-btn">升级会员 ¥66/月</div>
+                </article>
+</div>
+                </article>
+                <article class="sidebar-item" onclick="location.href='article.html?id=3'">
+                    <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                    <div class="sidebar-content">
+                        <h4>迷笛音樂節2026陣容公佈</h4>
+                        <p class="meta">現場 · 昨天</p>
+                    </div>
+                </article>
+                <article class="sidebar-item" onclick="location.href='article.html?id=4'">
+                    <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                    <div class="sidebar-content">
+                        <h4>專訪：刺蝟樂隊石璐</h4>
+                        <p class="meta">專題 · 昨天</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 榜单区 -->
+    <section class="charts-section">
+        <div class="charts-container">
+            <div class="charts-header">
+                <h2 class="charts-title">Official Charts 官方榜單</h2>
+                <div class="chart-tabs">
+                    <button class="chart-tab active" onclick="switchChart('artists', this)">Artists</button>
+                    <button class="chart-tab" onclick="switchChart('songs', this)">Songs</button>
+                    <button class="chart-tab" onclick="switchChart('albums', this)">Albums</button>
+                </div>
+            </div>
+            <div class="chart-content active" id="artistsChart">
+                <div class="top5-list">
+                    <div class="top5-item" onclick="location.href='artist.html?id=1'">
+                        <div class="top5-rank">1</div>
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop" alt="崔健" class="top5-image">
+                        <div class="top5-name">崔健 CUI JIAN</div>
+                        <div class="top5-meta">中國搖滾之父</div>
+                    </div>
+                    <div class="top5-item" onclick="location.href='artist.html?id=2'">
+                        <div class="top5-rank">2</div>
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop" alt="脑浊" class="top5-image">
+                        <div class="top5-name">腦濁 BRAIN FAILURE</div>
+                        <div class="top5-meta">北京龐克傳奇</div>
+                    </div>
+                    <div class="top5-item" onclick="location.href='artist.html?id=3'">
+                        <div class="top5-rank">3</div>
+                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=400&fit=crop" alt="地下婴儿" class="top5-image">
+                        <div class="top5-name">地下嬰兒 UNDERGROUND BABY</div>
+                        <div class="top5-meta">第一代龐克</div>
+                    </div>
+                    <div class="top5-item" onclick="location.href='artist.html?id=4'">
+                        <div class="top5-rank">4</div>
+                        <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=400&fit=crop" alt="The Noname" class="top5-image">
+                        <div class="top5-name">THE NONAME</div>
+                        <div class="top5-meta">西安龐克力量</div>
+                    </div>
+                    <div class="top5-item" onclick="location.href='artist.html?id=5'">
+                        <div class="top5-rank">5</div>
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop" alt="Dummy Toys" class="top5-image">
+                        <div class="top5-name">DUMMY TOYS</div>
+                        <div class="top5-meta">全女子硬核</div>
+                    </div>
+                </div>
+                <div class="view-full-chart">
+                    <a href="charts.html">查看完整榜單 View Full Chart →</a>
+                </div>
+            </div>
+            <div class="chart-content" id="songsChart">
+                <div class="top5-list">
+                    <div class="top5-item">
+                        <div class="top5-rank">1</div>
+                        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=400&fit=crop" alt="Song" class="top5-image">
+                        <div class="top5-name">一無所有</div>
+                        <div class="top5-meta">崔健</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">2</div>
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop" alt="Song" class="top5-image">
+                        <div class="top5-name">再見烏托邦</div>
+                        <div class="top5-meta">腦濁</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">3</div>
+                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=400&fit=crop" alt="Song" class="top5-image">
+                        <div class="top5-name">覺醒</div>
+                        <div class="top5-meta">地下嬰兒</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">4</div>
+                        <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=400&fit=crop" alt="Song" class="top5-image">
+                        <div class="top5-name">We Are The Noname</div>
+                        <div class="top5-meta">The Noname</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">5</div>
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop" alt="Song" class="top5-image">
+                        <div class="top5-name">Riot Girl</div>
+                        <div class="top5-meta">Dummy Toys</div>
+                    </div>
+                </div>
+                <div class="view-full-chart">
+                    <a href="charts.html">查看完整榜單 View Full Chart →</a>
+                </div>
+            </div>
+            <div class="chart-content" id="albumsChart">
+                <div class="top5-list">
+                    <div class="top5-item">
+                        <div class="top5-rank">1</div>
+                        <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=400&h=400&fit=crop" alt="Album" class="top5-image">
+                        <div class="top5-name">新長征路上的搖滾</div>
+                        <div class="top5-meta">崔健 · 1989</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">2</div>
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=400&fit=crop" alt="Album" class="top5-image">
+                        <div class="top5-name">欢迎来到北京</div>
+                        <div class="top5-meta">腦濁 · 2002</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">3</div>
+                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=400&fit=crop" alt="Album" class="top5-image">
+                        <div class="top5-name">地下嬰兒</div>
+                        <div class="top5-meta">地下嬰兒 · 1998</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">4</div>
+                        <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=400&fit=crop" alt="Album" class="top5-image">
+                        <div class="top5-name">Sick And Proud</div>
+                        <div class="top5-meta">The Noname · 2010</div>
+                    </div>
+                    <div class="top5-item">
+                        <div class="top5-rank">5</div>
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop" alt="Album" class="top5-image">
+                        <div class="top5-name">Dummy Toys EP</div>
+                        <div class="top5-meta">Dummy Toys · 2019</div>
+                    </div>
+                </div>
+                <div class="view-full-chart">
+                    <a href="charts.html">查看完整榜單 View Full Chart →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 演出区域 -->
+    <section class="shows-section">
+        <div class="section-header">
+            <h2 class="section-title">Upcoming Shows 近期演出</h2>
+            <span class="shows-source">數據來源：<strong>LiveGigsAsia</strong> ★ <strong>秀動</strong> ★ <strong>大麥</strong> ★ <strong>TicketFlap</strong></span>
+        </div>
+        <div class="shows-grid">
+            <div class="show-card" onclick="location.href='show.html?id=1'">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=689&h=1033&fit=crop" alt="演出海報">
+                <span class="show-price">¥280起</span>
+                <div class="show-overlay">
+                    <div class="show-date">3月15日 週六</div>
+                    <div class="show-title">萬能青年旅店 SPECIAL</div>
+                    <div class="show-venue">工人體育館 · 北京</div>
+                </div>
+            </div>
+            <div class="show-card" onclick="location.href='show.html?id=2'">
+                <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=689&h=1033&fit=crop" alt="演出海報">
+                <span class="show-price">¥180起</span>
+                <div class="show-overlay">
+                    <div class="show-date">3月16日 週日</div>
+                    <div class="show-title">草東沒有派對 2026巡演</div>
+                    <div class="show-venue">糖果Live · 北京</div>
+                </div>
+            </div>
+            <div class="show-card" onclick="location.href='show.html?id=3'">
+                <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=689&h=1033&fit=crop" alt="演出海報">
+                <span class="show-price">¥80起</span>
+                <div class="show-overlay">
+                    <div class="show-date">3月17日 週一</div>
+                    <div class="show-title">獨立音樂人之夜</div>
+                    <div class="show-venue">疆進酒 · 北京</div>
+                </div>
+            </div>
+            <div class="show-card" onclick="location.href='show.html?id=4'">
+                <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=689&h=1033&fit=crop" alt="演出海報">
+                <span class="show-price">¥60起</span>
+                <div class="show-overlay">
+                    <div class="show-date">3月18日 週二</div>
+                    <div class="show-title">後龐克聯合專場</div>
+                    <div class="show-venue">School · 北京</div>
+                </div>
+            </div>
+        </div>
+        <div class="view-full-chart" style="margin-top: 2rem;">
+            <a href="shows.html">查看全部演出 View All Shows →</a>
+        </div>
+    </section>
+
+    <!-- LIVE TV -->
+    <section class="livetv-section">
+        <div class="livetv-badge">COMING SOON</div>
+        <h2 class="livetv-title">LIVE TV</h2>
+        <p class="livetv-subtitle">24小時搖滾音樂直播 · 現場演出 · 獨家訪談 · 經典回放</p>
+        <p style="color: #a0a0a0; font-size: 0.9rem;">即將上線，敬請期待</p>
+    </section>
+
+    <!-- 页脚 -->
+    <div class="social-section">
+            <p class="social-title">Follow Us 關注我們</p>
+            <div class="social-links">
+                <a href="https://instagram.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://facebook.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.126-5.864 10.126-11.854z"/>
+                    </svg>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://x.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    <span>X / Twitter</span>
+                </a>
+                <a href="https://weibo.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.194.573zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.401-.649.386-1.02.425-1.899.003-2.525-.789-1.168-2.947-1.108-5.388-.031 0 0-.772.338-.575-.274.381-1.204.324-2.212-.27-2.796-1.346-1.327-4.928.047-8.001 3.067C1.189 10.875 0 13.021 0 14.89c0 3.579 4.591 5.758 9.085 5.758 5.892 0 9.813-3.423 9.813-6.143 0-1.643-1.385-2.573-2.839-2.856z"/>
+                    </svg>
+                    <span>微博 Weibo</span>
+                </a>
+                <a href="https://weixin.qq.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01-.023-.156.49.49 0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 110 1.936.968.968 0 010-1.936zm4.048 0a.968.968 0 110 1.936.968.968 0 010-1.936z"/>
+                    </svg>
+                    <span>微信 WeChat</span>
+                </a>
+                <a href="https://xiaohongshu.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5 7h-2v-3c0-.55-.45-1-1-1s-1 .45-1 1v3h-2v-6h2v.5c.5-.5 1.17-.83 1.9-.83 1.38 0 2.6 1.12 2.6 2.5v3.83z"/>
+                    </svg>
+                    <span>小紅書 RED</span>
+                </a>
+                <a href="https://bilibili.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 01-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 01.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                    </svg>
+                    <span>Bilibili</span>
+                </a>
+                <a href="https://douyin.com/chineserocks" target="_blank" class="social-link">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                    </svg>
+                    <span>抖音 Douyin</span>
+                </a>
+            </div>
+        </div>
+    
+    <!-- 会员定价区域 -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-container">
+            <div class="pricing-header">
+                <h2>選擇你的搖滾身份</h2>
+                <p>加入ChineseRocks會員，解鎖完整搖滾體驗</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- 体验卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">體驗卡</div>
+                    <div class="pricing-price">免費<span>/3天</span></div>
+                    <div class="pricing-daily">限時體驗</div>
+                    <ul class="pricing-features">
+                        <li>完整會員權益3天</li>
+                        <li>投票權重 ×1.0</li>
+                        <li>無限新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">關注領取</button>
+                </div>
+
+                <!-- 周卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">周卡</div>
+                    <div class="pricing-price">¥19.9<span>/週</span></div>
+                    <div class="pricing-daily">¥2.84/天</div>
+                    <ul class="pricing-features">
+                        <li>7天完整會員權益</li>
+                        <li>投票權重 ×1.0</li>
+                        <li>無限新聞閱讀</li>
+                        <li>演出優先購票</li>
+                    </ul>
+                    <button class="pricing-btn">選擇周卡</button>
+                </div>
+
+                <!-- 月卡 - 主推 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最熱門</div>
+                    <div class="pricing-name">月卡</div>
+                    <div class="pricing-price">¥66<span>/月</span></div>
+                    <div class="pricing-daily">¥2.20/天 · 省¥13</div>
+                    <ul class="pricing-features">
+                        <li>30天完整會員權益</li>
+                        <li>投票權重 ×3.0</li>
+                        <li>無限新聞閱讀</li>
+                        <li>演出優先購票</li>
+                        <li>獨家雜誌內容</li>
+                        <li>無廣告體驗</li>
+                    </ul>
+                    <button class="pricing-btn">立即開通</button>
+                </div>
+
+                <!-- 年卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">年卡</div>
+                    <div class="pricing-price">¥365<span>/年</span></div>
+                    <div class="pricing-daily">¥1.00/天 · 省¥427</div>
+                    <ul class="pricing-features">
+                        <li>365天完整會員權益</li>
+                        <li>投票權重 ×3.0</li>
+                        <li>專屬會員徽章</li>
+                        <li>線下活動優先</li>
+                        <li>限量版周邊抽獎</li>
+                    </ul>
+                    <button class="pricing-btn">選擇年卡</button>
+                </div>
+            </div>
+        </div>
+    </section>
+<footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary); letter-spacing: 2px; text-transform: uppercase; line-height: 1;">CHINESE ROCKS</div>
+                    <div style="font-size: 0.6rem; color: var(--silver-text); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE <span style="color: var(--pink-primary);">搖滾萬歲</span></div>
+                </div>
+                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷<br>始於2025</p>
+            </div>
+            <div>
+                <h4 class="footer-title">榜單 CHARTS</h4>
+                <ul class="footer-links">
+                    <li><a href="charts.html">藝人榜 ARTISTS</a></li>
+                    <li><a href="charts.html">歌曲榜 SONGS</a></li>
+                    <li><a href="charts.html">專輯榜 ALBUMS</a></li>
+                    <li><a href="charts.html">音樂節 FESTIVALS</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">內容 CONTENT</h4>
+                <ul class="footer-links">
+                    <li><a href="news.html">新聞 NEWS</a></li>
+                    <li><a href="shows.html">演出 SHOWS</a></li>
+                    <li><a href="magazine.html">雜誌 MAGAZINE</a></li>
+                    
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">服務 SERVICE</h4>
+                <ul class="footer-links">
+                    <li><a href="member.html">會員服務 MEMBERSHIP</a></li>
+                    <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
+                    <li><a href="#">廣告投放 ADVERTISING</a></li>
+                    <li><a href="#">聯繫我們 CONTACT</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- 社交媒体链接 - 银色背景，小图标 -->
+        <div class="footer-bottom">
+            <p>&copy; 2026 ChineseRocks. All rights reserved. 搖滾萬歲 ★ Emanon Ent.</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchGenre(genre, btn) {
+            document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.hero-slide').forEach(slide => {
+                slide.classList.remove('active');
+                if (slide.dataset.genre === genre) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        function switchChart(type, btn) {
+            document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.chart-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(type + 'Chart').classList.add('active');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const genres = ['all', 'punk', 'indie'];
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            const genre = genres[currentSlide];
+            document.querySelectorAll('.hero-slide').forEach(s => s.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            document.querySelectorAll('.genre-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.textContent.toLowerCase().includes(genre) || (genre === 'all' && b.textContent.includes('全部'))) {
+                    b.classList.add('active');
+                }
+            });
+        }, 8000);
+    </script>
+
+
+    <!-- 邀请返利悬浮按钮 -->
+    <div class="invite-float">
+        <div class="invite-tooltip">
+            <strong>🎁 邀請好友賺會員</strong>
+            好友首月5折，你獲得30%返利積分<br>
+            100積分 = 7天會員
+        </div>
+        <button class="invite-btn" onclick="showInvite()">🎁</button>
+    </div>
+
+    <script>
+        // 倒计时功能
+        function updateCountdown() {
+            const now = new Date();
+            const end = new Date();
+            end.setDate(end.getDate() + 2);
+            end.setHours(10, 0, 0, 0);
+
+            const diff = end - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+            document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 60000);
+        updateCountdown();
+
+        // 投票选择
+        function selectVote(el) {
+            document.querySelectorAll('.hero-vote-option').forEach(o => o.style.borderColor = 'transparent');
+            el.style.borderColor = '#FF0066';
+        }
+
+        // 邀请弹窗
+        function showInvite() {
+            alert('生成專屬邀請海報，分享到朋友圈！\n\n好友首月5折，你獲得30%返利積分\n100積分 = 7天會員');
+        }
+
+        // 原有函数
+        function switchGenre(genre, btn) {
+            document.querySelectorAll('.genre-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.hero-slide').forEach(slide => {
+                slide.classList.remove('active');
+                if (slide.dataset.genre === genre) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        function switchChart(type, btn) {
+            document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.chart-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(type + 'Chart').classList.add('active');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const genres = ['all', 'punk', 'indie'];
+
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            const genre = genres[currentSlide];
+            document.querySelectorAll('.hero-slide').forEach(s => s.classList.remove('active'));
+            slides[currentSlide].classList.add('active');
+            document.querySelectorAll('.genre-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.textContent.toLowerCase().includes(genre) || (genre === 'all' && b.textContent.includes('全部'))) {
+                    b.classList.add('active');
+                }
+            });
+        }, 8000);
+    </script>
+
+<!-- 登录弹窗 -->
+<div id="loginModal" class="login-modal">
+    <div class="login-modal-overlay" onclick="closeLoginModal()"></div>
+    <div class="login-modal-content">
+        <button class="login-modal-close" onclick="closeLoginModal()">×</button>
+
+        <!-- 新LOGO设计 -->
+        <div class="login-modal-header">
+            <div class="login-logo-main">CHINESE ROCKS</div>
+            <div class="login-logo-sub">NEWS ★ CHARTS ★ MAGAZINE <span class="login-logo-highlight">搖滾萬歲</span></div>
+        </div>
+
+        <p class="login-subtitle">登录以解锁完整摇滚体验</p>
+
+        <!-- 错误提示 -->
+        <div class="error-message" id="errorMsg"></div>
+
+        <!-- 社交登录 -->
+        <div class="social-login">
+            <!-- 社交登录按钮 -->
+            <button class="social-btn wechat full-width" onclick="loginWithWechat()">
+                <svg class="social-icon" viewBox="0 0 24 24" fill="white">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936zm4.048 0a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936z"/>
+                </svg>
+                微信一键登录
+            </button>
+
+            <button class="social-btn google" onclick="loginWithGoogle()">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google
+            </button>
+
+            <button class="social-btn facebook" onclick="loginWithFacebook()">
+                <svg class="social-icon" viewBox="0 0 24 24" fill="white">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Facebook
+            </button>
+        </div>
+
+        <div class="divider"><span>或使用邮箱/手机</span></div>
+
+        <!-- 登录方式切换 -->
+        <div class="login-tabs">
+            <button class="login-tab active" onclick="switchLoginTab('phone')">手机号</button>
+            <button class="login-tab" onclick="switchLoginTab('email')">邮箱</button>
+        </div>
+
+        <!-- 手机号登录 -->
+        <form id="phoneFormModal" onsubmit="return loginWithPhoneModal(event)">
+            <div class="form-group">
+                <label class="form-label">手机号</label>
+                <div class="phone-input-group">
+                    <select class="country-code" id="countryCodeModal">
+                        <option value="+86">+86</option>
+                        <option value="+852">+852</option>
+                        <option value="+853">+853</option>
+                        <option value="+886">+886</option>
+                    </select>
+                    <input type="tel" class="form-input" placeholder="请输入手机号" id="phoneInputModal" style="flex: 1;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">验证码</label>
+                <div class="phone-input-group">
+                    <input type="text" class="form-input" placeholder="6位验证码" id="codeInputModal" maxlength="6">
+                    <button type="button" class="verify-btn" id="verifyBtnModal" onclick="sendCodeModal()">获取验证码</button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn-submit">登录 / 注册</button>
+        </form>
+
+        <!-- 邮箱登录 -->
+        <form id="emailFormModal" style="display: none;" onsubmit="return loginWithEmailModal(event)">
+            <div class="form-group">
+                <label class="form-label">邮箱</label>
+                <input type="email" class="form-input" placeholder="your@email.com" id="emailInputModal">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">密码</label>
+                <input type="password" class="form-input" placeholder="请输入密码" id="passwordInputModal">
+            </div>
+
+            <button type="submit" class="login-btn-submit">登录</button>
+        </form>
+
+        <!-- 注册表单 -->
+        <form id="registerFormModal" style="display: none;" onsubmit="return registerUser(event)">
+            <!-- 注册方式切换 -->
+            <div class="login-tabs" style="margin-bottom: 1.5rem;" id="regTabs">
+                <button type="button" class="login-tab active" onclick="switchRegTab('phone')" id="regTabPhone">手机号注册</button>
+                <button type="button" class="login-tab" onclick="switchRegTab('email')" id="regTabEmail">邮箱注册</button>
+            </div>
+
+            <!-- 手机号注册 -->
+            <div id="regPhoneSection">
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <div class="phone-input-group">
+                        <select class="country-code" id="regCountryCode">
+                            <option value="+86">+86</option>
+                            <option value="+852">+852</option>
+                            <option value="+853">+853</option>
+                            <option value="+886">+886</option>
+                        </select>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="regPhone" style="flex: 1;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="regCode" maxlength="6">
+                        <button type="button" class="verify-btn" id="regVerifyBtn" onclick="sendRegCode()">获取验证码</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 邮箱注册 -->
+            <div id="regEmailSection" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="email" class="form-input" placeholder="your@email.com" id="regEmail">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="regEmailCode" maxlength="6">
+                        <button type="button" class="verify-btn" id="regEmailVerifyBtn" onclick="sendRegEmailCode()">获取验证码</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">设置密码</label>
+                <input type="password" class="form-input" placeholder="6-20位密码" id="regPassword" minlength="6" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">确认密码</label>
+                <input type="password" class="form-input" placeholder="再次输入密码" id="regPassword2" minlength="6" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">昵称</label>
+                <input type="text" class="form-input" placeholder="你的摇滚昵称" id="regNickname" maxlength="20">
+            </div>
+
+            <button type="submit" class="login-btn-submit">立即注册</button>
+        </form>
+
+        <div class="login-footer">
+            <a href="#" onclick="showForgotPassword()">忘记密码？</a>
+            <p>还没有账号？<a href="#" onclick="switchToRegister()">立即注册</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 登录弹窗样式 */
+.login-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-modal.active {
+    display: flex;
+}
+
+.login-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+}
+
+.login-modal-content {
+    position: relative;
+    background: rgba(10,10,10,0.98);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 90%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 1;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+}
+
+.login-modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.login-modal-close:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* 新LOGO设计 */
+.login-modal-header {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.login-logo-main {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #FF0066;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.login-logo-sub {
+    font-size: 0.6rem;
+    color: #c0c0c0;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.login-logo-highlight {
+    color: #FF0066;
+}
+
+.login-subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #c0c0c0;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #FF0066;
+    background: rgba(255,255,255,0.08);
+}
+
+.form-input::placeholder {
+    color: #666;
+}
+
+/* 手机号输入组 */
+.phone-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.country-code {
+    width: 85px;
+    padding: 0.875rem 0.5rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FF0066' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+    text-align: center;
+}
+
+.country-code option {
+    background: #1a1a1a;
+    color: white;
+    padding: 10px;
+}
+
+.country-code:focus {
+    outline: none;
+    border-color: #FF0066;
+}
+
+.verify-btn {
+    padding: 0 1rem;
+    background: #FF0066;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+}
+
+.verify-btn:hover {
+    background: #CC0052;
+}
+
+.verify-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+}
+
+/* 社交登录 */
+.social-login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.social-btn:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-1px);
+}
+
+.social-btn.full-width {
+    grid-column: span 2;
+}
+
+.social-btn.wechat {
+    background: #07C160;
+    border-color: #07C160;
+}
+
+.social-btn.wechat:hover {
+    background: #06AD56;
+}
+
+.social-btn.google {
+    background: white;
+    color: #333;
+}
+
+.social-btn.google:hover {
+    background: #f5f5f5;
+}
+
+.social-btn.facebook {
+    background: #1877F2;
+    border-color: #1877F2;
+}
+
+.social-btn.facebook:hover {
+    background: #166fe5;
+}
+
+.social-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* 分隔线 */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 1.25rem 0;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+}
+
+.divider span {
+    padding: 0 0.75rem;
+}
+
+/* 登录标签 */
+.login-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+    background: rgba(255,255,255,0.05);
+    padding: 0.25rem;
+    border-radius: 8px;
+}
+
+.login-tab {
+    flex: 1;
+    padding: 0.6rem;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: #888;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.login-tab.active {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* 登录按钮 */
+.login-btn-submit {
+    width: 100%;
+    padding: 0.875rem;
+    background: #FF0066;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+}
+
+.login-btn-submit:hover {
+    background: #CC0052;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(255,0,102,0.3);
+}
+
+/* 底部链接 */
+.login-footer {
+    text-align: center;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.login-footer a {
+    color: #FF0066;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+.login-footer p {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* 错误提示 */
+.error-message {
+    background: rgba(255,0,0,0.1);
+    border: 1px solid rgba(255,0,0,0.3);
+    color: #ff6666;
+    padding: 0.6rem 0.875rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* 响应式 */
+@media (max-width: 480px) {
+    .login-modal-content {
+        padding: 2rem 1.5rem;
+        width: 95%;
+    }
+
+    .login-logo-main {
+        font-size: 1.5rem;
+    }
+
+    .social-login {
+        grid-template-columns: 1fr;
+    }
+
+    .social-btn.full-width {
+        grid-column: span 1;
+    }
+
+    .phone-input-group {
+        flex-direction: column;
+    }
+
+    .country-code {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+// 弹窗控制
+function openLoginModal() {
+    document.getElementById('loginModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// 切换登录方式
+let currentLoginTab = 'phone';
+function switchLoginTab(tab) {
+    currentLoginTab = tab;
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (tab === 'phone') {
+        document.getElementById('phoneFormModal').style.display = 'block';
+        document.getElementById('emailFormModal').style.display = 'none';
+    } else {
+        document.getElementById('phoneFormModal').style.display = 'none';
+        document.getElementById('emailFormModal').style.display = 'block';
+    }
+}
+
+// 发送验证码
+let countdownModal = 0;
+function sendCodeModal() {
+    const phone = document.getElementById('phoneInputModal').value;
+    if (!phone || phone.length !== 11) {
+        showErrorModal('请输入正确的手机号');
+        return;
+    }
+
+    const btn = document.getElementById('verifyBtnModal');
+    countdownModal = 60;
+    btn.disabled = true;
+    btn.textContent = `${countdownModal}s`;
+
+    const timer = setInterval(() => {
+        countdownModal--;
+        if (countdownModal <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = '获取验证码';
+        } else {
+            btn.textContent = `${countdownModal}s`;
+        }
+    }, 1000);
+
+    alert(`验证码已发送至 ${phone}\n（演示模式：验证码是 123456）`);
+}
+
+// 登录函数
+function loginWithPhoneModal(e) {
+    e.preventDefault();
+    const phone = document.getElementById('phoneInputModal').value;
+    const code = document.getElementById('codeInputModal').value;
+
+    if (!phone || !code) {
+        showErrorModal('请填写手机号和验证码');
+        return false;
+    }
+
+    if (code === '123456') {
+        alert('登录成功！\n欢迎回到 ChineseRocks');
+        closeLoginModal();
+    } else {
+        showErrorModal('验证码错误，演示模式请输入 123456');
+    }
+    return false;
+}
+
+function loginWithEmailModal(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailInputModal').value;
+    const password = document.getElementById('passwordInputModal').value;
+
+    if (!email || !password) {
+        showErrorModal('请填写邮箱和密码');
+        return false;
+    }
+
+    alert('登录成功！\n欢迎回到 ChineseRocks');
+    closeLoginModal();
+    return false;
+}
+
+// ==================== 微信登录 ====================
+function loginWithWechat() {
+    // 检测是否在微信内置浏览器
+    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+
+    if (isWechat) {
+        // 微信内置浏览器 - 使用微信网页授权
+        // 实际部署时需要：
+        // 1. 在微信公众平台注册账号
+        // 2. 获取 appid
+        // 3. 配置授权回调域名
+
+        const appid = 'YOUR_WECHAT_APPID'; // 替换为实际的微信公众号 AppID
+        const redirect_uri = encodeURIComponent(window.location.origin + '/auth/wechat/callback');
+        const scope = 'snsapi_userinfo'; // 或 snsapi_base（静默授权）
+        const state = generateRandomState();
+
+        // 保存 state 到 sessionStorage 防止 CSRF
+        sessionStorage.setItem('wechat_state', state);
+
+        const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+
+        // 演示模式
+        console.log('微信授权 URL:', authUrl);
+
+        // 模拟登录成功（实际应跳转到 authUrl）
+        simulateWechatLogin();
+    } else {
+        // 非微信环境 - 使用微信开放平台扫码登录 或 提示用微信打开
+        alert('请使用微信扫一扫登录\n或点击确定使用演示账号登录');
+        simulateWechatLogin();
+    }
+}
+
+function simulateWechatLogin() {
+    // 模拟微信用户信息
+    const mockUser = {
+        openid: 'wx_' + Math.random().toString(36).substr(2, 9),
+        nickname: '摇滚青年',
+        headimgurl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop',
+        sex: 1,
+        province: '北京',
+        city: '北京'
+    };
+
+    handleSocialLoginSuccess('wechat', mockUser);
+}
+
+// ==================== Google 登录 ====================
+function loginWithGoogle() {
+    // 使用 Google Identity Services (GIS)
+    // 实际部署时需要：
+    // 1. 在 Google Cloud Console 创建项目
+    // 2. 配置 OAuth 2.0 客户端 ID
+    // 3. 添加授权 JavaScript 来源和重定向 URI
+
+    if (typeof google !== 'undefined' && google.accounts) {
+        // 使用 GIS 的 FedCM 或传统 OAuth
+        google.accounts.oauth2.initTokenClient({
+            client_id: '354874357906-o89hbnkrs8iiogn0vqmvo8ecffnqla9h.apps.googleusercontent.com',
+            scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+            callback: handleGoogleTokenResponse
+        }).requestAccessToken();
+    } else {
+        // 降级方案：使用 Google Sign-In 按钮或演示模式
+        console.log('Google Identity Services 未加载，使用演示模式');
+        simulateGoogleLogin();
+    }
+}
+
+function handleGoogleCredentialResponse(response) {
+    // 处理 Google One Tap 或按钮登录的响应
+    const credential = response.credential;
+    // 解码 JWT token 获取用户信息
+    const payload = JSON.parse(atob(credential.split('.')[1]));
+
+    const user = {
+        sub: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+        given_name: payload.given_name,
+        family_name: payload.family_name
+    };
+
+    handleSocialLoginSuccess('google', user);
+}
+
+function handleGoogleTokenResponse(tokenResponse) {
+    // 使用 access token 获取用户信息
+    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: {
+            'Authorization': `Bearer ${tokenResponse.access_token}`
+        }
+    })
+    .then(res => res.json())
+    .then(user => {
+        handleSocialLoginSuccess('google', user);
+    })
+    .catch(err => {
+        console.error('Google 登录失败:', err);
+        showErrorModal('Google 登录失败，请重试');
+    });
+}
+
+function simulateGoogleLogin() {
+    const mockUser = {
+        sub: 'google_' + Math.random().toString(36).substr(2, 9),
+        email: 'rocker@gmail.com',
+        name: 'Rock Fan',
+        picture: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&h=100&fit=crop',
+        given_name: 'Rock',
+        family_name: 'Fan'
+    };
+
+    handleSocialLoginSuccess('google', mockUser);
+}
+
+// ==================== Facebook 登录 ====================
+function loginWithFacebook() {
+    // 实际部署时需要：
+    // 1. 在 Facebook Developers 创建应用
+    // 2. 获取 App ID
+    // 3. 配置有效的 OAuth 重定向 URI
+
+    if (typeof FB !== 'undefined') {
+        FB.login(function(response) {
+            if (response.authResponse) {
+                // 获取用户信息
+                FB.api('/me', {fields: 'id,name,email,picture'}, function(userInfo) {
+                    handleSocialLoginSuccess('facebook', userInfo);
+                });
+            } else {
+                showErrorModal('Facebook 登录被取消');
+            }
+        }, {scope: 'public_profile,email'});
+    } else {
+        console.log('Facebook SDK 未加载，使用演示模式');
+        simulateFacebookLogin();
+    }
+}
+
+// 初始化 Facebook SDK
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '1628442824765533',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v18.0'
+    });
+};
+
+function simulateFacebookLogin() {
+    const mockUser = {
+        id: 'fb_' + Math.random().toString(36).substr(2, 9),
+        name: '摇滚达人',
+        email: 'rocker@facebook.com',
+        picture: {
+            data: {
+                url: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=100&h=100&fit=crop'
+            }
+        }
+    };
+
+    handleSocialLoginSuccess('facebook', mockUser);
+}
+
+// ==================== 社交登录通用处理 ====================
+function handleSocialLoginSuccess(provider, userData) {
+    console.log(`${provider} 登录成功:`, userData);
+
+    // 保存登录状态
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('loginProvider', provider);
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+    // 显示欢迎消息
+    const nickname = userData.nickname || userData.name || userData.given_name || '摇滚青年';
+    alert(`🎸 ${provider === 'wechat' ? '微信' : provider === 'google' ? 'Google' : 'Facebook'} 登录成功！\n\n欢迎回来，${nickname}！`);
+
+    // 关闭弹窗
+    closeLoginModal();
+
+    // 更新 UI（可选）
+    updateUIAfterLogin(userData);
+}
+
+function updateUIAfterLogin(userData) {
+    // 可以在这里更新导航栏显示用户头像等
+    const nickname = userData.nickname || userData.name || userData.given_name;
+    console.log('更新 UI，用户:', nickname);
+}
+
+// 生成随机 state 防止 CSRF
+function generateRandomState() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+// 检查是否已登录（页面加载时调用）
+function checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem('userLoggedIn');
+    const userData = localStorage.getItem('userData');
+
+    if (isLoggedIn && userData) {
+        const user = JSON.parse(userData);
+        console.log('用户已登录:', user.name || user.nickname);
+        updateUIAfterLogin(user);
+        return true;
+    }
+    return false;
+}
+
+// 退出登录
+function logout() {
+    localStorage.removeItem('userLoggedIn');
+    localStorage.removeItem('loginProvider');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userNickname');
+    localStorage.removeItem('userPhone');
+
+    // Facebook 退出
+    if (typeof FB !== 'undefined') {
+        FB.logout();
+    }
+
+    alert('已退出登录');
+    location.reload();
+}
+
+function showErrorModal(msg) {
+    const errorEl = document.getElementById('errorMsg');
+    errorEl.textContent = msg;
+    errorEl.classList.add('show');
+    setTimeout(() => errorEl.classList.remove('show'), 3000);
+}
+
+function showForgotPassword() {
+    alert('密码重置功能\n请输入注册邮箱，我们将发送重置链接');
+}
+
+// 切换到注册界面
+function switchToRegister() {
+    document.getElementById('phoneFormModal').style.display = 'none';
+    document.getElementById('emailFormModal').style.display = 'none';
+    document.getElementById('registerFormModal').style.display = 'block';
+    document.querySelector('.login-tabs').style.display = 'none';
+    document.querySelector('.divider').style.display = 'none';
+    document.querySelector('.social-login').style.display = 'none';
+    document.querySelector('.login-footer').style.display = 'none';
+    document.getElementById('backToLogin').style.display = 'block';
+    document.querySelector('.login-subtitle').textContent = '创建你的摇滚身份';
+
+    // 重置注册标签
+    switchRegTab('phone');
+}
+
+// 切换注册方式（手机号/邮箱）
+let currentRegTab = 'phone';
+function switchRegTab(tab) {
+    currentRegTab = tab;
+
+    // 更新标签样式
+    document.getElementById('regTabPhone').classList.toggle('active', tab === 'phone');
+    document.getElementById('regTabEmail').classList.toggle('active', tab === 'email');
+
+    // 显示/隐藏对应表单
+    document.getElementById('regPhoneSection').style.display = tab === 'phone' ? 'block' : 'none';
+    document.getElementById('regEmailSection').style.display = tab === 'email' ? 'block' : 'none';
+}
+
+// 发送邮箱注册验证码
+let regEmailCountdown = 0;
+function sendRegEmailCode() {
+    const email = document.getElementById('regEmail').value;
+
+    // 简单邮箱验证
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+        showErrorModal('请输入正确的邮箱地址');
+        return;
+    }
+
+    const btn = document.getElementById('regEmailVerifyBtn');
+    regEmailCountdown = 60;
+    btn.disabled = true;
+    btn.textContent = `${regEmailCountdown}s`;
+
+    const timer = setInterval(() => {
+        regEmailCountdown--;
+        if (regEmailCountdown <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = '获取验证码';
+        } else {
+            btn.textContent = `${regEmailCountdown}s`;
+        }
+    }, 1000);
+
+    // 模拟发送验证码到邮箱
+    alert(`注册验证码已发送至 ${email}
+（演示模式：验证码是 123456）`);
+}
+
+// 切换回登录界面
+function switchToLogin() {
+    document.getElementById('phoneFormModal').style.display = 'block';
+    document.getElementById('emailFormModal').style.display = 'none';
+    document.getElementById('registerFormModal').style.display = 'none';
+    document.querySelector('.login-tabs').style.display = 'flex';
+    document.querySelector('.divider').style.display = 'flex';
+    document.querySelector('.social-login').style.display = 'grid';
+    document.querySelector('.login-footer').style.display = 'block';
+    document.getElementById('backToLogin').style.display = 'none';
+    document.querySelector('.login-subtitle').textContent = '登录以解锁完整摇滚体验';
+
+    // 重置标签状态
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector('.login-tab').classList.add('active');
+}
+
+// 发送注册验证码
+let regCountdown = 0;
+function sendRegCode() {
+    const phone = document.getElementById('regPhone').value;
+    if (!phone || phone.length !== 11) {
+        showErrorModal('请输入正确的11位手机号');
+        return;
+    }
+
+    const btn = document.getElementById('regVerifyBtn');
+    regCountdown = 60;
+    btn.disabled = true;
+    btn.textContent = `${regCountdown}s`;
+
+    const timer = setInterval(() => {
+        regCountdown--;
+        if (regCountdown <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = '获取验证码';
+        } else {
+            btn.textContent = `${regCountdown}s`;
+        }
+    }, 1000);
+
+    // 模拟发送验证码
+    alert(`注册验证码已发送至 ${phone}\n（演示模式：验证码是 123456）`);
+}
+
+// 用户注册
+function registerUser(e) {
+    e.preventDefault();
+
+    const isPhoneReg = currentRegTab === 'phone';
+
+    let account, code, accountType;
+
+    if (isPhoneReg) {
+        // 手机号注册
+        account = document.getElementById('regPhone').value;
+        code = document.getElementById('regCode').value;
+        accountType = 'phone';
+
+        if (!account || account.length !== 11) {
+            showErrorModal('请输入正确的11位手机号');
+            return false;
+        }
+    } else {
+        // 邮箱注册
+        account = document.getElementById('regEmail').value;
+        code = document.getElementById('regEmailCode').value;
+        accountType = 'email';
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!account || !emailRegex.test(account)) {
+            showErrorModal('请输入正确的邮箱地址');
+            return false;
+        }
+    }
+
+    const password = document.getElementById('regPassword').value;
+    const password2 = document.getElementById('regPassword2').value;
+    const nickname = document.getElementById('regNickname').value;
+
+    if (!code || code.length !== 6) {
+        showErrorModal('请输入6位验证码');
+        return false;
+    }
+
+    if (!password || password.length < 6) {
+        showErrorModal('密码至少6位');
+        return false;
+    }
+
+    if (password !== password2) {
+        showErrorModal('两次密码输入不一致');
+        return false;
+    }
+
+    if (!nickname) {
+        showErrorModal('请输入昵称');
+        return false;
+    }
+
+    // 演示模式验证
+    if (code !== '123456') {
+        showErrorModal('验证码错误，演示模式请输入 123456');
+        return false;
+    }
+
+    // 模拟注册成功
+    const accountLabel = isPhoneReg ? '手机号' : '邮箱';
+    alert(`🎸 注册成功！\n\n欢迎加入 ChineseRocks，${nickname}！\n\n${accountLabel}: ${account}\n\n您已获得：\n✓ 3天会员体验\n✓ 投票权重 ×1.0\n✓ 无限新闻阅读`);
+
+    // 关闭弹窗
+    closeLoginModal();
+
+    // 保存登录状态
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userNickname', nickname);
+    localStorage.setItem('userAccount', account);
+    localStorage.setItem('userAccountType', accountType);
+
+    return false;
+}
+
+function showRegister() {
+    switchToRegister();
+}
+
+// ESC键关闭弹窗
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLoginModal();
+});
+
+// 页面加载时检查登录状态
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+});
+</script>
+
+</body>
+</html>
