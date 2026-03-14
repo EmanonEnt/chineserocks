@@ -5,5 +5,16 @@
       "source": "/MP_verify_YlllsxOVRq4LBz.txt",
       "destination": "/api/verify"
     }
+  ],
+  "headers": [
+    {
+      "source": "/MP_verify_YlllsxOVRq4LBz.txt",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
   ]
 }
