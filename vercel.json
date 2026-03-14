@@ -1,22 +1,8 @@
 {
-  "version": 2,
-  "headers": [
+  "rewrites": [
     {
-      "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain"
-        }
-      ]
+      "source": "/MP_verify_YlllsxOVRq4LBz.txt",
+      "destination": "/api/verify"
     }
-  ],
-  "functions": {
-    "api/wechat-auth.js": {
-      "maxDuration": 10
-    },
-    "api/send-code.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
