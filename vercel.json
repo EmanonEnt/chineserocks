@@ -1,13 +1,8 @@
 {
-  "headers": [
+  "rewrites": [
     {
       "source": "/MP_verify_YJilisx0VRq4L4Bz.txt",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
+      "destination": "/api/verify"
     }
   ]
 }
