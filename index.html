@@ -3322,7 +3322,16 @@
 
         // 社交登录
         function loginWithWechat() {
-            // 使用静默登录模式（snsapi_base），只获取OpenID
+            // 检查是否在微信内
+            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+
+            if (!isWechat) {
+                // 非微信环境，提示用户
+                alert('请在微信内打开此页面，或使用微信扫一扫访问以下链接：\n\nhttps://chineserocks.vercel.app');
+                return;
+            }
+
+            // 在微信内，使用静默登录模式（snsapi_base），只获取OpenID
             const appId = 'wx019d141a63482cd8';
             const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
             const scope = 'snsapi_base'; // 静默登录，只获取OpenID
@@ -3334,12 +3343,7 @@
             const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
 
             // 在微信内置浏览器中打开
-            if (/MicroMessenger/i.test(navigator.userAgent)) {
-                window.location.href = authUrl;
-            } else {
-                // 非微信环境，显示二维码登录
-                showWechatQRCode();
-            }
+            window.location.href = authUrl;
         }
 
         function generateRandomState() {
@@ -3397,19 +3401,14 @@
         }
 
         function loginWithGoogle() {
-            // 使用传统的 OAuth2 授权码流程
             const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
-            const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app');
             const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
-            const state = generateRandomState();
+            const state = Math.random().toString(36).substring(2);
 
-            // 保存 state 用于验证
             sessionStorage.setItem('google_state', state);
 
-            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}&include_granted_scopes=true`;
-
-            // 在当前窗口打开授权页面
-            window.location.href = authUrl;
+            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
         }
 
         function handleGoogleResponse(tokenResponse) {
