@@ -416,7 +416,8 @@
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
             gap: 1.5rem;
         }
 
@@ -424,15 +425,17 @@
             background: rgba(255,255,255,0.03);
             border: 1px solid #333;
             border-radius: 12px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             text-align: center;
             position: relative;
+            min-width: 0;
         }
 
         .pricing-card.featured {
             border-color: #FF0066;
             background: rgba(255,0,102,0.05);
-            transform: scale(1.05);
+            transform: scale(1.02);
+            z-index: 2;
         }
 
         .pricing-badge {
@@ -798,7 +801,8 @@
 
         .featured-main img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 
-        .featured-main:hover img { transform: scale(1.05); }
+        .featured-main:hover img { transform: scale(1.02);
+            z-index: 2; }
 
         .featured-overlay {
             position: absolute; bottom: 0; left: 0; right: 0;
@@ -979,13 +983,15 @@
 
         .shows-source strong { color: var(--pink-primary); }
 
-        .shows-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .shows-grid { display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem; margin-top: 2rem; }
 
         .show-card { position: relative; aspect-ratio: 2/3; overflow: hidden; cursor: pointer; }
 
         .show-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 
-        .show-card:hover img { transform: scale(1.05); }
+        .show-card:hover img { transform: scale(1.02);
+            z-index: 2; }
 
         .show-overlay {
             position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem 1rem 1rem;
@@ -1117,15 +1123,29 @@
             }
 
             .pricing-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+
+            .pricing-card {
+                padding: 1rem;
             }
 
             .pricing-card.featured {
-                transform: none;
+                transform: scale(1.02);
+            }
+
+            .pricing-price {
+                font-size: 2rem;
             }
 
             .paywall-card {
-                grid-column: span 2;
+                grid-column: span 1;
+            }
+
+            .shows-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
             }
 
             .nav-links {
@@ -1307,13 +1327,41 @@
         /* ===== 响应式 - 移动端 ===== */
         @media (max-width: 768px) {
             .pricing-grid {
-                grid-template-columns: 1fr;
-                max-width: 350px;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 0.75rem;
+                max-width: 100%;
                 margin: 0 auto;
             }
 
+            .pricing-card {
+                padding: 0.875rem;
+                grid-column: span 2;
+            }
+
+            /* 第一排3个卡片 */
+            .pricing-card:nth-child(1) { grid-column: 1 / 3; }
+            .pricing-card:nth-child(2) { grid-column: 3 / 5; }
+            .pricing-card:nth-child(3) { grid-column: 5 / 7; }
+
+            /* 第二排2个卡片居中 */
+            .pricing-card:nth-child(4) { grid-column: 2 / 4; }
+            .pricing-card:nth-child(5) { grid-column: 4 / 6; }
+
+            .pricing-name { font-size: 0.9rem; }
+            .pricing-price { font-size: 1.5rem; }
+            .pricing-price span { font-size: 0.75rem; }
+            .pricing-daily { font-size: 0.7rem; }
+            .pricing-features { font-size: 0.7rem; }
+            .pricing-features li { padding: 0.2rem 0; }
+            .pricing-btn { padding: 0.6rem; font-size: 0.75rem; }
+
             .paywall-card {
                 grid-column: span 1;
+            }
+
+            .shows-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
 
             .countdown-content {
@@ -1339,6 +1387,27 @@
         @media (max-width: 480px) {
             .nav-container {
                 padding: 0 0.8rem;
+            }
+
+            .shows-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                margin: 2rem auto 0;
+            }
+
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+            }
+
+            .pricing-card {
+                grid-column: span 1 !important;
+            }
+
+            .pricing-card:nth-child(5) {
+                grid-column: 1 / 3 !important;
+                max-width: 50%;
+                margin: 0 auto;
             }
 
             .hero-vote-card {
@@ -2860,6 +2929,15 @@
                     <div class="show-venue">School · 北京</div>
                 </div>
             </div>
+            <div class="show-card" onclick="location.href='show.html?id=5'">
+                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=689&h=1033&fit=crop" alt="演出海報">
+                <span class="show-price">¥120起</span>
+                <div class="show-overlay">
+                    <div class="show-date">3月20日 週四</div>
+                    <div class="show-title">獨立搖滾之夜</div>
+                    <div class="show-venue">MAO Livehouse · 北京</div>
+                </div>
+            </div>
         </div>
         <div class="view-full-chart" style="margin-top: 2rem;">
             <a href="shows.html">查看全部演出 View All Shows →</a>
@@ -2944,10 +3022,10 @@
                     <div class="pricing-price">免費<span>/3天</span></div>
                     <div class="pricing-daily">限時體驗</div>
                     <ul class="pricing-features">
-                        <li>完整會員權益3天</li>
-                        <li>投票權重 ×1.0</li>
                         <li>無限新聞閱讀</li>
-                        <li>1080P LIVE TV</li>
+                        <li>投票權重 ×0.3</li>
+                        <li>480P LIVE TV</li>
+                        <li>不可提交活動</li>
                     </ul>
                     <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">關注領取</button>
                 </div>
@@ -2961,6 +3039,7 @@
                         <li>7天完整會員權益</li>
                         <li>投票權重 ×1.0</li>
                         <li>無限新聞閱讀</li>
+                        <li>720P LIVE TV</li>
                         <li>演出優先購票</li>
                     </ul>
                     <button class="pricing-btn">選擇周卡</button>
@@ -2974,8 +3053,9 @@
                     <div class="pricing-daily">¥2.20/天 · 省¥13</div>
                     <ul class="pricing-features">
                         <li>30天完整會員權益</li>
-                        <li>投票權重 ×3.0</li>
+                        <li>投票權重 ×2.0</li>
                         <li>無限新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
                         <li>演出優先購票</li>
                         <li>獨家雜誌內容</li>
                         <li>無廣告體驗</li>
@@ -2983,17 +3063,43 @@
                     <button class="pricing-btn">立即開通</button>
                 </div>
 
-                <!-- 年卡 -->
+                <!-- 季卡 - 新增 -->
                 <div class="pricing-card">
+                    <div class="pricing-name">季卡</div>
+                    <div class="pricing-price">¥158<span>/季</span></div>
+                    <div class="pricing-daily">¥1.76/天 · 省¥40</div>
+                    <ul class="pricing-features">
+                        <li>90天完整會員權益</li>
+                        <li>投票權重 ×2.5</li>
+                        <li>無限新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票</li>
+                        <li>獨家雜誌內容</li>
+                        <li>無廣告體驗</li>
+                        <li>專屬會員徽章</li>
+                    </ul>
+                    <button class="pricing-btn">選擇季卡</button>
+                </div>
+
+                <!-- 年卡 - 最大受益 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最佳價值</div>
                     <div class="pricing-name">年卡</div>
                     <div class="pricing-price">¥365<span>/年</span></div>
                     <div class="pricing-daily">¥1.00/天 · 省¥427</div>
                     <ul class="pricing-features">
                         <li>365天完整會員權益</li>
-                        <li>投票權重 ×3.0</li>
-                        <li>專屬會員徽章</li>
-                        <li>線下活動優先</li>
-                        <li>限量版周邊抽獎</li>
+                        <li>投票權重 ×5.0 [最高]</li>
+                        <li>4K LIVE TV [獨享]</li>
+                        <li>演出提前48小時購票 [獨享]</li>
+                        <li>可提交上傳活動 [獨享]</li>
+                        <li>無限新聞閱讀</li>
+                        <li>獨家雜誌內容+實體年刊</li>
+                        <li>無廣告體驗</li>
+                        <li>專屬會員徽章+年卡標識</li>
+                        <li>線下活動優先+免費入場1次/年</li>
+                        <li>周邊抽獎必中1次/年</li>
+                        <li>VIP專屬客服</li>
                     </ul>
                     <button class="pricing-btn">選擇年卡</button>
                 </div>
@@ -3046,9 +3152,9 @@
     <!-- 邀请返利悬浮按钮 -->
     <div class="invite-float">
         <div class="invite-tooltip">
-            <strong>🎁 邀請好友賺會員</strong>
-            好友首月5折，你獲得30%返利積分<br>
-            100積分 = 7天會員
+            <strong>🎁 邀請好友賺現金</strong>
+            好友首月5折，你得30%現金返利<br>
+            可提現或轉會員時長(1.5倍)
         </div>
         <button class="invite-btn" onclick="showInvite()">🎁</button>
     </div>
@@ -3209,7 +3315,7 @@
 
         // 邀请好友
         function showInvite() {
-            alert('邀請好友功能即將上線！');
+            alert('🎁 邀請好友賺現金\n\n複製專屬邀請鏈接分享給好友：\n\n1. 好友通過鏈接註冊並首次付費\n2. 好友享首月5折優惠\n3. 你得30%現金返利（可提現或轉會員時長1.5倍增值）\n\n示例：好友購買年卡¥365，你得¥109.5現金或45天會員！');
         }
 
         // 登录弹窗控制
