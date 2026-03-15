@@ -218,10 +218,29 @@
             position:fixed;bottom:30px;right:30px;z-index:999;}
 
         .invite-btn {
-            width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FF0066,#CC0052);border:none;color:white;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 15px rgba(255,0,102,0.4);transition:all 0.3s;}
+            width:64px;height:64px;background:radial-gradient(circle at 30% 30%,#FFF8DC,#FFD700,#FFA500,#B8860B);border:3px solid #DAA520;color:#8B0000;font-size:0.75rem;font-weight:900;cursor:pointer;box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,215,0,0.5),0 0 60px rgba(255,165,0,0.3),inset 0 0 15px rgba(255,255,255,0.6),inset -3px -3px 10px rgba(184,134,11,0.5);transition:all 0.3s;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;text-shadow:0 1px 2px rgba(255,255,255,0.9),0 0 5px rgba(255,215,0,0.8);animation:coinShine 1.5s ease-in-out infinite alternate, coinFloat 3s ease-in-out infinite;position:relative;overflow:hidden;}
+
+        .invite-btn::before {
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.8) 50%,transparent 60%);animation:coinFlash 2s linear infinite;}
 
         .invite-btn:hover {
-            transform:scale(1.1);}
+            transform:scale(1.15) rotate(5deg);box-shadow:0 0 30px rgba(255,215,0,1),0 0 60px rgba(255,215,0,0.7),0 0 90px rgba(255,165,0,0.4),inset 0 0 20px rgba(255,255,255,0.8);}
+
+        @keyframes coinShine {
+            from {box-shadow:0 0 15px rgba(255,215,0,0.7),0 0 30px rgba(255,215,0,0.4),0 0 45px rgba(255,165,0,0.2),inset 0 0 10px rgba(255,255,255,0.5);}
+            to {box-shadow:0 0 25px rgba(255,215,0,1),0 0 50px rgba(255,215,0,0.6),0 0 75px rgba(255,165,0,0.4),inset 0 0 15px rgba(255,255,255,0.7);}}
+
+        @keyframes coinFlash {
+            0% {transform:translateX(-100%) translateY(-100%) rotate(45deg);}
+            100% {transform:translateX(100%) translateY(100%) rotate(45deg);}}
+
+        @keyframes coinFloat {
+            0%,100% {transform:translateY(0);}
+            50% {transform:translateY(-3px);}}
+
+        .btn-line1,.btn-line2{display:block;text-align:center;width:100%;}
+        .btn-line1{font-size:0.7rem;margin-bottom:1px;}
+        .btn-line2{font-size:0.65rem;}
 
         .invite-tooltip {
             position:absolute;bottom:65px;right:0;background:white;color:#0a0a0a;padding:0.75rem;border-radius:10px;width:280px;font-size:0.8rem;box-shadow:0 4px 15px rgba(0,0,0,0.2);opacity:0;visibility:hidden;transition:all 0.3s;}
@@ -599,7 +618,29 @@
 
             .mobile-menu-btn:hover {
                 background:rgba(255,255,255,0.1);}
-        }
+            .invite-float {
+                bottom:20px;
+                right:15px;
+                z-index:998;
+            }
+            .invite-btn {
+                width:52px;
+                height:52px;
+                font-size:0.65rem;
+                border-width:2px;
+            }
+            .btn-line1 {
+                font-size:0.6rem;
+            }
+            .btn-line2 {
+                font-size:0.55rem;
+            }
+            .invite-tooltip {
+                width:240px;
+                font-size:0.75rem;
+                bottom:60px;
+                right:-10px;
+            }}
 
         @media (max-aspect-ratio:4/3) and (min-width:769px) and (max-width:1024px) {
             .hero-section {
@@ -739,7 +780,26 @@
                 display:flex !important;align-items:center !important;justify-content:center !important;}
             .login-modal-content {
                 position:relative !important;margin:0 auto !important;left:0 !important;right:0 !important;top:0 !important;bottom:0 !important;transform:none !important;width:92% !important;max-width:400px !important;padding:1.5rem !important;max-height:85vh !important;}
-        }
+            .invite-float {
+                bottom:15px;
+                right:10px;
+            }
+            .invite-btn {
+                width:48px;
+                height:48px;
+                font-size:0.6rem;
+            }
+            .btn-line1 {
+                font-size:0.55rem;
+            }
+            .btn-line2 {
+                font-size:0.5rem;
+            }
+            .invite-tooltip {
+                width:220px;
+                font-size:0.7rem;
+                right:-5px;
+            }}
 
                 @media (max-width:480px) {
             .nav-container {
@@ -766,8 +826,7 @@
                 grid-column:span 1 !important;}
             .pricing-card:nth-child(5) {
                 grid-column:1 / 3 !important;max-width:50%;margin:0 auto;}
-            .hero-genre-tag {
-                font-size:0.75rem !important;padding:0.35rem 0.7rem !important;margin-bottom:0.75rem !important;}
+            
             .hero-description {
                 font-size:0.9rem !important;margin-bottom:0.4rem !important;}
 
@@ -811,7 +870,26 @@
                 width:100%;right:-100%;}
             .user-sidebar-content {
                 padding:1.5rem;}
-        }
+            .invite-float {
+                bottom:10px;
+                right:8px;
+            }
+            .invite-btn {
+                width:44px;
+                height:44px;
+                font-size:0.55rem;
+            }
+            .btn-line1 {
+                font-size:0.5rem;
+            }
+            .btn-line2 {
+                font-size:0.45rem;
+            }
+            .invite-tooltip {
+                width:200px;
+                font-size:0.65rem;
+                right:0;
+            }}
 
         @media (max-width:380px) {
             .hero-section {
@@ -1176,7 +1254,7 @@
             </a>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             <div class="nav-links" id="navLinks">
-                <a href="index.html">NEWS</a>
+                <a href="#news-section">NEWS</a>
                 <span class="nav-separator">★</span>
                 <a href="charts.html">CHARTS</a>
                 <span class="nav-separator">★</span>
@@ -1938,27 +2016,377 @@
         </div>
     </div>
 
-    <!-- 倒计时横幅 -->
-    <div class="countdown-banner">
-        <div class="countdown-content">
-            <span class="countdown-text">🎸 迷笛音乐节2026早鸟票开售倒计时</span>
-            <div class="countdown-timer">
-                <div class="countdown-item">
-                    <span class="countdown-number" id="cd-days">02</span>
-                    <span class="countdown-label">天</span>
+    <!-- 滚播新闻条 -->
+    <div class="news-ticker-bar">
+        <div class="news-ticker-wrapper">
+            <div class="news-ticker-track" id="newsTicker">
+                <!-- 新闻项目1: 草莓音乐节 -->
+                <div class="ticker-slide">
+                    <div class="ticker-content">
+                        <div class="ticker-stars">
+                            <span class="star filled">★</span>
+                            <span class="star filled">★</span>
+                            <span class="star filled">★</span>
+                            <span class="star half">★</span>
+                            <span class="star empty">☆</span>
+                        </div>
+                        <div class="ticker-text">
+                            <span class="ticker-title">草莓音乐节 2026 早鸟票开售倒计时</span>
+                            <span class="ticker-date">2026.05.15</span>
+                        </div>
+                        <div class="ticker-countdown" data-date="2026-05-15T10:00:00">
+                            <span class="tcd-num" id="tcd1-days">00</span><span class="tcd-label">天</span>
+                            <span class="tcd-num" id="tcd1-hours">00</span><span class="tcd-label">时</span>
+                            <span class="tcd-num" id="tcd1-minutes">00</span><span class="tcd-label">分</span>
+                        </div>
+                        <a href="https://wxaurl.cn/Strawberry2026" target="_blank" class="ticker-btn">會員提前 48 小時搶購 →</a>
+                    </div>
                 </div>
-                <div class="countdown-item">
-                    <span class="countdown-number" id="cd-hours">14</span>
-                    <span class="countdown-label">时</span>
-                </div>
-                <div class="countdown-item">
-                    <span class="countdown-number" id="cd-minutes">35</span>
-                    <span class="countdown-label">分</span>
+                <!-- 新闻项目2: 云南朋克音乐节 -->
+                <div class="ticker-slide">
+                    <div class="ticker-content">
+                        <div class="ticker-stars">
+                            <span class="star filled">★</span>
+                            <span class="star filled">★</span>
+                            <span class="star filled">★</span>
+                            <span class="star filled">★</span>
+                            <span class="star empty">☆</span>
+                        </div>
+                        <div class="ticker-text">
+                            <span class="ticker-title">第一届云南朋克音乐节</span>
+                            <span class="ticker-date">2026.04.24</span>
+                        </div>
+                        <div class="ticker-countdown" data-date="2026-04-24T14:00:00">
+                            <span class="tcd-num" id="tcd2-days">00</span><span class="tcd-label">天</span>
+                            <span class="tcd-num" id="tcd2-hours">00</span><span class="tcd-label">时</span>
+                            <span class="tcd-num" id="tcd2-minutes">00</span><span class="tcd-label">分</span>
+                        </div>
+                        <a href="https://wxaurl.cn/YunnanPunk2026" target="_blank" class="ticker-btn">年卡會員免費入場</a>
+                    </div>
                 </div>
             </div>
-            <a href="#" class="countdown-cta">会员提前24小时抢购 →</a>
+            <!-- 滑动指示器 -->
+            <div class="ticker-dots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+            </div>
         </div>
     </div>
+
+    <style>
+        /* 滚播新闻条样式 - 固定在居中 */
+        .news-ticker-bar {
+            background: linear-gradient(90deg, #FF0066, #CC0052);
+            padding: 12px 0;
+            overflow: hidden;
+            position: relative;
+            touch-action: pan-y;
+        }
+
+        .news-ticker-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-ticker-track {
+            display: flex;
+            transition: transform 0.5s ease;
+            cursor: grab;
+        }
+
+        .news-ticker-track:active {
+            cursor: grabbing;
+        }
+
+        .ticker-slide {
+            flex: 0 0 100%;
+            min-width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ticker-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* 星级评分 */
+        .ticker-stars {
+            display: flex;
+            gap: 2px;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .ticker-stars .star {
+            color: rgba(255, 255, 255, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+
+        .ticker-stars .star.filled {
+            color: #FFD700;
+        }
+
+        .ticker-stars .star.half {
+            position: relative;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .ticker-stars .star.half::before {
+            content: '★';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50%;
+            overflow: hidden;
+            color: #FFD700;
+        }
+
+        .ticker-stars .star.empty {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 新闻文字 */
+        .ticker-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+
+        .ticker-title {
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .ticker-date {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.75rem;
+        }
+
+        /* 倒计时 */
+        .ticker-countdown {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: white;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .ticker-countdown .tcd-num {
+            font-weight: 900;
+            font-size: 1rem;
+            color: #FFD700;
+            min-width: 1.5em;
+            text-align: center;
+        }
+
+        .ticker-countdown .tcd-label {
+            font-size: 0.7rem;
+            margin-right: 0.3rem;
+        }
+
+        /* 按钮 */
+        .ticker-btn {
+            background: white;
+            color: #FF0066;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .ticker-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 滑动指示器 */
+        .ticker-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .ticker-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ticker-dots .dot.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .ticker-content {
+                flex-direction: column;
+                gap: 0.6rem;
+                text-align: center;
+            }
+
+            .ticker-text {
+                align-items: center;
+            }
+
+            .ticker-title {
+                font-size: 0.85rem;
+                white-space: normal;
+                text-align: center;
+            }
+
+            .ticker-btn {
+                font-size: 0.75rem;
+                padding: 0.35rem 0.8rem;
+            }
+
+            .ticker-countdown {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+
+    <script>
+        // 滚播新闻条功能
+        (function() {
+            const track = document.getElementById('newsTicker');
+            const slides = track.querySelectorAll('.ticker-slide');
+            const dots = document.querySelectorAll('.ticker-dots .dot');
+            let currentSlide = 0;
+            let autoPlayInterval;
+            let isDragging = false;
+            let startPos = 0;
+            let currentTranslate = 0;
+            let prevTranslate = 0;
+
+            // 自动播放
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(() => {
+                    goToSlide((currentSlide + 1) % slides.length);
+                }, 5000);
+            }
+
+            function stopAutoPlay() {
+                clearInterval(autoPlayInterval);
+            }
+
+            // 切换到指定幻灯片
+            window.goToSlide = function(index) {
+                currentSlide = index;
+                currentTranslate = -currentSlide * 100;
+                prevTranslate = currentTranslate;
+                track.style.transform = `translateX(${currentTranslate}%)`;
+
+                // 更新指示器
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+            };
+
+            // 触摸/鼠标事件处理
+            track.addEventListener('mousedown', dragStart);
+            track.addEventListener('touchstart', dragStart);
+            track.addEventListener('mouseup', dragEnd);
+            track.addEventListener('touchend', dragEnd);
+            track.addEventListener('mousemove', drag);
+            track.addEventListener('touchmove', drag);
+            track.addEventListener('mouseleave', () => {
+                if (isDragging) dragEnd();
+            });
+
+            function dragStart(e) {
+                isDragging = true;
+                startPos = getPositionX(e);
+                stopAutoPlay();
+                track.style.transition = 'none';
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                const currentPosition = getPositionX(e);
+                const diff = currentPosition - startPos;
+                const percentage = (diff / track.offsetWidth) * 100;
+                track.style.transform = `translateX(${currentTranslate + percentage}%)`;
+            }
+
+            function dragEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                track.style.transition = 'transform 0.5s ease';
+
+                const currentPosition = getPositionX(e);
+                const diff = currentPosition - startPos;
+
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0 && currentSlide > 0) {
+                        goToSlide(currentSlide - 1);
+                    } else if (diff < 0 && currentSlide < slides.length - 1) {
+                        goToSlide(currentSlide + 1);
+                    } else {
+                        goToSlide(currentSlide);
+                    }
+                } else {
+                    goToSlide(currentSlide);
+                }
+
+                startAutoPlay();
+            }
+
+            function getPositionX(e) {
+                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            }
+
+            // 倒计时功能
+            function updateTickerCountdown() {
+                const countdowns = document.querySelectorAll('.ticker-countdown');
+                countdowns.forEach((cd, index) => {
+                    const targetDate = new Date(cd.dataset.date);
+                    const now = new Date();
+                    const diff = targetDate - now;
+
+                    if (diff > 0) {
+                        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+                        const prefix = index === 0 ? 'tcd1' : 'tcd2';
+                        document.getElementById(`${prefix}-days`).textContent = String(days).padStart(2, '0');
+                        document.getElementById(`${prefix}-hours`).textContent = String(hours).padStart(2, '0');
+                        document.getElementById(`${prefix}-minutes`).textContent = String(minutes).padStart(2, '0');
+                    }
+                });
+            }
+
+            setInterval(updateTickerCountdown, 60000);
+            updateTickerCountdown();
+            startAutoPlay();
+        })();
+    </script>
 
     <!-- 免费额度提示 -->
     <div class="free-quota-bar">
@@ -1969,7 +2397,7 @@
     </div>
 
     <!-- 新闻区 -->
-    <section class="news-grid-section">
+    <section id="news-section" class="news-grid-section">
         <div class="section-header">
             <h2 class="section-title">Latest News 最新新聞</h2>
             <a href="news.html" class="view-all-link">View All →</a>
@@ -2421,11 +2849,17 @@
     <!-- 邀请返利悬浮按钮 -->
     <div class="invite-float">
         <div class="invite-tooltip">
-            <strong>🎁 邀請好友賺現金</strong>
-            好友首月5折，你得30%現金返利<br>
-            可提現或轉會員時長(1.5倍)
+            <strong>★ 邀請好友賺現金 ★</strong>
+            複製專屬邀請鏈接分享給好友：<br>
+            1. 好友通過鏈接註冊並首次付費<br>
+            2. 好友享首月85折優惠<br>
+            3. 你得30%現金返利（可提現或轉會員時長1.5倍增值）<br><br>
+            <em>示例：好友購買年卡¥365，你得¥109.5現金或季卡會員！</em>
         </div>
-        <button class="invite-btn" onclick="showInvite()">🎁</button>
+        <button class="invite-btn" onclick="scrollToTopAndInvite()">
+            <span class="btn-line1">邀請</span>
+            <span class="btn-line2">賺現金</span>
+        </button>
     </div>
 
     <script>
@@ -2582,12 +3016,13 @@
             alert('COMING SOON / 即將上線，敬請期待');
         }
 
-        // 邀请好友
-        function showInvite() {
-            alert('🎁 邀請好友賺現金\n\n複製專屬邀請鏈接分享給好友：\n\n1. 好友通過鏈接註冊並首次付費\n2. 好友享首月5折優惠\n3. 你得30%現金返利（可提現或轉會員時長1.5倍增值）\n\n示例：好友購買年卡¥365，你得¥109.5現金或45天會員！');
+        
+
+        // 回到顶部
+        function scrollToTopAndInvite() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
-        // 登录弹窗控制
         function openLoginModal() {
             document.getElementById('loginModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -3293,22 +3728,6 @@
         }
 
         // 更新登录UI
-        function updateLoginUI() {
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
-            const nickname = localStorage.getItem('userNickname');
-            const loginBtn = document.querySelector('.login-btn');
-
-            if (isLoggedIn && loginBtn) {
-                loginBtn.textContent = nickname || '我的账号';
-                loginBtn.onclick = function() {
-                    alert('已登录：' + nickname + '\n\n功能菜单：\n- 个人中心\n- 我的投票\n- 账号设置\n- 退出登录');
-                };
-            }
-        }
-
-        // ===== 用户中心侧边栏功能 =====
-
-        // 处理用户菜单点击
         function handleUserMenuClick() {
             const isLoggedIn = localStorage.getItem('userLoggedIn');
             if (isLoggedIn) {
@@ -3633,6 +4052,16 @@
         async function syncUserData() {
             const pending = JSON.parse(localStorage.getItem('pendingSync') || '[]');
             if (pending.length === 0) return;
+
+            // 检查是否在本地文件环境（file://协议）
+            if (window.location.protocol === 'file:') {
+                console.log('本地文件环境，跳过API同步');
+                // 本地环境直接标记为已同步
+                localStorage.setItem('pendingSync', '[]');
+                localStorage.setItem('lastSyncTime', new Date().toISOString());
+                updateSyncBadge('synced');
+                return;
+            }
 
             // 这里调用 Vercel API 将数据发送到 Notion
             try {
