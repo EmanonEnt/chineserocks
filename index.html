@@ -2,8 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 微信 SDK：只在微信内加载 -->
+    <script>
+        if (/MicroMessenger/i.test(navigator.userAgent)) {
+            document.write('<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"><\/script>');
+        }
+    </script>
     <title>ChineseRocks - 中國搖滾官方榜單</title>
     <link rel="icon" type="image/png" href="./image/tablogo.png">
     <style>
@@ -1117,7 +1122,7 @@
                 transform: none;
                 width: 75%;
                 max-width: 320px;
-                margin: 2rem 0 0 auto;
+                margin: 2rem auto 0 auto;
             }
 
             .hero-content {
@@ -1338,6 +1343,127 @@
 
         /* ===== 响应式 - 移动端 ===== */
         @media (max-width: 768px) {
+            /* ===== 移动端 Banner 样式 ===== */
+            .hero-section {
+                aspect-ratio: auto !important;
+                min-height: 100vh !important;
+                height: auto !important;
+                padding: 80px 0 40px !important;
+            }
+
+            .hero-content {
+                flex-direction: column !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+                padding: 1rem !important;
+                gap: 1.5rem !important;
+                height: auto !important;
+                width: 100% !important;
+                position: relative !important;
+            }
+
+            .hero-text-content {
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                transform: none !important;
+                max-width: 100% !important;
+                text-align: center !important;
+                padding: 0 1rem !important;
+                order: 1 !important;
+            }
+
+            .hero-genre-tag {
+                font-size: 0.75rem !important;
+                padding: 0.35rem 0.7rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .hero-main-title {
+                font-size: clamp(2rem, 8vw, 2.8rem) !important;
+                margin-bottom: 0.3rem !important;
+                white-space: normal !important;
+                line-height: 1.1 !important;
+            }
+
+            .hero-sub-title {
+                font-size: clamp(1.5rem, 6vw, 2rem) !important;
+                margin-bottom: 0.75rem !important;
+                white-space: normal !important;
+            }
+
+            .hero-description {
+                font-size: 0.95rem !important;
+                margin-bottom: 0.4rem !important;
+                line-height: 1.5 !important;
+            }
+
+            .hero-sub-description {
+                font-size: 0.85rem !important;
+            }
+
+            .hero-vote-card {
+                position: relative !important;
+                right: auto !important;
+                top: auto !important;
+                left: auto !important;
+                transform: none !important;
+                width: 92% !important;
+                max-width: 400px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                padding: 1.25rem !important;
+                order: 2 !important;
+                display: block !important;
+            }
+
+            .hero-vote-header {
+                font-size: 0.8rem !important;
+                margin-bottom: 0.6rem !important;
+            }
+
+            .hero-vote-title {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+
+            .hero-vote-subtitle {
+                font-size: 0.85rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .hero-vote-option {
+                padding: 0.75rem !important;
+                margin-bottom: 0.5rem !important;
+                min-height: 56px;
+                height: 56px;
+            }
+
+            .hero-vote-option img {
+                width: 40px !important;
+                height: 40px !important;
+                margin-right: 0.6rem !important;
+            }
+
+            .option-line1 {
+                font-size: 0.9rem !important;
+            }
+
+            .option-line2 {
+                font-size: 0.8rem !important;
+            }
+
+            .hero-vote-btn {
+                padding: 0.8rem !important;
+                font-size: 0.95rem !important;
+                margin-top: 0.6rem !important;
+            }
+
+            .hero-vote-weight {
+                font-size: 0.8rem !important;
+                margin-top: 0.6rem !important;
+            }
+
             .pricing-grid {
                 grid-template-columns: repeat(6, 1fr);
                 gap: 0.75rem;
@@ -1401,6 +1527,40 @@
                 padding: 0 0.8rem;
             }
 
+            /* 移动端小屏幕 banner 优化 */
+            .hero-section {
+                padding: 70px 0 30px !important;
+            }
+
+            .hero-main-title {
+                font-size: clamp(1.8rem, 7vw, 2.2rem) !important;
+            }
+
+            .hero-sub-title {
+                font-size: clamp(1.3rem, 5vw, 1.6rem) !important;
+            }
+
+            .hero-vote-card {
+                width: 95% !important;
+                left: auto !important;
+                transform: none !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                padding: 1rem !important;
+                display: block !important;
+            }
+
+            .hero-vote-option {
+                min-height: 52px;
+                height: 52px;
+                padding: 0.6rem !important;
+            }
+
+            .hero-vote-option img {
+                width: 36px !important;
+                height: 36px !important;
+            }
+
             .shows-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.75rem;
@@ -1430,7 +1590,9 @@
             .hero-vote-card {
                 width: 90% !important;
                 max-width: 340px !important;
-                margin: 0 0 1rem auto !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                margin-bottom: 1rem !important;
                 padding: 1.25rem !important;
             }
 
@@ -1509,34 +1671,66 @@
                 margin-top: 0.6rem !important;
             }
 
+            /* 移动端风格导航 - 2排每排4个 */
+            .genre-container {
+                flex-wrap: wrap !important;
+            }
+
             .genre-btn { 
-                font-size: 0.55rem !important; 
-                padding: 0.3rem 0.05rem !important; 
-                min-height: 50px !important;
-                max-height: 50px !important;
-                line-height: 1.1 !important;
-                white-space: nowrap !important;
+                flex: 0 0 25% !important;
+                font-size: 0.5rem !important; 
+                padding: 0.4rem 0.1rem !important; 
+                min-height: 44px !important;
+                max-height: none !important;
+                line-height: 1.2 !important;
+                white-space: normal !important;
+                border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
+
+            .genre-btn:nth-child(4n) {
+                border-right: none !important;
+            }
+
+            .genre-btn:nth-child(n+5) {
+                border-bottom: none !important;
             }
         }
 
         @media (max-width: 380px) {
+            .hero-section {
+                padding: 60px 0 20px !important;
+            }
+
+            .hero-main-title {
+                font-size: 1.6rem !important;
+            }
+
+            .hero-sub-title {
+                font-size: 1.2rem !important;
+            }
+
+            .hero-vote-card {
+                padding: 0.875rem !important;
+            }
+
             .hero-vote-option {
-                min-height: 52px;
-                height: 52px;
+                min-height: 48px;
+                height: 48px;
                 padding: 0.5rem !important;
             }
 
             .hero-vote-option img {
-                width: 38px !important;
-                height: 38px !important;
+                width: 34px !important;
+                height: 34px !important;
             }
 
             .option-line1 {
-                font-size: 0.8rem !important;
+                font-size: 0.85rem !important;
             }
 
             .option-line2 {
-                font-size: 0.7rem !important;
+                font-size: 0.75rem !important;
             }
         }
 
@@ -1579,6 +1773,123 @@
             overflow-y: auto;
             z-index: 1;
             box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        /* 移动端弹窗强制居中 */
+        @media (max-width: 768px) {
+            .login-modal.active {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .login-modal-content {
+                position: relative !important;
+                margin: 0 auto !important;
+                left: 0 !important;
+                right: 0 !important;
+                top: 0 !important;
+                bottom: 0 !important;
+                transform: none !important;
+                width: 92% !important;
+                max-width: 400px !important;
+                padding: 1.5rem !important;
+                max-height: 85vh !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-modal-content {
+                width: 95% !important;
+                padding: 1.25rem !important;
+                border-radius: 16px !important;
+            }
+
+            .login-logo-main {
+                font-size: 1.4rem !important;
+            }
+
+            .login-logo-sub {
+                font-size: 0.55rem !important;
+            }
+
+            .login-subtitle {
+                font-size: 0.8rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .social-login {
+                margin-bottom: 1rem !important;
+                gap: 0.5rem !important;
+            }
+
+            .social-btn {
+                padding: 0.6rem !important;
+                font-size: 0.75rem !important;
+            }
+
+            .form-group {
+                margin-bottom: 0.75rem !important;
+            }
+
+            .form-input {
+                padding: 0.7rem !important;
+                font-size: 0.9rem !important;
+            }
+
+            .login-btn-submit {
+                padding: 0.75rem !important;
+                font-size: 0.9rem !important;
+            }
+
+            .login-footer {
+                margin-top: 1rem !important;
+                padding-top: 1rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-modal-content {
+                padding: 1.5rem !important;
+                width: 95% !important;
+                max-width: 95% !important;
+            }
+
+            .login-modal-header {
+                margin-bottom: 0.5rem !important;
+            }
+
+            .login-logo-main {
+                font-size: 1.4rem !important;
+            }
+
+            .login-subtitle {
+                font-size: 0.8rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            .social-login {
+                margin-bottom: 1rem !important;
+            }
+
+            .social-btn {
+                padding: 0.6rem !important;
+                font-size: 0.75rem !important;
+            }
+
+            .form-group {
+                margin-bottom: 0.75rem !important;
+            }
+
+            .form-input {
+                padding: 0.7rem !important;
+                font-size: 0.9rem !important;
+            }
+
+            .login-btn-submit {
+                padding: 0.75rem !important;
+                font-size: 0.9rem !important;
+            }
         }
 
         .login-modal-close {
@@ -3453,150 +3764,115 @@
         }
 
         // 社交登录
-        // ============================================
-// 微信登录 - 选项A：公众号模式（仅微信内可用）
-// 更新时间：2026-03-16
-// ============================================
+        function loginWithWechat() {
+            // 检查是否在微信内
+            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
 
-function loginWithWechat() {
-    // 检测是否在微信内
-    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+            if (!isWechat) {
+                // 非微信环境，显示引导弹窗
+                showWechatGuide();
+                return;
+            }
 
-    if (!isWechat) {
-        // 非微信环境 - 显示引导弹窗
-        showWechatGuide();
-        return;
-    }
+            // 在微信内，使用静默登录模式（snsapi_base），只获取OpenID
+            const appId = 'wx019d141a63482cd8';
+            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
+            const scope = 'snsapi_base'; // 静默登录，只获取OpenID
+            const state = generateRandomState();
 
-    // 微信内 - 使用静默授权（snsapi_base）
-    const appId = 'wx019d141a63482cd8'; // 你的公众号AppID
-    const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
-    const scope = 'snsapi_base'; // 静默授权，只获取OpenID
-    const state = generateRandomState();
+            // 保存state用于验证
+            sessionStorage.setItem('wechat_state', state);
 
-    // 保存state用于验证
-    sessionStorage.setItem('wechat_state', state);
+            const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
 
-    // 构建授权URL
-    const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+            // 在微信内置浏览器中打开
+            window.location.href = authUrl;
+        }
 
-    // 跳转到授权页面
-    window.location.href = authUrl;
-}
-
-// 显示微信外引导弹窗
-function showWechatGuide() {
-    const guideHtml = `
-        <div id="wechatGuideModal" style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 30000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        " onclick="closeWechatGuide()">
-            <div style="
-                background: #1a1a1a;
-                border: 1px solid #FF0066;
-                border-radius: 16px;
-                padding: 2rem;
-                max-width: 360px;
-                width: 100%;
-                text-align: center;
-                position: relative;
-            " onclick="event.stopPropagation()">
-                <button onclick="closeWechatGuide()" style="
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background: none;
-                    border: none;
-                    color: #888;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                ">×</button>
-
-                <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
-                <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">请在微信中打开</h3>
-                <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
-                    微信登录需要在微信APP内使用<br>
-                    请使用微信扫一扫访问本站
-                </p>
-
-                <div style="
-                    background: rgba(255,255,255,0.05);
-                    border-radius: 8px;
-                    padding: 1rem;
-                    margin-bottom: 1.5rem;
-                    word-break: break-all;
-                    font-size: 0.8rem;
-                    color: #FF0066;
-                ">
-                    https://chineserocks.vercel.app
-                </div>
-
-                <button onclick="closeWechatGuide()" style="
+        // 显示微信外引导弹窗
+        function showWechatGuide() {
+            const guideHtml = `
+                <div id="wechatGuideModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
                     width: 100%;
-                    padding: 0.875rem;
-                    background: #FF0066;
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    font-size: 0.95rem;
-                    font-weight: 700;
-                    cursor: pointer;
-                ">我知道了</button>
+                    height: 100%;
+                    background: rgba(0,0,0,0.9);
+                    z-index: 30000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                " onclick="closeWechatGuide()">
+                    <div style="
+                        background: #1a1a1a;
+                        border: 1px solid #FF0066;
+                        border-radius: 16px;
+                        padding: 2rem;
+                        max-width: 360px;
+                        width: 100%;
+                        text-align: center;
+                        position: relative;
+                    " onclick="event.stopPropagation()">
+                        <button onclick="closeWechatGuide()" style="
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            background: none;
+                            border: none;
+                            color: #888;
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                        ">×</button>
 
-                <p style="color: #666; font-size: 0.75rem; margin-top: 1rem;">
-                    或使用 Google / Facebook / 邮箱 登录
-                </p>
-            </div>
-        </div>
-    `;
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                        <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">请在微信中打开</h3>
+                        <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            微信登录需要在微信APP内使用<br>
+                            请使用微信扫一扫访问本站
+                        </p>
 
-    // 移除已存在的弹窗
-    const existing = document.getElementById('wechatGuideModal');
-    if (existing) existing.remove();
+                        <div style="
+                            background: rgba(255,255,255,0.05);
+                            border-radius: 8px;
+                            padding: 1rem;
+                            margin-bottom: 1.5rem;
+                            word-break: break-all;
+                            font-size: 0.8rem;
+                            color: #FF0066;
+                        ">
+                            https://chineserocks.vercel.app
+                        </div>
 
-    // 添加新弹窗
-    document.body.insertAdjacentHTML('beforeend', guideHtml);
-}
+                        <button onclick="closeWechatGuide()" style="
+                            width: 100%;
+                            padding: 0.875rem;
+                            background: #FF0066;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-size: 0.95rem;
+                            font-weight: 700;
+                            cursor: pointer;
+                        ">我知道了</button>
 
-function closeWechatGuide() {
-    const modal = document.getElementById('wechatGuideModal');
-    if (modal) modal.remove();
-}
+                        <p style="color: #666; font-size: 0.75rem; margin-top: 1rem;">
+                            或使用 Google / Facebook / 邮箱 登录
+                        </p>
+                    </div>
+                </div>
+            `;
 
-// 生成随机state
-function generateRandomState() {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
+            const existing = document.getElementById('wechatGuideModal');
+            if (existing) existing.remove();
+            document.body.insertAdjacentHTML('beforeend', guideHtml);
+        }
 
-// 处理微信回调
-function handleWechatCallback(code, state) {
-    const savedState = sessionStorage.getItem('wechat_state');
-    if (state !== savedState) {
-        showErrorModal('安全验证失败，请重试');
-        return;
-    }
-
-    const mockOpenId = 'wechat_' + Math.random().toString(36).substring(2, 15);
-
-    console.log('微信登录成功，OpenID:', mockOpenId);
-
-    checkAndShowBindingModal({
-        type: 'wechat',
-        id: mockOpenId,
-        name: '微信用户',
-        email: '',
-        avatar: ''
-    });
-}
+        function closeWechatGuide() {
+            const modal = document.getElementById('wechatGuideModal');
+            if (modal) modal.remove();
+        }
 
         function generateRandomState() {
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
