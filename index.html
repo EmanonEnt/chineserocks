@@ -953,10 +953,14 @@
         }
 
         .shows-section .section-header,
-        .shows-section .shows-grid,
         .shows-section .view-full-chart {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .shows-section .shows-grid {
+            margin: 2rem 0 0;
             padding: 0 2rem;
         }
 
@@ -983,8 +987,11 @@
 
         .shows-source strong { color: var(--pink-primary); }
 
-        .shows-grid { display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem; margin-top: 2rem; }
+        .shows-grid { 
+            display: grid; 
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.5rem;
+        }
 
         .show-card { position: relative; aspect-ratio: 2/3; overflow: hidden; cursor: pointer; }
 
@@ -1098,6 +1105,11 @@
 
         /* ===== 响应式 - 平板横屏/小桌面 ===== */
         @media (max-width: 1024px) {
+            .shows-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1rem;
+            }
+
             .hero-vote-card {
                 position: relative;
                 right: 0;
@@ -1390,9 +1402,14 @@
             }
 
             .shows-grid {
-                grid-template-columns: 1fr;
-                max-width: 320px;
-                margin: 2rem auto 0;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+                max-width: 100%;
+                padding: 0 0.8rem;
+            }
+
+            .show-card {
+                aspect-ratio: 2/2.5;
             }
 
             .pricing-grid {
@@ -2936,6 +2953,15 @@
                     <div class="show-date">3月20日 週四</div>
                     <div class="show-title">獨立搖滾之夜</div>
                     <div class="show-venue">MAO Livehouse · 北京</div>
+                </div>
+            </div>
+            <div class="show-card" onclick="location.href='show.html?id=6'">
+                <img src="https://images.unsplash.com/photo-1501612780327-45045538702b?w=689&h=1033&fit=crop" alt="演出海報">
+                <span class="show-price">¥150起</span>
+                <div class="show-overlay">
+                    <div class="show-date">3月21日 週五</div>
+                    <div class="show-title">後搖滾專場</div>
+                    <div class="show-venue">黃昏黎明DDC · 北京</div>
                 </div>
             </div>
         </div>
