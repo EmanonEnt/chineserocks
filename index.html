@@ -1826,7 +1826,7 @@
     <script>
         window.fbAsyncInit = function() {
             FB.init({
-                appId      : '976917147845412',
+                appId      : '1628442824765533',
                 cookie     : true,
                 xfbml      : true,
                 version    : 'v18.0'
@@ -3308,7 +3308,6 @@
         }
 
         function loginWithGoogle() {
-            // 使用 Google Identity Services
             const client = google.accounts.oauth2.initTokenClient({
                 client_id: '354874357906-o89hbnkrs8iogn0qvmvo8ecffnqla9h.apps.googleusercontent.com',
                 scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
@@ -3318,7 +3317,6 @@
         }
 
         function handleGoogleResponse(tokenResponse) {
-            // 使用 access token 获取用户信息
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: {
                     'Authorization': 'Bearer ' + tokenResponse.access_token
@@ -3327,18 +3325,14 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Google登录成功:', data);
-                // 保存用户信息
                 localStorage.setItem('userLoggedIn', 'true');
                 localStorage.setItem('userNickname', data.name || 'Google用户');
                 localStorage.setItem('userAccount', data.email);
                 localStorage.setItem('userAccountType', 'google');
                 localStorage.setItem('userAvatar', data.picture || '');
 
-                alert('🎸 Google登录成功！
-欢迎 ' + data.name + '！');
+                alert('🎸 Google登录成功！\n欢迎 ' + data.name + '！');
                 closeLoginModal();
-
-                // 更新UI显示登录状态
                 updateLoginUI();
             })
             .catch(error => {
@@ -3350,22 +3344,17 @@
         function loginWithFacebook() {
             FB.login(function(response) {
                 if (response.authResponse) {
-                    // 获取用户信息
                     FB.api('/me', {fields: 'name,email,picture'}, function(userInfo) {
                         console.log('Facebook登录成功:', userInfo);
 
-                        // 保存用户信息
                         localStorage.setItem('userLoggedIn', 'true');
                         localStorage.setItem('userNickname', userInfo.name || 'Facebook用户');
                         localStorage.setItem('userAccount', userInfo.email || 'Facebook用户');
                         localStorage.setItem('userAccountType', 'facebook');
                         localStorage.setItem('userAvatar', userInfo.picture?.data?.url || '');
 
-                        alert('🎸 Facebook登录成功！
-欢迎 ' + userInfo.name + '！');
+                        alert('🎸 Facebook登录成功！\n欢迎 ' + userInfo.name + '！');
                         closeLoginModal();
-
-                        // 更新UI显示登录状态
                         updateLoginUI();
                     });
                 } else {
