@@ -3279,8 +3279,17 @@
             }
 
             if (code === '123456') {
-                alert('登录成功！\n欢迎回到 ChineseRocks');
+                // 直接完成登录，因为手机号就是账号
+                completeLogin({
+                    type: 'phone',
+                    id: 'phone_' + phone,
+                    name: '手机用户',
+                    email: '',
+                    avatar: ''
+                });
+                localStorage.setItem('userPhone', phone);
                 closeLoginModal();
+                alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
             } else {
                 showErrorModal('验证码错误，演示模式请输入 123456');
             }
@@ -3297,47 +3306,153 @@
                 return false;
             }
 
-            alert('登录成功！\n欢迎回到 ChineseRocks');
+            // 直接完成登录
+            completeLogin({
+                type: 'email',
+                id: 'email_' + email,
+                name: email.split('@')[0],
+                email: email,
+                avatar: ''
+            });
+            localStorage.setItem('userEmail', email);
             closeLoginModal();
+            alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
             return false;
         }
 
         // 社交登录
         function loginWithWechat() {
-            alert('微信登录功能即将上线！');
+            // 使用静默登录模式（snsapi_base），只获取OpenID
+            const appId = 'wx019d141a63482cd8';
+            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
+            const scope = 'snsapi_base'; // 静默登录，只获取OpenID
+            const state = generateRandomState();
+
+            // 保存state用于验证
+            sessionStorage.setItem('wechat_state', state);
+
+            const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+
+            // 在微信内置浏览器中打开
+            if (/MicroMessenger/i.test(navigator.userAgent)) {
+                window.location.href = authUrl;
+            } else {
+                // 非微信环境，显示二维码登录
+                showWechatQRCode();
+            }
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        function showWechatQRCode() {
+            // 非微信环境，提示用户使用微信扫码
+            const qrModal = document.createElement('div');
+            qrModal.id = 'wechatQRModal';
+            qrModal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; display: flex; align-items: center; justify-content: center;" onclick="closeWechatQR()">
+                    <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 320px;" onclick="event.stopPropagation()">
+                        <h3 style="color: #333; margin-bottom: 1rem;">微信登录</h3>
+                        <div style="width: 200px; height: 200px; background: #f0f0f0; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                            <span style="color: #999; font-size: 0.9rem;">请使用微信扫一扫</span>
+                        </div>
+                        <p style="color: #666; font-size: 0.85rem; margin-bottom: 1rem;">请使用微信扫描二维码登录</p>
+                        <button onclick="closeWechatQR()" style="background: #07C160; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 6px; cursor: pointer;">关闭</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(qrModal);
+        }
+
+        function closeWechatQR() {
+            const modal = document.getElementById('wechatQRModal');
+            if (modal) modal.remove();
+        }
+
+        // 处理微信回调（需要在wechat-callback.html中调用）
+        function handleWechatCallback(code, state) {
+            const savedState = sessionStorage.getItem('wechat_state');
+            if (state !== savedState) {
+                showErrorModal('安全验证失败，请重试');
+                return;
+            }
+
+            // 使用code换取OpenID（这里需要后端支持，先用模拟数据演示）
+            // 实际应该调用: https://api.weixin.qq.com/sns/oauth2/access_token
+
+            // 模拟获取到OpenID
+            const mockOpenId = 'wechat_' + Math.random().toString(36).substring(2, 15);
+
+            console.log('微信登录成功，OpenID:', mockOpenId);
+
+            // 检查是否需要绑定
+            checkAndShowBindingModal({
+                type: 'wechat',
+                id: mockOpenId,
+                name: '微信用户',
+                email: '',
+                avatar: ''
+            });
         }
 
         function loginWithGoogle() {
-            const client = google.accounts.oauth2.initTokenClient({
-                client_id: '354874357906-o89hbnkrs8iogn0qvmvo8ecffnqla9h.apps.googleusercontent.com',
-                scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-                callback: handleGoogleResponse
-            });
-            client.requestAccessToken();
+            try {
+                const client = google.accounts.oauth2.initTokenClient({
+                    client_id: '354874357906-o89hbnkrs8iogn0qvmvo8ecffnqla9h.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+                    callback: handleGoogleResponse,
+                    error_callback: (error) => {
+                        console.error('Google登录错误:', error);
+                        if (error.type === 'popup_closed') {
+                            showErrorModal('登录窗口被关闭，请重试');
+                        } else if (error.type === 'popup_failed_to_open') {
+                            showErrorModal('无法打开登录窗口，请检查浏览器设置');
+                        } else {
+                            showErrorModal('Google登录失败: ' + (error.message || '未知错误'));
+                        }
+                    }
+                });
+                client.requestAccessToken();
+            } catch (e) {
+                console.error('Google初始化失败:', e);
+                showErrorModal('Google登录初始化失败，请检查网络连接');
+            }
         }
 
         function handleGoogleResponse(tokenResponse) {
+            if (tokenResponse.error) {
+                console.error('Google授权错误:', tokenResponse);
+                showErrorModal('Google授权失败: ' + tokenResponse.error);
+                return;
+            }
+
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: {
                     'Authorization': 'Bearer ' + tokenResponse.access_token
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('获取用户信息失败: ' + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
                 console.log('Google登录成功:', data);
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('userNickname', data.name || 'Google用户');
-                localStorage.setItem('userAccount', data.email);
-                localStorage.setItem('userAccountType', 'google');
-                localStorage.setItem('userAvatar', data.picture || '');
 
-                alert('🎸 Google登录成功！\n欢迎 ' + data.name + '！');
-                closeLoginModal();
-                updateLoginUI();
+                // 检查是否需要绑定手机/邮箱
+                checkAndShowBindingModal({
+                    type: 'google',
+                    id: data.sub,
+                    name: data.name || 'Google用户',
+                    email: data.email,
+                    avatar: data.picture || ''
+                });
             })
             .catch(error => {
                 console.error('Google登录失败:', error);
-                showErrorModal('Google登录失败，请重试');
+                showErrorModal('Google登录失败: ' + error.message);
             });
         }
 
@@ -3347,15 +3462,13 @@
                     FB.api('/me', {fields: 'name,email,picture'}, function(userInfo) {
                         console.log('Facebook登录成功:', userInfo);
 
-                        localStorage.setItem('userLoggedIn', 'true');
-                        localStorage.setItem('userNickname', userInfo.name || 'Facebook用户');
-                        localStorage.setItem('userAccount', userInfo.email || 'Facebook用户');
-                        localStorage.setItem('userAccountType', 'facebook');
-                        localStorage.setItem('userAvatar', userInfo.picture?.data?.url || '');
-
-                        alert('🎸 Facebook登录成功！\n欢迎 ' + userInfo.name + '！');
-                        closeLoginModal();
-                        updateLoginUI();
+                        checkAndShowBindingModal({
+                            type: 'facebook',
+                            id: userInfo.id,
+                            name: userInfo.name || 'Facebook用户',
+                            email: userInfo.email || '',
+                            avatar: userInfo.picture?.data?.url || ''
+                        });
                     });
                 } else {
                     console.log('Facebook登录被取消');
@@ -3544,9 +3657,208 @@
             if (e.key === 'Escape') closeLoginModal();
         });
 
+
+        // 存储临时登录数据
+        let tempLoginData = null;
+
+        // 检查并显示绑定弹窗
+        function checkAndShowBindingModal(loginData) {
+            tempLoginData = loginData;
+
+            // 检查是否已绑定
+            const hasPhone = localStorage.getItem('userPhone');
+            const hasEmail = localStorage.getItem('userEmail');
+
+            if (!hasPhone && !hasEmail) {
+                // 未绑定，显示绑定弹窗
+                showBindingModal();
+            } else {
+                // 已绑定，直接完成登录
+                completeLogin(loginData);
+            }
+        }
+
+        function showBindingModal() {
+            document.getElementById('bindingModal').classList.add('active');
+            // 预填充如果有的话
+            if (tempLoginData.email) {
+                document.getElementById('bindEmail').value = tempLoginData.email;
+            }
+        }
+
+        function closeBindingModal() {
+            document.getElementById('bindingModal').classList.remove('active');
+        }
+
+        function switchBindingTab(tab) {
+            document.querySelectorAll('#bindingModal .login-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'phone') {
+                document.getElementById('bindingPhoneForm').style.display = 'block';
+                document.getElementById('bindingEmailForm').style.display = 'none';
+            } else {
+                document.getElementById('bindingPhoneForm').style.display = 'none';
+                document.getElementById('bindingEmailForm').style.display = 'block';
+            }
+        }
+
+        // 发送绑定验证码
+        let bindCountdown = 0;
+        function sendBindCode() {
+            if (bindCountdown > 0) return;
+
+            const phone = document.getElementById('bindPhone').value;
+            if (!phone || phone.length !== 11) {
+                showBindingError('请输入正确的11位手机号');
+                return;
+            }
+
+            const btn = document.getElementById('bindVerifyBtn');
+            bindCountdown = 60;
+            btn.disabled = true;
+            btn.textContent = bindCountdown + 's';
+
+            const timer = setInterval(() => {
+                bindCountdown--;
+                if (bindCountdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = bindCountdown + 's';
+                }
+            }, 1000);
+
+            alert('验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
+        }
+
+        let bindEmailCountdown = 0;
+        function sendBindEmailCode() {
+            if (bindEmailCountdown > 0) return;
+
+            const email = document.getElementById('bindEmail').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showBindingError('请输入正确的邮箱地址');
+                return;
+            }
+
+            const btn = document.getElementById('bindEmailVerifyBtn');
+            bindEmailCountdown = 60;
+            btn.disabled = true;
+            btn.textContent = bindEmailCountdown + 's';
+
+            const timer = setInterval(() => {
+                bindEmailCountdown--;
+                if (bindEmailCountdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = bindEmailCountdown + 's';
+                }
+            }, 1000);
+
+            alert('验证码已发送至 ' + email + '\n（演示模式：验证码是 123456）');
+        }
+
+        // 提交绑定
+        function submitBinding(e, type) {
+            e.preventDefault();
+
+            let account, code;
+
+            if (type === 'phone') {
+                account = document.getElementById('bindPhone').value;
+                code = document.getElementById('bindCode').value;
+
+                if (!account || account.length !== 11) {
+                    showBindingError('请输入正确的11位手机号');
+                    return false;
+                }
+            } else {
+                account = document.getElementById('bindEmail').value;
+                code = document.getElementById('bindEmailCode').value;
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!account || !emailRegex.test(account)) {
+                    showBindingError('请输入正确的邮箱地址');
+                    return false;
+                }
+            }
+
+            if (!code || code !== '123456') {
+                showBindingError('验证码错误，演示模式请输入 123456');
+                return false;
+            }
+
+            // 保存绑定信息
+            if (type === 'phone') {
+                localStorage.setItem('userPhone', account);
+            } else {
+                localStorage.setItem('userEmail', account);
+            }
+
+            // 完成登录
+            completeLogin(tempLoginData);
+            closeBindingModal();
+            closeLoginModal();
+
+            alert('🎸 绑定成功！\n欢迎加入 ChineseRocks！');
+
+            return false;
+        }
+
+        // 跳过绑定
+        function skipBinding() {
+            if (confirm('跳过后部分功能（如找回账号）将受限，确定跳过吗？')) {
+                completeLogin(tempLoginData);
+                closeBindingModal();
+                closeLoginModal();
+            }
+        }
+
+        // 完成登录
+        function completeLogin(loginData) {
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('userId', loginData.id);
+            localStorage.setItem('userNickname', loginData.name);
+            localStorage.setItem('userAccountType', loginData.type);
+            localStorage.setItem('userAvatar', loginData.avatar || '');
+
+            if (loginData.email) {
+                localStorage.setItem('userEmail', loginData.email);
+            }
+
+            updateLoginUI();
+        }
+
+        function showBindingError(msg) {
+            const errorEl = document.getElementById('bindingErrorMsg');
+            errorEl.textContent = msg;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 3000);
+        }
+
+        // 更新登录UI
+        function updateLoginUI() {
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            const nickname = localStorage.getItem('userNickname');
+            const loginBtn = document.querySelector('.login-btn');
+
+            if (isLoggedIn && loginBtn) {
+                loginBtn.textContent = nickname || '我的账号';
+                loginBtn.onclick = function() {
+                    alert('已登录：' + nickname + '\n\n功能菜单：\n- 个人中心\n- 我的投票\n- 账号设置\n- 退出登录');
+                };
+            }
+        }
+
         // 页面加载时启动第一个slide的滚播
         document.addEventListener('DOMContentLoaded', () => {
             startVoteRotate('all');
+            updateLoginUI();
         });
     </script>
 
@@ -3704,6 +4016,76 @@
                 <p>还没有账号？<a href="#" onclick="switchToRegister();return false;">立即注册</a></p>
             </div>
         </div>
+
+    <!-- 绑定手机/邮箱弹窗 -->
+    <div id="bindingModal" class="login-modal">
+        <div class="login-modal-overlay" onclick="closeBindingModal()"></div>
+        <div class="login-modal-content">
+            <button class="login-modal-close" onclick="closeBindingModal()">×</button>
+
+            <div class="login-modal-header">
+                <div class="login-logo-main">CHINESE ROCKS</div>
+                <div class="login-logo-sub">NEWS ★ CHARTS ★ MAGAZINE <span class="login-logo-highlight">搖滾萬歲</span></div>
+            </div>
+
+            <p class="login-subtitle">完善你的摇滚身份</p>
+            <p style="text-align: center; color: #888; font-size: 0.8rem; margin-bottom: 1.5rem;">请至少绑定手机号或邮箱，用于找回账号和接收通知</p>
+
+            <div class="error-message" id="bindingErrorMsg"></div>
+
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchBindingTab('phone')">绑定手机</button>
+                <button class="login-tab" onclick="switchBindingTab('email')">绑定邮箱</button>
+            </div>
+
+            <form id="bindingPhoneForm" onsubmit="return submitBinding(event, 'phone')">
+                <div class="form-group">
+                    <label class="form-label">手机号 <span style="color: #FF0066;">*</span></label>
+                    <div class="phone-input-group">
+                        <select class="country-code" id="bindCountryCode">
+                            <option value="+86">+86</option>
+                            <option value="+852">+852</option>
+                            <option value="+853">+853</option>
+                            <option value="+886">+886</option>
+                        </select>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="bindPhone" style="flex: 1;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="bindCode" maxlength="6">
+                        <button type="button" class="verify-btn" id="bindVerifyBtn" onclick="sendBindCode()">获取验证码</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn-submit">完成绑定</button>
+            </form>
+
+            <form id="bindingEmailForm" style="display: none;" onsubmit="return submitBinding(event, 'email')">
+                <div class="form-group">
+                    <label class="form-label">邮箱 <span style="color: #FF0066;">*</span></label>
+                    <input type="email" class="form-input" placeholder="your@email.com" id="bindEmail">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="bindEmailCode" maxlength="6">
+                        <button type="button" class="verify-btn" id="bindEmailVerifyBtn" onclick="sendBindEmailCode()">获取验证码</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn-submit">完成绑定</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1rem;">
+                <button onclick="skipBinding()" style="background: none; border: none; color: #666; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">暂时跳过（部分功能受限）</button>
+            </div>
+        </div>
+    </div>
+
     </div>
 </body>
 </html>
