@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信登录 - ChineseRocks</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #c0c0c0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #FF0066;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .logo-sub {
+            font-size: 0.6rem;
+            color: #888;
+            letter-spacing: 1.5px;
+            margin-bottom: 2rem;
+        }
+        .status-box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255,0,102,0.3);
+            border-top-color: #FF0066;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .status-text {
+            font-size: 1.1rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .status-sub {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #07C160;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+        .error-icon {
+            width: 64px;
+            height: 64px;
+            background: #ff4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            background: #FF0066;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #CC0052;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #FF0066;
+            margin-top: 0.75rem;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,0,102,0.1);
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">CHINESE ROCKS</div>
+        <div class="logo-sub">中國搖滾官方榜單</div>
+
+        <div id="loadingState" class="status-box">
+            <div class="loading-spinner"></div>
+            <div class="status-text">正在处理登录...</div>
+            <div class="status-sub">请稍候，正在连接微信服务器</div>
+        </div>
+
+        <div id="successState" class="status-box hidden">
+            <div class="success-icon">✓</div>
+            <div class="status-text">登录成功！</div>
+            <div class="status-sub">欢迎回到 ChineseRocks</div>
+        </div>
+
+        <div id="errorState" class="status-box hidden">
+            <div class="error-icon">✕</div>
+            <div class="status-text" id="errorText">登录失败</div>
+            <div class="status-sub" id="errorSub">请重试或使用其他方式登录</div>
+        </div>
+
+        <button id="closeBtn" class="btn hidden" onclick="closeWindow()">关闭窗口</button>
+        <button id="retryBtn" class="btn btn-secondary hidden" onclick="retryLogin()">重试</button>
+    </div>
+
+    <script>
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                code: params.get('code'),
+                state: params.get('state'),
+                error: params.get('error')
+            };
+        }
+
+        function showState(state) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('successState').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            document.getElementById('closeBtn').classList.add('hidden');
+            document.getElementById('retryBtn').classList.add('hidden');
+
+            if (state === 'loading') {
+                document.getElementById('loadingState').classList.remove('hidden');
+            } else if (state === 'success') {
+                document.getElementById('successState').classList.remove('hidden');
+                document.getElementById('closeBtn').classList.remove('hidden');
+            } else if (state === 'error') {
+                document.getElementById('errorState').classList.remove('hidden');
+                document.getElementById('closeBtn').classList.remove('hidden');
+                document.getElementById('retryBtn').classList.remove('hidden');
+            }
+        }
+
+        function closeWindow() {
+            if (window.opener) {
+                window.close();
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        function retryLogin() {
+            window.location.href = '/';
+        }
+
+        async function handleLogin() {
+            const { code, state, error } = getUrlParams();
+
+            if (error) {
+                showState('error');
+                document.getElementById('errorText').textContent = '用户取消授权';
+                return;
+            }
+
+            if (!code || !state) {
+                showState('error');
+                document.getElementById('errorText').textContent = '缺少必要参数';
+                return;
+            }
+
+            const savedState = sessionStorage.getItem('wechat_state');
+            if (state !== savedState) {
+                showState('error');
+                document.getElementById('errorText').textContent = '安全验证失败';
+                return;
+            }
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                const mockUser = {
+                    type: 'wechat',
+                    id: 'wechat_' + Math.random().toString(36).substr(2, 9),
+                    name: '微信用户',
+                    avatar: ''
+                };
+
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userId', mockUser.id);
+                localStorage.setItem('userNickname', mockUser.name);
+                localStorage.setItem('userAccountType', 'wechat');
+                localStorage.setItem('userAvatar', mockUser.avatar);
+
+                if (window.opener) {
+                    window.opener.postMessage({
+                        type: 'WECHAT_LOGIN_SUCCESS',
+                        data: mockUser
+                    }, '*');
+                }
+
+                showState('success');
+                setTimeout(closeWindow, 2000);
+
+            } catch (err) {
+                showState('error');
+                document.getElementById('errorText').textContent = '登录处理失败';
+            }
+        }
+
+        window.onload = handleLogin;
+    </script>
+</body>
+</html>

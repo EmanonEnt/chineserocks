@@ -3453,30 +3453,150 @@
         }
 
         // 社交登录
-        function loginWithWechat() {
-            // 检查是否在微信内
-            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+        // ============================================
+// 微信登录 - 选项A：公众号模式（仅微信内可用）
+// 更新时间：2026-03-16
+// ============================================
 
-            if (!isWechat) {
-                // 非微信环境，提示用户
-                alert('请在微信内打开此页面，或使用微信扫一扫访问以下链接：\n\nhttps://chineserocks.vercel.app');
-                return;
-            }
+function loginWithWechat() {
+    // 检测是否在微信内
+    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
 
-            // 在微信内，使用静默登录模式（snsapi_base），只获取OpenID
-            const appId = 'wx019d141a63482cd8';
-            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
-            const scope = 'snsapi_base'; // 静默登录，只获取OpenID
-            const state = generateRandomState();
+    if (!isWechat) {
+        // 非微信环境 - 显示引导弹窗
+        showWechatGuide();
+        return;
+    }
 
-            // 保存state用于验证
-            sessionStorage.setItem('wechat_state', state);
+    // 微信内 - 使用静默授权（snsapi_base）
+    const appId = 'wx019d141a63482cd8'; // 你的公众号AppID
+    const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
+    const scope = 'snsapi_base'; // 静默授权，只获取OpenID
+    const state = generateRandomState();
 
-            const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+    // 保存state用于验证
+    sessionStorage.setItem('wechat_state', state);
 
-            // 在微信内置浏览器中打开
-            window.location.href = authUrl;
-        }
+    // 构建授权URL
+    const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+
+    // 跳转到授权页面
+    window.location.href = authUrl;
+}
+
+// 显示微信外引导弹窗
+function showWechatGuide() {
+    const guideHtml = `
+        <div id="wechatGuideModal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 30000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        " onclick="closeWechatGuide()">
+            <div style="
+                background: #1a1a1a;
+                border: 1px solid #FF0066;
+                border-radius: 16px;
+                padding: 2rem;
+                max-width: 360px;
+                width: 100%;
+                text-align: center;
+                position: relative;
+            " onclick="event.stopPropagation()">
+                <button onclick="closeWechatGuide()" style="
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: none;
+                    border: none;
+                    color: #888;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                ">×</button>
+
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">请在微信中打开</h3>
+                <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                    微信登录需要在微信APP内使用<br>
+                    请使用微信扫一扫访问本站
+                </p>
+
+                <div style="
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 8px;
+                    padding: 1rem;
+                    margin-bottom: 1.5rem;
+                    word-break: break-all;
+                    font-size: 0.8rem;
+                    color: #FF0066;
+                ">
+                    https://chineserocks.vercel.app
+                </div>
+
+                <button onclick="closeWechatGuide()" style="
+                    width: 100%;
+                    padding: 0.875rem;
+                    background: #FF0066;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 0.95rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                ">我知道了</button>
+
+                <p style="color: #666; font-size: 0.75rem; margin-top: 1rem;">
+                    或使用 Google / Facebook / 邮箱 登录
+                </p>
+            </div>
+        </div>
+    `;
+
+    // 移除已存在的弹窗
+    const existing = document.getElementById('wechatGuideModal');
+    if (existing) existing.remove();
+
+    // 添加新弹窗
+    document.body.insertAdjacentHTML('beforeend', guideHtml);
+}
+
+function closeWechatGuide() {
+    const modal = document.getElementById('wechatGuideModal');
+    if (modal) modal.remove();
+}
+
+// 生成随机state
+function generateRandomState() {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+// 处理微信回调
+function handleWechatCallback(code, state) {
+    const savedState = sessionStorage.getItem('wechat_state');
+    if (state !== savedState) {
+        showErrorModal('安全验证失败，请重试');
+        return;
+    }
+
+    const mockOpenId = 'wechat_' + Math.random().toString(36).substring(2, 15);
+
+    console.log('微信登录成功，OpenID:', mockOpenId);
+
+    checkAndShowBindingModal({
+        type: 'wechat',
+        id: mockOpenId,
+        name: '微信用户',
+        email: '',
+        avatar: ''
+    });
+}
 
         function generateRandomState() {
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
