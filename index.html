@@ -3397,27 +3397,19 @@
         }
 
         function loginWithGoogle() {
-            try {
-                const client = google.accounts.oauth2.initTokenClient({
-                    client_id: '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com',
-                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-                    callback: handleGoogleResponse,
-                    error_callback: (error) => {
-                        console.error('Google登录错误:', error);
-                        if (error.type === 'popup_closed') {
-                            showErrorModal('登录窗口被关闭，请重试');
-                        } else if (error.type === 'popup_failed_to_open') {
-                            showErrorModal('无法打开登录窗口，请检查浏览器设置');
-                        } else {
-                            showErrorModal('Google登录失败: ' + (error.message || '未知错误'));
-                        }
-                    }
-                });
-                client.requestAccessToken();
-            } catch (e) {
-                console.error('Google初始化失败:', e);
-                showErrorModal('Google登录初始化失败，请检查网络连接');
-            }
+            // 使用传统的 OAuth2 授权码流程
+            const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
+            const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+            const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+            const state = generateRandomState();
+
+            // 保存 state 用于验证
+            sessionStorage.setItem('google_state', state);
+
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}&include_granted_scopes=true`;
+
+            // 在当前窗口打开授权页面
+            window.location.href = authUrl;
         }
 
         function handleGoogleResponse(tokenResponse) {
@@ -3862,7 +3854,46 @@
 
             // 检查是否从小程序传入用户数据
             handleMiniAppLogin();
+
+            // 检查 Google 登录回调
+            handleGoogleCallback();
         });
+
+        // 处理 Google OAuth 回调
+        function handleGoogleCallback() {
+            const hash = window.location.hash;
+            if (hash.includes('access_token')) {
+                const params = new URLSearchParams(hash.substring(1));
+                const accessToken = params.get('access_token');
+                const state = params.get('state');
+                const savedState = sessionStorage.getItem('google_state');
+
+                // 清除 URL hash
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                if (accessToken) {
+                    // 获取用户信息
+                    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        headers: { 'Authorization': 'Bearer ' + accessToken }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('Google登录成功:', data);
+                        checkAndShowBindingModal({
+                            type: 'google',
+                            id: data.sub,
+                            name: data.name || 'Google用户',
+                            email: data.email || '',
+                            avatar: data.picture || ''
+                        });
+                    })
+                    .catch(err => {
+                        console.error('获取用户信息失败:', err);
+                        showErrorModal('获取用户信息失败');
+                    });
+                }
+            }
+        }
 
         // 处理小程序传入的登录数据
         function handleMiniAppLogin() {
