@@ -3859,7 +3859,37 @@
         document.addEventListener('DOMContentLoaded', () => {
             startVoteRotate('all');
             updateLoginUI();
+
+            // 检查是否从小程序传入用户数据
+            handleMiniAppLogin();
         });
+
+        // 处理小程序传入的登录数据
+        function handleMiniAppLogin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const openid = urlParams.get('openid');
+            const nickname = urlParams.get('nickname');
+            const avatar = urlParams.get('avatar');
+            const source = urlParams.get('source');
+
+            if (openid && source === 'livegigs_miniapp') {
+                console.log('从小程序获取用户:', { openid, nickname, avatar });
+
+                // 自动登录，显示绑定弹窗
+                setTimeout(() => {
+                    checkAndShowBindingModal({
+                        type: 'wechat_miniapp',
+                        id: openid,
+                        name: nickname ? decodeURIComponent(nickname) : '微信用户',
+                        email: '',
+                        avatar: avatar ? decodeURIComponent(avatar) : ''
+                    });
+                }, 1000);
+
+                // 清除 URL 参数，避免刷新重复登录
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
     </script>
 
     <!-- 登录弹窗 -->
