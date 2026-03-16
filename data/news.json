@@ -1,1 +1,18 @@
-{"all": [], "hero": [], "featured": [], "latest": [], "homepage_hot": [], "updated_at": ""}
+{
+  "updated_at": "",
+  "total_count": 0,
+  "data": {
+    "all": [],
+    "hero": [],
+    "featured": [],
+    "latest": [],
+    "by_category": {
+      "全部": [],
+      "獨家": [],
+      "現場": [],
+      "專題": [],
+      "國際": [],
+      "新發行": []
+    }
+  }
+}
