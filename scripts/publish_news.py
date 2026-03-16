@@ -1,49 +1,67 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 审核发布脚本 - API修復版
-使用新版 notion-client API
+ChineseRocks 审核发布脚本 - 舊版API兼容版
+使用 notion_client 舊版 API
 """
 
 import os
 import json
 from datetime import datetime
-from notion_client import Client
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
 def fetch_published_articles():
     """从Notion获取已发布的文章"""
-    notion = Client(auth=NOTION_TOKEN)
+
+    # 延遲導入，避免版本問題
+    try:
+        from notion_client import Client
+        notion = Client(auth=NOTION_TOKEN)
+    except ImportError:
+        print("錯誤: 無法導入 notion_client")
+        return []
 
     articles = []
 
     try:
         print("正在查询Notion数据库...")
 
-        # 修復：使用新版API調用方式
-        response = notion.databases.query(
-            database_id=NEWS_DB_ID,
-            filter={
-                "property": "狀態",
-                "select": {"equals": "已發佈"}
-            },
-            sorts=[{
-                "property": "發布時間",
-                "direction": "descending"
-            }]
-        )
+        # 嘗試新版API調用方式
+        try:
+            response = notion.databases.query(
+                **{
+                    "database_id": NEWS_DB_ID,
+                    "filter": {
+                        "property": "狀態",
+                        "select": {"equals": "已發佈"}
+                    },
+                    "sorts": [{
+                        "property": "發布時間",
+                        "direction": "descending"
+                    }]
+                }
+            )
+        except TypeError:
+            # 如果失敗，嘗試舊版調用方式
+            print("嘗試舊版API...")
+            response = notion.databases.query(
+                database_id=NEWS_DB_ID,
+                filter={
+                    "property": "狀態",
+                    "select": {"equals": "已發佈"}
+                }
+            )
 
-        print(f"查询成功，获取到 {len(response['results'])} 篇文章")
+        print(f"查询成功，获取到 {len(response.get('results', []))} 篇文章")
 
-        for page in response['results']:
+        for page in response.get('results', []):
             try:
-                props = page['properties']
+                props = page.get('properties', {})
 
-                # 提取字段
                 article = {
-                    "id": page['id'],
+                    "id": page.get('id'),
                     "title": extract_title(props),
                     "content": extract_content(props),
                     "category": extract_select(props, '類型'),
@@ -57,7 +75,6 @@ def fetch_published_articles():
                     "cover_image": extract_url(props, '封面圖') or get_default_image()
                 }
 
-                # 檢查是否會員專享
                 if '會員專享' in article['tags'] or '獨家' in article['tags']:
                     article['is_premium'] = True
 
@@ -78,8 +95,9 @@ def fetch_published_articles():
 def extract_title(props):
     try:
         title_prop = props.get('標題', {})
-        if title_prop.get('title'):
-            return title_prop['title'][0]['text']['content']
+        title_list = title_prop.get('title', [])
+        if title_list:
+            return title_list[0].get('text', {}).get('content', '無標題')
     except:
         pass
     return "無標題"
@@ -87,8 +105,9 @@ def extract_title(props):
 def extract_content(props):
     try:
         content_prop = props.get('內容', {})
-        if content_prop.get('rich_text'):
-            return content_prop['rich_text'][0]['text']['content']
+        rich_text = content_prop.get('rich_text', [])
+        if rich_text:
+            return rich_text[0].get('text', {}).get('content', '')
     except:
         pass
     return ""
@@ -96,8 +115,9 @@ def extract_content(props):
 def extract_select(props, prop_name):
     try:
         prop = props.get(prop_name, {})
-        if prop.get('select'):
-            return prop['select']['name']
+        select_data = prop.get('select')
+        if select_data:
+            return select_data.get('name', '')
     except:
         pass
     return ""
@@ -105,8 +125,8 @@ def extract_select(props, prop_name):
 def extract_multi_select(props, prop_name):
     try:
         prop = props.get(prop_name, {})
-        if prop.get('multi_select'):
-            return [tag['name'] for tag in prop['multi_select']]
+        multi_select = prop.get('multi_select', [])
+        return [tag.get('name', '') for tag in multi_select]
     except:
         pass
     return []
@@ -122,8 +142,9 @@ def extract_url(props, prop_name):
 def extract_date(props, prop_name):
     try:
         prop = props.get(prop_name, {})
-        if prop.get('date'):
-            return prop['date']['start']
+        date_data = prop.get('date', {})
+        if date_data:
+            return date_data.get('start', datetime.now().isoformat())
     except:
         pass
     return datetime.now().isoformat()
@@ -159,16 +180,13 @@ def categorize_articles(articles):
         tags = article.get('tags', [])
         category = article.get('category', '')
 
-        # 头条文章（前3篇）
         if article.get('featured') and len(categorized['hero']) < 3:
             categorized['hero'].append(article)
             continue
 
-        # 精选文章
         if article.get('is_premium') and len(categorized['featured']) < 4:
             categorized['featured'].append(article)
 
-        # 按分类归档
         if '獨家' in tags or category == '獨家':
             categorized['by_category']['獨家'].append(article)
         elif '現場' in tags or category in ['演出预告', '現場']:
@@ -182,7 +200,6 @@ def categorize_articles(articles):
 
         categorized['latest'].append(article)
 
-    # 如果hero不够3篇，从latest补充
     while len(categorized['hero']) < 3 and categorized['latest']:
         for article in categorized['latest']:
             if article not in categorized['hero']:
@@ -222,7 +239,6 @@ def main():
 
     if not articles:
         print("没有已发布的文章")
-        # 創建空文件
         empty_data = {
             "hero": [],
             "featured": [],
@@ -252,7 +268,7 @@ def main():
     print(f"國際: {len(categorized['by_category']['國際'])} 篇")
     print(f"新發行: {len(categorized['by_category']['新發行'])} 篇")
     print("="*70)
-    print("\n发布完成！前端将自动读取 data/news.json")
+    print("\n发布完成！")
 
 if __name__ == "__main__":
     main()
