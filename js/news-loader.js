@@ -1,186 +1,96 @@
-// News Loader - 修復版
+// News Loader - 強制更新版
 (function() {
     const NEWS_JSON_URL = 'data/news.json';
 
     async function loadNews() {
         try {
-            console.log('📰 開始加載新聞...');
+            console.log('📰 強制更新新聞...');
 
-            const response = await fetch(`${NEWS_JSON_URL}?t=${Date.now()}`, {
-                cache: 'no-store'
-            });
+            const res = await fetch(`${NEWS_JSON_URL}?t=${Date.now()}`, {cache: 'no-store'});
+            const data = await res.json();
+            const newsList = data.data?.all || [];
 
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+            console.log('新聞數量:', newsList.length);
+
+            if (newsList.length === 0) return;
+
+            // 策略：直接查找所有新聞卡片，強制替換內容
+            updateAllNewsCards(newsList);
+
+        } catch (e) {
+            console.error('錯誤:', e);
+        }
+    }
+
+    function updateAllNewsCards(newsList) {
+        // 查找所有可能的新聞卡片（通過圖片容器）
+        const allImages = document.querySelectorAll('img');
+        console.log('頁面圖片總數:', allImages.length);
+
+        // 查找大圖（通常是尺寸最大的那個）
+        let bigImage = null;
+        let maxArea = 0;
+
+        allImages.forEach(img => {
+            const rect = img.getBoundingClientRect();
+            const area = rect.width * rect.height;
+            if (area > maxArea && rect.width > 300) {
+                maxArea = area;
+                bigImage = img;
             }
-
-            const data = await response.json();
-            console.log('📦 數據結構:', Object.keys(data));
-
-            // 解析正確的數據結構
-            // 格式: { updated_at, total_count, data: { all: [...], hero: [...] } }
-            let newsList = [];
-
-            if (data.data && data.data.all && Array.isArray(data.data.all)) {
-                // 新格式
-                newsList = data.data.all;
-                console.log('✅ 使用 data.data.all 格式');
-            } else if (data.news && Array.isArray(data.news)) {
-                // 舊格式
-                newsList = data.news;
-                console.log('✅ 使用 data.news 格式');
-            } else if (Array.isArray(data)) {
-                // 直接是數組
-                newsList = data;
-                console.log('✅ 使用直接數組格式');
-            } else {
-                console.error('❌ 無法識別數據格式:', data);
-                return;
-            }
-
-            console.log('📊 新聞數量:', newsList.length);
-            newsList.forEach((news, i) => {
-                console.log(`   ${i+1}. ${news.title}`);
-            });
-
-            renderNews(newsList);
-
-        } catch (error) {
-            console.error('❌ 加載失敗:', error);
-        }
-    }
-
-    function renderNews(newsList) {
-        if (newsList.length === 0) {
-            console.log('⚠️ 沒有新聞');
-            return;
-        }
-
-        // 根據數量決定布局
-        if (newsList.length === 1) {
-            updateFeaturedNews(newsList[0], true);
-            updateSideNews([]);
-        } else if (newsList.length === 2) {
-            updateFeaturedNews(newsList[0], false);
-            updateSideNews([newsList[1]]);
-        } else {
-            updateFeaturedNews(newsList[0], false);
-            updateSideNews(newsList.slice(1, 3));
-        }
-    }
-
-    function updateFeaturedNews(news, isFullWidth) {
-        // 查找元素（嘗試多種選擇器）
-        const imgSelectors = ['.featured-news-img', '.news-main-image', '.hero-news img', '.main-news-image'];
-        const titleSelectors = ['.featured-news-title', '.news-main-title', '.hero-news h3', '.main-news-title'];
-        const summarySelectors = ['.featured-news-summary', '.news-main-summary', '.hero-news p'];
-        const linkSelectors = ['.featured-news-link', '.news-main-link', '.hero-news a'];
-
-        const img = findElement(imgSelectors);
-        const title = findElement(titleSelectors);
-        const summary = findElement(summarySelectors);
-        const link = findElement(linkSelectors);
-
-        // 使用 cover_image 或 image 字段
-        const imageUrl = news.cover_image || news.image || '';
-
-        if (img && imageUrl) {
-            img.src = imageUrl;
-            img.alt = news.title;
-            console.log('✅ 大圖已更新:', news.title);
-        }
-
-        if (title) {
-            title.textContent = news.title;
-        }
-
-        if (summary) {
-            // 使用 content 或 summary 字段
-            summary.textContent = news.summary || news.content || '';
-        }
-
-        if (link) {
-            link.href = news.source_url || news.sourceUrl || '#';
-        }
-
-        // 更新分類
-        const catSelectors = ['.featured-news-category', '.news-category', '.category-tag'];
-        const catEl = findElement(catSelectors);
-        if (catEl && news.category) {
-            catEl.textContent = news.category;
-        }
-    }
-
-    function updateSideNews(newsList) {
-        const containerSelectors = ['.side-news', '.news-sidebar', '.secondary-news'];
-        const container = findElement(containerSelectors);
-
-        if (!container) {
-            console.log('⚠️ 未找到側邊容器');
-            return;
-        }
-
-        container.innerHTML = '';
-
-        if (newsList.length === 0) {
-            container.style.display = 'none';
-            return;
-        }
-
-        newsList.forEach(news => {
-            const imageUrl = news.cover_image || news.image || '';
-            const item = document.createElement('div');
-            item.className = 'side-news-item';
-            item.style.cssText = 'margin-bottom: 15px;';
-
-            item.innerHTML = `
-                <a href="${news.source_url || news.sourceUrl || '#'}" style="
-                    display: block;
-                    text-decoration: none;
-                    color: inherit;
-                ">
-                    <div style="
-                        width: 100%;
-                        height: 150px;
-                        overflow: hidden;
-                        border-radius: 8px;
-                        margin-bottom: 10px;
-                    ">
-                        <img src="${imageUrl}" alt="${news.title}" style="
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
-                        ">
-                    </div>
-                    <span style="
-                        display: inline-block;
-                        background: #ff0066;
-                        color: white;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        font-size: 12px;
-                        margin-bottom: 5px;
-                    ">${news.category || '新聞'}</span>
-                    <h4 style="
-                        margin: 0;
-                        font-size: 16px;
-                        line-height: 1.3;
-                        color: #333;
-                    ">${news.title}</h4>
-                </a>
-            `;
-            container.appendChild(item);
         });
 
-        console.log('✅ 側邊新聞已更新:', newsList.length, '條');
-    }
+        console.log('找到大圖:', bigImage ? '是' : '否');
 
-    function findElement(selectors) {
-        for (const sel of selectors) {
-            const el = document.querySelector(sel);
-            if (el) return el;
+        // 更新大圖區域
+        if (bigImage && newsList[0]) {
+            const news = newsList[0];
+            bigImage.src = news.cover_image || news.image;
+
+            // 查找大圖的父容器，更新標題
+            let parent = bigImage.parentElement;
+            for (let i = 0; i < 5 && parent; i++) {
+                const title = parent.querySelector('h1, h2, h3, h4, .title');
+                if (title) {
+                    title.textContent = news.title;
+                    console.log('✅ 更新大圖標題:', news.title);
+                    break;
+                }
+                parent = parent.parentElement;
+            }
         }
-        return null;
+
+        // 查找側邊小圖（尺寸較小的圖片）
+        const sideImages = [];
+        allImages.forEach(img => {
+            const rect = img.getBoundingClientRect();
+            if (rect.width > 100 && rect.width < 400 && rect.height > 80) {
+                sideImages.push(img);
+            }
+        });
+
+        console.log('找到側邊圖片:', sideImages.length);
+
+        // 更新側邊圖片
+        sideImages.forEach((img, index) => {
+            const newsIndex = index + 1; // 跳過第一個（大圖）
+            if (newsIndex < newsList.length) {
+                const news = newsList[newsIndex];
+                img.src = news.cover_image || news.image;
+
+                // 更新旁邊的標題
+                let parent = img.parentElement;
+                for (let i = 0; i < 3 && parent; i++) {
+                    const title = parent.querySelector('h4, h5, .title, .news-title');
+                    if (title) {
+                        title.textContent = news.title;
+                        console.log('✅ 更新側邊標題:', news.title);
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+            }
+        });
     }
 
     // 頁面加載後執行
@@ -190,6 +100,6 @@
         loadNews();
     }
 
-    // 每5分鐘刷新
-    setInterval(loadNews, 5 * 60 * 1000);
+    // 也延遲執行一次（確保動態內容加載完成）
+    setTimeout(loadNews, 1000);
 })();
