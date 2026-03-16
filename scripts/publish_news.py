@@ -15,29 +15,32 @@ NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 def fetch_published_articles():
     """從Notion獲取已發佈的文章"""
     notion = Client(auth=NOTION_TOKEN)
-
+    
     articles = []
     cursor = None
-
+    
     while True:
         try:
-            # 構建查詢參數
-            query_params = {
-                "database_id": NEWS_DB_ID,
-                "filter": {"property": "狀態", "select": {"equals": "已發佈"}},
-                "sorts": [{"property": "發布時間", "direction": "descending"}],
-                "page_size": 100
-            }
-
+            # notion-client 2.x 正確用法
             if cursor:
-                query_params["start_cursor"] = cursor
-
-            # 使用正確的 API 調用方式
-            response = notion.databases.query(**query_params)
-
-            for page in response['results']:
-                props = page['properties']
-
+                response = notion.databases.query(
+                    database_id=NEWS_DB_ID,
+                    filter={"property": "狀態", "select": {"equals": "已發佈"}},
+                    sorts=[{"property": "發布時間", "direction": "descending"}],
+                    start_cursor=cursor,
+                    page_size=100
+                )
+            else:
+                response = notion.databases.query(
+                    database_id=NEWS_DB_ID,
+                    filter={"property": "狀態", "select": {"equals": "已發佈"}},
+                    sorts=[{"property": "發布時間", "direction": "descending"}],
+                    page_size=100
+                )
+            
+            for page in response.get('results', []):
+                props = page.get('properties', {})
+                
                 # 檢測是否會員專享
                 tags = extract_multi_select(props, '標籤')
                 is_premium = (
@@ -45,9 +48,9 @@ def fetch_published_articles():
                     extract_checkbox(props, '是否會員專享') or
                     '獨家' in tags
                 )
-
+                
                 article = {
-                    "id": page['id'],
+                    "id": page.get('id'),
                     "title": extract_title(props),
                     "content": extract_content(props),
                     "category": extract_select(props, '類型'),
@@ -60,19 +63,19 @@ def fetch_published_articles():
                     "is_premium": is_premium,
                     "cover_image": extract_url(props, '封面圖') or get_default_image()
                 }
-
+                
                 articles.append(article)
-
+            
             if not response.get('has_more'):
                 break
             cursor = response.get('next_cursor')
-
+            
         except Exception as e:
             print(f"❌ 獲取文章失敗: {e}")
             import traceback
             traceback.print_exc()
             break
-
+    
     return articles
 
 def extract_title(props):
@@ -156,22 +159,22 @@ def categorize_articles(articles):
             "新發行": []
         }
     }
-
+    
     for article in articles:
         tags = article.get('tags', [])
         category = article.get('category', '')
-
+        
         # 頭條文章（前3篇）
         if article.get('featured') or len(categorized['hero']) < 3:
             if len(categorized['hero']) < 3:
                 categorized['hero'].append(article)
                 continue
-
+        
         # 精選文章（會員專享或獨家）
         if article.get('is_premium') or '獨家' in tags:
             if len(categorized['featured']) < 4:
                 categorized['featured'].append(article)
-
+        
         # 按分類歸檔
         if '獨家' in tags or category == '獨家':
             categorized['by_category']['獨家'].append(article)
@@ -185,9 +188,9 @@ def categorize_articles(articles):
             categorized['by_category']['新發行'].append(article)
         else:
             categorized['by_category']['全部'].append(article)
-
+        
         categorized['latest'].append(article)
-
+    
     return categorized
 
 def save_to_json(data):
@@ -197,12 +200,12 @@ def save_to_json(data):
         "total_count": len(data.get('latest', [])),
         "data": data
     }
-
+    
     os.makedirs('data', exist_ok=True)
-
+    
     with open('data/news.json', 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-
+    
     print(f"✅ 已保存 {output['total_count']} 篇文章到 data/news.json")
 
 def main():
@@ -210,28 +213,28 @@ def main():
     print("🎸 ChineseRocks 審核發佈系統")
     print(f" 時間: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("="*70)
-
+    
     if not NOTION_TOKEN:
         print("❌ 錯誤: NOTION_TOKEN 未設置")
         return
-
+    
     print(f"\n📡 從Notion獲取已發佈文章...")
     print(f"   數據庫ID: {NEWS_DB_ID}")
-
+    
     articles = fetch_published_articles()
-
+    
     if not articles:
         print("⚠️ 沒有已發佈的文章")
         return
-
+    
     print(f"✅ 獲取到 {len(articles)} 篇已發佈文章")
-
+    
     print("\n📂 分類整理文章...")
     categorized = categorize_articles(articles)
-
+    
     print("\n💾 保存到JSON文件...")
     save_to_json(categorized)
-
+    
     print("\n" + "="*70)
     print("📊 發佈統計")
     print("="*70)
