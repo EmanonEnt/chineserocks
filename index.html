@@ -1057,7 +1057,23 @@ html {
             }
             .top5-rank::before {
                 width:200%;height:200%;
-            }}
+            }
+            /* 480px Footer 布局 */
+            .footer-content {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.5rem 1rem !important;
+                padding: 1.5rem 1rem !important;
+            }
+            .footer-content > div:first-child {
+                grid-column: 1 / -1;
+            }
+            .footer-title {
+                font-size: 0.75rem !important;
+            }
+            .footer-links a {
+                font-size: 0.75rem !important;
+            }
+}
 
         @media (max-width:380px) {
             .hero-section {
@@ -1078,7 +1094,23 @@ html {
             .hero-vote-option img {
                 width:34px !important;height:34px !important;}
 
-        }
+        
+            /* 380px Footer 布局 */
+            .footer-content {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+                padding: 1rem !important;
+            }
+            .footer-title {
+                font-size: 0.7rem !important;
+            }
+            .footer-links a {
+                font-size: 0.7rem !important;
+            }
+            .footer-bottom {
+                font-size: 0.7rem !important;
+            }
+}
 
         .login-modal {
             display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;align-items:center;justify-content:center;}
@@ -2577,7 +2609,36 @@ html {
                 font-size:0.7rem !important;}
             .news-grid-section .paywall-card {
                 display:none !important;}
-        }
+        
+            /* 移动端 Footer 布局 */
+            .footer-content {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 2rem 1.5rem !important;
+                padding: 2rem 1rem !important;
+            }
+            .footer-content > div:first-child {
+                grid-column: 1 / -1;
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+            .footer-title {
+                font-size: 0.8rem !important;
+                margin-bottom: 0.8rem !important;
+            }
+            .footer-links li {
+                margin-bottom: 0.4rem !important;
+            }
+            .footer-links a {
+                font-size: 0.8rem !important;
+            }
+            .footer-desc {
+                font-size: 0.85rem !important;
+            }
+            .footer-bottom {
+                padding: 1rem !important;
+                font-size: 0.75rem !important;
+            }
+}
         
         /* 全局溢出保护 */
         img, video, canvas, iframe {
