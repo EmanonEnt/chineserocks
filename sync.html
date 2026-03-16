@@ -123,6 +123,8 @@
             color: #fff;
             font-size: 15px;
             transition: all 0.3s;
+            text-align: center;
+            letter-spacing: 2px;
         }
 
         .form-input:focus {
@@ -133,6 +135,7 @@
 
         .form-input::placeholder {
             color: #555;
+            letter-spacing: normal;
         }
 
         .input-hint {
@@ -220,6 +223,18 @@
             color: #FF0066;
         }
 
+        .btn-text {
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 13px;
+            text-decoration: underline;
+        }
+
+        .btn-text:hover {
+            color: #888;
+        }
+
         .status-icon {
             font-size: 50px;
             margin-bottom: 15px;
@@ -291,24 +306,67 @@
             margin-top: 10px;
         }
 
-        .error-box {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 13px;
-            color: #ff6666;
+        .qr-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 102, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
-        .info-box {
-            background: rgba(255, 0, 102, 0.1);
-            border: 1px solid rgba(255, 0, 102, 0.3);
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: #fff;
             border-radius: 8px;
-            padding: 12px;
+            margin: 0 auto 15px;
+            overflow: hidden;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .member-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
             margin-bottom: 15px;
-            font-size: 13px;
+        }
+
+        .member-badge.tourist {
+            background: rgba(128, 128, 128, 0.2);
+            color: #888;
+            border: 1px solid rgba(128, 128, 128, 0.3);
+        }
+
+        .member-badge.trial {
+            background: rgba(255, 0, 102, 0.2);
             color: #FF0066;
+            border: 1px solid rgba(255, 0, 102, 0.3);
+        }
+
+        .expiry-info {
+            font-size: 12px;
+            color: #FF0066;
+            margin-top: 5px;
+        }
+
+        .error-text {
+            color: #ff4444;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .success-text {
+            color: #44ff44;
+            font-size: 13px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -335,7 +393,7 @@
 
             <div class="form-group">
                 <label class="form-label">昵称 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="nickname-input" placeholder="请输入您的昵称" maxlength="20">
+                <input type="text" class="form-input" id="nickname-input" placeholder="请输入您的昵称" maxlength="20" style="text-align: left; letter-spacing: normal;">
             </div>
 
             <div class="divider"><span>联系方式（手机或邮箱至少填一个）</span></div>
@@ -343,80 +401,194 @@
             <div class="contact-options">
                 <div class="form-group">
                     <label class="form-label">手机号</label>
-                    <input type="tel" class="form-input" id="phone-input" placeholder="11位手机号" maxlength="11">
+                    <input type="tel" class="form-input" id="phone-input" placeholder="11位手机号" maxlength="11" style="text-align: left; letter-spacing: normal;">
                 </div>
                 <div class="form-group">
                     <label class="form-label">邮箱</label>
-                    <input type="email" class="form-input" id="email-input" placeholder="your@email.com">
+                    <input type="email" class="form-input" id="email-input" placeholder="your@email.com" style="text-align: left; letter-spacing: normal;">
                 </div>
             </div>
             <p class="input-hint">* 手机号或邮箱至少填写一项，用于找回账号</p>
 
             <button class="btn" onclick="register()">创建账号</button>
 
-            <p class="tips">💡 注册即可获得100积分奖励</p>
+            <p class="tips">💡 注册后可领取3天体验卡</p>
         </div>
 
-        <!-- 状态3: 注册中 -->
-        <div id="processing-state" class="state-section">
+        <!-- 状态3: 注册成功，激活体验卡 -->
+        <div id="activate-state" class="state-section">
+            <div class="star-decoration">★</div>
+            <h1>注册成功！</h1>
+            <p>关注公众号领取3天体验卡</p>
+
+            <div class="member-badge tourist">普通游客</div>
+
+            <div class="qr-section">
+                <div class="qr-code">
+                    <img src="./image/crgzh.jpg" alt="公众号二维码">
+                </div>
+                <p style="font-size: 13px; color: #888; margin-bottom: 10px;">
+                    扫码关注公众号，自动回复激活码
+                </p>
+                <p style="font-size: 12px; color: #666;">
+                    本月激活码格式：<strong style="color: #FF0066;">CR3D03</strong>
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">输入激活码 <span class="required">*</span></label>
+                <input type="text" class="form-input" id="code-input" placeholder="如: CR3D03" maxlength="6">
+                <p class="input-hint">关注公众号后，在自动回复中获取</p>
+                <p id="code-error" class="error-text" style="display: none;"></p>
+            </div>
+
+            <button class="btn" onclick="activateTrial()">激活体验卡</button>
+            <button class="btn btn-text" onclick="skipActivate()">跳过，以游客身份进入</button>
+
+            <div style="margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; text-align: left;">
+                <p style="font-size: 12px; color: #666; margin-bottom: 8px;"><strong>权益对比：</strong></p>
+                <table style="width: 100%; font-size: 11px; color: #888; line-height: 1.8;">
+                    <tr>
+                        <td style="width: 50%;">普通游客</td>
+                        <td style="color: #FF0066;">3天体验会员</td>
+                    </tr>
+                    <tr>
+                        <td>每日1次新闻</td>
+                        <td style="color: #fff;">每日3次新闻</td>
+                    </tr>
+                    <tr>
+                        <td>不能投票</td>
+                        <td style="color: #fff;">投票权重×0.5</td>
+                    </tr>
+                    <tr>
+                        <td>不能购票</td>
+                        <td style="color: #fff;">480P LIVE TV</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 状态4: 激活中 -->
+        <div id="activating-state" class="state-section">
             <div class="star-decoration">★</div>
             <div class="spinner"></div>
-            <h1>正在创建账号...</h1>
-            <p>保存您的会员信息</p>
+            <h1>激活中...</h1>
+            <p>正在开通体验会员</p>
         </div>
 
-        <!-- 状态4: 已登录，显示用户信息 -->
-        <div id="loggedin-state" class="state-section">
+        <!-- 状态5: 激活成功 -->
+        <div id="activated-state" class="state-section">
             <div class="star-decoration">★</div>
             <div class="status-icon success"></div>
-            <h1>已登录</h1>
-            <p>欢迎回来，<span id="welcome-name">摇滚用户</span></p>
+            <h1>激活成功！</h1>
+            <p>您已获得3天体验会员</p>
+
+            <div class="member-badge trial">体验会员</div>
 
             <div class="user-info">
                 <div class="user-info-item">
                     <span class="user-info-label">昵称</span>
-                    <span class="user-info-value" id="info-name">-</span>
+                    <span class="user-info-value" id="act-name">-</span>
                 </div>
                 <div class="user-info-item">
-                    <span class="user-info-label">用户ID</span>
-                    <span class="user-info-value" id="info-id">-</span>
+                    <span class="user-info-label">会员类型</span>
+                    <span class="user-info-value" style="color: #FF0066;">3天体验卡</span>
                 </div>
                 <div class="user-info-item">
-                    <span class="user-info-label">联系方式</span>
-                    <span class="user-info-value" id="info-contact">-</span>
-                </div>
-                <div class="user-info-item">
-                    <span class="user-info-label">会员状态</span>
-                    <span class="user-info-value" style="color: #FF0066; font-weight: 700;">已激活</span>
-                </div>
-                <div class="user-info-item">
-                    <span class="user-info-label">当前积分</span>
-                    <span class="user-info-value points" id="info-points">0</span>
+                    <span class="user-info-label">到期时间</span>
+                    <span class="user-info-value" id="act-expiry">-</span>
                 </div>
             </div>
 
             <button class="btn" onclick="enterWebsite()">进入网站</button>
-            <button class="btn btn-secondary" onclick="logout()">退出登录</button>
-
-            <p class="countdown" id="countdown-text">5秒后自动进入...</p>
+            <p class="countdown" id="act-countdown">3秒后自动进入...</p>
         </div>
 
-        <!-- 状态5: 注册成功 -->
-        <div id="success-state" class="state-section">
+        <!-- 状态6: 已登录游客 -->
+        <div id="tourist-state" class="state-section">
             <div class="star-decoration">★</div>
             <div class="status-icon success"></div>
-            <h1>注册成功！</h1>
-            <p>欢迎加入 ChineseRocks 大家庭</p>
+            <h1>欢迎回来</h1>
+            <p>您当前是游客身份</p>
 
-            <div class="info-box">
-                您的账号已创建并自动登录
+            <div class="member-badge tourist">普通游客</div>
+
+            <div class="user-info">
+                <div class="user-info-item">
+                    <span class="user-info-label">昵称</span>
+                    <span class="user-info-value" id="tour-name">-</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">用户ID</span>
+                    <span class="user-info-value" id="tour-id">-</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">会员状态</span>
+                    <span class="user-info-value" style="color: #888;">未激活</span>
+                </div>
             </div>
 
-            <button class="btn" onclick="enterWebsite()">立即进入网站</button>
-            <p class="countdown" id="success-countdown">3秒后自动进入...</p>
+            <div class="qr-section" style="margin-top: 15px;">
+                <p style="font-size: 13px; color: #888; margin-bottom: 10px;">
+                    扫码关注公众号，领取体验卡
+                </p>
+                <div class="qr-code" style="width: 120px; height: 120px;">
+                    <img src="./image/crgzh.jpg" alt="公众号二维码" style="width: 100%; height: 100%;">
+                </div>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                    本月激活码：<strong style="color: #FF0066;">CR3D03</strong>
+                </p>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <input type="text" class="form-input" id="tour-code-input" placeholder="输入激活码" maxlength="6">
+                <p id="tour-code-error" class="error-text" style="display: none;"></p>
+            </div>
+
+            <button class="btn" onclick="activateFromTourist()">激活体验卡</button>
+            <button class="btn btn-secondary" onclick="enterWebsite()">直接进入</button>
+            <button class="btn btn-text" onclick="logout()">退出登录</button>
         </div>
 
-        <!-- 状态6: 错误 -->
+        <!-- 状态7: 已登录体验会员 -->
+        <div id="trial-state" class="state-section">
+            <div class="star-decoration">★</div>
+            <div class="status-icon success"></div>
+            <h1>欢迎回来</h1>
+            <p>体验会员专享权益</p>
+
+            <div class="member-badge trial">体验会员</div>
+
+            <div class="user-info">
+                <div class="user-info-item">
+                    <span class="user-info-label">昵称</span>
+                    <span class="user-info-value" id="trial-name">-</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">用户ID</span>
+                    <span class="user-info-value" id="trial-id">-</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">会员类型</span>
+                    <span class="user-info-value" style="color: #FF0066;">3天体验卡</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">到期时间</span>
+                    <span class="user-info-value" id="trial-expiry">-</span>
+                </div>
+                <div class="user-info-item">
+                    <span class="user-info-label">剩余天数</span>
+                    <span class="user-info-value points" id="trial-days">-</span>
+                </div>
+            </div>
+
+            <button class="btn" onclick="enterWebsite()">进入网站</button>
+            <button class="btn btn-text" onclick="logout()">退出登录</button>
+
+            <p class="countdown" id="trial-countdown">5秒后自动进入...</p>
+        </div>
+
+        <!-- 状态8: 错误 -->
         <div id="error-state" class="state-section">
             <div class="star-decoration">★</div>
             <div class="status-icon warning"></div>
@@ -432,13 +604,31 @@
         // 配置
         const CONFIG = {
             MAIN_SITE: 'https://chineserocks.net',
+            TRIAL_DAYS: 3,
             AUTO_REDIRECT_DELAY: 5,
-            NEW_USER_REDIRECT_DELAY: 3
+            ACTIVATED_REDIRECT_DELAY: 3
         };
 
         let currentUser = null;
         let autoRedirectTimer = null;
         let countdownInterval = null;
+
+        // 获取本月有效激活码（自动计算）
+        function getValidCode() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            return 'CR' + (year % 10) + 'D' + month.toString().padStart(2, '0');
+            // 例如 2026年3月 = "CR3D03"
+        }
+
+        // 验证激活码
+        function isValidCode(code) {
+            if (!code) return false;
+            const input = code.toString().trim().toUpperCase();
+            const valid = getValidCode();
+            return input === valid;
+        }
 
         // 验证手机号
         function isValidChinesePhone(phone) {
@@ -450,20 +640,6 @@
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || '');
         }
 
-        // 脱敏手机号
-        function maskPhone(phone) {
-            if (!phone || phone.length !== 11) return phone || '-';
-            return phone.substring(0, 3) + '****' + phone.substring(7);
-        }
-
-        // 脱敏邮箱
-        function maskEmail(email) {
-            if (!email) return '-';
-            const atIndex = email.indexOf('@');
-            if (atIndex <= 2) return email;
-            return email.substring(0, 2) + '***' + email.substring(atIndex);
-        }
-
         // 生成用户ID
         function generateUserId(contact) {
             let hash = 0;
@@ -473,6 +649,22 @@
                 hash = hash & hash;
             }
             return 'CR_' + Math.abs(hash).toString(36).substring(0, 8).toUpperCase();
+        }
+
+        // 格式化日期
+        function formatDate(date) {
+            const d = new Date(date);
+            return d.getFullYear() + '-' + 
+                   (d.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+                   d.getDate().toString().padStart(2, '0');
+        }
+
+        // 计算剩余天数
+        function getRemainingDays(expiryDate) {
+            const now = new Date();
+            const expiry = new Date(expiryDate);
+            const diff = expiry - now;
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
         }
 
         // 切换状态
@@ -534,30 +726,45 @@
 
             if (user && user.isLoggedIn && user.userId) {
                 currentUser = user;
-                showLoggedInState(user);
+
+                // 检查会员类型和过期
+                if (user.memberType === '体验会员' && user.expiryDate) {
+                    const remaining = getRemainingDays(user.expiryDate);
+                    if (remaining > 0) {
+                        showTrialState(user, remaining);
+                    } else {
+                        // 已过期，降级为游客
+                        user.memberType = '游客';
+                        user.isTrialExpired = true;
+                        saveUserData(user);
+                        showTouristState(user);
+                    }
+                } else {
+                    // 普通游客
+                    showTouristState(user);
+                }
             } else {
+                // 未登录，显示注册
                 showState('register');
             }
         }
 
-        // 显示已登录状态
-        function showLoggedInState(user) {
-            showState('loggedin');
+        // 显示游客状态
+        function showTouristState(user) {
+            showState('tourist');
+            document.getElementById('tour-name').textContent = user.name || '-';
+            document.getElementById('tour-id').textContent = user.userId || '-';
+        }
 
-            document.getElementById('welcome-name').textContent = user.name || '摇滚用户';
-            document.getElementById('info-name').textContent = user.name || '-';
-            document.getElementById('info-id').textContent = user.userId || '-';
-            document.getElementById('info-points').textContent = user.points || 0;
+        // 显示体验会员状态
+        function showTrialState(user, remainingDays) {
+            showState('trial');
+            document.getElementById('trial-name').textContent = user.name || '-';
+            document.getElementById('trial-id').textContent = user.userId || '-';
+            document.getElementById('trial-expiry').textContent = formatDate(user.expiryDate);
+            document.getElementById('trial-days').textContent = remainingDays + '天';
 
-            let contact = '-';
-            if (user.phone) {
-                contact = maskPhone(user.phone);
-            } else if (user.email) {
-                contact = maskEmail(user.email);
-            }
-            document.getElementById('info-contact').textContent = contact;
-
-            startAutoRedirect(CONFIG.AUTO_REDIRECT_DELAY, 'countdown-text');
+            startAutoRedirect(CONFIG.AUTO_REDIRECT_DELAY, 'trial-countdown');
         }
 
         // 注册
@@ -590,16 +797,14 @@
                 return;
             }
 
-            showState('processing');
-
             const contact = phone || email;
             const userData = {
                 userId: generateUserId(contact),
                 name: nickname,
                 phone: phone || null,
                 email: email || null,
-                points: 100,
-                memberType: '体验会员',
+                points: 0,
+                memberType: '游客',
                 isLoggedIn: true,
                 loginTime: new Date().toISOString(),
                 registerTime: new Date().toISOString(),
@@ -608,13 +813,103 @@
 
             if (saveUserData(userData)) {
                 currentUser = userData;
-                setTimeout(function() {
-                    showState('success');
-                    startAutoRedirect(CONFIG.NEW_USER_REDIRECT_DELAY, 'success-countdown');
-                }, 800);
+                // 注册成功，显示激活页面
+                showState('activate');
             } else {
                 showError('保存用户数据失败，请检查浏览器设置');
             }
+        }
+
+        // 激活体验卡（从注册页）
+        function activateTrial() {
+            const code = document.getElementById('code-input').value.trim();
+            const errorEl = document.getElementById('code-error');
+
+            if (!code) {
+                errorEl.textContent = '请输入激活码';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (!isValidCode(code)) {
+                errorEl.textContent = '激活码错误，本月有效码：' + getValidCode();
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            errorEl.style.display = 'none';
+            showState('activating');
+
+            // 计算过期时间
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + CONFIG.TRIAL_DAYS);
+
+            // 更新用户数据
+            currentUser.memberType = '体验会员';
+            currentUser.activationCode = code;
+            currentUser.activationTime = new Date().toISOString();
+            currentUser.expiryDate = expiryDate.toISOString();
+            currentUser.points = 100; // 体验会员送100积分
+
+            if (saveUserData(currentUser)) {
+                setTimeout(function() {
+                    showActivatedState();
+                }, 800);
+            } else {
+                showError('激活失败，请重试');
+            }
+        }
+
+        // 激活体验卡（从游客页）
+        function activateFromTourist() {
+            const code = document.getElementById('tour-code-input').value.trim();
+            const errorEl = document.getElementById('tour-code-error');
+
+            if (!code) {
+                errorEl.textContent = '请输入激活码';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (!isValidCode(code)) {
+                errorEl.textContent = '激活码错误，本月有效码：' + getValidCode();
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            errorEl.style.display = 'none';
+
+            // 计算过期时间
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + CONFIG.TRIAL_DAYS);
+
+            // 更新用户数据
+            currentUser.memberType = '体验会员';
+            currentUser.activationCode = code;
+            currentUser.activationTime = new Date().toISOString();
+            currentUser.expiryDate = expiryDate.toISOString();
+            currentUser.points = 100;
+
+            if (saveUserData(currentUser)) {
+                const remaining = getRemainingDays(expiryDate);
+                showTrialState(currentUser, remaining);
+            } else {
+                showError('激活失败，请重试');
+            }
+        }
+
+        // 显示激活成功状态
+        function showActivatedState() {
+            showState('activated');
+            document.getElementById('act-name').textContent = currentUser.name || '-';
+            document.getElementById('act-expiry').textContent = formatDate(currentUser.expiryDate);
+
+            startAutoRedirect(CONFIG.ACTIVATED_REDIRECT_DELAY, 'act-countdown');
+        }
+
+        // 跳过激活
+        function skipActivate() {
+            enterWebsite();
         }
 
         // 退出登录
@@ -646,6 +941,7 @@
             if (currentUser) {
                 params.set('uid', currentUser.userId);
                 params.set('name', encodeURIComponent(currentUser.name || ''));
+                params.set('type', currentUser.memberType === '体验会员' ? 'trial' : 'tourist');
             }
 
             window.location.href = CONFIG.MAIN_SITE + '/?' + params.toString();
