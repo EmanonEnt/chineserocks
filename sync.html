@@ -120,7 +120,6 @@
             letter-spacing: 1px;
         }
 
-        /* 输入框样式 */
         .form-group {
             margin-bottom: 15px;
             text-align: left;
@@ -242,6 +241,10 @@
             content: '✅';
         }
 
+        .status-icon.error::after {
+            content: '❌';
+        }
+
         .brand-footer {
             font-size: 11px;
             color: #444;
@@ -260,6 +263,17 @@
             margin-top: 10px;
             line-height: 1.5;
         }
+
+        .error-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-size: 13px;
+            color: #ff6666;
+        }
     </style>
 </head>
 <body>
@@ -267,6 +281,16 @@
         <div class="brand-header">
             <div class="brand-title">CHINESE ROCKS</div>
             <div class="brand-subtitle">NEWS ★ CHARTS ★ MAGAZINE</div>
+        </div>
+
+        <!-- 错误提示 -->
+        <div id="error-state" class="hidden">
+            <div class="star-decoration">★</div>
+            <div class="status-icon error"></div>
+            <h1>参数错误</h1>
+            <p>无法获取手机号</p>
+            <div class="error-box" id="error-detail"></div>
+            <button class="btn" onclick="enterWebsite()">直接进入网站</button>
         </div>
 
         <!-- 第一步：欢迎+填写信息 -->
@@ -330,7 +354,7 @@
                 </div>
                 <div class="user-info-item">
                     <span class="user-info-label">当前积分</span>
-                    <span class="user-info-value points" id="user-points">100</span>
+                    <span class="user-info-value points" id="user-points">0</span>
                 </div>
             </div>
 
@@ -342,11 +366,37 @@
 
     <script>
         let userPhone = '';
+        let isValidPhone = false;
 
-        // 获取URL参数
+        // 获取URL参数 - 增强版
         function getUrlParam(name) {
-            const params = new URLSearchParams(window.location.search);
-            return params.get(name);
+            // 方法1: 标准URLSearchParams
+            let value = new URLSearchParams(window.location.search).get(name);
+
+            // 方法2: 如果失败，尝试从hash获取
+            if (!value && window.location.hash.includes('?')) {
+                value = new URLSearchParams(window.location.hash.split('?')[1]).get(name);
+            }
+
+            // 方法3: 尝试正则匹配
+            if (!value) {
+                const regex = new RegExp('[?&]' + name + '=([^&]+)');
+                const match = window.location.href.match(regex);
+                if (match) {
+                    value = decodeURIComponent(match[1]);
+                }
+            }
+
+            return value;
+        }
+
+        // 验证手机号格式
+        function isValidChinesePhone(phone) {
+            if (!phone) return false;
+            // 去除空格和特殊字符
+            phone = phone.replace(/\s/g, '').replace(/[\[\]]/g, '');
+            // 中国手机号：11位，1开头
+            return /^1[3-9]\d{9}$/.test(phone);
         }
 
         // 脱敏手机号
@@ -357,13 +407,29 @@
 
         // 页面加载
         window.onload = function() {
+            // 获取手机号参数
             userPhone = getUrlParam('phone');
 
+            console.log('Raw URL:', window.location.href);
+            console.log('Phone param:', userPhone);
+
+            // 清理手机号（去除方括号等）
+            if (userPhone) {
+                userPhone = userPhone.replace(/[\[\]]/g, '').trim();
+            }
+
             // 验证手机号
-            if (!userPhone || userPhone === '[用户手机号]' || userPhone === 'undefined' || userPhone === 'null') {
-                document.getElementById('display-phone').textContent = '参数错误';
+            if (!userPhone || !isValidChinesePhone(userPhone)) {
+                // 显示错误
+                document.getElementById('error-detail').innerHTML = 
+                    '获取到的参数: ' + (userPhone || '空') + '<br>' +
+                    '完整URL: ' + window.location.href;
+                document.getElementById('welcome-state').classList.add('hidden');
+                document.getElementById('error-state').classList.remove('hidden');
                 return;
             }
+
+            isValidPhone = true;
 
             // 显示手机号
             document.getElementById('display-phone').textContent = maskPhone(userPhone);
@@ -371,20 +437,30 @@
             // 检查本地是否已有该用户
             const existingUser = localStorage.getItem('chineserocks_user');
             if (existingUser) {
-                const user = JSON.parse(existingUser);
-                if (user.phone === userPhone) {
-                    // 已存在，直接显示成功
-                    showExistingUser(user);
-                    return;
+                try {
+                    const user = JSON.parse(existingUser);
+                    if (user.phone === userPhone) {
+                        // 已存在，直接显示成功
+                        showExistingUser(user);
+                        return;
+                    }
+                } catch (e) {
+                    console.log('Parse error:', e);
                 }
             }
 
             // 新用户，设置默认昵称
-            document.getElementById('nickname-input').value = '摇滚用户' + userPhone.slice(-4);
+            const defaultName = '摇滚用户' + userPhone.slice(-4);
+            document.getElementById('nickname-input').value = defaultName;
         };
 
         // 保存资料
         function saveProfile() {
+            if (!isValidPhone) {
+                alert('手机号参数错误，请重新进入');
+                return;
+            }
+
             const nickname = document.getElementById('nickname-input').value.trim();
             const email = document.getElementById('email-input').value.trim();
 
@@ -427,6 +503,7 @@
                 document.getElementById('user-name').textContent = nickname;
                 document.getElementById('user-id').textContent = userId;
                 document.getElementById('user-phone').textContent = maskPhone(userPhone);
+                document.getElementById('user-points').textContent = '100';
 
                 document.getElementById('loading-state').classList.add('hidden');
                 document.getElementById('success-state').classList.remove('hidden');
@@ -440,6 +517,11 @@
 
         // 跳过直接进入
         function skipAndEnter() {
+            if (!isValidPhone) {
+                alert('手机号参数错误，请重新进入');
+                return;
+            }
+
             const defaultName = '摇滚用户' + userPhone.slice(-4);
             document.getElementById('nickname-input').value = defaultName;
             saveProfile();
