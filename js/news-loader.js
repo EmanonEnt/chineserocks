@@ -1,45 +1,221 @@
-// news-loader.js - 新闻加载器
-// 从data/news.json加载已发布的新闻
+// news-loader-v2.js - ChineseRocks 新闻加载器
+// 功能：从 data/news.json 加载新闻，支持优先标签排序
 
-class NewsLoader {
-    constructor() {
-        this.data = null;
-        this.currentCategory = 'all';
-        this.currentPage = 1;
-        this.itemsPerPage = 8;
-        // 优先显示的标签（权重更高）
-        this.priorityTags = [
-            'TheNoname', '無名', '無名樂隊', 'THE NONAME', 'the noname',
-            'PUNK', 'Punk', 'punk', 'PUNK & HARDCORE', 
-            '龐克', '庞克', '硬核', 'Hardcore'
-        ];
+(function() {
+    'use strict';
+
+    // 优先标签配置 - 这些标签会优先显示并有特殊样式
+    const PRIORITY_TAGS = [
+        'TheNoname', '無名', '無名樂隊', 'THE NONAME',
+        'PUNK', 'Punk', 'punk', 'PUNK & HARDCORE',
+        '龐克', '庞克', '硬核', 'Hardcore'
+    ];
+
+    // 优先标签样式类名
+    const PRIORITY_CLASS = 'priority-tag';
+
+    // 新闻数据缓存
+    let newsData = [];
+    let currentFilter = 'all';
+    let currentTag = null;
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', init);
+
+    function init() {
+        loadNewsData();
+        initTagCloud();
     }
 
-    async loadNews() {
+    // 从 data/news.json 加载新闻数据
+    async function loadNewsData() {
         try {
-            const timestamp = new Date().getTime();
-            const response = await fetch(`data/news.json?t=${timestamp}`);
+            const response = await fetch('data/news.json?t=' + Date.now());
             if (!response.ok) throw new Error('Failed to load news');
 
-            this.data = await response.json();
-            console.log(`[NewsLoader] Loaded ${this.data.data.latest.length} articles`);
+            newsData = await response.json();
+            console.log('[NewsLoader] Loaded', newsData.length, 'articles');
 
-            // 生成热门标签
-            this.generateHotTags();
-
-            return this.data;
+            // 处理并渲染新闻
+            processAndRenderNews();
         } catch (error) {
             console.error('[NewsLoader] Error:', error);
-            return null;
+            // 如果加载失败，保持页面原有静态内容
         }
     }
 
-    // 自动生成热门标签
-    generateHotTags() {
-        const articles = this.data?.data?.latest || [];
-        const tagCount = {};
+    // 处理新闻数据 - 排序和分类
+    function processAndRenderNews() {
+        // 1. 按优先级排序（有优先标签的文章排在前面）
+        const sortedNews = sortByPriority(newsData);
 
-        // 统计所有标签出现次数
+        // 2. 分离头条和普通新闻
+        const heroNews = sortedNews.filter(n => n.isHero || n.isHeadline).slice(0, 3);
+        const normalNews = sortedNews.filter(n => !n.isHero && !n.isHeadline);
+
+        // 3. 渲染头条区
+        if (heroNews.length > 0) {
+            renderHeroSection(heroNews);
+        }
+
+        // 4. 渲染新闻列表
+        renderNewsList(normalNews);
+
+        // 5. 生成热门标签
+        generateHotTags(sortedNews);
+    }
+
+    // 按优先级排序
+    function sortByPriority(articles) {
+        return articles.sort((a, b) => {
+            const aPriority = hasPriorityTag(a) ? 1 : 0;
+            const bPriority = hasPriorityTag(b) ? 1 : 0;
+
+            if (aPriority !== bPriority) {
+                return bPriority - aPriority; // 优先标签排前面
+            }
+
+            // 同优先级按日期排序（新的在前）
+            return new Date(b.date || 0) - new Date(a.date || 0);
+        });
+    }
+
+    // 检查文章是否包含优先标签
+    function hasPriorityTag(article) {
+        const text = (article.title + ' ' + (article.tags || []).join(' ')).toLowerCase();
+        return PRIORITY_TAGS.some(tag => text.includes(tag.toLowerCase()));
+    }
+
+    // 获取文章的优先标签
+    function getPriorityTags(article) {
+        const tags = article.tags || [];
+        return tags.filter(tag => 
+            PRIORITY_TAGS.some(pt => tag.toLowerCase().includes(pt.toLowerCase()))
+        );
+    }
+
+    // 渲染头条区
+    function renderHeroSection(heroNews) {
+        const heroMain = document.querySelector('.hero-main');
+        const heroSide = document.querySelector('.hero-side');
+
+        if (!heroMain || !heroSide) return;
+
+        // 主头条
+        if (heroNews[0]) {
+            const main = heroNews[0];
+            const isPriority = hasPriorityTag(main);
+            heroMain.innerHTML = `
+                <img src="${main.image || main.cover}" alt="${main.title}">
+                <div class="hero-overlay">
+                    <span class="hero-tag ${main.category || 'exclusive'} ${isPriority ? PRIORITY_CLASS : ''}">
+                        ${main.tag || main.categoryName || '獨家'}
+                    </span>
+                    <h2 class="hero-title">${main.title}</h2>
+                    <p class="hero-excerpt">${main.excerpt || main.summary || ''}</p>
+                    <div class="hero-meta">
+                        <span>${formatDate(main.date)}</span>
+                        <span>閱讀時間 ${main.readTime || '5'} 分鐘</span>
+                        ${main.isPremium ? '<span>★ 會員專享</span>' : ''}
+                    </div>
+                </div>
+            `;
+            heroMain.onclick = () => handleArticleClick(main);
+        }
+
+        // 侧边头条
+        heroSide.innerHTML = heroNews.slice(1, 3).map(news => {
+            const isPriority = hasPriorityTag(news);
+            return `
+                <article class="side-card" data-id="${news.id}">
+                    <img src="${news.image || news.cover}" alt="${news.title}">
+                    <div class="side-overlay">
+                        <span class="side-tag ${isPriority ? PRIORITY_CLASS : ''}">${news.tag || news.categoryName || '新聞'}</span>
+                        <h3 class="side-title">${news.title}</h3>
+                    </div>
+                </article>
+            `;
+        }).join('');
+
+        // 绑定点击事件
+        heroSide.querySelectorAll('.side-card').forEach((card, idx) => {
+            card.onclick = () => handleArticleClick(heroNews[idx + 1]);
+        });
+    }
+
+    // 渲染新闻列表
+    function renderNewsList(news) {
+        const newsList = document.getElementById('newsList');
+        if (!newsList) return;
+
+        // 保留加载更多按钮
+        const loadMore = newsList.querySelector('.load-more');
+
+        // 清除现有新闻卡片（保留加载更多）
+        const existingCards = newsList.querySelectorAll('.news-card');
+        existingCards.forEach(card => card.remove());
+
+        // 渲染新卡片
+        news.forEach(item => {
+            const card = createNewsCard(item);
+            newsList.insertBefore(card, loadMore);
+        });
+
+        // 应用当前筛选
+        applyFilter();
+    }
+
+    // 创建新闻卡片
+    function createNewsCard(news) {
+        const isPremium = news.isPremium || news.memberOnly;
+        const isPriority = hasPriorityTag(news);
+        const priorityTags = getPriorityTags(news);
+
+        const card = document.createElement('article');
+        card.className = `news-card ${isPremium ? 'premium' : ''}`;
+        card.dataset.category = news.category || 'feature';
+        card.dataset.id = news.id;
+
+        if (priorityTags.length > 0) {
+            card.dataset.priorityTag = priorityTags[0];
+        }
+
+        card.innerHTML = `
+            <div class="news-thumb">
+                <img src="${news.image || news.cover}" alt="${news.title}" loading="lazy">
+            </div>
+            <div class="news-content">
+                <span class="news-category ${isPriority ? PRIORITY_CLASS : ''}">
+                    ${news.categoryName || news.category || '新聞'}
+                    ${isPriority ? ' ★' : ''}
+                </span>
+                <h3 class="news-title">${news.title}</h3>
+                <p class="news-excerpt">${news.excerpt || news.summary || ''}</p>
+                <div class="news-footer">
+                    <div class="news-meta">
+                        <span>${formatDate(news.date)}</span>
+                        <span>閱讀 ${news.readTime || '5'} 分鐘</span>
+                        ${isPremium ? '<span style="color: #B8860B; font-weight: 700;">★ 會員專享</span>' : ''}
+                    </div>
+                    <div class="news-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); toggleFav(this, '${news.title.replace(/'/g, "\'")}')">☆</button>
+                        <button class="action-btn" onclick="event.stopPropagation(); shareArticle('${news.title.replace(/'/g, "\'")}')">↗</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        card.onclick = () => handleArticleClick(news);
+        return card;
+    }
+
+    // 生成热门标签
+    function generateHotTags(articles) {
+        const tagCloud = document.getElementById('tagCloud');
+        if (!tagCloud) return;
+
+        // 统计标签出现频率
+        const tagCount = {};
         articles.forEach(article => {
             const tags = article.tags || [];
             tags.forEach(tag => {
@@ -47,245 +223,82 @@ class NewsLoader {
             });
         });
 
-        // 转换为数组并排序
-        let sortedTags = Object.entries(tagCount)
-            .map(([tag, count]) => ({ tag, count }))
-            .sort((a, b) => {
-                // 优先标签权重 +10
-                const aPriority = this.priorityTags.some(pt => 
-                    a.tag.toLowerCase().includes(pt.toLowerCase())
-                ) ? 10 : 0;
-                const bPriority = this.priorityTags.some(pt => 
-                    b.tag.toLowerCase().includes(pt.toLowerCase())
-                ) ? 10 : 0;
+        // 按频率排序，取前12个
+        const hotTags = Object.entries(tagCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 12)
+            .map(([tag]) => tag);
 
-                // 按 (出现次数 + 优先级) 排序
-                return (b.count + bPriority) - (a.count + aPriority);
-            })
-            .slice(0, 12) // 取前12个
-            .map(item => item.tag);
+        // 合并优先标签（确保它们显示在前面）
+        const priorityDisplayTags = ['TheNoname無名', '龐克', '迷笛音樂節'];
+        const finalTags = [...new Set([...priorityDisplayTags, ...hotTags])].slice(0, 12);
 
-        // 如果没有标签，使用默认标签
-        if (sortedTags.length === 0) {
-            sortedTags = [
-                'TheNoname無名', '龐克', '獨立音樂', 
-                '地下搖滾', '後龐克', '迷笛音樂節'
-            ];
-        }
-
-        // 渲染热门标签
-        this.renderHotTags(sortedTags);
-    }
-
-    // 渲染热门标签到页面
-    renderHotTags(tags) {
-        const container = document.getElementById('tagCloud');
-        if (!container) return;
-
-        container.innerHTML = tags.map(tag => {
-            // 判断是否是优先标签，添加特殊样式
-            const isPriority = this.priorityTags.some(pt => 
+        // 渲染标签
+        tagCloud.innerHTML = finalTags.map(tag => {
+            const isPriority = PRIORITY_TAGS.some(pt => 
                 tag.toLowerCase().includes(pt.toLowerCase())
             );
-            const priorityClass = isPriority ? 'priority-tag' : '';
-
-            return `<button class="tag-item ${priorityClass}" onclick="newsLoader.filterByTag('${tag}', this)">#${tag}</button>`;
+            return `<button class="tag-item ${isPriority ? PRIORITY_CLASS : ''}" onclick="filterByTag('${tag}', this)">#${tag}</button>`;
         }).join('');
     }
 
-    getHeroArticles() {
-        // 优先返回包含 TheNoname/Punk 的文章作为头条
-        const articles = this.data?.data?.latest || [];
-        const priorityArticles = articles.filter(article => {
-            const text = (article.title + ' ' + article.content + ' ' + article.tags.join(' ')).toLowerCase();
-            return this.priorityTags.some(pt => text.includes(pt.toLowerCase()));
-        });
-
-        // 合并优先文章和其他文章
-        const combined = [...priorityArticles, ...articles.filter(a => !priorityArticles.includes(a))];
-        return combined.slice(0, 3); // 取前3篇
+    // 初始化标签云点击事件
+    function initTagCloud() {
+        // 标签筛选功能已由全局函数处理
     }
 
-    getFeaturedArticles() {
-        const articles = this.data?.data?.latest || [];
-        // 优先选择会员专享和包含优先标签的文章
-        return articles.filter(article => {
-            const text = (article.title + ' ' + article.tags.join(' ')).toLowerCase();
-            const hasPriority = this.priorityTags.some(pt => text.includes(pt.toLowerCase()));
-            return article.is_premium || hasPriority;
-        }).slice(0, 4);
-    }
+    // 应用当前筛选
+    function applyFilter() {
+        const newsCards = document.querySelectorAll('.news-card');
 
-    getLatestArticles(page = 1) {
-        const articles = this.data?.data?.latest || [];
-        const start = (page - 1) * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        return articles.slice(start, end);
-    }
+        newsCards.forEach(card => {
+            let shouldShow = true;
 
-    getArticlesByCategory(category) {
-        if (category === 'all') {
-            return this.data?.data?.latest || [];
-        }
-        return this.data?.data?.by_category[category] || [];
-    }
-
-    getArticlesByTag(tag) {
-        const all = this.data?.data?.latest || [];
-        return all.filter(article => 
-            article.tags && article.tags.some(t => 
-                t.toLowerCase().includes(tag.toLowerCase()) ||
-                tag.toLowerCase().includes(t.toLowerCase())
-            )
-        );
-    }
-
-    renderHero() {
-        const heroArticles = this.getHeroArticles();
-        if (heroArticles.length === 0) return;
-
-        const mainHero = heroArticles[0];
-        const heroMain = document.querySelector('.hero-main');
-        if (heroMain) {
-            heroMain.innerHTML = `
-                <img src="${mainHero.cover_image}" alt="${mainHero.title}">
-                <div class="hero-overlay">
-                    <span class="hero-tag exclusive">獨家 EXCLUSIVE</span>
-                    <h2 class="hero-title">${mainHero.title}</h2>
-                    <p class="hero-excerpt">${mainHero.content.substring(0, 100)}...</p>
-                    <div class="hero-meta">
-                        <span>${this.formatDate(mainHero.published_date)}</span>
-                        <span>閱讀時間 ${this.estimateReadTime(mainHero.content)} 分鐘</span>
-                        ${mainHero.is_premium ? '<span>★ 會員專享</span>' : ''}
-                    </div>
-                </div>
-            `;
-            heroMain.onclick = () => this.openArticle(mainHero.id);
-        }
-
-        const sideArticles = heroArticles.slice(1, 3);
-        const heroSide = document.querySelector('.hero-side');
-        if (heroSide) {
-            heroSide.innerHTML = sideArticles.map(article => `
-                <article class="side-card" onclick="newsLoader.openArticle('${article.id}')">
-                    <img src="${article.cover_image}" alt="${article.title}">
-                    <div class="side-overlay">
-                        <span class="side-tag">${article.tags[0] || '新闻'}</span>
-                        <h3 class="side-title">${article.title}</h3>
-                    </div>
-                </article>
-            `).join('');
-        }
-    }
-
-    renderNewsList(category = 'all', page = 1) {
-        const container = document.getElementById('newsList');
-        if (!container) return;
-
-        const loadMoreBtn = container.querySelector('.load-more');
-
-        let articles = category === 'all' 
-            ? this.getLatestArticles(page)
-            : this.getArticlesByCategory(category).slice((page-1)*this.itemsPerPage, page*this.itemsPerPage);
-
-        const articlesHTML = articles.map(article => `
-            <article class="news-card ${article.is_premium ? 'premium' : ''}" 
-                     data-category="${this.mapCategory(article.category)}"
-                     onclick="newsLoader.openArticle('${article.id}')">
-                <div class="news-thumb">
-                    <img src="${article.cover_image}" alt="${article.title}">
-                </div>
-                <div class="news-content">
-                    <span class="news-category">${article.category} ${article.tags[0] || ''}</span>
-                    <h3 class="news-title">${article.title}</h3>
-                    <p class="news-excerpt">${article.content.substring(0, 80)}...</p>
-                    <div class="news-footer">
-                        <div class="news-meta">
-                            <span>${this.formatDate(article.published_date)}</span>
-                            <span>閱讀 ${this.estimateReadTime(article.content)} 分鐘</span>
-                            ${article.is_premium ? '<span style="color: #B8860B; font-weight: 700;">★ 會員專享</span>' : ''}
-                        </div>
-                        <div class="news-actions">
-                            <button class="action-btn" onclick="event.stopPropagation(); toggleFav(this, '${article.title}')">☆</button>
-                            <button class="action-btn" onclick="event.stopPropagation(); shareArticle('${article.title}')">↗</button>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        `).join('');
-
-        if (page === 1) {
-            container.innerHTML = articlesHTML + (loadMoreBtn ? loadMoreBtn.outerHTML : '');
-        } else {
-            container.insertAdjacentHTML('beforeend', articlesHTML);
-        }
-    }
-
-    filterByTag(keyword, btn) {
-        const isActive = btn.classList.contains('active');
-        document.querySelectorAll('.tag-item').forEach(t => t.classList.remove('active'));
-
-        if (!isActive) {
-            btn.classList.add('active');
-            const newsCards = document.querySelectorAll('.news-card');
-            let hasResult = false;
-
-            newsCards.forEach(card => {
-                const title = card.querySelector('.news-title').textContent;
-                const category = card.querySelector('.news-category').textContent;
-                if (title.includes(keyword) || category.includes(keyword)) {
-                    card.style.display = 'flex';
-                    hasResult = true;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-
-            if (!hasResult) {
-                alert('暫無包含 "' + keyword + '" 的文章');
-                newsCards.forEach(card => card.style.display = 'flex');
-                btn.classList.remove('active');
+            // 分类筛选
+            if (currentFilter !== 'all' && card.dataset.category !== currentFilter) {
+                shouldShow = false;
             }
-        } else {
-            document.querySelectorAll('.news-card').forEach(card => {
-                card.style.display = 'flex';
-            });
+
+            // 标签筛选
+            if (currentTag && !card.dataset.priorityTag?.includes(currentTag)) {
+                shouldShow = false;
+            }
+
+            card.style.display = shouldShow ? 'flex' : 'none';
+        });
+    }
+
+    // 处理文章点击
+    function handleArticleClick(article) {
+        // 调用页面原有的处理函数
+        if (window.handleArticleClick) {
+            const tempElement = document.createElement('div');
+            tempElement.className = article.isPremium ? 'news-card premium' : 'news-card';
+            window.handleArticleClick(tempElement, article.title);
         }
+
+        // 实际跳转
+        window.location.href = `article.html?id=${article.id}&title=${encodeURIComponent(article.title)}`;
     }
 
-    openArticle(articleId) {
-        window.location.href = `article.html?id=${articleId}`;
+    // 格式化日期
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
     }
 
-    mapCategory(category) {
-        const map = {
-            '獨家': 'exclusive',
-            '演出': 'live',
-            '專題': 'feature',
-            '乐评': 'releases',
-            '新闻': 'all',
-            '国际': 'international'
-        };
-        return map[category] || 'all';
-    }
+    // 暴露全局方法供页面调用
+    window.NewsLoader = {
+        refresh: loadNewsData,
+        filterByCategory: function(category) {
+            currentFilter = category;
+            applyFilter();
+        },
+        filterByTag: function(tag) {
+            currentTag = tag;
+            applyFilter();
+        }
+    };
 
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`;
-    }
-
-    estimateReadTime(content) {
-        const words = content.length / 200;
-        return Math.max(1, Math.round(words));
-    }
-}
-
-const newsLoader = new NewsLoader();
-
-document.addEventListener('DOMContentLoaded', async () => {
-    await newsLoader.loadNews();
-    newsLoader.renderHero();
-    newsLoader.renderNewsList();
-});
+})();
