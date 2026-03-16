@@ -428,17 +428,13 @@
                     <img src="./image/crgzh.jpg" alt="公众号二维码">
                 </div>
                 <p style="font-size: 13px; color: #888; margin-bottom: 10px;">
-                    扫码关注公众号，自动回复激活码
-                </p>
-                <p style="font-size: 12px; color: #666;">
-                    本月激活码格式：<strong style="color: #FF0066;">CR3D03</strong>
+                    扫码关注公众号，自动回复获取激活码
                 </p>
             </div>
 
             <div class="form-group">
                 <label class="form-label">输入激活码 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="code-input" placeholder="如: CR3D03" maxlength="6">
-                <p class="input-hint">关注公众号后，在自动回复中获取</p>
+                <input type="text" class="form-input" id="code-input" placeholder="关注公众号后获取" maxlength="6">
                 <p id="code-error" class="error-text" style="display: none;"></p>
             </div>
 
@@ -535,9 +531,6 @@
                 <div class="qr-code" style="width: 120px; height: 120px;">
                     <img src="./image/crgzh.jpg" alt="公众号二维码" style="width: 100%; height: 100%;">
                 </div>
-                <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                    本月激活码：<strong style="color: #FF0066;">CR3D03</strong>
-                </p>
             </div>
 
             <div class="form-group" style="margin-top: 15px;">
@@ -832,7 +825,7 @@
             }
 
             if (!isValidCode(code)) {
-                errorEl.textContent = '激活码错误，本月有效码：' + getValidCode();
+                errorEl.textContent = '激活码错误，请扫码关注公众号获取';
                 errorEl.style.display = 'block';
                 return;
             }
@@ -872,7 +865,7 @@
             }
 
             if (!isValidCode(code)) {
-                errorEl.textContent = '激活码错误，本月有效码：' + getValidCode();
+                errorEl.textContent = '激活码错误，请扫码关注公众号获取';
                 errorEl.style.display = 'block';
                 return;
             }
