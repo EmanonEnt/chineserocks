@@ -1,16 +1,13 @@
 name: Fetch News
 
 on:
-  # 中国新闻：周一到周四 21:00 (UTC 13:00)
+  # 多個定時任務
   schedule:
+    # 中国新闻：周一到周四 21:00 (UTC 13:00)
     - cron: '0 13 * * 1,2,3,4'
-
-  # 中国新闻：周五到周日 12:00、18:00、22:00 (UTC 4:00、10:00、14:00)
-  schedule:
+    # 中国新闻：周五到周日 12:00、18:00、22:00 (UTC 4:00、10:00、14:00)
     - cron: '0 4,10,14 * * 5,6,0'
-
-  # 国际新闻：每周三和周六 12:00 (UTC 4:00)
-  schedule:
+    # 国际新闻：每周三和周六 12:00 (UTC 4:00)
     - cron: '0 4 * * 3,6'
 
   workflow_dispatch:
@@ -18,7 +15,7 @@ on:
       mode:
         description: '抓取模式'
         required: true
-        default: 'china'
+        default: 'test'
         type: choice
         options:
           - china
@@ -26,66 +23,45 @@ on:
           - test
 
 jobs:
-  fetch-china-weekday:
-    if: github.event.schedule == '0 13 * * 1,2,3,4' || github.event.inputs.mode == 'china'
+  fetch-news:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          pip install feedparser requests notion-client beautifulsoup4
-      - name: Fetch China News
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
-        run: python scripts/fetch_news.py --source china --limit 15
 
-  fetch-china-weekend:
-    if: github.event.schedule == '0 4,10,14 * * 5,6,0'
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          pip install feedparser requests notion-client beautifulsoup4
-      - name: Fetch China News (Weekend)
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
-        run: python scripts/fetch_news.py --source china --limit 20
+    - uses: actions/checkout@v4
 
-  fetch-international:
-    if: github.event.schedule == '0 4 * * 3,6' || github.event.inputs.mode == 'international'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          pip install feedparser requests notion-client beautifulsoup4
-      - name: Fetch International News
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
-        run: python scripts/fetch_news.py --source international --limit 8
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-  test-fetch:
-    if: github.event.inputs.mode == 'test'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          pip install feedparser requests notion-client beautifulsoup4
-      - name: Test Fetch
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
-        run: python scripts/fetch_news.py --source china --limit 1
+    - name: Install dependencies
+      run: |
+        pip install feedparser requests notion-client beautifulsoup4
+
+    - name: Fetch News
+      env:
+        NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
+      run: |
+        # 根據不同條件運行不同模式
+        if [ "${{ github.event.inputs.mode }}" == "test" ]; then
+          echo "Running TEST mode..."
+          python scripts/fetch_news.py --source china --limit 1
+        elif [ "${{ github.event.inputs.mode }}" == "international" ]; then
+          echo "Running INTERNATIONAL mode..."
+          python scripts/fetch_news.py --source international --limit 8
+        elif [ "${{ github.event.inputs.mode }}" == "china" ]; then
+          echo "Running CHINA mode..."
+          python scripts/fetch_news.py --source china --limit 15
+        else
+          # 自動判斷定時任務類型
+          HOUR=$(date -u +%H)
+          DOW=$(date -u +%u)  # 1-5 周一到周五, 6-7 周末
+
+          if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
+            echo "Auto: INTERNATIONAL mode (Wed/Sat 12:00 CST)"
+            python scripts/fetch_news.py --source international --limit 8
+          else
+            echo "Auto: CHINA mode"
+            python scripts/fetch_news.py --source china --limit 15
+          fi
+        fi
