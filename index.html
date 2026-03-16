@@ -12,7 +12,16 @@
     <title>ChineseRocks - 中國搖滾官方榜單</title>
     <link rel="icon" type="image/png" href="./image/tablogo.png">
     <style>
-        :root {
+html {
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+                :root {
             --pink-primary:#FF0066;--black:#0a0a0a;--silver-text:#c0c0c0;--text-secondary:#a0a0a0;--silver-bg:#f0f0f0;}
 
         * { margin:0;padding:0;box-sizing:border-box;}
@@ -128,7 +137,33 @@
             background:white;color:#FF0066;padding:0.5rem 1.2rem;border-radius:20px;font-weight:800;font-size:0.85rem;text-decoration:none;}
 
         .free-quota-bar {
-            background:linear-gradient(90deg,#FF0066,#CC0052);color:white;padding:0.75rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+            background:linear-gradient(90deg,#FF0066,#CC0052);color:white;padding:0.875rem 1.5rem;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:1rem;text-align:center;}
+
+        .free-quota-text {
+            font-weight:600;font-size:0.9rem;display:flex;align-items:center;gap:0.3rem;}
+
+        .free-quota-text strong {
+            color:#FFD700;font-weight:800;font-size:1.1rem;}
+
+        .free-quota-btn {
+            background:white;color:#FF0066;padding:0.5rem 1.25rem;border-radius:20px;font-weight:800;font-size:0.85rem;text-decoration:none;white-space:nowrap;transition:all 0.3s;}
+
+        .free-quota-btn:hover {
+            /* 移动端全局盒模型保护 */
+            * {
+                box-sizing: border-box !important;
+            }
+            
+            transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+
+        @media (max-width:768px) {
+            .free-quota-bar {
+                flex-direction:column;padding:0.75rem 1rem;gap:0.6rem;}
+            .free-quota-text {
+                font-size:0.85rem;}
+            .free-quota-btn {
+                font-size:0.8rem;padding:0.4rem 1rem;}
+        }
 
         .free-quota-text {
             font-weight:700;font-size:0.9rem;}
@@ -137,7 +172,11 @@
             background:white;color:#FF0066;padding:0.4rem 1rem;border-radius:20px;font-weight:800;font-size:0.8rem;text-decoration:none;}
 
         .paywall-card {
-            background:linear-gradient(135deg,#1a1a1a,#0a0a0a);border:2px dashed #444;border-radius:12px;padding:2rem;text-align:center;grid-column:span 2;}
+            background:linear-gradient(135deg,#1a1a1a,#0a0a0a);border:2px solid #FF0066;border-radius:12px;padding:1.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;}
+        .paywall-card .paywall-icon {font-size:2rem;}
+        .paywall-card .paywall-title {font-size:1rem;font-weight:800;color:white;}
+        .paywall-card .paywall-text {color:#888;font-size:0.85rem;line-height:1.4;}
+        .paywall-card .paywall-btn {display:inline-block;background:#FF0066;color:white;padding:0.6rem 1.2rem;border-radius:6px;font-weight:800;text-decoration:none;font-size:0.85rem;}
 
         .paywall-icon {
             font-size:2.5rem;margin-bottom:0.75rem;}
@@ -359,8 +398,25 @@
         .news-grid-section .sidebar-content .meta {
             color:#555;}
 
+        /* 桌面端 sidebar 垂直布局 */
+        .news-grid-section .featured-sidebar {
+            display:flex;flex-direction:column;gap:1.2rem;}
+
         .section-header {
             display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:none;padding-bottom:2rem;}
+
+        /* 移动端弹窗 */
+        .mobile-paywall-modal {
+            display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1rem;}
+        .mobile-paywall-modal.active {display:flex;}
+        .mobile-paywall-content {
+            background:linear-gradient(135deg,#1a1a1a,#0a0a0a);border:2px solid #FF0066;border-radius:16px;padding:2rem;text-align:center;max-width:340px;width:90%;position:relative;box-sizing:border-box;}
+        .mobile-paywall-close {position:absolute;top:10px;right:15px;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;}
+        .mobile-paywall-icon {font-size:3rem;margin-bottom:1rem;}
+        .mobile-paywall-title {font-size:1.3rem;font-weight:800;color:white;margin-bottom:0.5rem;}
+        .mobile-paywall-text {color:#888;font-size:0.9rem;margin-bottom:1.5rem;line-height:1.5;}
+        .mobile-paywall-btn {display:inline-block;background:#FF0066;color:white;padding:0.875rem 1.5rem;border-radius:8px;font-weight:800;text-decoration:none;font-size:0.95rem;width:100%;}
+        .mobile-paywall-skip {color:#666;font-size:0.8rem;margin-top:1rem;cursor:pointer;text-decoration:underline;}
 
         .section-title { font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#c0c0c0;}
 
@@ -368,7 +424,48 @@
 
         .featured-news { display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:4rem;}
 
+        /* 移动端新闻网格 */
+        @media (max-width:768px) {
+            .news-grid-section .featured-news {
+                grid-template-columns:1fr !important;gap:1rem !important;margin-bottom:2rem !important;}
+            .news-grid-section .featured-main {
+                aspect-ratio:16/10 !important;}
+            .news-grid-section .featured-sidebar {
+                display:grid !important;grid-template-columns:1fr 1fr !important;gap:1rem !important;}
+            .news-grid-section .sidebar-item {
+                flex-direction:column !important;padding-bottom:0 !important;border-bottom:none !important;}
+            .news-grid-section .sidebar-thumb {
+                width:100% !important;height:auto !important;aspect-ratio:16/10 !important;margin-bottom:0.5rem !important;}
+            .news-grid-section .sidebar-content h4 {
+                font-size:0.85rem !important;line-height:1.3 !important;}
+            .news-grid-section .sidebar-content .meta {
+                font-size:0.7rem !important;}
+            /* 移动端隐藏 paywall-card */
+            .news-grid-section .paywall-card {
+                display:none !important;}
+            .news-grid-section .section-title {
+                font-size:1.1rem !important;}
+            .news-grid-section .view-all-link {
+                font-size:0.8rem !important;}
+        }
+
+        /* 平板/竖屏适配 */
+        @media (min-width:769px) and (max-width:1024px) {
+            .news-grid-section .featured-news {
+                grid-template-columns:1.2fr 1fr !important;gap:1.5rem !important;}
+            .news-grid-section .paywall-card {
+                grid-column:span 1 !important;}
+        }
+
         .featured-main { position:relative;aspect-ratio:16/9;overflow:hidden;cursor:pointer;background:#000;}
+        .featured-main img { width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+        .featured-main:hover img { transform:scale(1.02);}
+        .featured-overlay {
+            position:absolute;bottom:0;left:0;right:0;padding:3rem 2rem 2rem;background:linear-gradient(to top,rgba(10,10,10,0.95) 0%,transparent 100%);color:white;}
+        .featured-tag {
+            display:inline-block;background:var(--pink-primary);padding:0.3rem 0.8rem;font-size:0.7rem;font-weight:800;text-transform:uppercase;margin-bottom:1rem;}
+        .featured-title { font-size:1.6rem;font-weight:900;margin-bottom:0.5rem;line-height:1.2;}
+        .featured-excerpt { color:var(--silver-text);font-size:0.9rem;line-height:1.5;}
 
         .featured-main img { width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
 
@@ -387,11 +484,17 @@
         .featured-sidebar { display:flex;flex-direction:column;gap:1.2rem;}
 
         .sidebar-item {
-            display:flex;gap:1rem;cursor:pointer;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+            display:flex;gap:1rem;cursor:pointer;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);transition:all 0.3s;}
+
+        .sidebar-item:hover { background:rgba(255,255,255,0.05);}
 
         .sidebar-item:last-child { border-bottom:none;}
 
-        .sidebar-thumb { width:100px;height:75px;object-fit:cover;flex-shrink:0;}
+        .sidebar-thumb { width:100px;height:75px;object-fit:cover;flex-shrink:0;border-radius:4px;}
+
+        .sidebar-content { flex:1;min-width:0;}
+        .sidebar-content h4 { font-size:0.95rem;font-weight:800;margin-bottom:0.3rem;line-height:1.3;color:#c0c0c0;}
+        .sidebar-content .meta { color:var(--text-secondary);font-size:0.75rem;}
 
         .sidebar-content h4 { font-size:0.95rem;font-weight:800;margin-bottom:0.3rem;line-height:1.3;color:#c0c0c0;}
 
@@ -673,7 +776,7 @@
                 width:240px;
                 font-size:0.75rem;
                 bottom:60px;
-                right:-10px;
+                right:0;
             }
             .top5-rank {
                 font-size:1.1rem;
@@ -842,7 +945,7 @@
             .invite-tooltip {
                 width:220px;
                 font-size:0.7rem;
-                right:-5px;
+                right:0;
             }
             .top5-rank {
                 font-size:1rem;
@@ -865,7 +968,7 @@
             .hero-sub-title {
                 font-size:clamp(1.1rem,4.5vw,1.5rem) !important;margin-bottom:0.75rem !important;}
             .hero-vote-card {
-                width:90% !important;max-width:340px !important;margin-left:auto !important;margin-right:auto !important;margin-bottom:1rem !important;padding:1.25rem !important;}
+                width:92% !important;max-width:340px !important;margin-left:auto !important;margin-right:auto !important;margin-bottom:1rem !important;padding:1.25rem !important;box-sizing:border-box !important;}
             .hero-vote-option {
                 padding:0.85rem !important;margin-bottom:0.6rem !important;min-height:58px;height:58px;}
             .hero-vote-option img {
@@ -893,7 +996,7 @@
             .genre-container {
                 flex-wrap:wrap !important;}
             .genre-btn {
-                flex:0 0 25% !important;font-size:0.5rem !important;padding:0.4rem 0.1rem !important;min-height:44px !important;max-height:none !important;line-height:1.2 !important;white-space:normal !important;border-right:1px solid rgba(255,255,255,0.1) !important;border-bottom:1px solid rgba(255,255,255,0.1) !important;}
+                flex:0 0 calc(25% - 1px) !important;font-size:0.5rem !important;padding:0.4rem 0.1rem !important;min-height:44px !important;max-height:none !important;line-height:1.2 !important;white-space:normal !important;border-right:1px solid rgba(255,255,255,0.1) !important;border-bottom:1px solid rgba(255,255,255,0.1) !important;}
             .genre-btn:nth-child(4n) {
                 border-right:none !important;}
             .genre-btn:nth-child(n+5) {
@@ -1125,7 +1228,7 @@
             color:#FF0066;}
 
         .user-sidebar {
-            position:fixed;top:0;right:-400px;width:400px;height:100vh;z-index:10001;transition:right 0.3s ease;}
+            position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100vh;z-index:10001;transition:right 0.3s ease;transform:translateZ(0);}
 
         .user-sidebar.active {
             right:0;}
@@ -1285,7 +1388,87 @@
         .setting-btn:hover {
             background:#FF0066;color:white;}
 
-</style>
+
+        /* 移动端新闻网格 - 强制覆盖 */
+        @media (max-width:768px) {
+            .news-grid-section {
+                padding:2rem 0 !important;}
+            .news-grid-section .section-header,
+            .news-grid-section .featured-news {
+                padding:0 1rem !important;}
+            .news-grid-section .featured-news {
+                display:grid !important;
+                grid-template-columns:1fr !important;
+                gap:1rem !important;
+                margin-bottom:2rem !important;}
+            .news-grid-section .featured-main {
+                display:block !important;
+                aspect-ratio:16/10 !important;
+                width:100% !important;}
+            .news-grid-section .featured-main img {
+                width:100% !important;
+                height:100% !important;
+                object-fit:cover !important;}
+            .news-grid-section .featured-overlay {
+                padding:2rem 1rem 1rem !important;}
+            .news-grid-section .featured-title {
+                font-size:1.2rem !important;}
+            .news-grid-section .featured-excerpt {
+                font-size:0.85rem !important;
+                display:none !important;}
+            .news-grid-section .featured-sidebar {
+                display:grid !important;
+                grid-template-columns:1fr 1fr !important;
+                gap:1rem !important;}
+            .news-grid-section .sidebar-item {
+                flex-direction:column !important;
+                padding-bottom:0 !important;
+                border-bottom:none !important;
+                background:rgba(0,0,0,0.05);
+                border-radius:8px;
+                overflow:hidden;}
+            .news-grid-section .sidebar-thumb {
+                width:100% !important;
+                height:auto !important;
+                aspect-ratio:16/10 !important;
+                margin-bottom:0 !important;}
+            .news-grid-section .sidebar-content {
+                padding:0.75rem !important;}
+            .news-grid-section .sidebar-content h4 {
+                font-size:0.85rem !important;
+                line-height:1.3 !important;
+                margin-bottom:0.25rem !important;}
+            .news-grid-section .sidebar-content .meta {
+                font-size:0.7rem !important;}
+            .news-grid-section .paywall-card {
+                display:none !important;}
+        }
+        
+        /* 全局溢出保护 */
+        img, video, canvas, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 确保固定定位元素不会导致滚动 */
+        .invite-float, .invite-btn {
+            transform: translateZ(0);
+        }
+        
+        /* 模态框溢出保护 */
+        .login-modal, .mobile-paywall-modal {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .login-modal-content, .mobile-paywall-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        </style>
     <!-- Google Sign-In SDK -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -2168,7 +2351,7 @@
 
         .ticker-slide {
             flex: 0 0 100%;
-            min-width: 100%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -2332,9 +2515,95 @@
 
             .ticker-countdown {
                 font-size: 0.8rem;
-            }
+            
+            .footer-content {
+                grid-template-columns:1fr !important;
+                gap:2rem !important;
+                padding:2rem 1rem !important;}
+            .footer-bottom {
+                padding:1rem !important;}}
         }
-    </style>
+    
+        /* 移动端新闻网格 - 强制覆盖 */
+        @media (max-width:768px) {
+            .news-grid-section {
+                padding:2rem 0 !important;}
+            .news-grid-section .section-header,
+            .news-grid-section .featured-news {
+                padding:0 1rem !important;}
+            .news-grid-section .featured-news {
+                display:grid !important;
+                grid-template-columns:1fr !important;
+                gap:1rem !important;
+                margin-bottom:2rem !important;}
+            .news-grid-section .featured-main {
+                display:block !important;
+                aspect-ratio:16/10 !important;
+                width:100% !important;}
+            .news-grid-section .featured-main img {
+                width:100% !important;
+                height:100% !important;
+                object-fit:cover !important;}
+            .news-grid-section .featured-overlay {
+                padding:2rem 1rem 1rem !important;}
+            .news-grid-section .featured-title {
+                font-size:1.2rem !important;}
+            .news-grid-section .featured-excerpt {
+                font-size:0.85rem !important;
+                display:none !important;}
+            .news-grid-section .featured-sidebar {
+                display:grid !important;
+                grid-template-columns:1fr 1fr !important;
+                gap:1rem !important;}
+            .news-grid-section .sidebar-item {
+                flex-direction:column !important;
+                padding-bottom:0 !important;
+                border-bottom:none !important;
+                background:rgba(0,0,0,0.05);
+                border-radius:8px;
+                overflow:hidden;}
+            .news-grid-section .sidebar-thumb {
+                width:100% !important;
+                height:auto !important;
+                aspect-ratio:16/10 !important;
+                margin-bottom:0 !important;}
+            .news-grid-section .sidebar-content {
+                padding:0.75rem !important;}
+            .news-grid-section .sidebar-content h4 {
+                font-size:0.85rem !important;
+                line-height:1.3 !important;
+                margin-bottom:0.25rem !important;}
+            .news-grid-section .sidebar-content .meta {
+                font-size:0.7rem !important;}
+            .news-grid-section .paywall-card {
+                display:none !important;}
+        }
+        
+        /* 全局溢出保护 */
+        img, video, canvas, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 确保固定定位元素不会导致滚动 */
+        .invite-float, .invite-btn {
+            transform: translateZ(0);
+        }
+        
+        /* 模态框溢出保护 */
+        .login-modal, .mobile-paywall-modal {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .login-modal-content, .mobile-paywall-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        </style>
 
     <script>
         // 滚播新闻条功能
@@ -2456,9 +2725,21 @@
     <!-- 免费额度提示 -->
     <div class="free-quota-bar">
         <div class="free-quota-text">
-            📱 今日免费阅读额度：3篇中的 <strong>第1篇</strong>（升级会员无限畅读）
+            ★ 今日免费阅读额度:仅剩<strong id="remainingReads">2</strong>篇(升级会员更多畅读及权益）
         </div>
-        <a href="#pricing" class="free-quota-btn">升级会员 ¥66/月</a>
+        <a href="#pricing" class="free-quota-btn">升级月卡会员 ￥66/月</a>
+    </div>
+
+    <!-- 移动端会员弹窗 -->
+    <div id="mobilePaywallModal" class="mobile-paywall-modal">
+        <div class="mobile-paywall-content">
+            <button class="mobile-paywall-close" onclick="closeMobilePaywall()">×</button>
+            <div class="mobile-paywall-icon">★</div>
+            <h3 class="mobile-paywall-title">今日免费阅读额度已用完</h3>
+            <p class="mobile-paywall-text">升级月卡会员，解锁无限畅读及更多权益</p>
+            <a href="#pricing" class="mobile-paywall-btn" onclick="closeMobilePaywall()">升级月卡会员 ￥66/月</a>
+            <p class="mobile-paywall-skip" onclick="closeMobilePaywall()">稍后再说</p>
+        </div>
     </div>
 
     <!-- 新闻区 -->
@@ -2468,7 +2749,7 @@
             <a href="news.html" class="view-all-link">View All →</a>
         </div>
         <div class="featured-news">
-            <article class="featured-main" onclick="location.href='article.html?id=1'">
+            <article class="featured-main" onclick="handleArticleClick(this, '重塑雕像的權利新專輯首發深度解析')">
                 <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop" alt="Featured News">
                 <div class="featured-overlay">
                     <span class="featured-tag">獨家 EXCLUSIVE</span>
@@ -2477,32 +2758,32 @@
                 </div>
             </article>
             <div class="featured-sidebar">
-                <article class="sidebar-item" onclick="location.href='article.html?id=2'">
+                <article class="sidebar-item" onclick="handleArticleClick(this, 'Radiohead 宣佈2026年亞洲巡演')">
                     <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
                     <div class="sidebar-content">
                         <h4>Radiohead 宣佈2026年亞洲巡演</h4>
                         <p class="meta">國際 · 5小時前</p>
                     </div>
                 </article>
-                <!-- 会员墙 -->
-                <article class="sidebar-item paywall-card" onclick="location.href='#pricing'">
-                    <div class="paywall-icon">🔒</div>
-                    <div class="paywall-title">今日限额已用完</div>
-                    <div class="paywall-text">您已免费阅读3篇新闻<br>升级会员，无限畅读</div>
-                    <div class="paywall-btn">升级会员 ¥66/月</div>
-                </article>
-                <article class="sidebar-item" onclick="location.href='article.html?id=3'">
+                <article class="sidebar-item" onclick="handleArticleClick(this, '迷笛音樂節2026陣容公佈')">
                     <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
                     <div class="sidebar-content">
                         <h4>迷笛音樂節2026陣容公佈</h4>
                         <p class="meta">現場 · 昨天</p>
                     </div>
                 </article>
-                <article class="sidebar-item" onclick="location.href='article.html?id=4'">
+                <article class="sidebar-item" onclick="handleArticleClick(this, '專訪：刺蝟樂隊石璐')">
                     <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
                     <div class="sidebar-content">
                         <h4>專訪：刺蝟樂隊石璐</h4>
                         <p class="meta">專題 · 昨天</p>
+                    </div>
+                </article>
+                <article class="sidebar-item" onclick="handleArticleClick(this, '草東沒有派對新專輯發行')">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                    <div class="sidebar-content">
+                        <h4>草東沒有派對新專輯發行</h4>
+                        <p class="meta">音樂 · 2天前</p>
                     </div>
                 </article>
             </div>
@@ -2787,7 +3068,7 @@
                         <li>每日3次新聞閱讀</li>
                         <li>480P LIVE TV</li>
                     </ul>
-                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">關注領取</button>
+                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">免費領取體驗卡</button>
                 </div>
 
                 <!-- 周卡 -->
@@ -2804,7 +3085,7 @@
                         <li>獨家雜誌內容預覽</li>
                         <li>廣告彈窗優化</li>
                     </ul>
-                    <button class="pricing-btn">選擇周卡</button>
+                    <button class="pricing-btn">升級周卡會員</button>
                 </div>
 
                 <!-- 月卡 - 主推 -->
@@ -2824,7 +3105,7 @@
                         <li>特享會員名稱效果</li>
                         <li>線下活動入場抽獎資格</li>
                     </ul>
-                    <button class="pricing-btn">立即開通</button>
+                    <button class="pricing-btn">升級月卡會員</button>
                 </div>
 
                 <!-- 季卡 - 新增 -->
@@ -2844,7 +3125,7 @@
                         <li>線下活動免費邀請入場1+次/年</li>
                         <li>周邊抽獎資格</li>
                     </ul>
-                    <button class="pricing-btn">選擇季卡</button>
+                    <button class="pricing-btn">升級季卡會員</button>
                 </div>
 
                 <!-- 年卡 - 最大受益 -->
@@ -2866,7 +3147,7 @@
                         <li>周邊抽獎必中1次/年+折扣權益</li>
                         <li>VIP專屬客服</li>
                     </ul>
-                    <button class="pricing-btn">選擇年卡</button>
+                    <button class="pricing-btn">升級年卡會員</button>
                 </div>
             </div>
         </div>
