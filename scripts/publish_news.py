@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-ChineseRocks 審核發佈腳本 v4.0
+ChineseRocks 審核發佈腳本 v4.2
 檢查Notion中狀態為"已發佈"的文章，更新到前端JSON文件
-使用 requests 直接調用 Notion API，避免 SDK 兼容性問題
+使用繁體中文屬性名稱
 """
 
 import os
@@ -36,7 +36,6 @@ def notion_api_request(method, endpoint, json_data=None):
         else:
             raise ValueError(f"不支持的 HTTP 方法: {method}")
 
-        # 打印詳細錯誤信息
         if response.status_code != 200:
             debug_print(f"API 錯誤: {response.status_code}")
             debug_print(f"響應內容: {response.text}")
@@ -56,13 +55,12 @@ def fetch_published_articles():
 
     while True:
         try:
-            # 構建查詢參數 - 使用正確的 filter 格式
+            # 構建查詢參數 - 使用繁體中文
             query_data = {
                 "page_size": 100
             }
 
-            # 添加過濾器（如果狀態欄位存在）
-            # 注意：Notion API 的 status 過濾器格式
+            # 使用繁體中文"狀態"
             query_data["filter"] = {
                 "property": "狀態",
                 "status": {
@@ -70,7 +68,6 @@ def fetch_published_articles():
                 }
             }
 
-            # 添加排序
             query_data["sorts"] = [
                 {
                     "timestamp": "created_time",
@@ -83,7 +80,6 @@ def fetch_published_articles():
 
             debug_print(f"查詢數據: {json.dumps(query_data, ensure_ascii=False)}")
 
-            # 直接調用 API
             response = notion_api_request(
                 "POST", 
                 f"/databases/{NEWS_DB_ID}/query", 
@@ -96,7 +92,6 @@ def fetch_published_articles():
             for page in results:
                 props = page.get('properties', {})
 
-                # 調試：打印第一個結果的屬性
                 if len(articles) == 0:
                     debug_print(f"第一個結果的屬性鍵: {list(props.keys())}")
 
@@ -118,18 +113,14 @@ def fetch_published_articles():
     return articles
 
 def process_page(page, props):
-    """處理單個頁面數據"""
+    """處理單個頁面數據 - 使用繁體中文屬性名"""
     try:
-        # 提取標題
         title = extract_title(props)
+        tags = extract_multi_select(props, '標籤')  # 繁體
 
-        # 提取標籤
-        tags = extract_multi_select(props, '標籤')
-
-        # 檢測是否會員專享
         is_premium = (
             '會員專享' in tags or
-            extract_checkbox(props, '是否會員專享') or
+            extract_checkbox(props, '是否會員專享') or  # 繁體
             '獨家' in tags
         )
 
@@ -137,15 +128,15 @@ def process_page(page, props):
             "id": page['id'],
             "title": title,
             "content": extract_content(props),
-            "category": extract_select(props, '類型'),
+            "category": extract_select(props, '類型'),  # 繁體
             "tags": tags,
             "status": extract_status(props),
-            "source_url": extract_url(props, '來源'),
-            "published_date": extract_date(props, '發布時間'),
-            "is_ai_generated": extract_checkbox(props, 'AI生成'),
-            "featured": extract_checkbox(props, '頭條'),
+            "source_url": extract_url(props, '來源'),  # 繁體
+            "published_date": extract_date(props, '發布時間'),  # 繁體
+            "is_ai_generated": extract_checkbox(props, 'AI生成'),  # 繁體
+            "featured": extract_checkbox(props, '頭條'),  # 繁體
             "is_premium": is_premium,
-            "cover_image": extract_url(props, '封面圖') or get_default_image(),
+            "cover_image": extract_url(props, '封面圖') or get_default_image(),  # 繁體
             "created_time": page.get('created_time', ''),
             "last_edited_time": page.get('last_edited_time', '')
         }
@@ -154,9 +145,9 @@ def process_page(page, props):
         return None
 
 def extract_title(props):
-    """提取標題"""
+    """提取標題 - 繁體"""
     try:
-        title_prop = props.get('標題', props.get('title', {}))
+        title_prop = props.get('標題', props.get('title', {}))  # 繁體
         if 'title' in title_prop and title_prop['title']:
             return title_prop['title'][0]['text']['content']
     except:
@@ -164,9 +155,9 @@ def extract_title(props):
     return "無標題"
 
 def extract_content(props):
-    """提取內容"""
+    """提取內容 - 繁體"""
     try:
-        content_prop = props.get('內容', props.get('content', {}))
+        content_prop = props.get('內容', props.get('content', {}))  # 繁體
         if 'rich_text' in content_prop and content_prop['rich_text']:
             return content_prop['rich_text'][0]['text']['content']
     except:
@@ -184,13 +175,11 @@ def extract_select(props, prop_name):
     return ""
 
 def extract_status(props):
-    """提取狀態屬性（支持新版 status 和舊版 select）"""
+    """提取狀態屬性 - 繁體"""
     try:
-        prop = props.get('狀態', {})
-        # 新版 status 類型
+        prop = props.get('狀態', {})  # 繁體
         if 'status' in prop and prop['status']:
             return prop['status']['name']
-        # 舊版 select 類型
         if 'select' in prop and prop['select']:
             return prop['select']['name']
     except:
@@ -262,18 +251,15 @@ def categorize_articles(articles):
         tags = article.get('tags', [])
         category = article.get('category', '')
 
-        # 頭條文章（前3篇）
         if article.get('featured') or len(categorized['hero']) < 3:
             if len(categorized['hero']) < 3:
                 categorized['hero'].append(article)
                 continue
 
-        # 精選文章（會員專享或獨家）
         if article.get('is_premium') or '獨家' in tags:
             if len(categorized['featured']) < 4:
                 categorized['featured'].append(article)
 
-        # 按分類歸檔
         if '獨家' in tags or category == '獨家':
             categorized['by_category']['獨家'].append(article)
         elif '現場' in tags or category in ['演出預告', '現場']:
@@ -304,7 +290,7 @@ def save_to_json(data):
 
 def main():
     print("\n" + "="*70)
-    print("🎸 ChineseRocks 審核發佈系統 v4.0")
+    print("🎸 ChineseRocks 審核發佈系統 v4.2")
     print(f" 時間: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("="*70)
 
@@ -319,7 +305,6 @@ def main():
 
         if not articles:
             print("⚠️ 沒有已發佈的文章")
-            # 創建空的 news.json
             save_to_json({"all": [], "hero": [], "featured": [], "latest": [], "by_category": {}})
             return
 
