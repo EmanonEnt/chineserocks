@@ -13,7 +13,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  # 強制拉取完整歷史，避免緩存問題
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -22,7 +22,10 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install notion-client
+        # 安裝 notion-client 和 requests（作為備用）
+        pip install notion-client>=2.0.0 requests
+        # 驗證安裝
+        python -c "import notion_client; print('notion-client version:', notion_client.__version__)"
 
     - name: Publish approved articles
       env:

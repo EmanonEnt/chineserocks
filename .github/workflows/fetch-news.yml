@@ -34,7 +34,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install feedparser requests notion-client beautifulsoup4
+      - run: |
+          pip install feedparser requests notion-client beautifulsoup4
       - name: Fetch China News
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -49,7 +50,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install feedparser requests notion-client beautifulsoup4
+      - run: |
+          pip install feedparser requests notion-client beautifulsoup4
       - name: Fetch China News (Weekend)
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -64,7 +66,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install feedparser requests notion-client beautifulsoup4
+      - run: |
+          pip install feedparser requests notion-client beautifulsoup4
       - name: Fetch International News
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -79,7 +82,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install feedparser requests notion-client beautifulsoup4
+      - run: |
+          pip install feedparser requests notion-client beautifulsoup4
       - name: Test Fetch
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
