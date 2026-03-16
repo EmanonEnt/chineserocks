@@ -271,8 +271,19 @@
             padding: 15px;
             margin-bottom: 20px;
             text-align: left;
-            font-size: 13px;
+            font-size: 12px;
             color: #ff6666;
+            word-break: break-all;
+        }
+
+        .debug-btn {
+            background: transparent;
+            border: 1px solid #333;
+            color: #333;
+            font-size: 11px;
+            padding: 5px 10px;
+            margin-top: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -283,14 +294,23 @@
             <div class="brand-subtitle">NEWS ★ CHARTS ★ MAGAZINE</div>
         </div>
 
-        <!-- 错误提示 -->
+        <!-- 错误状态：参数获取失败 -->
         <div id="error-state" class="hidden">
             <div class="star-decoration">★</div>
             <div class="status-icon error"></div>
-            <h1>参数错误</h1>
-            <p>无法获取手机号</p>
-            <div class="error-box" id="error-detail"></div>
+            <h1>同步失败</h1>
+            <p>无法获取您的手机号</p>
+
+            <div class="error-box">
+                <div>错误：手机号参数为空或格式错误</div>
+                <div style="margin-top:8px; color:#888; font-size:11px;">请返回小程序重新进入</div>
+            </div>
+
             <button class="btn" onclick="enterWebsite()">直接进入网站</button>
+            <button class="btn btn-secondary" onclick="history.back()">返回小程序</button>
+
+            <!-- 隐藏的调试按钮（长按5秒显示） -->
+            <button class="debug-btn" id="debug-btn" style="display:none;" onclick="showDebug()">调试</button>
         </div>
 
         <!-- 第一步：欢迎+填写信息 -->
@@ -301,7 +321,7 @@
 
             <div class="phone-card">
                 <span class="phone-label">手机号</span>
-                <span class="phone-number" id="display-phone">-</span>
+                <span class="phone-number" id="display-phone">获取中...</span>
             </div>
 
             <div class="form-group">
@@ -354,7 +374,7 @@
                 </div>
                 <div class="user-info-item">
                     <span class="user-info-label">当前积分</span>
-                    <span class="user-info-value points" id="user-points">0</span>
+                    <span class="user-info-value points" id="user-points">100</span>
                 </div>
             </div>
 
@@ -366,36 +386,17 @@
 
     <script>
         let userPhone = '';
-        let isValidPhone = false;
 
-        // 获取URL参数 - 增强版
+        // 获取URL参数
         function getUrlParam(name) {
-            // 方法1: 标准URLSearchParams
-            let value = new URLSearchParams(window.location.search).get(name);
-
-            // 方法2: 如果失败，尝试从hash获取
-            if (!value && window.location.hash.includes('?')) {
-                value = new URLSearchParams(window.location.hash.split('?')[1]).get(name);
-            }
-
-            // 方法3: 尝试正则匹配
-            if (!value) {
-                const regex = new RegExp('[?&]' + name + '=([^&]+)');
-                const match = window.location.href.match(regex);
-                if (match) {
-                    value = decodeURIComponent(match[1]);
-                }
-            }
-
-            return value;
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name);
         }
 
-        // 验证手机号格式
+        // 验证手机号
         function isValidChinesePhone(phone) {
             if (!phone) return false;
-            // 去除空格和特殊字符
-            phone = phone.replace(/\s/g, '').replace(/[\[\]]/g, '');
-            // 中国手机号：11位，1开头
+            phone = phone.replace(/[\s\[\]]/g, '');
             return /^1[3-9]\d{9}$/.test(phone);
         }
 
@@ -407,57 +408,79 @@
 
         // 页面加载
         window.onload = function() {
-            // 获取手机号参数
             userPhone = getUrlParam('phone');
 
-            console.log('Raw URL:', window.location.href);
+            console.log('URL:', window.location.href);
             console.log('Phone param:', userPhone);
 
-            // 清理手机号（去除方括号等）
+            // 清理手机号
             if (userPhone) {
                 userPhone = userPhone.replace(/[\[\]]/g, '').trim();
             }
 
             // 验证手机号
             if (!userPhone || !isValidChinesePhone(userPhone)) {
-                // 显示错误
-                document.getElementById('error-detail').innerHTML = 
-                    '获取到的参数: ' + (userPhone || '空') + '<br>' +
-                    '完整URL: ' + window.location.href;
-                document.getElementById('welcome-state').classList.add('hidden');
-                document.getElementById('error-state').classList.remove('hidden');
+                // 参数错误，显示错误页面
+                console.error('Invalid phone:', userPhone);
+                showErrorState();
                 return;
             }
 
-            isValidPhone = true;
-
-            // 显示手机号
+            // 有效手机号，显示正常页面
             document.getElementById('display-phone').textContent = maskPhone(userPhone);
 
-            // 检查本地是否已有该用户
-            const existingUser = localStorage.getItem('chineserocks_user');
-            if (existingUser) {
-                try {
-                    const user = JSON.parse(existingUser);
-                    if (user.phone === userPhone) {
-                        // 已存在，直接显示成功
-                        showExistingUser(user);
-                        return;
-                    }
-                } catch (e) {
-                    console.log('Parse error:', e);
-                }
-            }
-
-            // 新用户，设置默认昵称
+            // 设置默认昵称
             const defaultName = '摇滚用户' + userPhone.slice(-4);
             document.getElementById('nickname-input').value = defaultName;
+
+            // 检查是否已存在该用户
+            checkExistingUser();
         };
+
+        // 显示错误状态
+        function showErrorState() {
+            document.getElementById('welcome-state').classList.add('hidden');
+            document.getElementById('error-state').classList.remove('hidden');
+
+            // 5秒后显示调试按钮（用于测试）
+            setTimeout(() => {
+                const debugBtn = document.getElementById('debug-btn');
+                if (debugBtn) debugBtn.style.display = 'inline-block';
+            }, 5000);
+        }
+
+        // 调试模式（手动输入）
+        function showDebug() {
+            const phone = prompt('请输入测试手机号（11位）：');
+            if (phone && isValidChinesePhone(phone)) {
+                userPhone = phone;
+                document.getElementById('error-state').classList.add('hidden');
+                document.getElementById('welcome-state').classList.remove('hidden');
+                document.getElementById('display-phone').textContent = maskPhone(phone);
+                document.getElementById('nickname-input').value = '摇滚用户' + phone.slice(-4);
+            }
+        }
+
+        // 检查已存在用户
+        function checkExistingUser() {
+            try {
+                const existing = localStorage.getItem('chineserocks_user');
+                if (existing) {
+                    const user = JSON.parse(existing);
+                    if (user.phone === userPhone) {
+                        // 已存在，直接显示成功
+                        showSuccess(user);
+                    }
+                }
+            } catch (e) {
+                console.log('Check existing error:', e);
+            }
+        }
 
         // 保存资料
         function saveProfile() {
-            if (!isValidPhone) {
-                alert('手机号参数错误，请重新进入');
+            if (!userPhone || !isValidChinesePhone(userPhone)) {
+                alert('手机号错误，请重新进入');
                 return;
             }
 
@@ -473,10 +496,8 @@
             document.getElementById('welcome-state').classList.add('hidden');
             document.getElementById('loading-state').classList.remove('hidden');
 
-            // 生成用户ID
+            // 创建用户数据
             const userId = 'CR_' + userPhone.slice(-8);
-
-            // 保存用户数据
             const userInfo = {
                 userId: userId,
                 phone: userPhone,
@@ -489,58 +510,42 @@
                 source: 'miniprogram'
             };
 
+            // 保存到本地
             localStorage.setItem('chineserocks_user', JSON.stringify(userInfo));
             localStorage.setItem('userLoggedIn', 'true');
             localStorage.setItem('userId', userInfo.userId);
             localStorage.setItem('userNickname', userInfo.name);
             localStorage.setItem('userPhone', userInfo.phone);
-            if (email) {
-                localStorage.setItem('userEmail', email);
-            }
+            if (email) localStorage.setItem('userEmail', email);
 
-            // 延迟显示成功
+            // 显示成功
             setTimeout(() => {
-                document.getElementById('user-name').textContent = nickname;
-                document.getElementById('user-id').textContent = userId;
-                document.getElementById('user-phone').textContent = maskPhone(userPhone);
-                document.getElementById('user-points').textContent = '100';
-
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('success-state').classList.remove('hidden');
-
-                // 3秒后自动跳转
-                setTimeout(() => {
-                    enterWebsite();
-                }, 3000);
+                showSuccess(userInfo);
             }, 1000);
         }
 
-        // 跳过直接进入
+        // 跳过
         function skipAndEnter() {
-            if (!isValidPhone) {
-                alert('手机号参数错误，请重新进入');
-                return;
+            const nickname = document.getElementById('nickname-input').value.trim();
+            if (!nickname) {
+                document.getElementById('nickname-input').value = '摇滚用户' + userPhone.slice(-4);
             }
-
-            const defaultName = '摇滚用户' + userPhone.slice(-4);
-            document.getElementById('nickname-input').value = defaultName;
             saveProfile();
         }
 
-        // 显示已有用户
-        function showExistingUser(user) {
-            document.getElementById('welcome-state').classList.add('hidden');
+        // 显示成功
+        function showSuccess(user) {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('success-state').classList.remove('hidden');
 
             document.getElementById('user-name').textContent = user.name;
             document.getElementById('user-id').textContent = user.userId;
             document.getElementById('user-phone').textContent = maskPhone(user.phone);
-            document.getElementById('user-points').textContent = user.points || '0';
 
-            document.getElementById('success-state').classList.remove('hidden');
-
+            // 3秒后自动跳转
             setTimeout(() => {
                 enterWebsite();
-            }, 2500);
+            }, 3000);
         }
 
         // 进入主站
