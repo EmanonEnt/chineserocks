@@ -22,8 +22,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        # 安裝 notion-client 和 requests（作為備用）
-        pip install notion-client>=2.0.0 requests
+        # 只安裝 requests，不再使用 notion-client
+        pip install requests
 
     - name: Publish approved articles
       env:
