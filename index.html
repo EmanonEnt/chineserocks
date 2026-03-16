@@ -405,6 +405,13 @@
 
         .charts-section .charts-title,.charts-section .top5-name,.charts-section .view-full-chart a {
             color:#0a0a0a;}
+        .charts-section .charts-quarter {
+            color: #FF0066;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            letter-spacing: 0.5px;
+        }
 
         .charts-section .top5-meta {
             color:#333;}
@@ -2506,7 +2513,10 @@
     <section class="charts-section">
         <div class="charts-container">
             <div class="charts-header">
-                <h2 class="charts-title">Official Charts 官方榜單</h2>
+                <div>
+                    <h2 class="charts-title">Official Charts 官方榜單</h2>
+                    <p class="charts-quarter" id="chartsQuarter">2025年第四季度榜单</p>
+                </div>
                 <div class="chart-tabs">
                     <button class="chart-tab active" onclick="switchChart('artists', this)">Artists</button>
                     <button class="chart-tab" onclick="switchChart('songs', this)">Songs</button>
@@ -4199,6 +4209,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             startVoteRotate('all');
             updateLoginUI();
+            updateChartsQuarter();
 
             // 检查是否从小程序传入用户数据
             handleMiniAppLogin();
@@ -4243,6 +4254,31 @@
                         showErrorModal('获取用户信息失败');
                     });
                 }
+            }
+        }
+
+        // 更新榜单季度显示
+        function updateChartsQuarter() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1; // 1-12
+
+            let quarterText = '';
+
+            // 判断季度
+            if (month >= 1 && month <= 3) {
+                quarterText = year + '年第一季度榜单';
+            } else if (month >= 4 && month <= 6) {
+                quarterText = year + '年第二季度榜单';
+            } else if (month >= 7 && month <= 9) {
+                quarterText = year + '年第三季度榜单';
+            } else {
+                quarterText = year + '年第四季度榜单';
+            }
+
+            const quarterEl = document.getElementById('chartsQuarter');
+            if (quarterEl) {
+                quarterEl.textContent = quarterText;
             }
         }
 
