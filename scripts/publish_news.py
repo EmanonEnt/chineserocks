@@ -24,13 +24,13 @@ def fetch_published_articles():
 
     while True:
         try:
-            # 構建查詢參數 - notion-client 2.0+ 格式
+            # 構建查詢參數
             query_params = {
                 "database_id": NEWS_DB_ID,
                 "page_size": 100
             }
 
-            # 新版 API filter 格式
+            # 繁體中文欄位名
             filter_obj = {
                 "property": "狀態",
                 "status": {"equals": "已發佈"}
@@ -48,11 +48,10 @@ def fetch_published_articles():
 
             print(f"  查詢參數: {json.dumps(filter_obj, ensure_ascii=False)}")
 
-            # 正確調用方式 - notion-client 2.0+
+            # notion-client 2.0+ 正確調用方式
             response = notion.databases.query(**query_params)
 
             print(f"  獲取到 {len(response.get('results', []))} 條結果")
-            print(f"  has_more: {response.get('has_more')}")
 
             for page in response.get('results', []):
                 props = page.get('properties', {})
@@ -64,8 +63,7 @@ def fetch_published_articles():
                 is_premium = (
                     '會員專享' in tags or
                     extract_checkbox(props, '是否會員專享') or
-                    '獨家' in tags or
-                    '独家' in tags
+                    '獨家' in tags
                 )
 
                 article = {
@@ -102,7 +100,7 @@ def fetch_published_articles():
 
 def extract_title(props):
     try:
-        title_prop = props.get('標題', props.get('title', {}))
+        title_prop = props.get('標題', {})
         if 'title' in title_prop and title_prop['title']:
             return title_prop['title'][0]['text']['content']
     except:
@@ -111,7 +109,7 @@ def extract_title(props):
 
 def extract_content(props):
     try:
-        content_prop = props.get('內容', props.get('content', {}))
+        content_prop = props.get('內容', {})
         if 'rich_text' in content_prop and content_prop['rich_text']:
             texts = []
             for rt in content_prop['rich_text']:
@@ -182,11 +180,9 @@ def get_default_image():
 def save_to_json(articles):
     """保存到JSON文件"""
 
-    # 分類整理
     hero = articles[:3] if len(articles) >= 3 else articles
     featured = [a for a in articles if a.get('featured') or a.get('is_premium')][:4]
 
-    # 按分類整理
     by_category = {
         "全部": articles,
         "獨家": [],
@@ -200,15 +196,15 @@ def save_to_json(articles):
         cat = article.get('category', '')
         tags = article.get('tags', [])
 
-        if cat == '獨家' or '獨家' in tags or '独家' in tags:
+        if cat == '獨家' or '獨家' in tags:
             by_category['獨家'].append(article)
-        elif cat == '現場' or '現場' in tags or '现场' in tags:
+        elif cat == '現場' or '現場' in tags:
             by_category['現場'].append(article)
-        elif cat == '專題' or '專題' in tags or '专题' in tags:
+        elif cat == '專題' or '專題' in tags:
             by_category['專題'].append(article)
-        elif cat == '國際' or '國際' in tags or '国际' in tags:
+        elif cat == '國際' or '國際' in tags:
             by_category['國際'].append(article)
-        elif cat == '新發行' or '新發行' in tags or '新发行' in tags:
+        elif cat == '新發行' or '新發行' in tags:
             by_category['新發行'].append(article)
 
     output = {
@@ -241,7 +237,6 @@ def main():
 
     if not articles:
         print("⚠️ 沒有已發布的文章")
-        # 創建空文件
         save_to_json([])
         return
 
