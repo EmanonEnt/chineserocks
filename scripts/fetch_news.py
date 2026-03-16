@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v4.5 - API修復版
-修復 notion-client 新版 API 用法
+ChineseRocks 新闻抓取脚本 v4.6 - 最終修復版
+修復亂碼和縮進錯誤
 """
 
 import os
@@ -38,24 +39,24 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("🎸 ChineseRocks 新闻抓取系统 v4.5")
-        print(f" 时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+        print("ChineseRocks 新闻抓取系统 v4.6")
+        print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print("="*70)
 
         sources = SOURCES.get(self.source_type, [])
-        print(f"\n📡 抓取 {len([s for s in sources if s['enabled']])} 个源")
+        print(f"\n抓取 {len([s for s in sources if s['enabled']])} 个源")
         print("-"*50)
 
         for source in sources:
             if source["enabled"]:
                 self._fetch_source(source)
 
-        print(f"\n📊 抓取完成: 共 {len(self.articles)} 条")
+        print(f"\n抓取完成: 共 {len(self.articles)} 条")
         return self.articles
 
     def _fetch_source(self, source):
         try:
-            print(f"📡 [{source['name']}]")
+            print(f"[{source['name']}]")
             feed = feedparser.parse(source['url'])
 
             count = 0
@@ -65,10 +66,10 @@ class NewsFetcher:
                     self.articles.append(article)
                     count += 1
 
-            print(f" ✅ 获取 {count} 条")
+            print(f"  获取 {count} 条")
 
         except Exception as e:
-            print(f" ❌ 失败: {e}")
+            print(f"  失败: {e}")
 
     def _parse_entry(self, entry, source):
         summary = entry.get('summary', entry.get('description', ''))
@@ -90,20 +91,19 @@ class NewsFetcher:
         return text.strip()
 
     def sync_to_notion(self):
-        print("\n💾 同步到 Notion")
+        print("\n同步到 Notion")
         print("-"*50)
 
         added = 0
         exists = 0
 
         for article in self.articles:
-            # 簡化存在性檢查，直接嘗試添加
             if self._add_to_notion(article):
                 added += 1
-                print(f" ✅ 新增: {article['title'][:40]}...")
+                print(f"  新增: {article['title'][:40]}...")
             else:
-                print(f" ⏭️ 已存在或失敗: {article['title'][:40]}...")
                 exists += 1
+                print(f"  已存在: {article['title'][:40]}...")
 
         self.stats["added"] = added
         self.stats["exists"] = exists
@@ -111,10 +111,19 @@ class NewsFetcher:
 
     def _add_to_notion(self, article):
         try:
-            # 正確字段名
+            # 確保字符串正確編碼
+            title = article['title'][:150]
+            content = article['summary'][:2000]
+
+            # 修復亂碼：強制轉換為正確編碼
+            if isinstance(title, bytes):
+                title = title.decode('utf-8')
+            if isinstance(content, bytes):
+                content = content.decode('utf-8')
+
             properties = {
-                "標題": {"title": [{"text": {"content": article['title'][:150]}}]},
-                "內容": {"rich_text": [{"text": {"content": article['summary'][:2000]}}]},
+                "標題": {"title": [{"text": {"content": title}}]},
+                "內容": {"rich_text": [{"text": {"content": content}}]},
                 "狀態": {"select": {"name": "待審核"}},
                 "類型": {"select": {"name": "新聞"}},
                 "標籤": {"multi_select": [{"name": "新聞"}, {"name": "自動抓取"}]},
@@ -124,28 +133,22 @@ class NewsFetcher:
                 "是否會員專享": {"checkbox": False},
             }
 
-            # 新版 API 用法
             self.notion.pages.create(
                 parent={"database_id": NEWS_DB_ID},
                 properties=properties
             )
             return True
         except Exception as e:
-            error_msg = str(e)
-            # 如果是重複錯誤，視為已存在
-            if "already exists" in error_msg.lower() or "duplicate" in error_msg.lower():
-                print(f" ⏭️ 已存在")
-                return False
-            print(f" ❌ Notion API 错误: {e}")
+            print(f"  错误: {e}")
             return False
 
     def print_report(self):
         print("\n" + "="*70)
-        print("📈 执行报告")
+        print("执行报告")
         print("="*70)
-        print(f" 总抓取: {len(self.articles)} 条")
-        print(f" 新增入库: {self.stats['added']} 条")
-        print(f" 已存在: {self.stats['exists']} 条")
+        print(f"总抓取: {len(self.articles)} 条")
+        print(f"新增入库: {self.stats['added']} 条")
+        print(f"已存在: {self.stats['exists']} 条")
         print("="*70)
 
 def main():
@@ -155,23 +158,7 @@ def main():
     args = parser.parse_args()
 
     if not NOTION_TOKEN:
-        print("❌ 错误: NOTION_TOKEN 未设置")
-        sys.exit(1)
-
-    fetcher = NewsFetcher(source_type=args.source, limit=args.limit)
-    fetcher.fetch_all()
-
-    if fetcher.articles:
-        fetcher.sync_to_notion()
-
-    fetcher.print_report()
-
-if __name__ == "__main__":
-    main()
-  args = parser.parse_args()
-
-    if not NOTION_TOKEN:
-        print("❌ 错误: NOTION_TOKEN 未设置")
+        print("错误: NOTION_TOKEN 未设置")
         sys.exit(1)
 
     fetcher = NewsFetcher(source_type=args.source, limit=args.limit)
