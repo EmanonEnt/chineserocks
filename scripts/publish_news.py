@@ -63,7 +63,7 @@ def fetch_published_articles():
             # 使用繁體中文"狀態"
             query_data["filter"] = {
                 "property": "狀態",
-                "select": {
+                "status": {
                     "equals": "已發佈"
                 }
             }
