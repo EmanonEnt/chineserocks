@@ -17,7 +17,8 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  const { userId, phone } = req.query;
+  const userId = req.query.userId || req.query.userid;
+const phone = req.query.phone;
   
   if (!userId && !phone) {
     return res.status(400).json({ 
