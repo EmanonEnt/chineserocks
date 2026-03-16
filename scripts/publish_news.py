@@ -1,340 +1,226 @@
 #!/usr/bin/env python3
 """
-ChineseRocks 審核發佈腳本 v4.2
-檢查Notion中狀態為"已發佈"的文章，更新到前端JSON文件
-使用繁體中文屬性名稱
+ChineseRocks 新聞發布腳本 - 修復版
+從Notion數據庫讀取已審核的文章，生成 news.json
 """
 
 import os
 import json
-import sys
-from datetime import datetime
-import requests
+from datetime import datetime, timezone
+from notion_client import Client
 
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
+# Notion配置
+NOTION_TOKEN = os.environ.get('NOTION_TOKEN')
+DATABASE_ID = os.environ.get('NOTION_DATABASE_ID') or os.environ.get('NEWS_DB_ID')
 
-def debug_print(msg):
-    """調試輸出"""
-    print(f"[DEBUG] {msg}")
+# 分類映射表 - 支持多種寫法
+CATEGORY_MAP = {
+    '獨家': '獨家',
+    '独家': '獨家', 
+    'EXCLUSIVE': '獨家',
+    'exclusive': '獨家',
+    '獨家 EXCLUSIVE': '獨家',
+    '現場': '現場',
+    '现场': '現場',
+    'LIVE': '現場',
+    'live': '現場',
+    '現場 LIVE': '現場',
+    '專題': '專題',
+    '专题': '專題',
+    'FEATURE': '專題',
+    'feature': '專題',
+    '專題 FEATURE': '專題',
+    '國際': '國際',
+    '国际': '國際',
+    'INTERNATIONAL': '國際',
+    'international': '國際',
+    '國際 INTERNATIONAL': '國際',
+    '新發行': '新發行',
+    '新发行': '新發行',
+    'RELEASES': '新發行',
+    'releases': '新發行',
+    '新發行 RELEASES': '新發行',
+}
 
-def notion_api_request(method, endpoint, json_data=None):
-    """使用 requests 直接調用 Notion API"""
-    headers = {
-        "Authorization": f"Bearer {NOTION_TOKEN}",
-        "Content-Type": "application/json",
-        "Notion-Version": "2022-06-28"
-    }
-
-    url = f"https://api.notion.com/v1{endpoint}"
+def fetch_notion_articles():
+    """從Notion獲取已發佈的文章"""
+    notion = Client(auth=NOTION_TOKEN)
 
     try:
-        if method == "POST":
-            response = requests.post(url, headers=headers, json=json_data, timeout=30)
-        elif method == "GET":
-            response = requests.get(url, headers=headers, timeout=30)
-        else:
-            raise ValueError(f"不支持的 HTTP 方法: {method}")
+        print(f"正在查詢數據庫: {DATABASE_ID}")
 
-        if response.status_code != 200:
-            debug_print(f"API 錯誤: {response.status_code}")
-            debug_print(f"響應內容: {response.text}")
-
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        debug_print(f"API 請求失敗: {e}")
-        raise
-
-def fetch_published_articles():
-    """從Notion獲取已發佈的文章"""
-    articles = []
-    cursor = None
-
-    debug_print(f"數據庫ID: {NEWS_DB_ID}")
-
-    while True:
-        try:
-            # 構建查詢參數 - 使用繁體中文
-            query_data = {
-                "page_size": 100
-            }
-
-            # 使用繁體中文"狀態"
-            query_data["filter"] = {
+        # 查詢數據庫 - 獲取已發佈的文章
+        response = notion.databases.query(
+            database_id=DATABASE_ID,
+            filter={
                 "property": "狀態",
-                "select": {
+                "status": {
                     "equals": "已發佈"
                 }
-            }
-
-            query_data["sorts"] = [
+            },
+            sorts=[
                 {
-                    "timestamp": "created_time",
+                    "property": "發布日期", 
                     "direction": "descending"
                 }
             ]
-
-            if cursor:
-                query_data["start_cursor"] = cursor
-
-            debug_print(f"查詢數據: {json.dumps(query_data, ensure_ascii=False)}")
-
-            response = notion_api_request(
-                "POST", 
-                f"/databases/{NEWS_DB_ID}/query", 
-                json_data=query_data
-            )
-
-            results = response.get('results', [])
-            debug_print(f"獲取到 {len(results)} 條結果")
-
-            for page in results:
-                props = page.get('properties', {})
-
-                if len(articles) == 0:
-                    debug_print(f"第一個結果的屬性鍵: {list(props.keys())}")
-
-                article = process_page(page, props)
-                if article:
-                    articles.append(article)
-                    debug_print(f"處理文章: {article['title'][:30]}...")
-
-            if not response.get('has_more'):
-                break
-            cursor = response.get('next_cursor')
-
-        except Exception as e:
-            debug_print(f"獲取文章失敗: {e}")
-            import traceback
-            traceback.print_exc()
-            break
-
-    return articles
-
-def process_page(page, props):
-    """處理單個頁面數據 - 使用繁體中文屬性名"""
-    try:
-        title = extract_title(props)
-        tags = extract_multi_select(props, '標籤')  # 繁體
-
-        is_premium = (
-            '會員專享' in tags or
-            extract_checkbox(props, '是否會員專享') or  # 繁體
-            '獨家' in tags
         )
 
-        return {
-            "id": page['id'],
-            "title": title,
-            "content": extract_content(props),
-            "category": extract_select(props, '類型'),  # 繁體
-            "tags": tags,
-            "status": extract_status(props),
-            "source_url": extract_url(props, '來源'),  # 繁體
-            "published_date": extract_date(props, '發布時間'),  # 繁體
-            "is_ai_generated": extract_checkbox(props, 'AI生成'),  # 繁體
-            "featured": extract_checkbox(props, '頭條'),  # 繁體
-            "is_premium": is_premium,
-            "cover_image": extract_url(props, '封面圖') or get_default_image(),  # 繁體
-            "created_time": page.get('created_time', ''),
-            "last_edited_time": page.get('last_edited_time', '')
-        }
+        articles = []
+        print(f"找到 {len(response.get('results', []))} 篇文章")
+
+        for page in response.get('results', []):
+            try:
+                props = page.get('properties', {})
+
+                # 提取標題
+                title_prop = props.get('標題', {}).get('title', [])
+                title = title_prop[0].get('text', {}).get('content', '') if title_prop else ''
+
+                # 提取內容
+                content_prop = props.get('內容', {}).get('rich_text', [])
+                content = content_prop[0].get('text', {}).get('content', '') if content_prop else ''
+
+                # 提取分類 - 修復：使用select屬性
+                category_select = props.get('分類', {}).get('select')
+                category_raw = category_select.get('name', '全部') if category_select else '全部'
+                # 標準化分類名稱
+                category = CATEGORY_MAP.get(category_raw, category_raw)
+
+                print(f"  文章: {title[:30]}... | 原始分類: {category_raw} -> 映射: {category}")
+
+                # 提取標籤 - 修復：使用multi_select屬性
+                tags_multi = props.get('標籤', {}).get('multi_select', [])
+                tags = [tag.get('name', '') for tag in tags_multi]
+
+                # 提取封面圖
+                cover = props.get('封面圖', {}).get('url', '')
+
+                # 提取發布日期
+                date_prop = props.get('發布日期', {}).get('date', {})
+                published_date = date_prop.get('start', '') if date_prop else ''
+
+                # 提取會員專屬標記
+                is_premium = any(t in tags for t in ['會員專享', '会员专享', 'PREMIUM', 'premium'])
+
+                # 提取頭條標記
+                is_featured = any(t in tags for t in ['頭條', '头条', 'FEATURED', 'featured', 'HOT'])
+
+                if title:
+                    articles.append({
+                        'id': page.get('id'),
+                        'title': title,
+                        'content': content,
+                        'category': category,
+                        'tags': tags,
+                        'cover_image': cover,
+                        'published_date': published_date,
+                        'is_premium': is_premium,
+                        'is_featured': is_featured,
+                        'created_time': page.get('created_time'),
+                        'last_edited_time': page.get('last_edited_time')
+                    })
+            except Exception as e:
+                print(f"處理文章時出錯: {e}")
+                import traceback
+                traceback.print_exc()
+                continue
+
+        return articles
     except Exception as e:
-        debug_print(f"處理頁面失敗: {e}")
-        return None
+        print(f"獲取Notion數據失敗: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
 
-def extract_title(props):
-    """提取標題 - 繁體"""
-    try:
-        title_prop = props.get('標題', props.get('title', {}))  # 繁體
-        if 'title' in title_prop and title_prop['title']:
-            return title_prop['title'][0]['text']['content']
-    except:
-        pass
-    return "無標題"
+def generate_news_json(articles):
+    """生成 news.json 文件"""
 
-def extract_content(props):
-    """提取內容 - 繁體"""
-    try:
-        content_prop = props.get('內容', props.get('content', {}))  # 繁體
-        if 'rich_text' in content_prop and content_prop['rich_text']:
-            return content_prop['rich_text'][0]['text']['content']
-    except:
-        pass
-    return ""
+    # 按日期排序
+    articles.sort(key=lambda x: x.get('published_date', ''), reverse=True)
 
-def extract_select(props, prop_name):
-    """提取單選屬性"""
-    try:
-        prop = props.get(prop_name, {})
-        if 'select' in prop and prop['select']:
-            return prop['select']['name']
-    except:
-        pass
-    return ""
+    # 頭條文章（最新的1-3篇，或有頭條標記的）
+    featured_articles = [a for a in articles if a.get('is_featured')]
+    if featured_articles:
+        hero = featured_articles[:3]
+    else:
+        hero = articles[:3]
 
-def extract_status(props):
-    """提取狀態屬性 - 繁體"""
-    try:
-        prop = props.get('狀態', {})  # 繁體
-        if 'status' in prop and prop['status']:
-            return prop['status']['name']
-        if 'select' in prop and prop['select']:
-            return prop['select']['name']
-    except:
-        pass
-    return ""
+    # 精選文章（有頭條標記的，最多4篇）
+    featured = featured_articles[:4]
 
-def extract_multi_select(props, prop_name):
-    """提取多選屬性"""
-    try:
-        prop = props.get(prop_name, {})
-        if 'multi_select' in prop:
-            return [tag['name'] for tag in prop['multi_select']]
-    except:
-        pass
-    return []
+    # 最新文章（最多12篇）
+    latest = articles[:12]
 
-def extract_url(props, prop_name):
-    """提取 URL 屬性"""
-    try:
-        prop = props.get(prop_name, {})
-        if 'url' in prop:
-            return prop['url']
-    except:
-        pass
-    return ""
-
-def extract_date(props, prop_name):
-    """提取日期屬性"""
-    try:
-        prop = props.get(prop_name, {})
-        if 'date' in prop and prop['date']:
-            return prop['date']['start']
-    except:
-        pass
-    return datetime.now().isoformat()
-
-def extract_checkbox(props, prop_name):
-    """提取複選框屬性"""
-    try:
-        prop = props.get(prop_name, {})
-        if 'checkbox' in prop:
-            return prop['checkbox']
-    except:
-        pass
-    return False
-
-def get_default_image():
-    """獲取默認圖片"""
-    return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop"
-
-def categorize_articles(articles):
-    """分類文章"""
-    categorized = {
-        "all": articles,
-        "hero": [],
-        "featured": [],
-        "latest": articles[:20],
-        "by_category": {
-            "全部": articles,
-            "獨家": [],
-            "現場": [],
-            "專題": [],
-            "國際": [],
-            "新發行": []
-        }
+    # 按分類分組 - 修復：確保所有分類都被正確填充
+    by_category = {
+        '全部': articles,
+        '獨家': [],
+        '現場': [],
+        '專題': [],
+        '國際': [],
+        '新發行': []
     }
 
     for article in articles:
-        tags = article.get('tags', [])
-        category = article.get('category', '')
+        cat = article.get('category', '全部')
+        if cat in by_category:
+            by_category[cat].append(article)
+            print(f"  分類歸檔: {article['title'][:20]}... -> {cat}")
+        else:
+            print(f"  警告: 未知分類 '{cat}' - 文章: {article['title'][:30]}")
 
-        if article.get('featured') or len(categorized['hero']) < 3:
-            if len(categorized['hero']) < 3:
-                categorized['hero'].append(article)
-                continue
-
-        if article.get('is_premium') or '獨家' in tags:
-            if len(categorized['featured']) < 4:
-                categorized['featured'].append(article)
-
-        if '獨家' in tags or category == '獨家':
-            categorized['by_category']['獨家'].append(article)
-        elif '現場' in tags or category in ['演出預告', '現場']:
-            categorized['by_category']['現場'].append(article)
-        elif '專題' in tags or category in ['專訪', '專題']:
-            categorized['by_category']['專題'].append(article)
-        elif '國際' in tags:
-            categorized['by_category']['國際'].append(article)
-        elif '新發行' in tags or category in ['樂評', '新發行']:
-            categorized['by_category']['新發行'].append(article)
-
-    return categorized
-
-def save_to_json(data):
-    """保存到JSON文件"""
-    output = {
-        "updated_at": datetime.now().isoformat(),
-        "total_count": len(data.get('all', [])),
-        "data": data
+    news_data = {
+        'updated_at': datetime.now(timezone.utc).isoformat(),
+        'total_count': len(articles),
+        'data': {
+            'all': articles,
+            'hero': hero,
+            'featured': featured,
+            'latest': latest,
+            'by_category': by_category
+        }
     }
 
-    os.makedirs('data', exist_ok=True)
+    return news_data
 
-    with open('data/news.json', 'w', encoding='utf-8') as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-
-    print(f"✅ 已保存 {output['total_count']} 篇文章到 data/news.json")
+def save_json(data, filepath='data/news.json'):
+    """保存JSON文件"""
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    with open(filepath, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    print(f"\n已保存: {filepath}")
 
 def main():
-    print("\n" + "="*70)
-    print("🎸 ChineseRocks 審核發佈系統 v4.2")
-    print(f" 時間: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    print("="*70)
+    print("="*50)
+    print("ChineseRocks 新聞發布腳本")
+    print("="*50)
 
     if not NOTION_TOKEN:
-        print("❌ 錯誤: NOTION_TOKEN 未設置")
-        sys.exit(1)
+        print("錯誤: 未設置 NOTION_TOKEN")
+        return
+    if not DATABASE_ID:
+        print("錯誤: 未設置數據庫ID")
+        return
 
-    print(f"\n📡 從Notion獲取已發佈文章...")
+    print(f"數據庫ID: {DATABASE_ID}")
+    print("-"*50)
 
-    try:
-        articles = fetch_published_articles()
+    articles = fetch_notion_articles()
+    print(f"\n獲取到 {len(articles)} 篇文章")
 
-        if not articles:
-            print("⚠️ 沒有已發佈的文章")
-            save_to_json({"all": [], "hero": [], "featured": [], "latest": [], "by_category": {}})
-            return
+    if articles:
+        news_data = generate_news_json(articles)
+        save_json(news_data)
+        print(f"\n生成完成!")
+        print(f"總數: {news_data['total_count']} 篇")
+        print(f"頭條: {len(news_data['data']['hero'])} 篇")
+        print(f"精選: {len(news_data['data']['featured'])} 篇")
+        print("\n分類統計:")
+        for cat, items in news_data['data']['by_category'].items():
+            print(f"  - {cat}: {len(items)} 篇")
+    else:
+        print("\n沒有找到已發佈的文章")
 
-        print(f"✅ 獲取到 {len(articles)} 篇已發佈文章")
-
-        print("\n📂 分類整理文章...")
-        categorized = categorize_articles(articles)
-
-        print("\n💾 保存到JSON文件...")
-        save_to_json(categorized)
-
-        print("\n" + "="*70)
-        print("📊 發佈統計")
-        print("="*70)
-        print(f" 頭條文章: {len(categorized['hero'])} 篇")
-        print(f" 精選文章: {len(categorized['featured'])} 篇")
-        print(f" 最新文章: {len(categorized['latest'])} 篇")
-        print(f" 獨家: {len(categorized['by_category']['獨家'])} 篇")
-        print(f" 現場: {len(categorized['by_category']['現場'])} 篇")
-        print(f" 專題: {len(categorized['by_category']['專題'])} 篇")
-        print(f" 國際: {len(categorized['by_category']['國際'])} 篇")
-        print(f" 新發行: {len(categorized['by_category']['新發行'])} 篇")
-        print("="*70)
-        print("\n✅ 發佈完成！前端將自動讀取 data/news.json")
-
-    except Exception as e:
-        print(f"\n❌ 執行失敗: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main() 
+if __name__ == '__main__':
+    main()
