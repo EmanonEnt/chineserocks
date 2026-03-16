@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks News Publisher - ASCII Version
+ChineseRocks News Publisher - Fixed Version
 """
 
 import os
@@ -19,24 +19,27 @@ def fetch_published_articles():
 
     try:
         print("Fetching from Notion...")
+        print(f"Database ID: {NEWS_DB_ID}")
 
+        # 不設置 filter，先獲取所有文章看看
         response = notion.databases.query(
             database_id=NEWS_DB_ID,
-            filter={
-                "property": "狀態",
-                "select": {"equals": "已發佈"}
-            },
-            sorts=[{
-                "property": "發布時間",
-                "direction": "descending"
-            }]
+            page_size=100
         )
 
-        print(f"Found {len(response['results'])} articles")
+        print(f"Total articles in database: {len(response['results'])}")
 
         for page in response['results']:
             try:
                 props = page['properties']
+
+                # 檢查狀態
+                status = extract_select(props, '狀態')
+                print(f"  Article: {extract_title(props)[:30]}... Status: {status}")
+
+                # 只處理已發佈的文章
+                if status != "已發佈":
+                    continue
 
                 article = {
                     "id": page['id'],
@@ -44,7 +47,7 @@ def fetch_published_articles():
                     "content": extract_content(props),
                     "category": extract_select(props, '類型'),
                     "tags": extract_multi_select(props, '標籤'),
-                    "status": extract_select(props, '狀態'),
+                    "status": status,
                     "source_url": extract_url(props, '來源'),
                     "published_date": extract_date(props, '發布時間'),
                     "is_ai_generated": extract_checkbox(props, 'AI生成'),
@@ -57,10 +60,10 @@ def fetch_published_articles():
                     article['is_premium'] = True
 
                 articles.append(article)
-                print(f"  OK: {article['title'][:40]}...")
+                print(f"    -> Added to publish list")
 
             except Exception as e:
-                print(f"  Error: {e}")
+                print(f"    -> Error: {e}")
                 continue
 
     except Exception as e:
@@ -139,10 +142,16 @@ def generate_news_json(articles):
 
     articles.sort(key=lambda x: x.get('published_date', ''), reverse=True)
 
+    # Hero: first 3 articles
     hero = articles[:3] if articles else []
+
+    # Featured: premium or featured articles
     featured = [a for a in articles if a.get('featured') or a.get('is_premium')][:4]
+
+    # Latest: first 12 articles
     latest = articles[:12]
 
+    # By category
     by_category = {
         "全部": articles,
         "獨家": [],
@@ -203,6 +212,8 @@ def main():
     print("\nFetching published articles...")
     articles = fetch_published_articles()
 
+    print(f"\nTotal published articles: {len(articles)}")
+
     if not articles:
         print("No published articles found")
         empty_data = {
@@ -225,8 +236,6 @@ def main():
         }
         save_to_json(empty_data)
         return
-
-    print(f"\nFound {len(articles)} published articles")
 
     print("\nGenerating news.json...")
     news_data = generate_news_json(articles)
