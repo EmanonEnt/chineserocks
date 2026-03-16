@@ -1,9 +1,9 @@
 name: Publish Approved News
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '*/30 * * * *'  # 每30分鐘運行一次
+    - cron: '*/30 * * * *'  # 每30分钟检查一次
+  workflow_dispatch:  # 手动触发
 
 jobs:
   publish:
@@ -11,30 +11,27 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
-        # 只安裝 requests，不再使用 notion-client
-        pip install requests
+        python -m pip install --upgrade pip
+        pip install notion-client
 
     - name: Publish approved articles
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
-      run: |
-        python scripts/publish_news.py
+      run: python scripts/publish_news.py
 
-    - name: Commit and push
+    - name: Commit and push if changed
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add data/news.json
-        git diff --staged --quiet || (git commit -m "Update news.json" && git push)
+        git add -A
+        git diff --cached --quiet || (git commit -m "Update news.json $(date +'%Y-%m-%d %H:%M')" && git push)
