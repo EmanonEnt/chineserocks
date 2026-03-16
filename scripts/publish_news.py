@@ -21,21 +21,19 @@ def fetch_published_articles():
 
     while True:
         try:
+            # 構建查詢參數
+            query_params = {
+                "database_id": NEWS_DB_ID,
+                "filter": {"property": "狀態", "select": {"equals": "已發佈"}},
+                "sorts": [{"property": "發布時間", "direction": "descending"}],
+                "page_size": 100
+            }
+
             if cursor:
-                response = notion.databases.query(
-                    database_id=NEWS_DB_ID,
-                    filter={"property": "狀態", "select": {"equals": "已發佈"}},
-                    sorts=[{"property": "發布時間", "direction": "descending"}],
-                    start_cursor=cursor,
-                    page_size=100
-                )
-            else:
-                response = notion.databases.query(
-                    database_id=NEWS_DB_ID,
-                    filter={"property": "狀態", "select": {"equals": "已發佈"}},
-                    sorts=[{"property": "發布時間", "direction": "descending"}],
-                    page_size=100
-                )
+                query_params["start_cursor"] = cursor
+
+            # 使用正確的 API 調用方式
+            response = notion.databases.query(**query_params)
 
             for page in response['results']:
                 props = page['properties']
@@ -65,12 +63,14 @@ def fetch_published_articles():
 
                 articles.append(article)
 
-            if not response['has_more']:
+            if not response.get('has_more'):
                 break
-            cursor = response['next_cursor']
+            cursor = response.get('next_cursor')
 
         except Exception as e:
             print(f"❌ 獲取文章失敗: {e}")
+            import traceback
+            traceback.print_exc()
             break
 
     return articles
@@ -215,7 +215,9 @@ def main():
         print("❌ 錯誤: NOTION_TOKEN 未設置")
         return
 
-    print("\n📡 從Notion獲取已發佈文章...")
+    print(f"\n📡 從Notion獲取已發佈文章...")
+    print(f"   數據庫ID: {NEWS_DB_ID}")
+
     articles = fetch_published_articles()
 
     if not articles:
