@@ -1,0 +1,29 @@
+name: Sync News to Site
+
+on:
+  schedule:
+    - cron: '0,30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install notion-client
+      - name: Sync news from Notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
+        run: python scripts/sync_notion.py
+      - name: Commit and push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add data/news.json
+          git diff --staged --quiet || (git commit -m "🔄 同步新闻: $(date +'%Y-%m-%d %H:%M')" && git push)
