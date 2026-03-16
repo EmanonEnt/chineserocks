@@ -30,7 +30,7 @@
         }
 
         .brand-header {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .brand-title {
@@ -51,7 +51,7 @@
         .star-decoration {
             font-size: 36px;
             color: #FF0066;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
             animation: starGlow 2s ease-in-out infinite alternate;
         }
@@ -83,7 +83,7 @@
 
         h1 {
             font-size: 20px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             color: #fff;
             font-weight: 800;
             letter-spacing: 1px;
@@ -92,7 +92,7 @@
         p {
             font-size: 14px;
             color: #888;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.6;
         }
 
@@ -100,8 +100,8 @@
             background: rgba(255, 0, 102, 0.1);
             border: 1px solid rgba(255, 0, 102, 0.3);
             border-radius: 12px;
-            padding: 15px 20px;
-            margin-bottom: 25px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -120,12 +120,47 @@
             letter-spacing: 1px;
         }
 
+        /* 输入框样式 */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            padding-left: 5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #FF0066;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-input::placeholder {
+            color: #555;
+        }
+
         .user-info {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 0, 102, 0.2);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
@@ -179,6 +214,14 @@
             box-shadow: 0 8px 20px rgba(255, 0, 102, 0.3);
         }
 
+        .btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
         .btn-secondary {
             background: transparent;
             border: 1.5px solid #FF0066;
@@ -199,72 +242,23 @@
             content: '✅';
         }
 
-        .status-icon.error::after {
-            content: '❌';
-        }
-
-        .error-detail {
-            background: rgba(255, 0, 0, 0.1);
-            border-left: 3px solid #ff4444;
-            padding: 15px;
-            margin: 20px 0;
-            text-align: left;
-            font-size: 13px;
-            color: #ff6666;
-            border-radius: 0 8px 8px 0;
-            word-break: break-all;
+        .brand-footer {
+            font-size: 11px;
+            color: #444;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 30px;
         }
 
         .hidden {
             display: none;
         }
 
-        .brand-footer {
-            font-size: 11px;
-            color: #444;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 40px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #FF0066, #CC0052);
-            border-radius: 2px;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .progress-fill.active {
-            width: 100%;
-            animation: progress 2s ease-in-out;
-        }
-
-        @keyframes progress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-
-        /* 调试信息 */
-        .debug-info {
-            background: rgba(255, 255, 0, 0.1);
-            border: 1px solid rgba(255, 255, 0, 0.3);
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 20px;
+        .tips {
             font-size: 12px;
-            color: #aa0;
-            text-align: left;
-            word-break: break-all;
+            color: #666;
+            margin-top: 10px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -275,32 +269,53 @@
             <div class="brand-subtitle">NEWS ★ CHARTS ★ MAGAZINE</div>
         </div>
 
-        <!-- 加载中 -->
-        <div id="loading-state">
+        <!-- 第一步：欢迎+填写信息 -->
+        <div id="welcome-state">
             <div class="star-decoration">★</div>
-            <div class="spinner"></div>
-            <h1>正在同步会员数据</h1>
+            <h1>欢迎加入 ChineseRocks！</h1>
+            <p>完善您的摇滚身份</p>
 
             <div class="phone-card">
-                <span class="phone-label">当前账号</span>
-                <span class="phone-number" id="display-phone">获取中...</span>
+                <span class="phone-label">手机号</span>
+                <span class="phone-number" id="display-phone">-</span>
             </div>
 
-            <div class="progress-bar">
-                <div class="progress-fill active" id="progressBar"></div>
+            <div class="form-group">
+                <label class="form-label">昵称 *</label>
+                <input type="text" class="form-input" id="nickname-input" placeholder="请输入您的昵称" maxlength="20">
             </div>
 
-            <p id="loading-text">正在连接服务器...</p>
+            <div class="form-group">
+                <label class="form-label">邮箱（可选）</label>
+                <input type="email" class="form-input" id="email-input" placeholder="your@email.com">
+            </div>
+
+            <button class="btn" onclick="saveProfile()">创建账号</button>
+            <button class="btn btn-secondary" onclick="skipAndEnter()">跳过，直接进入</button>
+
+            <p class="tips">💡 完善信息可获得100积分奖励</p>
         </div>
 
-        <!-- 同步成功 -->
+        <!-- 第二步：同步中 -->
+        <div id="loading-state" class="hidden">
+            <div class="star-decoration">★</div>
+            <div class="spinner"></div>
+            <h1>正在同步...</h1>
+            <p>保存您的会员信息</p>
+        </div>
+
+        <!-- 第三步：同步成功 -->
         <div id="success-state" class="hidden">
             <div class="star-decoration">★</div>
             <div class="status-icon success"></div>
             <h1>同步成功！</h1>
-            <p>您的会员信息已同步</p>
+            <p>欢迎加入 ChineseRocks 大家庭</p>
 
             <div class="user-info">
+                <div class="user-info-item">
+                    <span class="user-info-label">昵称</span>
+                    <span class="user-info-value" id="user-name">-</span>
+                </div>
                 <div class="user-info-item">
                     <span class="user-info-label">用户ID</span>
                     <span class="user-info-value" id="user-id">-</span>
@@ -315,53 +330,18 @@
                 </div>
                 <div class="user-info-item">
                     <span class="user-info-label">当前积分</span>
-                    <span class="user-info-value points" id="user-points">0</span>
+                    <span class="user-info-value points" id="user-points">100</span>
                 </div>
             </div>
 
             <button class="btn" onclick="enterWebsite()">进入网站</button>
-            <button class="btn btn-secondary" onclick="goBack()">返回小程序</button>
-        </div>
-
-        <!-- 新用户注册 -->
-        <div id="register-state" class="hidden">
-            <div class="star-decoration">★</div>
-            <div style="font-size: 48px; margin-bottom: 10px;">🎉</div>
-            <h1>欢迎加入 ChineseRocks！</h1>
-            <p>检测到您是新用户</p>
-
-            <div class="phone-card">
-                <span class="phone-label">手机号</span>
-                <span class="phone-number" id="new-phone">-</span>
-            </div>
-
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">创建账号后即可同步会员权益</p>
-
-            <button class="btn" onclick="createAccount()">创建会员账号</button>
-            <button class="btn btn-secondary" onclick="enterWebsite()">暂不创建</button>
-        </div>
-
-        <!-- 错误 -->
-        <div id="error-state" class="hidden">
-            <div class="star-decoration">★</div>
-            <div class="status-icon error"></div>
-            <h1>同步失败</h1>
-            <p id="error-message">请检查网络连接</p>
-            <div class="error-detail hidden" id="error-detail"></div>
-            <button class="btn" onclick="retry()">重新尝试</button>
-            <button class="btn btn-secondary" onclick="enterWebsite()">直接进入网站</button>
         </div>
 
         <div class="brand-footer">搖滾萬歲 ★ Emanon Ent.</div>
     </div>
 
     <script>
-        // 配置
-        const CONFIG = {
-            API_BASE: 'https://chineserocks.net/api',
-            SITE_URL: 'https://chineserocks.net',
-            DEBUG: true  // 开启调试模式
-        };
+        let userPhone = '';
 
         // 获取URL参数
         function getUrlParam(name) {
@@ -377,131 +357,60 @@
 
         // 页面加载
         window.onload = function() {
-            const phone = getUrlParam('phone');
-            const from = getUrlParam('from');
+            userPhone = getUrlParam('phone');
 
-            // 调试信息
-            if (CONFIG.DEBUG) {
-                console.log('URL参数:', { phone, from });
-                console.log('完整URL:', window.location.href);
-            }
-
-            // 验证参数
-            if (!phone || phone === '[用户手机号]' || phone === 'undefined' || phone === 'null') {
+            // 验证手机号
+            if (!userPhone || userPhone === '[用户手机号]' || userPhone === 'undefined' || userPhone === 'null') {
                 document.getElementById('display-phone').textContent = '参数错误';
-                showError('无法获取手机号', 
-                    'URL: ' + window.location.href + '<br>' +
-                    '请检查小程序配置是否正确');
                 return;
             }
 
             // 显示手机号
-            const maskedPhone = maskPhone(phone);
-            document.getElementById('display-phone').textContent = maskedPhone;
-            document.getElementById('new-phone').textContent = maskedPhone;
+            document.getElementById('display-phone').textContent = maskPhone(userPhone);
 
-            // 保存到本地
-            localStorage.setItem('sync_phone', phone);
-            localStorage.setItem('sync_from', from || 'miniprogram');
+            // 检查本地是否已有该用户
+            const existingUser = localStorage.getItem('chineserocks_user');
+            if (existingUser) {
+                const user = JSON.parse(existingUser);
+                if (user.phone === userPhone) {
+                    // 已存在，直接显示成功
+                    showExistingUser(user);
+                    return;
+                }
+            }
 
-            // 延迟后开始同步
-            setTimeout(() => {
-                syncUser(phone);
-            }, 800);
+            // 新用户，设置默认昵称
+            document.getElementById('nickname-input').value = '摇滚用户' + userPhone.slice(-4);
         };
 
-        // 同步用户 - 真实API调用
-        async function syncUser(phone) {
-            document.getElementById('loading-text').textContent = '正在查询用户信息...';
+        // 保存资料
+        function saveProfile() {
+            const nickname = document.getElementById('nickname-input').value.trim();
+            const email = document.getElementById('email-input').value.trim();
 
-            try {
-                // 真实API调用
-                const response = await fetch(`${CONFIG.API_BASE}/userInfo?phone=${encodeURIComponent(phone)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    // 添加超时处理
-                    signal: AbortSignal.timeout(10000)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP错误: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (CONFIG.DEBUG) {
-                    console.log('API响应:', data);
-                }
-
-                // 检查用户是否存在
-                if (!data.exists && !data.userId) {
-                    // 新用户
-                    showState('register-state');
-                    return;
-                }
-
-                // 已有用户，保存数据
-                saveUserData(data);
-
-                // 显示成功
-                displayUserInfo(data);
-                showState('success-state');
-
-                // 自动跳转
-                setTimeout(() => {
-                    enterWebsite();
-                }, 2500);
-
-            } catch (error) {
-                console.error('同步失败:', error);
-
-                // 网络错误时，尝试本地处理（演示模式）
-                if (error.name === 'TypeError' || error.name === 'AbortError' || error.message.includes('Failed to fetch')) {
-                    handleOfflineMode(phone);
-                } else {
-                    showError('同步失败', error.message);
-                }
-            }
-        }
-
-        // 离线模式（API不可用时）
-        function handleOfflineMode(phone) {
-            document.getElementById('loading-text').textContent = '网络连接失败，使用本地模式...';
-
-            // 检查本地是否已有该用户数据
-            const localUser = localStorage.getItem('chineserocks_user');
-            if (localUser) {
-                const user = JSON.parse(localUser);
-                if (user.phone === phone) {
-                    // 本地有数据，直接显示成功
-                    displayUserInfo(user);
-                    showState('success-state');
-                    setTimeout(enterWebsite, 2000);
-                    return;
-                }
+            if (!nickname) {
+                alert('请输入昵称');
+                return;
             }
 
-            // 本地没有，显示注册页面
-            setTimeout(() => {
-                showState('register-state');
-            }, 1000);
-        }
+            // 显示加载
+            document.getElementById('welcome-state').classList.add('hidden');
+            document.getElementById('loading-state').classList.remove('hidden');
 
-        // 保存用户数据
-        function saveUserData(data) {
+            // 生成用户ID
+            const userId = 'CR_' + userPhone.slice(-8);
+
+            // 保存用户数据
             const userInfo = {
-                userId: data.userId || 'CR_' + data.phone.slice(-8),
-                phone: data.phone,
-                name: data.name || data.nickname || '摇滚用户' + data.phone.slice(-4),
-                email: data.email || '',
-                avatar: data.avatar || '',
-                points: data.points || 0,
-                memberType: data.memberType || '体验会员',
+                userId: userId,
+                phone: userPhone,
+                name: nickname,
+                email: email,
+                points: 100,
+                memberType: '体验会员',
                 isLoggedIn: true,
                 loginTime: new Date().toISOString(),
-                source: 'miniprogram_sync'
+                source: 'miniprogram'
             };
 
             localStorage.setItem('chineserocks_user', JSON.stringify(userInfo));
@@ -509,106 +418,52 @@
             localStorage.setItem('userId', userInfo.userId);
             localStorage.setItem('userNickname', userInfo.name);
             localStorage.setItem('userPhone', userInfo.phone);
-        }
-
-        // 显示用户信息
-        function displayUserInfo(data) {
-            document.getElementById('user-id').textContent = data.userId || data.user_id || '-';
-            document.getElementById('user-phone').textContent = maskPhone(data.phone);
-            document.getElementById('user-points').textContent = data.points || '0';
-        }
-
-        // 创建新账号
-        async function createAccount() {
-            const phone = localStorage.getItem('sync_phone');
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = '创建中...';
-
-            try {
-                // 尝试调用创建API
-                const response = await fetch(`${CONFIG.API_BASE}/createUser`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        phone: phone,
-                        source: 'miniprogram',
-                        createTime: new Date().toISOString()
-                    }),
-                    signal: AbortSignal.timeout(10000)
-                });
-
-                let userData;
-
-                if (response.ok) {
-                    userData = await response.json();
-                } else {
-                    // API失败，使用本地生成
-                    throw new Error('API创建失败');
-                }
-
-                saveUserData(userData);
-                displayUserInfo(userData);
-
-            } catch (error) {
-                // 本地创建
-                const userId = 'CR_' + phone.slice(-8) + '_' + Date.now().toString(36).slice(-4);
-                const userData = {
-                    userId: userId,
-                    phone: phone,
-                    name: '摇滚用户' + phone.slice(-4),
-                    points: 0,
-                    memberType: '新用户'
-                };
-                saveUserData(userData);
-                displayUserInfo(userData);
+            if (email) {
+                localStorage.setItem('userEmail', email);
             }
 
-            showState('success-state');
-            setTimeout(enterWebsite, 2000);
+            // 延迟显示成功
+            setTimeout(() => {
+                document.getElementById('user-name').textContent = nickname;
+                document.getElementById('user-id').textContent = userId;
+                document.getElementById('user-phone').textContent = maskPhone(userPhone);
+
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('success-state').classList.remove('hidden');
+
+                // 3秒后自动跳转
+                setTimeout(() => {
+                    enterWebsite();
+                }, 3000);
+            }, 1000);
+        }
+
+        // 跳过直接进入
+        function skipAndEnter() {
+            const defaultName = '摇滚用户' + userPhone.slice(-4);
+            document.getElementById('nickname-input').value = defaultName;
+            saveProfile();
+        }
+
+        // 显示已有用户
+        function showExistingUser(user) {
+            document.getElementById('welcome-state').classList.add('hidden');
+
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-id').textContent = user.userId;
+            document.getElementById('user-phone').textContent = maskPhone(user.phone);
+            document.getElementById('user-points').textContent = user.points || '0';
+
+            document.getElementById('success-state').classList.remove('hidden');
+
+            setTimeout(() => {
+                enterWebsite();
+            }, 2500);
         }
 
         // 进入主站
         function enterWebsite() {
-            const phone = localStorage.getItem('sync_phone') || '';
-            window.location.href = `${CONFIG.SITE_URL}/?synced=1&from=miniprogram&phone=${phone.slice(-4)}`;
-        }
-
-        // 返回小程序
-        function goBack() {
-            if (window.wx && window.wx.miniProgram) {
-                window.wx.miniProgram.navigateBack();
-            } else {
-                window.history.back();
-            }
-        }
-
-        // 显示指定状态
-        function showState(stateId) {
-            document.querySelectorAll('[id$="-state"]').forEach(el => {
-                el.classList.add('hidden');
-            });
-            document.getElementById(stateId).classList.remove('hidden');
-        }
-
-        // 显示错误
-        function showError(message, detail) {
-            document.getElementById('error-message').textContent = message;
-            if (detail) {
-                document.getElementById('error-detail').innerHTML = detail;
-                document.getElementById('error-detail').classList.remove('hidden');
-            }
-            showState('error-state');
-        }
-
-        // 重试
-        function retry() {
-            const phone = localStorage.getItem('sync_phone');
-            showState('loading-state');
-            document.getElementById('loading-text').textContent = '正在连接服务器...';
-            syncUser(phone);
+            window.location.href = 'https://chineserocks.net/?synced=1&from=miniprogram';
         }
     </script> 
 </body>
