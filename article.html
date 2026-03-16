@@ -1375,409 +1375,6 @@
             letter-spacing: 10px;
         }
     </style>
-</head>
-<body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
-            </a>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-            <div class="nav-links" id="navLinks">
-                <a href="news.html">NEWS</a>
-                <span class="nav-separator">★</span>
-                <a href="charts.html">CHARTS</a>
-                <span class="nav-separator">★</span>
-                <a href="magazine.html">MAGAZINE</a>
-                <span class="nav-separator">★</span>
-                <a href="index.html#shows-section">SHOWS</a>
-                <span class="nav-separator">★</span>
-                <a href="#" onclick="showLiveTVComingSoon(); return false;">LIVE TV</a>
-                <a href="#" class="login-btn" id="userMenuBtn" onclick="handleUserMenuClick(); return false;">LOGIN</a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 文章头部 -->
-    <header class="article-header">
-        <div class="article-header-content">
-            <!-- 面包屑 -->
-            <nav class="breadcrumb">
-                <a href="index.html">首页</a>
-                <span class="breadcrumb-separator">/</span>
-                <a href="news.html">新闻</a>
-                <span class="breadcrumb-separator">/</span>
-                <span>{{CATEGORY_NAME}}</span>
-            </nav>
-
-            <!-- 分类标签 -->
-            <span class="article-category {{CATEGORY_CLASS}}">{{CATEGORY_NAME}}</span>
-
-            <!-- 标题 -->
-            <h1 class="article-title">{{ARTICLE_TITLE}}</h1>
-
-            <!-- 元信息 -->
-            <div class="article-meta">
-                <div class="article-author">
-                    <img src="{{AUTHOR_AVATAR}}" alt="{{AUTHOR_NAME}}" class="author-avatar">
-                    <div class="author-info">
-                        <span class="author-name">{{AUTHOR_NAME}}</span>
-                        <span class="author-role">{{AUTHOR_ROLE}}</span>
-                    </div>
-                </div>
-
-                <div class="article-stats">
-                    <span class="stat-item">
-                        <span class="icon">👁</span>
-                        <span>{{VIEW_COUNT}}</span>
-                    </span>
-                    <span class="stat-item">
-                        <span class="icon">♥</span>
-                        <span>{{LIKE_COUNT}}</span>
-                    </span>
-                    <span class="stat-item">
-                        <span class="icon">💬</span>
-                        <span>{{COMMENT_COUNT}}</span>
-                    </span>
-                </div>
-
-                <time class="publish-date">{{PUBLISH_DATE}}</time>
-            </div>
-        </div>
-    </header>
-
-    <!-- 文章主体 -->
-    <div class="article-layout">
-        <article class="article-main">
-            <!-- 特色图片 -->
-            <img src="{{ARTICLE_IMAGE}}" alt="{{ARTICLE_TITLE}}" class="article-hero-image">
-            <p class="image-caption">{{IMAGE_CAPTION}}</p>
-
-            <!-- 文章正文 -->
-            <div class="article-content">
-                {{ARTICLE_CONTENT}}
-            </div>
-
-            <!-- 重点标注示例 -->
-            <div class="highlight-box">
-                <div class="highlight-box-title">★ 重点摘要</div>
-                <p>{{HIGHLIGHT_TEXT}}</p>
-            </div>
-
-            <!-- 引用框示例 -->
-            <div class="quote-box">
-                <p class="quote-text">{{QUOTE_TEXT}}</p>
-                <p class="quote-author">—— {{QUOTE_AUTHOR}}</p>
-            </div>
-
-            <!-- 视频嵌入示例 -->
-            <div class="video-embed">
-                <iframe src="{{VIDEO_URL}}" allowfullscreen></iframe>
-            </div>
-
-            <!-- 音频播放器示例 -->
-            <div class="audio-player">
-                <img src="{{AUDIO_COVER}}" alt="" class="audio-cover">
-                <div class="audio-info">
-                    <div class="audio-title">{{AUDIO_TITLE}}</div>
-                    <div class="audio-artist">{{AUDIO_ARTIST}}</div>
-                </div>
-                <div class="audio-controls">
-                    <button class="play-btn">▶</button>
-                </div>
-            </div>
-
-            <!-- 标签 -->
-            <div class="article-tags">
-                <h3 class="tags-title">标签 TAGS</h3>
-                <div class="tags-list">
-                    {{TAGS_LIST}}
-                </div>
-            </div>
-
-            <!-- 分享 -->
-            <div class="article-share">
-                <span class="share-title">分享 SHARE</span>
-                <div class="share-buttons">
-                    <button class="share-btn" onclick="shareToWechat()">📱</button>
-                    <button class="share-btn" onclick="shareToWeibo()">📝</button>
-                    <button class="share-btn" onclick="shareToTwitter()">🐦</button>
-                    <button class="share-btn" onclick="copyLink()">🔗</button>
-                </div>
-            </div>
-
-            <!-- 作者卡片 -->
-            <div class="author-card">
-                <img src="{{AUTHOR_AVATAR}}" alt="{{AUTHOR_NAME}}" class="author-card-avatar">
-                <div class="author-card-info">
-                    <h3 class="author-card-name">{{AUTHOR_NAME}}</h3>
-                    <p class="author-card-role">{{AUTHOR_ROLE}}</p>
-                    <p class="author-card-bio">{{AUTHOR_BIO}}</p>
-                    <button class="follow-btn" onclick="followAuthor()">+ 关注作者</button>
-                </div>
-            </div>
-
-            <!-- 相关文章 -->
-            <div class="related-articles">
-                <h3 class="related-title">相关文章 RELATED</h3>
-                <div class="related-grid">
-                    {{RELATED_ARTICLES}}
-                </div>
-            </div>
-        </article>
-
-        <!-- 侧边栏 -->
-        <aside class="article-sidebar">
-            <!-- 阅读进度 -->
-            <div class="sidebar-widget">
-                <h4 class="widget-title">阅读进度</h4>
-                <div class="reading-progress">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="readingProgress"></div>
-                    </div>
-                    <p class="progress-text" id="progressText">0%</p>
-                </div>
-            </div>
-
-            <!-- 热门文章 -->
-            <div class="sidebar-widget">
-                <h4 class="widget-title">热门文章</h4>
-                <div class="trending-list">
-                    {{TRENDING_LIST}}
-                </div>
-            </div>
-
-            <!-- 订阅 -->
-            <div class="subscribe-box">
-                <h4 class="subscribe-title">订阅 ChineseRocks</h4>
-                <p class="subscribe-text">获取最新摇滚资讯</p>
-                <input type="email" class="subscribe-input" placeholder="输入邮箱地址">
-                <button class="subscribe-btn">立即订阅</button>
-            </div>
-
-            <!-- 广告位 -->
-            <div class="sidebar-widget">
-                <h4 class="widget-title">推广</h4>
-                <div class="ad-placeholder">
-                    广告位<br>300x250
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- 评论区 -->
-    <section class="comments-section">
-        <div class="comments-header">
-            <h2 class="comments-title">评论区</h2>
-            <span class="comments-count">{{COMMENT_COUNT}} 条评论</span>
-        </div>
-
-        <div class="comment-form">
-            <textarea class="comment-textarea" placeholder="分享你的看法..."></textarea>
-            <button class="comment-submit">发表评论</button>
-        </div>
-
-        <div class="comment-list">
-            {{COMMENT_LIST}}
-        </div>
-    </section>
-
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div>
-                <div style="margin-bottom: 1rem;">
-                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary); letter-spacing: 2px; text-transform: uppercase; line-height: 1;">CHINESE ROCKS</div>
-                    <div style="font-size: 0.6rem; color: var(--silver-text); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE <span style="color: var(--pink-primary);">搖滾萬歲</span></div>
-                </div>
-                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷<br>始於2025</p>
-            </div>
-            <div>
-                <h4 class="footer-title">榜單 CHARTS</h4>
-                <ul class="footer-links">
-                    <li><a href="charts.html">藝人榜 ARTISTS</a></li>
-                    <li><a href="charts.html">歌曲榜 SONGS</a></li>
-                    <li><a href="charts.html">專輯榜 ALBUMS</a></li>
-                    <li><a href="charts.html">音樂節 FESTIVALS</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="footer-title">內容 CONTENT</h4>
-                <ul class="footer-links">
-                    <li><a href="news.html">新聞 NEWS</a></li>
-                    <li><a href="index.html#shows-section">演出 SHOWS</a></li>
-                    <li><a href="magazine.html">雜誌 MAGAZINE</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="footer-title">服務 SERVICE</h4>
-                <ul class="footer-links">
-                    <li><a href="index.html#pricing">會員服務 MEMBERSHIP</a></li>
-                    <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
-                    <li><a href="#">廣告投放 ADVERTISING</a></li>
-                    <li><a href="#">聯繫我們 CONTACT</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 ChineseRocks. All rights reserved. 搖滾萬歲 ★ Emanon Ent.</p>
-        </div>
-    
-    <!-- 社交媒體板塊 -->
-    <div class="social-section">
-        <p class="social-title">Follow Us 關注我們</p>
-        <div class="social-links">
-            <a href="https://instagram.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                <span>Instagram</span>
-            </a>
-            <a href="https://facebook.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.126-5.864 10.126-11.854z"/>
-                </svg>
-                <span>Facebook</span>
-            </a>
-            <a href="https://x.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-                <span>X / Twitter</span>
-            </a>
-            <a href="https://weibo.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.194.573zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.401-.649.386-1.02.425-1.899.003-2.525-.789-1.168-2.947-1.108-5.388-.031 0 0-.772.338-.575-.274.381-1.204.324-2.212-.27-2.796-1.346-1.327-4.928.047-8.001 3.067C1.189 10.875 0 13.021 0 14.89c0 3.579 4.591 5.758 9.085 5.758 5.892 0 9.813-3.423 9.813-6.143 0-1.643-1.385-2.573-2.839-2.856z"/>
-                </svg>
-                <span>微博 Weibo</span>
-            </a>
-            <a href="https://weixin.qq.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01-.023-.156.49.49 0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 110 1.936.968.968 0 010-1.936zm4.048 0a.968.968 0 110 1.936.968.968 0 010-1.936z"/>
-                </svg>
-                <span>微信 WeChat</span>
-            </a>
-            <a href="https://xiaohongshu.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5 7h-2v-3c0-.55-.45-1-1-1s-1 .45-1 1v3h-2v-6h2v.5c.5-.5 1.17-.83 1.9-.83 1.38 0 2.6 1.12 2.6 2.5v3.83z"/>
-                </svg>
-                <span>小紅書 RED</span>
-            </a>
-            <a href="https://bilibili.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 01-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 01.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
-                </svg>
-                <span>Bilibili</span>
-            </a>
-            <a href="https://douyin.com/chineserocks" target="_blank" class="social-link">
-                <svg class="social-icon" viewBox="0 0 24 24">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                </svg>
-                <span>抖音 Douyin</span>
-            </a>
-        </div>
-    </div>
-
-    <!-- 會員購買卡板塊 -->
-    <section class="pricing-section" id="pricing">
-        <div class="pricing-container">
-            <div class="pricing-header">
-                <h2>選擇你的搖滾身份</h2>
-                <p>加入ChineseRocks會員，解鎖完整搖滾體驗</p>
-            </div>
-            <div class="pricing-grid">
-                <!-- 體驗卡 -->
-                <div class="pricing-card">
-                    <div class="pricing-name">體驗卡</div>
-                    <div class="pricing-price">免費<span>/3天</span></div>
-                    <div class="pricing-daily">限時體驗</div>
-                    <ul class="pricing-features">
-                        <li>3天體驗會員權益</li>
-                        <li>投票權重 ×0.5</li>
-                        <li>每日3次新聞閱讀</li>
-                        <li>480P LIVE TV</li>
-                    </ul>
-                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">免費領取體驗卡</button>
-                </div>
-                <!-- 周卡 -->
-                <div class="pricing-card">
-                    <div class="pricing-name">周卡</div>
-                    <div class="pricing-price">¥19.9<span>/週</span></div>
-                    <div class="pricing-daily">¥2.84/天</div>
-                    <ul class="pricing-features">
-                        <li>7天完整會員權益</li>
-                        <li>投票權重 ×1.0</li>
-                        <li>每天7次新聞閱讀</li>
-                        <li>720P LIVE TV</li>
-                        <li>演出優先購票</li>
-                        <li>獨家雜誌內容預覽</li>
-                        <li>廣告彈窗優化</li>
-                    </ul>
-                    <button class="pricing-btn">升級周卡會員</button>
-                </div>
-                <!-- 月卡 - 主推 -->
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">最熱門</div>
-                    <div class="pricing-name">月卡</div>
-                    <div class="pricing-price">¥66<span>/月</span></div>
-                    <div class="pricing-daily">¥2.20/天 · 省¥13</div>
-                    <ul class="pricing-features">
-                        <li>30天完整會員權益</li>
-                        <li>投票權重 ×2.0</li>
-                        <li>每天30次新聞閱讀</li>
-                        <li>1080P LIVE TV</li>
-                        <li>演出優先購票及95折優惠</li>
-                        <li>獨家雜誌內容</li>
-                        <li>廣告彈窗優化</li>
-                        <li>特享會員名稱效果</li>
-                        <li>線下活動入場抽獎資格</li>
-                    </ul>
-                    <button class="pricing-btn">升級月卡會員</button>
-                </div>
-                <!-- 季卡 -->
-                <div class="pricing-card">
-                    <div class="pricing-name">季卡</div>
-                    <div class="pricing-price">¥158<span>/季</span></div>
-                    <div class="pricing-daily">¥1.76/天 · 省¥40</div>
-                    <ul class="pricing-features">
-                        <li>90天完整會員權益</li>
-                        <li>投票權重 ×3.0</li>
-                        <li>每天100次新聞閱讀</li>
-                        <li>1080P LIVE TV</li>
-                        <li>演出優先購票及85折優惠</li>
-                        <li>獨家雜誌內容+實體年刊預購資格</li>
-                        <li>無廣告體驗</li>
-                        <li>特享會員名稱效果+專屬會員徽章</li>
-                        <li>線下活動免費邀請入場1+次/年</li>
-                        <li>周邊抽獎資格</li>
-                    </ul>
-                    <button class="pricing-btn">升級季卡會員</button>
-                </div>
-                <!-- 年卡 - 最大受益 -->
-                <div class="pricing-card featured">
-                    <div class="pricing-badge">最佳價值</div>
-                    <div class="pricing-name">年卡</div>
-                    <div class="pricing-price">¥365<span>/年</span></div>
-                    <div class="pricing-daily">¥1.00/天 · 省¥427</div>
-                    <ul class="pricing-features">
-                        <li>365天完整會員權益</li>
-                        <li>投票權重 ×5.0 [最高]</li>
-                        <li>無限新聞閱讀</li>
-                        <li>2K+ LIVE TV [獨享]</li>
-                        <li>演出提前48小時購票 [獨享]及75折優惠</li>
-                        <li>獨家雜誌內容+實體年刊禮品</li>
-                        <li>無廣告體驗</li>
-                        <li>特享會員名稱效果+專屬會員徽章</li>
-                        <li>線下活動免費邀請入場1+次/年</li>
-                        <li>周邊抽獎必中1次/年+折扣權益</li>
-                        <li>VIP專屬客服</li>
-                    </ul>
-                    <button class="pricing-btn">升級年卡會員</button>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <style>
     /* 社交媒體板塊樣式 */
@@ -2043,7 +1640,410 @@
         }
     }
     </style>
+    </head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
+            </a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="news.html">NEWS</a>
+                <span class="nav-separator">★</span>
+                <a href="charts.html">CHARTS</a>
+                <span class="nav-separator">★</span>
+                <a href="magazine.html">MAGAZINE</a>
+                <span class="nav-separator">★</span>
+                <a href="index.html#shows-section">SHOWS</a>
+                <span class="nav-separator">★</span>
+                <a href="#" onclick="showLiveTVComingSoon(); return false;">LIVE TV</a>
+                <a href="#" class="login-btn" id="userMenuBtn" onclick="handleUserMenuClick(); return false;">LOGIN</a>
+            </div>
+        </div>
+    </nav>
 
+    <!-- 文章头部 -->
+    <header class="article-header">
+        <div class="article-header-content">
+            <!-- 面包屑 -->
+            <nav class="breadcrumb">
+                <a href="index.html">首页</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="news.html">新闻</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>{{CATEGORY_NAME}}</span>
+            </nav>
+
+            <!-- 分类标签 -->
+            <span class="article-category {{CATEGORY_CLASS}}">{{CATEGORY_NAME}}</span>
+
+            <!-- 标题 -->
+            <h1 class="article-title">{{ARTICLE_TITLE}}</h1>
+
+            <!-- 元信息 -->
+            <div class="article-meta">
+                <div class="article-author">
+                    <img src="{{AUTHOR_AVATAR}}" alt="{{AUTHOR_NAME}}" class="author-avatar">
+                    <div class="author-info">
+                        <span class="author-name">{{AUTHOR_NAME}}</span>
+                        <span class="author-role">{{AUTHOR_ROLE}}</span>
+                    </div>
+                </div>
+
+                <div class="article-stats">
+                    <span class="stat-item">
+                        <span class="icon">👁</span>
+                        <span>{{VIEW_COUNT}}</span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="icon">♥</span>
+                        <span>{{LIKE_COUNT}}</span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="icon">💬</span>
+                        <span>{{COMMENT_COUNT}}</span>
+                    </span>
+                </div>
+
+                <time class="publish-date">{{PUBLISH_DATE}}</time>
+            </div>
+        </div>
+    </header>
+
+    <!-- 文章主体 -->
+    <div class="article-layout">
+        <article class="article-main">
+            <!-- 特色图片 -->
+            <img src="{{ARTICLE_IMAGE}}" alt="{{ARTICLE_TITLE}}" class="article-hero-image">
+            <p class="image-caption">{{IMAGE_CAPTION}}</p>
+
+            <!-- 文章正文 -->
+            <div class="article-content">
+                {{ARTICLE_CONTENT}}
+            </div>
+
+            <!-- 重点标注示例 -->
+            <div class="highlight-box">
+                <div class="highlight-box-title">★ 重点摘要</div>
+                <p>{{HIGHLIGHT_TEXT}}</p>
+            </div>
+
+            <!-- 引用框示例 -->
+            <div class="quote-box">
+                <p class="quote-text">{{QUOTE_TEXT}}</p>
+                <p class="quote-author">—— {{QUOTE_AUTHOR}}</p>
+            </div>
+
+            <!-- 视频嵌入示例 -->
+            <div class="video-embed">
+                <iframe src="{{VIDEO_URL}}" allowfullscreen></iframe>
+            </div>
+
+            <!-- 音频播放器示例 -->
+            <div class="audio-player">
+                <img src="{{AUDIO_COVER}}" alt="" class="audio-cover">
+                <div class="audio-info">
+                    <div class="audio-title">{{AUDIO_TITLE}}</div>
+                    <div class="audio-artist">{{AUDIO_ARTIST}}</div>
+                </div>
+                <div class="audio-controls">
+                    <button class="play-btn">▶</button>
+                </div>
+            </div>
+
+            <!-- 标签 -->
+            <div class="article-tags">
+                <h3 class="tags-title">标签 TAGS</h3>
+                <div class="tags-list">
+                    {{TAGS_LIST}}
+                </div>
+            </div>
+
+            <!-- 分享 -->
+            <div class="article-share">
+                <span class="share-title">分享 SHARE</span>
+                <div class="share-buttons">
+                    <button class="share-btn" onclick="shareToWechat()">📱</button>
+                    <button class="share-btn" onclick="shareToWeibo()">📝</button>
+                    <button class="share-btn" onclick="shareToTwitter()">🐦</button>
+                    <button class="share-btn" onclick="copyLink()">🔗</button>
+                </div>
+            </div>
+
+            <!-- 作者卡片 -->
+            <div class="author-card">
+                <img src="{{AUTHOR_AVATAR}}" alt="{{AUTHOR_NAME}}" class="author-card-avatar">
+                <div class="author-card-info">
+                    <h3 class="author-card-name">{{AUTHOR_NAME}}</h3>
+                    <p class="author-card-role">{{AUTHOR_ROLE}}</p>
+                    <p class="author-card-bio">{{AUTHOR_BIO}}</p>
+                    <button class="follow-btn" onclick="followAuthor()">+ 关注作者</button>
+                </div>
+            </div>
+
+            <!-- 相关文章 -->
+            <div class="related-articles">
+                <h3 class="related-title">相关文章 RELATED</h3>
+                <div class="related-grid">
+                    {{RELATED_ARTICLES}}
+                </div>
+            </div>
+        </article>
+
+        <!-- 侧边栏 -->
+        <aside class="article-sidebar">
+            <!-- 阅读进度 -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">阅读进度</h4>
+                <div class="reading-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="readingProgress"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">0%</p>
+                </div>
+            </div>
+
+            <!-- 热门文章 -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">热门文章</h4>
+                <div class="trending-list">
+                    {{TRENDING_LIST}}
+                </div>
+            </div>
+
+            <!-- 订阅 -->
+            <div class="subscribe-box">
+                <h4 class="subscribe-title">订阅 ChineseRocks</h4>
+                <p class="subscribe-text">获取最新摇滚资讯</p>
+                <input type="email" class="subscribe-input" placeholder="输入邮箱地址">
+                <button class="subscribe-btn">立即订阅</button>
+            </div>
+
+            <!-- 广告位 -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">推广</h4>
+                <div class="ad-placeholder">
+                    广告位<br>300x250
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 评论区 -->
+    <section class="comments-section">
+        <div class="comments-header">
+            <h2 class="comments-title">评论区</h2>
+            <span class="comments-count">{{COMMENT_COUNT}} 条评论</span>
+        </div>
+
+        <div class="comment-form">
+            <textarea class="comment-textarea" placeholder="分享你的看法..."></textarea>
+            <button class="comment-submit">发表评论</button>
+        </div>
+
+        <div class="comment-list">
+            {{COMMENT_LIST}}
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <!-- 社交媒體板塊 -->
+    <div class="social-section">
+        <p class="social-title">Follow Us 關注我們</p>
+        <div class="social-links">
+            <a href="https://instagram.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                <span>Instagram</span>
+            </a>
+            <a href="https://facebook.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.126-5.864 10.126-11.854z"/>
+                </svg>
+                <span>Facebook</span>
+            </a>
+            <a href="https://x.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span>X / Twitter</span>
+            </a>
+            <a href="https://weibo.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.194.573zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.401-.649.386-1.02.425-1.899.003-2.525-.789-1.168-2.947-1.108-5.388-.031 0 0-.772.338-.575-.274.381-1.204.324-2.212-.27-2.796-1.346-1.327-4.928.047-8.001 3.067C1.189 10.875 0 13.021 0 14.89c0 3.579 4.591 5.758 9.085 5.758 5.892 0 9.813-3.423 9.813-6.143 0-1.643-1.385-2.573-2.839-2.856z"/>
+                </svg>
+                <span>微博 Weibo</span>
+            </a>
+            <a href="https://weixin.qq.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01-.023-.156.49.49 0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 110 1.936.968.968 0 010-1.936zm4.048 0a.968.968 0 110 1.936.968.968 0 010-1.936z"/>
+                </svg>
+                <span>微信 WeChat</span>
+            </a>
+            <a href="https://xiaohongshu.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5 7h-2v-3c0-.55-.45-1-1-1s-1 .45-1 1v3h-2v-6h2v.5c.5-.5 1.17-.83 1.9-.83 1.38 0 2.6 1.12 2.6 2.5v3.83z"/>
+                </svg>
+                <span>小紅書 RED</span>
+            </a>
+            <a href="https://bilibili.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 01-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 01.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                </svg>
+                <span>Bilibili</span>
+            </a>
+            <a href="https://douyin.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                </svg>
+                <span>抖音 Douyin</span>
+            </a>
+        </div>
+    </div>
+
+        <!-- 會員購買卡板塊 -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-container">
+            <div class="pricing-header">
+                <h2>選擇你的搖滾身份</h2>
+                <p>加入ChineseRocks會員，解鎖完整搖滾體驗</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- 體驗卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">體驗卡</div>
+                    <div class="pricing-price">免費<span>/3天</span></div>
+                    <div class="pricing-daily">限時體驗</div>
+                    <ul class="pricing-features">
+                        <li>3天體驗會員權益</li>
+                        <li>投票權重 ×0.5</li>
+                        <li>每日3次新聞閱讀</li>
+                        <li>480P LIVE TV</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">免費領取體驗卡</button>
+                </div>
+                <!-- 周卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">周卡</div>
+                    <div class="pricing-price">¥19.9<span>/週</span></div>
+                    <div class="pricing-daily">¥2.84/天</div>
+                    <ul class="pricing-features">
+                        <li>7天完整會員權益</li>
+                        <li>投票權重 ×1.0</li>
+                        <li>每天7次新聞閱讀</li>
+                        <li>720P LIVE TV</li>
+                        <li>演出優先購票</li>
+                        <li>獨家雜誌內容預覽</li>
+                        <li>廣告彈窗優化</li>
+                    </ul>
+                    <button class="pricing-btn">升級周卡會員</button>
+                </div>
+                <!-- 月卡 - 主推 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最熱門</div>
+                    <div class="pricing-name">月卡</div>
+                    <div class="pricing-price">¥66<span>/月</span></div>
+                    <div class="pricing-daily">¥2.20/天 · 省¥13</div>
+                    <ul class="pricing-features">
+                        <li>30天完整會員權益</li>
+                        <li>投票權重 ×2.0</li>
+                        <li>每天30次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及95折優惠</li>
+                        <li>獨家雜誌內容</li>
+                        <li>廣告彈窗優化</li>
+                        <li>特享會員名稱效果</li>
+                        <li>線下活動入場抽獎資格</li>
+                    </ul>
+                    <button class="pricing-btn">升級月卡會員</button>
+                </div>
+                <!-- 季卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">季卡</div>
+                    <div class="pricing-price">¥158<span>/季</span></div>
+                    <div class="pricing-daily">¥1.76/天 · 省¥40</div>
+                    <ul class="pricing-features">
+                        <li>90天完整會員權益</li>
+                        <li>投票權重 ×3.0</li>
+                        <li>每天100次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及85折優惠</li>
+                        <li>獨家雜誌內容+實體年刊預購資格</li>
+                        <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎資格</li>
+                    </ul>
+                    <button class="pricing-btn">升級季卡會員</button>
+                </div>
+                <!-- 年卡 - 最大受益 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最佳價值</div>
+                    <div class="pricing-name">年卡</div>
+                    <div class="pricing-price">¥365<span>/年</span></div>
+                    <div class="pricing-daily">¥1.00/天 · 省¥427</div>
+                    <ul class="pricing-features">
+                        <li>365天完整會員權益</li>
+                        <li>投票權重 ×5.0 [最高]</li>
+                        <li>無限新聞閱讀</li>
+                        <li>2K+ LIVE TV [獨享]</li>
+                        <li>演出提前48小時購票 [獨享]及75折優惠</li>
+                        <li>獨家雜誌內容+實體年刊禮品</li>
+                        <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎必中1次/年+折扣權益</li>
+                        <li>VIP專屬客服</li>
+                    </ul>
+                    <button class="pricing-btn">升級年卡會員</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <div class="footer-content">
+            <div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary); letter-spacing: 2px; text-transform: uppercase; line-height: 1;">CHINESE ROCKS</div>
+                    <div style="font-size: 0.6rem; color: var(--silver-text); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE <span style="color: var(--pink-primary);">搖滾萬歲</span></div>
+                </div>
+                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷<br>始於2025</p>
+            </div>
+            <div>
+                <h4 class="footer-title">榜單 CHARTS</h4>
+                <ul class="footer-links">
+                    <li><a href="charts.html">藝人榜 ARTISTS</a></li>
+                    <li><a href="charts.html">歌曲榜 SONGS</a></li>
+                    <li><a href="charts.html">專輯榜 ALBUMS</a></li>
+                    <li><a href="charts.html">音樂節 FESTIVALS</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">內容 CONTENT</h4>
+                <ul class="footer-links">
+                    <li><a href="news.html">新聞 NEWS</a></li>
+                    <li><a href="index.html#shows-section">演出 SHOWS</a></li>
+                    <li><a href="magazine.html">雜誌 MAGAZINE</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">服務 SERVICE</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html#pricing">會員服務 MEMBERSHIP</a></li>
+                    <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
+                    <li><a href="#">廣告投放 ADVERTISING</a></li>
+                    <li><a href="#">聯繫我們 CONTACT</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 ChineseRocks. All rights reserved. 搖滾萬歲 ★ Emanon Ent.</p>
+        
     </footer>
 
     <!-- 底部导航 -->
@@ -2191,6 +2191,271 @@
         // 頁面加載時執行
         document.addEventListener('DOMContentLoaded', getArticleTitleFromUrl);
 
+    </script>
+
+    <!-- 文章數據加載系統 -->
+    <script>
+        // 文章數據配置 - 可從 Notion 獲取
+        const ARTICLE_CONFIG = {
+            // Notion API 配置
+            notionApiKey: '', // 在這裡填入你的 Notion Integration Token
+            notionDatabaseId: '', // 在這裡填入你的 Notion Database ID
+
+            // 默認文章數據（當無法從 Notion 獲取時顯示）
+            defaultArticle: {
+                title: '文章標題',
+                excerpt: '文章摘要...',
+                content: '<p>文章內容正在加載中...</p>',
+                image: './image/default-article.jpg',
+                category: 'NEWS',
+                categoryClass: '',
+                author: {
+                    name: 'ChineseRocks 編輯部',
+                    role: '官方編輯',
+                    avatar: './image/default-avatar.png',
+                    bio: 'ChineseRocks 官方編輯團隊，為你帶來最新搖滾資訊。'
+                },
+                publishDate: new Date().toLocaleDateString('zh-CN'),
+                viewCount: 0,
+                likeCount: 0,
+                commentCount: 0,
+                tags: ['搖滾', '音樂'],
+                trending: []
+            }
+        };
+
+        // 從 URL 獲取文章 ID
+        function getArticleIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || params.get('article') || 'default';
+        }
+
+        // 從 URL 獲取文章標題（兼容舊版本）
+        function getArticleTitleFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('title') || params.get('t');
+        }
+
+        // 模擬從 Notion 獲取數據（實際使用時需要替換為真實 API 調用）
+        async function fetchArticleFromNotion(articleId) {
+            // 這裡是模擬數據，實際使用時請取消註釋下面的 API 調用
+            /*
+            const response = await fetch(`https://api.notion.com/v1/pages/${articleId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${ARTICLE_CONFIG.notionApiKey}`,
+                    'Notion-Version': '2022-06-28',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch article from Notion');
+            }
+
+            const data = await response.json();
+            return parseNotionData(data);
+            */
+
+            // 模擬數據返回
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve({
+                        ...ARTICLE_CONFIG.defaultArticle,
+                        id: articleId,
+                        title: getArticleTitleFromUrl() || ARTICLE_CONFIG.defaultArticle.title
+                    });
+                }, 100);
+            });
+        }
+
+        // 解析 Notion 數據格式
+        function parseNotionData(notionData) {
+            const properties = notionData.properties || {};
+
+            return {
+                id: notionData.id,
+                title: properties.Title?.title?.[0]?.plain_text || '無標題',
+                excerpt: properties.Excerpt?.rich_text?.[0]?.plain_text || '',
+                content: properties.Content?.rich_text?.[0]?.plain_text || '',
+                image: properties.Image?.files?.[0]?.file?.url || './image/default-article.jpg',
+                category: properties.Category?.select?.name || 'NEWS',
+                categoryClass: getCategoryClass(properties.Category?.select?.name),
+                author: {
+                    name: properties.Author?.rich_text?.[0]?.plain_text || 'ChineseRocks',
+                    role: properties.AuthorRole?.rich_text?.[0]?.plain_text || '編輯',
+                    avatar: properties.AuthorAvatar?.files?.[0]?.file?.url || './image/default-avatar.png',
+                    bio: properties.AuthorBio?.rich_text?.[0]?.plain_text || ''
+                },
+                publishDate: properties.PublishDate?.date?.start || new Date().toISOString(),
+                viewCount: properties.Views?.number || 0,
+                likeCount: properties.Likes?.number || 0,
+                commentCount: properties.Comments?.number || 0,
+                tags: properties.Tags?.multi_select?.map(tag => tag.name) || [],
+                videoUrl: properties.VideoUrl?.url || '',
+                audioTitle: properties.AudioTitle?.rich_text?.[0]?.plain_text || '',
+                audioArtist: properties.AudioArtist?.rich_text?.[0]?.plain_text || '',
+                audioCover: properties.AudioCover?.files?.[0]?.file?.url || ''
+            };
+        }
+
+        // 獲取分類樣式類名
+        function getCategoryClass(category) {
+            const classMap = {
+                '獨家': 'exclusive',
+                '現場': 'live',
+                '專題': 'feature',
+                '國際': 'international',
+                '發行': 'release'
+            };
+            return classMap[category] || '';
+        }
+
+        // 渲染文章內容
+        function renderArticle(article) {
+            // 更新頁面標題
+            document.title = `${article.title} - ChineseRocks 中國搖滾官方榜單`;
+
+            // 更新 Meta 標籤
+            updateMetaTag('description', article.excerpt);
+            updateMetaTag('og:title', article.title);
+            updateMetaTag('og:description', article.excerpt);
+            updateMetaTag('og:image', article.image);
+            updateMetaTag('twitter:title', article.title);
+            updateMetaTag('twitter:description', article.excerpt);
+            updateMetaTag('twitter:image', article.image);
+
+            // 更新文章頭部
+            setTextContent('.article-title', article.title);
+            setTextContent('.article-category', article.category);
+            setElementClass('.article-category', article.categoryClass);
+            setImageSrc('.article-hero-image', article.image);
+            setTextContent('.image-caption', article.imageCaption || '');
+
+            // 更新作者信息
+            setTextContent('.author-name', article.author.name);
+            setTextContent('.author-role', article.author.role);
+            setImageSrc('.author-avatar', article.author.avatar);
+            setImageSrc('.author-card-avatar', article.author.avatar);
+            setTextContent('.author-card-name', article.author.name);
+            setTextContent('.author-card-role', article.author.role);
+            setTextContent('.author-card-bio', article.author.bio);
+
+            // 更新統計數據
+            setTextContent('.stat-item:nth-child(1) span:last-child', article.viewCount);
+            setTextContent('.stat-item:nth-child(2) span:last-child', article.likeCount);
+            setTextContent('.stat-item:nth-child(3) span:last-child', article.commentCount);
+            setTextContent('.comments-count', `${article.commentCount} 條評論`);
+            setTextContent('#likeCount', article.likeCount);
+            setTextContent('.publish-date', formatDate(article.publishDate));
+
+            // 更新文章內容
+            const contentEl = document.querySelector('.article-content');
+            if (contentEl && article.content) {
+                contentEl.innerHTML = article.content;
+            }
+
+            // 更新標籤
+            renderTags(article.tags);
+
+            // 更新視頻
+            if (article.videoUrl) {
+                const videoIframe = document.querySelector('.video-embed iframe');
+                if (videoIframe) {
+                    videoIframe.src = article.videoUrl;
+                }
+            }
+
+            // 更新音頻
+            if (article.audioTitle) {
+                setTextContent('.audio-title', article.audioTitle);
+                setTextContent('.audio-artist', article.audioArtist);
+                setImageSrc('.audio-cover', article.audioCover);
+            }
+
+            // 更新麵包屑分類
+            const breadcrumbCategory = document.querySelector('.breadcrumb span:last-child');
+            if (breadcrumbCategory) {
+                breadcrumbCategory.textContent = article.category;
+            }
+        }
+
+        // 輔助函數：更新 Meta 標籤
+        function updateMetaTag(property, content) {
+            if (!content) return;
+            let meta = document.querySelector(`meta[property="${property}"], meta[name="${property}"]`);
+            if (meta) {
+                meta.setAttribute('content', content);
+            }
+        }
+
+        // 輔助函數：設置文本內容
+        function setTextContent(selector, text) {
+            const el = document.querySelector(selector);
+            if (el && text) {
+                el.textContent = text;
+            }
+        }
+
+        // 輔助函數：設置圖片源
+        function setImageSrc(selector, src) {
+            const el = document.querySelector(selector);
+            if (el && src) {
+                el.src = src;
+                el.onerror = function() {
+                    this.src = './image/default-article.jpg';
+                };
+            }
+        }
+
+        // 輔助函數：設置元素類名
+        function setElementClass(selector, className) {
+            const el = document.querySelector(selector);
+            if (el && className) {
+                el.classList.add(className);
+            }
+        }
+
+        // 輔助函數：渲染標籤
+        function renderTags(tags) {
+            const container = document.querySelector('.tags-list');
+            if (!container || !tags || tags.length === 0) return;
+
+            container.innerHTML = tags.map(tag => 
+                `<a href="news.html?tag=${encodeURIComponent(tag)}" class="tag-link">${tag}</a>`
+            ).join('');
+        }
+
+        // 輔助函數：格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // 初始化文章
+        async function initArticle() {
+            try {
+                const articleId = getArticleIdFromUrl();
+                const article = await fetchArticleFromNotion(articleId);
+                renderArticle(article);
+                console.log('文章加載成功:', article.title);
+            } catch (error) {
+                console.error('文章加載失敗:', error);
+                // 使用默認數據
+                renderArticle(ARTICLE_CONFIG.defaultArticle);
+            }
+        }
+
+        // 頁面加載完成後初始化
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initArticle);
+        } else {
+            initArticle();
+        }
     </script>
 </body>
 </html>
