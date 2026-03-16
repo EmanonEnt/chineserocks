@@ -6,7 +6,6 @@ ChineseRocks 新聞發布系統
 
 import os
 import json
-import re
 from datetime import datetime
 from notion_client import Client
 
@@ -21,64 +20,48 @@ def fetch_published_articles():
 
     notion = Client(auth=NOTION_TOKEN)
     articles = []
+    cursor = None
 
-    try:
-        # 新版API調用方式
-        response = notion.databases.query(
-            database_id=NEWS_DB_ID,
-            filter={"property": "狀態", "status": {"equals": "已發佈"}},
-            sorts=[{"timestamp": "created_time", "direction": "descending"}],
-            page_size=100
-        )
-
-        for page in response.get('results', []):
-            props = page.get('properties', {})
-
-            # 提取標籤
-            tags = extract_multi_select(props, '標籤')
-
-            # 檢測是否會員專享
-            is_premium = (
-                '會員專享' in tags or
-                extract_checkbox(props, '是否會員專享') or
-                '獨家' in tags or
-                '独家' in tags
-            )
-
-            article = {
-                "id": page.get('id'),
-                "title": extract_title(props),
-                "content": extract_content(props),
-                "category": extract_select(props, '類型'),
-                "tags": tags,
-                "status": extract_status(props, '狀態'),
-                "source_url": extract_url(props, '來源'),
-                "published_date": extract_date(props, '發布時間'),
-                "is_ai_generated": extract_checkbox(props, 'AI生成'),
-                "featured": extract_checkbox(props, '頭條'),
-                "is_premium": is_premium,
-                "cover_image": extract_url(props, '封面圖') or get_default_image(),
-                "created_time": page.get('created_time'),
-                "last_edited_time": page.get('last_edited_time')
+    while True:
+        try:
+            # 構建查詢參數
+            query_params = {
+                "database_id": NEWS_DB_ID,
+                "page_size": 100
             }
 
-            articles.append(article)
-            print(f"  ✓ {article['title'][:40]}...")
+            # 嘗試新版 API 格式 (status)
+            filter_obj = {
+                "property": "狀態",
+                "status": {"equals": "已發佈"}
+            }
+            sorts_obj = [{"timestamp": "created_time", "direction": "descending"}]
 
-        # 處理分頁
-        while response.get('has_more'):
-            response = notion.databases.query(
-                database_id=NEWS_DB_ID,
-                filter={"property": "狀態", "status": {"equals": "已發佈"}},
-                sorts=[{"timestamp": "created_time", "direction": "descending"}],
-                start_cursor=response.get('next_cursor'),
-                page_size=100
-            )
+            query_params["filter"] = filter_obj
+            query_params["sorts"] = sorts_obj
+
+            if cursor:
+                query_params["start_cursor"] = cursor
+
+            print(f"  查詢參數: {json.dumps(filter_obj, ensure_ascii=False)}")
+
+            response = notion.databases.query(**query_params)
+
+            print(f"  獲取到 {len(response.get('results', []))} 條結果")
 
             for page in response.get('results', []):
                 props = page.get('properties', {})
+
+                # 提取標籤
                 tags = extract_multi_select(props, '標籤')
-                is_premium = '會員專享' in tags or extract_checkbox(props, '是否會員專享')
+
+                # 檢測是否會員專享
+                is_premium = (
+                    '會員專享' in tags or
+                    extract_checkbox(props, '是否會員專享') or
+                    '獨家' in tags or
+                    '独家' in tags
+                )
 
                 article = {
                     "id": page.get('id'),
@@ -96,12 +79,19 @@ def fetch_published_articles():
                     "created_time": page.get('created_time'),
                     "last_edited_time": page.get('last_edited_time')
                 }
+
                 articles.append(article)
                 print(f"  ✓ {article['title'][:40]}...")
 
-    except Exception as e:
-        print(f"❌ 獲取文章失敗: {e}")
-        return []
+            if not response.get('has_more'):
+                break
+            cursor = response.get('next_cursor')
+
+        except Exception as e:
+            print(f"❌ 獲取文章失敗: {e}")
+            import traceback
+            traceback.print_exc()
+            break
 
     return articles
 
