@@ -29,7 +29,6 @@
             width: 100%;
         }
 
-        /* 品牌标识 */
         .brand-header {
             margin-bottom: 30px;
         }
@@ -49,7 +48,6 @@
             letter-spacing: 3px;
         }
 
-        /* 星星装饰 */
         .star-decoration {
             font-size: 36px;
             color: #FF0066;
@@ -69,7 +67,6 @@
             }
         }
 
-        /* 加载动画 */
         .spinner {
             width: 50px;
             height: 50px;
@@ -99,7 +96,6 @@
             line-height: 1.6;
         }
 
-        /* 手机号显示卡片 */
         .phone-card {
             background: rgba(255, 0, 102, 0.1);
             border: 1px solid rgba(255, 0, 102, 0.3);
@@ -124,7 +120,6 @@
             letter-spacing: 1px;
         }
 
-        /* 用户信息卡片 */
         .user-info {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 0, 102, 0.2);
@@ -160,7 +155,6 @@
             font-weight: 900;
         }
 
-        /* 按钮 */
         .btn {
             display: inline-block;
             width: 100%;
@@ -196,16 +190,6 @@
             color: #FF0066;
         }
 
-        .btn:disabled {
-            background: #333;
-            border-color: #333;
-            color: #666;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* 状态图标 */
         .status-icon {
             font-size: 50px;
             margin-bottom: 15px;
@@ -219,7 +203,6 @@
             content: '❌';
         }
 
-        /* 错误提示 */
         .error-detail {
             background: rgba(255, 0, 0, 0.1);
             border-left: 3px solid #ff4444;
@@ -229,13 +212,13 @@
             font-size: 13px;
             color: #ff6666;
             border-radius: 0 8px 8px 0;
+            word-break: break-all;
         }
 
         .hidden {
             display: none;
         }
 
-        /* 底部品牌 */
         .brand-footer {
             font-size: 11px;
             color: #444;
@@ -244,7 +227,6 @@
             margin-top: 40px;
         }
 
-        /* 进度条 */
         .progress-bar {
             width: 100%;
             height: 4px;
@@ -271,23 +253,34 @@
             0% { width: 0%; }
             100% { width: 100%; }
         }
+
+        /* 调试信息 */
+        .debug-info {
+            background: rgba(255, 255, 0, 0.1);
+            border: 1px solid rgba(255, 255, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aa0;
+            text-align: left;
+            word-break: break-all;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 品牌标识 -->
         <div class="brand-header">
             <div class="brand-title">CHINESE ROCKS</div>
             <div class="brand-subtitle">NEWS ★ CHARTS ★ MAGAZINE</div>
         </div>
 
-        <!-- 加载中 / 自动同步 -->
+        <!-- 加载中 -->
         <div id="loading-state">
             <div class="star-decoration">★</div>
             <div class="spinner"></div>
             <h1>正在同步会员数据</h1>
 
-            <!-- 显示从URL获取的手机号 -->
             <div class="phone-card">
                 <span class="phone-label">当前账号</span>
                 <span class="phone-number" id="display-phone">获取中...</span>
@@ -297,7 +290,7 @@
                 <div class="progress-fill active" id="progressBar"></div>
             </div>
 
-            <p>正在连接服务器，请稍候...</p>
+            <p id="loading-text">正在连接服务器...</p>
         </div>
 
         <!-- 同步成功 -->
@@ -342,7 +335,7 @@
                 <span class="phone-number" id="new-phone">-</span>
             </div>
 
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">创建账号后即可同步会员权益</p>
 
             <button class="btn" onclick="createAccount()">创建会员账号</button>
             <button class="btn btn-secondary" onclick="enterWebsite()">暂不创建</button>
@@ -363,116 +356,152 @@
     </div>
 
     <script>
+        // 配置
+        const CONFIG = {
+            API_BASE: 'https://chineserocks.net/api',
+            SITE_URL: 'https://chineserocks.net',
+            DEBUG: true  // 开启调试模式
+        };
+
         // 获取URL参数
         function getUrlParam(name) {
             const params = new URLSearchParams(window.location.search);
             return params.get(name);
         }
 
-        // 页面加载时执行
+        // 脱敏手机号
+        function maskPhone(phone) {
+            if (!phone || phone.length !== 11) return phone;
+            return phone.substring(0, 3) + '****' + phone.substring(7);
+        }
+
+        // 页面加载
         window.onload = function() {
             const phone = getUrlParam('phone');
             const from = getUrlParam('from');
 
-            // 显示手机号（隐藏中间4位）
-            if (phone && phone !== '[用户手机号]') {
-                const maskedPhone = phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-                document.getElementById('display-phone').textContent = maskedPhone;
-                document.getElementById('new-phone').textContent = maskedPhone;
-
-                // 保存到本地
-                localStorage.setItem('sync_phone', phone);
-                localStorage.setItem('sync_from', from || 'miniprogram');
-
-                // 自动开始同步（延迟1秒让用户看到加载状态）
-                setTimeout(() => {
-                    syncUser(phone);
-                }, 1000);
-            } else {
-                document.getElementById('display-phone').textContent = '未获取';
-                showError('无法获取手机号', '请从小程序正确访问此页面');
+            // 调试信息
+            if (CONFIG.DEBUG) {
+                console.log('URL参数:', { phone, from });
+                console.log('完整URL:', window.location.href);
             }
+
+            // 验证参数
+            if (!phone || phone === '[用户手机号]' || phone === 'undefined' || phone === 'null') {
+                document.getElementById('display-phone').textContent = '参数错误';
+                showError('无法获取手机号', 
+                    'URL: ' + window.location.href + '<br>' +
+                    '请检查小程序配置是否正确');
+                return;
+            }
+
+            // 显示手机号
+            const maskedPhone = maskPhone(phone);
+            document.getElementById('display-phone').textContent = maskedPhone;
+            document.getElementById('new-phone').textContent = maskedPhone;
+
+            // 保存到本地
+            localStorage.setItem('sync_phone', phone);
+            localStorage.setItem('sync_from', from || 'miniprogram');
+
+            // 延迟后开始同步
+            setTimeout(() => {
+                syncUser(phone);
+            }, 800);
         };
 
-        // 同步用户信息
+        // 同步用户 - 真实API调用
         async function syncUser(phone) {
+            document.getElementById('loading-text').textContent = '正在查询用户信息...';
+
             try {
-                // 模拟API调用（实际使用时替换为真实API）
-                // const response = await fetch(`https://chineserocks.net/api/userInfo?phone=${encodeURIComponent(phone)}`);
-                // const data = await response.json();
+                // 真实API调用
+                const response = await fetch(`${CONFIG.API_BASE}/userInfo?phone=${encodeURIComponent(phone)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // 添加超时处理
+                    signal: AbortSignal.timeout(10000)
+                });
 
-                // 模拟数据（开发测试用）
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
 
-                // 模拟：假设用户已存在
-                const mockData = {
-                    exists: true,
-                    userId: 'CR_' + phone.slice(-8),
-                    phone: phone,
-                    name: '摇滚用户' + phone.slice(-4),
-                    email: '',
-                    avatar: '',
-                    points: 100,
-                    memberType: '体验会员'
-                };
+                const data = await response.json();
 
-                if (!mockData.exists) {
+                if (CONFIG.DEBUG) {
+                    console.log('API响应:', data);
+                }
+
+                // 检查用户是否存在
+                if (!data.exists && !data.userId) {
                     // 新用户
                     showState('register-state');
                     return;
                 }
 
-                // 已有用户，保存到本地
-                const userInfo = {
-                    userId: mockData.userId,
-                    phone: mockData.phone,
-                    name: mockData.name,
-                    email: mockData.email,
-                    avatar: mockData.avatar,
-                    points: mockData.points,
-                    memberType: mockData.memberType,
-                    isLoggedIn: true,
-                    loginTime: new Date().toISOString(),
-                    source: 'miniprogram_sync'
-                };
+                // 已有用户，保存数据
+                saveUserData(data);
 
-                localStorage.setItem('chineserocks_user', JSON.stringify(userInfo));
-                localStorage.setItem('userLoggedIn', 'true');
-                localStorage.setItem('userId', userInfo.userId);
-                localStorage.setItem('userNickname', userInfo.name);
-                localStorage.setItem('userPhone', userInfo.phone);
-
-                // 显示成功信息
-                document.getElementById('user-id').textContent = userInfo.userId;
-                document.getElementById('user-phone').textContent = userInfo.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-                document.getElementById('user-points').textContent = userInfo.points;
-
+                // 显示成功
+                displayUserInfo(data);
                 showState('success-state');
 
-                // 3秒后自动跳转到主站
+                // 自动跳转
                 setTimeout(() => {
                     enterWebsite();
-                }, 3000);
+                }, 2500);
 
             } catch (error) {
-                showError('网络请求失败', error.message);
+                console.error('同步失败:', error);
+
+                // 网络错误时，尝试本地处理（演示模式）
+                if (error.name === 'TypeError' || error.name === 'AbortError' || error.message.includes('Failed to fetch')) {
+                    handleOfflineMode(phone);
+                } else {
+                    showError('同步失败', error.message);
+                }
             }
         }
 
-        // 创建新账号
-        async function createAccount() {
-            const phone = localStorage.getItem('sync_phone');
-            const userId = 'CR_' + phone.slice(-8) + '_' + Date.now().toString(36).substr(-4);
+        // 离线模式（API不可用时）
+        function handleOfflineMode(phone) {
+            document.getElementById('loading-text').textContent = '网络连接失败，使用本地模式...';
 
+            // 检查本地是否已有该用户数据
+            const localUser = localStorage.getItem('chineserocks_user');
+            if (localUser) {
+                const user = JSON.parse(localUser);
+                if (user.phone === phone) {
+                    // 本地有数据，直接显示成功
+                    displayUserInfo(user);
+                    showState('success-state');
+                    setTimeout(enterWebsite, 2000);
+                    return;
+                }
+            }
+
+            // 本地没有，显示注册页面
+            setTimeout(() => {
+                showState('register-state');
+            }, 1000);
+        }
+
+        // 保存用户数据
+        function saveUserData(data) {
             const userInfo = {
-                userId: userId,
-                phone: phone,
-                name: '摇滚用户' + phone.slice(-4),
-                points: 0,
-                memberType: '新用户',
+                userId: data.userId || 'CR_' + data.phone.slice(-8),
+                phone: data.phone,
+                name: data.name || data.nickname || '摇滚用户' + data.phone.slice(-4),
+                email: data.email || '',
+                avatar: data.avatar || '',
+                points: data.points || 0,
+                memberType: data.memberType || '体验会员',
                 isLoggedIn: true,
                 loginTime: new Date().toISOString(),
-                source: 'miniprogram_new'
+                source: 'miniprogram_sync'
             };
 
             localStorage.setItem('chineserocks_user', JSON.stringify(userInfo));
@@ -480,32 +509,79 @@
             localStorage.setItem('userId', userInfo.userId);
             localStorage.setItem('userNickname', userInfo.name);
             localStorage.setItem('userPhone', userInfo.phone);
+        }
 
-            // 显示成功
-            document.getElementById('user-id').textContent = userInfo.userId;
-            document.getElementById('user-phone').textContent = phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
-            document.getElementById('user-points').textContent = '0';
+        // 显示用户信息
+        function displayUserInfo(data) {
+            document.getElementById('user-id').textContent = data.userId || data.user_id || '-';
+            document.getElementById('user-phone').textContent = maskPhone(data.phone);
+            document.getElementById('user-points').textContent = data.points || '0';
+        }
+
+        // 创建新账号
+        async function createAccount() {
+            const phone = localStorage.getItem('sync_phone');
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '创建中...';
+
+            try {
+                // 尝试调用创建API
+                const response = await fetch(`${CONFIG.API_BASE}/createUser`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: phone,
+                        source: 'miniprogram',
+                        createTime: new Date().toISOString()
+                    }),
+                    signal: AbortSignal.timeout(10000)
+                });
+
+                let userData;
+
+                if (response.ok) {
+                    userData = await response.json();
+                } else {
+                    // API失败，使用本地生成
+                    throw new Error('API创建失败');
+                }
+
+                saveUserData(userData);
+                displayUserInfo(userData);
+
+            } catch (error) {
+                // 本地创建
+                const userId = 'CR_' + phone.slice(-8) + '_' + Date.now().toString(36).slice(-4);
+                const userData = {
+                    userId: userId,
+                    phone: phone,
+                    name: '摇滚用户' + phone.slice(-4),
+                    points: 0,
+                    memberType: '新用户'
+                };
+                saveUserData(userData);
+                displayUserInfo(userData);
+            }
 
             showState('success-state');
-
-            setTimeout(() => {
-                enterWebsite();
-            }, 2000);
+            setTimeout(enterWebsite, 2000);
         }
 
         // 进入主站
         function enterWebsite() {
-            window.location.href = 'https://chineserocks.net/?synced=1&from=miniprogram';
+            const phone = localStorage.getItem('sync_phone') || '';
+            window.location.href = `${CONFIG.SITE_URL}/?synced=1&from=miniprogram&phone=${phone.slice(-4)}`;
         }
 
         // 返回小程序
         function goBack() {
-            // 尝试关闭web-view返回小程序
             if (window.wx && window.wx.miniProgram) {
                 window.wx.miniProgram.navigateBack();
             } else {
-                // 否则进入主站
-                enterWebsite();
+                window.history.back();
             }
         }
 
@@ -521,7 +597,7 @@
         function showError(message, detail) {
             document.getElementById('error-message').textContent = message;
             if (detail) {
-                document.getElementById('error-detail').textContent = detail;
+                document.getElementById('error-detail').innerHTML = detail;
                 document.getElementById('error-detail').classList.remove('hidden');
             }
             showState('error-state');
@@ -531,6 +607,7 @@
         function retry() {
             const phone = localStorage.getItem('sync_phone');
             showState('loading-state');
+            document.getElementById('loading-text').textContent = '正在连接服务器...';
             syncUser(phone);
         }
     </script> 
