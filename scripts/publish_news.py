@@ -1,257 +1,188 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-ChineseRocks News Publisher - Fixed Version
+ChineseRocks 新聞發布腳本
+從 Notion 數據庫獲取已審核的新聞，生成 news.json
 """
 
 import os
 import json
+import requests
 from datetime import datetime
-from notion_client import Client
 
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
+NOTION_TOKEN = os.environ.get('NOTION_TOKEN')
+NOTION_DATABASE_ID = os.environ.get('NOTION_DATABASE_ID')
 
-def fetch_published_articles():
-    """Fetch published articles from Notion"""
-    notion = Client(auth=NOTION_TOKEN)
-    articles = []
+def query_database():
+    """查詢 Notion 數據庫獲取所有已發布新聞"""
+    url = f"https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query"
 
-    try:
-        print("Fetching from Notion...")
-        print(f"Database ID: {NEWS_DB_ID}")
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28"
+    }
 
-        # 不設置 filter，先獲取所有文章看看
-        response = notion.databases.query(
-            database_id=NEWS_DB_ID,
-            page_size=100
-        )
+    all_results = []
+    has_more = True
+    start_cursor = None
 
-        print(f"Total articles in database: {len(response['results'])}")
-
-        for page in response['results']:
-            try:
-                props = page['properties']
-
-                # 檢查狀態
-                status = extract_select(props, '狀態')
-                print(f"  Article: {extract_title(props)[:30]}... Status: {status}")
-
-                # 只處理已發佈的文章
-                if status != "已發佈":
-                    continue
-
-                article = {
-                    "id": page['id'],
-                    "title": extract_title(props),
-                    "content": extract_content(props),
-                    "category": extract_select(props, '類型'),
-                    "tags": extract_multi_select(props, '標籤'),
-                    "status": status,
-                    "source_url": extract_url(props, '來源'),
-                    "published_date": extract_date(props, '發布時間'),
-                    "is_ai_generated": extract_checkbox(props, 'AI生成'),
-                    "featured": extract_checkbox(props, '頭條'),
-                    "is_premium": False,
-                    "cover_image": extract_url(props, '封面圖') or get_default_image()
+    while has_more:
+        data = {
+            "filter": {
+                "property": "狀態",
+                "select": {
+                    "equals": "已發佈"
                 }
-
-                if '會員專享' in article['tags'] or '獨家' in article['tags']:
-                    article['is_premium'] = True
-
-                articles.append(article)
-                print(f"    -> Added to publish list")
-
-            except Exception as e:
-                print(f"    -> Error: {e}")
-                continue
-
-    except Exception as e:
-        print(f"Fetch failed: {e}")
-        import traceback
-        traceback.print_exc()
-
-    return articles
-
-def extract_title(props):
-    try:
-        title_prop = props.get('標題', {})
-        if title_prop.get('title'):
-            return title_prop['title'][0]['text']['content']
-    except:
-        pass
-    return "No Title"
-
-def extract_content(props):
-    try:
-        content_prop = props.get('內容', {})
-        if content_prop.get('rich_text'):
-            return content_prop['rich_text'][0]['text']['content']
-    except:
-        pass
-    return ""
-
-def extract_select(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if prop.get('select'):
-            return prop['select']['name']
-    except:
-        pass
-    return ""
-
-def extract_multi_select(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if prop.get('multi_select'):
-            return [tag['name'] for tag in prop['multi_select']]
-    except:
-        pass
-    return []
-
-def extract_url(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        return prop.get('url', '')
-    except:
-        pass
-    return ""
-
-def extract_date(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if prop.get('date'):
-            return prop['date']['start']
-    except:
-        pass
-    return datetime.now().isoformat()
-
-def extract_checkbox(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        return prop.get('checkbox', False)
-    except:
-        pass
-    return False
-
-def get_default_image():
-    return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop"
-
-def generate_news_json(articles):
-    """Generate news.json"""
-
-    articles.sort(key=lambda x: x.get('published_date', ''), reverse=True)
-
-    # Hero: first 3 articles
-    hero = articles[:3] if articles else []
-
-    # Featured: premium or featured articles
-    featured = [a for a in articles if a.get('featured') or a.get('is_premium')][:4]
-
-    # Latest: first 12 articles
-    latest = articles[:12]
-
-    # By category
-    by_category = {
-        "全部": articles,
-        "獨家": [],
-        "現場": [],
-        "專題": [],
-        "國際": [],
-        "新發行": []
-    }
-
-    for article in articles:
-        cat = article.get('category', '')
-        tags = article.get('tags', [])
-
-        if '獨家' in tags or cat == '獨家':
-            by_category['獨家'].append(article)
-        elif '現場' in tags or cat in ['演出预告', '現場']:
-            by_category['現場'].append(article)
-        elif '專題' in tags or cat in ['专访', '專題']:
-            by_category['專題'].append(article)
-        elif '國際' in tags:
-            by_category['國際'].append(article)
-        elif '新發行' in tags or cat in ['乐评', '新發行']:
-            by_category['新發行'].append(article)
-
-    news_data = {
-        "updated_at": datetime.now().isoformat(),
-        "total_count": len(articles),
-        "data": {
-            "all": articles,
-            "hero": hero,
-            "featured": featured,
-            "latest": latest,
-            "by_category": by_category
+            },
+            "page_size": 100
         }
-    }
 
-    return news_data
+        if start_cursor:
+            data["start_cursor"] = start_cursor
 
-def save_to_json(news_data):
-    """Save to JSON file"""
-    os.makedirs('data', exist_ok=True)
+        print(f"📡 發送請求... (cursor: {start_cursor})")
+        response = requests.post(url, headers=headers, json=data)
 
-    with open('data/news.json', 'w', encoding='utf-8') as f:
-        json.dump(news_data, f, ensure_ascii=False, indent=2)
+        if response.status_code != 200:
+            print(f"❌ API 錯誤: {response.status_code}")
+            print(f"響應: {response.text}")
+            return None
 
-    print(f"\nSaved {news_data['total_count']} articles to data/news.json")
+        result = response.json()
+        results = result.get("results", [])
+        all_results.extend(results)
+
+        has_more = result.get("has_more", False)
+        start_cursor = result.get("next_cursor")
+
+        print(f"✅ 本頁獲取 {len(results)} 條，累計 {len(all_results)} 條")
+
+    return all_results
+
+def extract_property(properties, prop_name):
+    """從 properties 中提取值"""
+    prop = properties.get(prop_name)
+    if not prop:
+        return None
+
+    prop_type = prop.get("type")
+
+    if prop_type == "title":
+        items = prop.get("title", [])
+        return "".join([item.get("plain_text", "") for item in items])
+
+    elif prop_type == "rich_text":
+        items = prop.get("rich_text", [])
+        return "".join([item.get("plain_text", "") for item in items])
+
+    elif prop_type == "select":
+        select = prop.get("select")
+        return select.get("name") if select else None
+
+    elif prop_type == "multi_select":
+        return [item.get("name", "") for item in prop.get("multi_select", [])]
+
+    elif prop_type == "url":
+        return prop.get("url")
+
+    elif prop_type == "files":
+        files = prop.get("files", [])
+        if files:
+            file = files[0]
+            if file.get("type") == "external":
+                return file.get("external", {}).get("url")
+            elif file.get("type") == "file":
+                return file.get("file", {}).get("url")
+        return None
+
+    elif prop_type == "date":
+        date = prop.get("date")
+        return date.get("start") if date else None
+
+    return None
+
+def process_news(pages):
+    """處理新聞數據"""
+    news_list = []
+
+    for page in pages:
+        props = page.get("properties", {})
+
+        news = {
+            "id": page.get("id"),
+            "title": extract_property(props, "標題") or "無標題",
+            "content": extract_property(props, "內容") or "",
+            "category": extract_property(props, "類型") or "新聞",
+            "tags": extract_property(props, "標籤") or [],
+            "cover_image": extract_property(props, "封面圖"),
+            "source_url": extract_property(props, "來源") or extract_property(props, "原文連結"),
+            "published_date": extract_property(props, "發布時間") or extract_property(props, "發布日期"),
+            "status": "已發佈",
+            "created_time": page.get("created_time"),
+            "last_edited_time": page.get("last_edited_time")
+        }
+
+        # 默認圖片
+        if not news["cover_image"]:
+            news["cover_image"] = "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop"
+
+        news_list.append(news)
+        print(f"  ✓ {news['title'][:40]}...")
+
+    # 按發布日期排序（新的在前）
+    news_list.sort(key=lambda x: x["published_date"] or "", reverse=True)
+
+    return news_list
 
 def main():
-    print("\n" + "="*70)
-    print("ChineseRocks News Publisher")
-    print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    print("="*70)
+    print("=" * 60)
+    print("ChineseRocks 新聞發布系統")
+    print(f"時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 60)
 
-    if not NOTION_TOKEN:
-        print("Error: NOTION_TOKEN not set")
+    if not NOTION_TOKEN or not NOTION_DATABASE_ID:
+        print("❌ 缺少環境變量")
         return
 
-    print("\nFetching published articles...")
-    articles = fetch_published_articles()
+    # 獲取數據
+    pages = query_database()
+    if pages is None:
+        print("❌ 查詢失敗")
+        return
 
-    print(f"\nTotal published articles: {len(articles)}")
+    print(f"\n📊 總共獲取 {len(pages)} 條已發布新聞")
 
-    if not articles:
-        print("No published articles found")
-        empty_data = {
-            "updated_at": datetime.now().isoformat(),
-            "total_count": 0,
-            "data": {
-                "all": [],
-                "hero": [],
-                "featured": [],
-                "latest": [],
-                "by_category": {
-                    "全部": [],
-                    "獨家": [],
-                    "現場": [],
-                    "專題": [],
-                    "國際": [],
-                    "新發行": []
-                }
+    # 處理數據
+    news_list = process_news(pages)
+
+    # 構建輸出
+    output = {
+        "updated_at": datetime.now().isoformat(),
+        "total_count": len(news_list),
+        "data": {
+            "all": news_list,
+            "hero": news_list[:1] if news_list else [],
+            "featured": [],
+            "latest": news_list[:5],
+            "by_category": {
+                "全部": news_list,
+                "獨家": [n for n in news_list if n["category"] == "獨家"],
+                "現場": [n for n in news_list if n["category"] == "現場"],
+                "專題": [n for n in news_list if n["category"] == "專題"],
+                "國際": [n for n in news_list if n["category"] == "國際"],
+                "新發行": [n for n in news_list if n["category"] == "新發行"]
             }
         }
-        save_to_json(empty_data)
-        return
+    }
 
-    print("\nGenerating news.json...")
-    news_data = generate_news_json(articles)
+    # 保存
+    os.makedirs("data", exist_ok=True)
+    with open("data/news.json", "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print("\nSaving to file...")
-    save_to_json(news_data)
-
-    print("\n" + "="*70)
-    print("Publish Stats")
-    print("="*70)
-    print(f"Total: {news_data['total_count']}")
-    print(f"Hero: {len(news_data['data']['hero'])}")
-    print(f"Featured: {len(news_data['data']['featured'])}")
-    print(f"Latest: {len(news_data['data']['latest'])}")
-    print("="*70)
-    print("\nDone!")
+    print(f"\n💾 已保存: data/news.json")
+    print(f"📰 總計: {len(news_list)} 條新聞")
+    print("\n✅ 完成!")
 
 if __name__ == "__main__":
     main()
