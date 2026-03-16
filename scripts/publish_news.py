@@ -24,18 +24,21 @@ def fetch_published_articles():
 
     while True:
         try:
-            # 構建查詢參數
+            # 構建查詢參數 - notion-client 2.0+ 格式
             query_params = {
                 "database_id": NEWS_DB_ID,
                 "page_size": 100
             }
 
-            # 嘗試新版 API 格式 (status)
+            # 新版 API filter 格式
             filter_obj = {
                 "property": "狀態",
                 "status": {"equals": "已發佈"}
             }
-            sorts_obj = [{"timestamp": "created_time", "direction": "descending"}]
+
+            sorts_obj = [
+                {"timestamp": "created_time", "direction": "descending"}
+            ]
 
             query_params["filter"] = filter_obj
             query_params["sorts"] = sorts_obj
@@ -45,9 +48,11 @@ def fetch_published_articles():
 
             print(f"  查詢參數: {json.dumps(filter_obj, ensure_ascii=False)}")
 
+            # 正確調用方式 - notion-client 2.0+
             response = notion.databases.query(**query_params)
 
             print(f"  獲取到 {len(response.get('results', []))} 條結果")
+            print(f"  has_more: {response.get('has_more')}")
 
             for page in response.get('results', []):
                 props = page.get('properties', {})
