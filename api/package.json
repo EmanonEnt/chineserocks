@@ -1,0 +1,6 @@
+{
+  "name": "chineserocks-api",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}
