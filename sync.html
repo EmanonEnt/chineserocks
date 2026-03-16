@@ -10,11 +10,11 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0a0a0a;
-            color: #fff;
+            color: #c0c0c0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -22,153 +22,213 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         .container {
             text-align: center;
             max-width: 400px;
             width: 100%;
         }
-        
+
         .logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
             border-radius: 20px;
+            border: 2px solid #FF0066;
         }
-        
+
+        /* 星星装饰 */
+        .star-decoration {
+            font-size: 32px;
+            color: #FF0066;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+            animation: starGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes starGlow {
+            from { 
+                text-shadow: 0 0 10px rgba(255, 0, 102, 0.5), 0 0 20px rgba(255, 0, 102, 0.3);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 20px rgba(255, 0, 102, 0.8), 0 0 40px rgba(255, 0, 102, 0.5);
+                transform: scale(1.1);
+            }
+        }
+
         .status-icon {
             font-size: 60px;
             margin-bottom: 20px;
         }
-        
+
         .status-icon.loading::after {
             content: '⏳';
             animation: pulse 1.5s infinite;
         }
-        
+
         .status-icon.success::after {
             content: '✅';
         }
-        
+
         .status-icon.error::after {
             content: '❌';
         }
-        
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        
+
         h1 {
-            font-size: 24px;
-            margin-bottom: 15px;
+            font-size: 22px;
+            margin-bottom: 12px;
             color: #fff;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
-        
+
         p {
-            font-size: 16px;
+            font-size: 14px;
             color: #888;
             margin-bottom: 30px;
             line-height: 1.6;
         }
-        
+
         .user-info {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 0, 102, 0.2);
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: left;
         }
-        
+
         .user-info-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 14px;
         }
-        
+
         .user-info-item:last-child {
             margin-bottom: 0;
         }
-        
+
         .user-info-label {
             color: #666;
         }
-        
+
         .user-info-value {
             color: #fff;
-            font-weight: 500;
+            font-weight: 600;
         }
-        
+
         .points {
-            color: #ff6b35;
-            font-size: 24px;
-            font-weight: bold;
+            color: #FF0066;
+            font-size: 20px;
+            font-weight: 900;
         }
-        
+
         .btn {
             display: inline-block;
-            padding: 15px 40px;
-            background: #ff6b35;
+            width: 100%;
+            padding: 14px 40px;
+            background: #FF0066;
             color: #fff;
             text-decoration: none;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: 500;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
             transition: all 0.3s;
             border: none;
             cursor: pointer;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
+
         .btn:hover {
-            background: #ff8555;
+            background: #CC0052;
             transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 0, 102, 0.3);
         }
-        
+
         .btn-secondary {
             background: transparent;
-            border: 1px solid #444;
-            margin-top: 10px;
+            border: 1.5px solid #FF0066;
+            color: #FF0066;
         }
-        
+
         .btn-secondary:hover {
-            border-color: #ff6b35;
-            color: #ff6b35;
+            background: rgba(255, 0, 102, 0.1);
+            color: #FF0066;
         }
-        
+
         .error-detail {
-            background: rgba(255,0,0,0.1);
+            background: rgba(255, 0, 0, 0.1);
             border-left: 3px solid #ff4444;
             padding: 15px;
             margin: 20px 0;
             text-align: left;
-            font-size: 14px;
-            color: #ff8888;
+            font-size: 13px;
+            color: #ff6666;
             border-radius: 0 8px 8px 0;
         }
-        
+
         .hidden {
             display: none;
+        }
+
+        /* 品牌标识 */
+        .brand-text {
+            font-size: 12px;
+            color: #FF0066;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+
+        /* 加载动画 */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 0, 102, 0.2);
+            border-top-color: #FF0066;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="https://chineserocks.net/logo.png" alt="ChineseRocks" class="logo" onerror="this.style.display='none'">
-        
+        <!-- 品牌Logo -->
+        <div style="margin-bottom: 10px;">
+            <div style="font-size: 28px; font-weight: 900; color: #FF0066; letter-spacing: 2px; text-transform: uppercase;">CHINESE ROCKS</div>
+            <div style="font-size: 10px; color: #888; letter-spacing: 3px; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE</div>
+        </div>
+
         <!-- 加载中 -->
         <div id="loading-state">
-            <div class="status-icon loading"></div>
-            <h1>正在同步会员数据...</h1>
-            <p>请稍候，正在连接服务器</p>
+            <div class="spinner"></div>
+            <div class="star-decoration">★</div>
+            <h1>正在同步会员数据</h1>
+            <p>请稍候，正在连接服务器...</p>
         </div>
-        
+
         <!-- 同步成功 -->
         <div id="success-state" class="hidden">
+            <div class="star-decoration">★</div>
             <div class="status-icon success"></div>
             <h1>会员同步成功！</h1>
             <p>您的会员信息已成功同步到网站</p>
-            
+
             <div class="user-info">
                 <div class="user-info-item">
                     <span class="user-info-label">用户ID</span>
@@ -183,38 +243,40 @@
                     <span class="user-info-value points" id="user-points">0</span>
                 </div>
             </div>
-            
+
             <a href="/" class="btn">进入网站</a>
-            <br>
             <button class="btn btn-secondary" onclick="goBack()">返回小程序</button>
         </div>
-        
+
         <!-- 新用户注册 -->
         <div id="register-state" class="hidden">
-            <div class="status-icon">🎉</div>
+            <div class="star-decoration">★</div>
+            <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
             <h1>欢迎加入 ChineseRocks！</h1>
             <p>检测到您是新用户，是否创建网站会员账号？</p>
-            
+
             <div class="user-info">
                 <div class="user-info-item">
                     <span class="user-info-label">手机号</span>
                     <span class="user-info-value" id="new-phone">-</span>
                 </div>
             </div>
-            
+
             <button class="btn" onclick="createAccount()">创建会员账号</button>
-            <br>
             <a href="/" class="btn btn-secondary">暂不创建</a>
         </div>
-        
+
         <!-- 错误 -->
         <div id="error-state" class="hidden">
+            <div class="star-decoration">★</div>
             <div class="status-icon error"></div>
             <h1>同步失败</h1>
             <p id="error-message">请检查网络连接后重试</p>
             <div class="error-detail hidden" id="error-detail"></div>
             <button class="btn" onclick="retry()">重新尝试</button>
         </div>
+
+        <div class="brand-text">搖滾萬歲 ★ Emanon Ent.</div>
     </div>
 
     <script>
@@ -223,43 +285,43 @@
             const params = new URLSearchParams(window.location.search);
             return params.get(name);
         }
-        
+
         // 页面加载时执行
         window.onload = function() {
             const phone = getUrlParam('phone');
             const from = getUrlParam('from');
-            
+
             if (!phone) {
                 showError('缺少手机号参数', '请从小程序正确访问此页面');
                 return;
             }
-            
+
             if (from !== 'miniprogram') {
                 showError('非法访问来源', '此页面仅支持从小程序访问');
                 return;
             }
-            
+
             // 保存到本地存储
             localStorage.setItem('sync_phone', phone);
             localStorage.setItem('sync_from', from);
-            
+
             // 查询用户信息
             syncUser(phone);
         };
-        
+
         // 同步用户信息
         async function syncUser(phone) {
             try {
                 const response = await fetch(`https://chineserocks.net/api/userInfo?phone=${encodeURIComponent(phone)}`);
                 const data = await response.json();
-                
+
                 if (!data.exists) {
                     // 新用户
                     document.getElementById('new-phone').textContent = phone;
                     showState('register-state');
                     return;
                 }
-                
+
                 // 已有用户，同步到本地
                 const userInfo = {
                     userId: data.userId,
@@ -272,30 +334,30 @@
                     loginTime: new Date().toISOString(),
                     source: 'miniprogram_sync'
                 };
-                
+
                 // 保存到localStorage
                 localStorage.setItem('chineserocks_user', JSON.stringify(userInfo));
-                
+
                 // 显示成功信息
                 document.getElementById('user-id').textContent = userInfo.userId;
                 document.getElementById('user-phone').textContent = userInfo.phone || phone;
                 document.getElementById('user-points').textContent = userInfo.points;
-                
+
                 showState('success-state');
-                
+
                 // 可选：同步到Notion（记录登录行为）
                 logUserAction(userInfo.userId, 'miniprogram_login');
-                
+
             } catch (error) {
                 showError('网络请求失败', error.message);
             }
         }
-        
+
         // 创建新账号
         async function createAccount() {
             const phone = localStorage.getItem('sync_phone');
             const userId = 'mp_' + phone.slice(-8) + '_' + Date.now().toString(36);
-            
+
             const userInfo = {
                 userId: userId,
                 phone: phone,
@@ -305,16 +367,16 @@
                 loginTime: new Date().toISOString(),
                 source: 'miniprogram_new'
             };
-            
+
             localStorage.setItem('chineserocks_user', JSON.stringify(userInfo));
-            
+
             // 这里可以调用API创建用户
             // await fetch('https://chineserocks.net/api/createUser', {...});
-            
+
             alert('账号创建成功！');
             window.location.href = '/';
         }
-        
+
         // 记录用户行为
         async function logUserAction(userId, action) {
             try {
@@ -331,7 +393,7 @@
                 console.log('Log action failed:', e);
             }
         }
-        
+
         // 显示指定状态
         function showState(stateId) {
             document.querySelectorAll('[id$="-state"]').forEach(el => {
@@ -339,7 +401,7 @@
             });
             document.getElementById(stateId).classList.remove('hidden');
         }
-        
+
         // 显示错误
         function showError(message, detail) {
             document.getElementById('error-message').textContent = message;
@@ -349,14 +411,14 @@
             }
             showState('error-state');
         }
-        
+
         // 重试
         function retry() {
             const phone = localStorage.getItem('sync_phone');
             showState('loading-state');
             syncUser(phone);
         }
-        
+
         // 返回小程序（微信内置浏览器）
         function goBack() {
             if (window.wx && window.wx.miniProgram) {
