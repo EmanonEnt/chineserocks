@@ -1,0 +1,2196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ARTICLE_TITLE}} - ChineseRocks 中國搖滾官方榜單</title>
+    <meta name="description" content="{{ARTICLE_EXCERPT}}">
+    <meta name="keywords" content="{{ARTICLE_TAGS}}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ARTICLE_TITLE}}">
+    <meta property="og:description" content="{{ARTICLE_EXCERPT}}">
+    <meta property="og:image" content="{{ARTICLE_IMAGE}}">
+    <meta property="og:type" content="article">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ARTICLE_TITLE}}">
+    <meta name="twitter:description" content="{{ARTICLE_EXCERPT}}">
+    <meta name="twitter:image" content="{{ARTICLE_IMAGE}}">
+
+    <link rel="icon" type="image/png" href="./image/tablogo.png">
+    <link rel="canonical" href="{{ARTICLE_URL}}">
+
+    <style>
+        :root {
+            --pink-primary: #FF0066;
+            --pink-dark: #CC0052;
+            --black: #0a0a0a;
+            --silver-text: #c0c0c0;
+            --text-secondary: #a0a0a0;
+            --bg-light: #f5f5f5;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #c0c0c0;
+            color: #0a0a0a;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ===== 导航栏 ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            position: relative;
+            z-index: 1001;
+            display: inline-block;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--silver-text);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--pink-primary);
+        }
+
+        .nav-separator {
+            color: var(--pink-primary);
+            font-size: 0.7rem;
+        }
+
+        .login-btn {
+            border: 1.5px solid var(--pink-primary);
+            padding: 0.4rem 1rem;
+            color: var(--pink-primary) !important;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: var(--pink-primary);
+            color: white !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 0, 102, 0.3);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        /* ===== 文章头部 ===== */
+        .article-header {
+            position: relative;
+            padding: 140px 2rem 3rem;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 0, 102, 0.03) 2px,
+                    rgba(255, 0, 102, 0.03) 4px
+                );
+            pointer-events: none;
+        }
+
+        .article-header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 面包屑导航 */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--pink-primary);
+        }
+
+        .breadcrumb-separator {
+            color: #999;
+        }
+
+        /* 分类标签 */
+        .article-category {
+            display: inline-block;
+            background: var(--pink-primary);
+            color: white;
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(255, 0, 102, 0.3);
+        }
+
+        .article-category.exclusive {
+            background: var(--pink-primary);
+            color: white;
+        }
+
+        .article-category.live {
+            background: #FF6B35;
+        }
+
+        .article-category.feature {
+            background: #8B5CF6;
+        }
+
+        .article-category.international {
+            background: #3B82F6;
+        }
+
+        .article-category.release {
+            background: #10B981;
+        }
+
+        /* 文章标题 */
+        .article-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            color: #0a0a0a;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        /* 文章元信息 */
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .article-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--pink-primary);
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #0a0a0a;
+            font-size: 0.95rem;
+        }
+
+        .author-role {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .article-stats {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .stat-item .icon {
+            font-size: 1rem;
+        }
+
+        .publish-date {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* ===== 文章主体布局 ===== */
+        .article-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+        }
+
+        .article-main {
+            max-width: 800px;
+        }
+
+        /* 特色图片 */
+        .article-hero-image {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-caption {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        /* 文章正文 */
+        .article-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--pink-primary);
+        }
+
+        .article-content h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0a0a0a;
+            margin: 2rem 0 1rem;
+        }
+
+        .article-content blockquote {
+            border-left: 4px solid var(--pink-primary);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: #555;
+            font-size: 1.2rem;
+        }
+
+        .article-content a {
+            color: var(--pink-primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .article-content a:hover {
+            border-bottom-color: var(--pink-primary);
+        }
+
+        .article-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* 重点标注 */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(255, 0, 102, 0.05), rgba(255, 0, 102, 0.1));
+            border-left: 4px solid var(--pink-primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box-title {
+            font-weight: 800;
+            color: var(--pink-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* 引用框 */
+        .quote-box {
+            background: #0a0a0a;
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--pink-primary);
+            position: absolute;
+            top: -0.5rem;
+            left: 1rem;
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .quote-author {
+            color: var(--silver-text);
+            font-size: 0.9rem;
+        }
+
+        /* 视频嵌入 */
+        .video-embed {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 2rem 0;
+            background: #0a0a0a;
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 音频播放器 */
+        .audio-player {
+            background: #0a0a0a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .audio-cover {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .audio-info {
+            flex: 1;
+        }
+
+        .audio-title {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .audio-artist {
+            color: var(--silver-text);
+            font-size: 0.85rem;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .play-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--pink-primary);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* 标签区域 */
+        .article-tags {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tags-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0a0a0a;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag-link {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.05);
+            color: #444;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .tag-link:hover {
+            background: var(--pink-primary);
+            color: white;
+        }
+
+        /* 分享区域 */
+        .article-share {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .share-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0a0a0a;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .share-btn:hover {
+            background: var(--pink-primary);
+            border-color: var(--pink-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* 作者卡片 */
+        .author-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .author-card-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--pink-primary);
+            flex-shrink: 0;
+        }
+
+        .author-card-info {
+            flex: 1;
+        }
+
+        .author-card-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            margin-bottom: 0.25rem;
+        }
+
+        .author-card-role {
+            color: var(--pink-primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .author-card-bio {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .follow-btn {
+            background: var(--pink-primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .follow-btn:hover {
+            background: var(--pink-dark);
+            transform: translateY(-1px);
+        }
+
+        /* 相关文章 */
+        .related-articles {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .related-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .related-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--pink-primary);
+            border-radius: 2px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .related-card {
+            display: flex;
+            gap: 1rem;
+            cursor: pointer;
+            padding: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .related-card:hover {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .related-thumb {
+            width: 100px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .related-content h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0a0a0a;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .related-meta {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* ===== 侧边栏 ===== */
+        .article-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .sidebar-widget {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .widget-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--pink-primary);
+        }
+
+        /* 阅读进度 */
+        .reading-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--pink-primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+            text-align: right;
+        }
+
+        /* 热门文章 */
+        .trending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .trending-item {
+            display: flex;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .trending-item:hover {
+            background: rgba(255, 0, 102, 0.05);
+        }
+
+        .trending-rank {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--pink-primary);
+            line-height: 1;
+            width: 30px;
+            flex-shrink: 0;
+        }
+
+        .trending-content h5 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0a0a0a;
+            line-height: 1.3;
+            margin-bottom: 0.25rem;
+        }
+
+        .trending-meta {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        /* 订阅框 */
+        .subscribe-box {
+            background: linear-gradient(135deg, var(--pink-primary), var(--pink-dark));
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .subscribe-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .subscribe-text {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .subscribe-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .subscribe-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0a0a0a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .subscribe-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 广告位 */
+        .ad-placeholder {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.85rem;
+            border: 2px dashed #ccc;
+        }
+
+        /* ===== 评论区 ===== */
+        .comments-section {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .comments-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .comments-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0a0a0a;
+        }
+
+        .comments-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .comment-form {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: var(--pink-primary);
+        }
+
+        .comment-submit {
+            background: var(--pink-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .comment-submit:hover {
+            background: var(--pink-dark);
+        }
+
+        /* 评论列表 */
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .comment-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .comment-body {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: #0a0a0a;
+        }
+
+        .comment-badge {
+            background: var(--pink-primary);
+            color: white;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .comment-time {
+            color: #888;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .comment-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .comment-action {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: color 0.3s;
+        }
+
+        .comment-action:hover {
+            color: var(--pink-primary);
+        }
+
+        /* ===== 底部导航 ===== */
+        .article-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-article {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            max-width: 40%;
+        }
+
+        .nav-article:hover .nav-title {
+            color: var(--pink-primary);
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-title {
+            font-weight: 700;
+            color: #0a0a0a;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.3s;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-action-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-action-btn:hover {
+            color: var(--pink-primary);
+        }
+
+        .nav-action-btn.active {
+            color: var(--pink-primary);
+        }
+
+        .action-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--pink-primary);
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* ===== 页脚 ===== */
+        .footer {
+            background: #0a0a0a;
+            padding: 4rem 2rem 2rem;
+            margin-bottom: 80px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-desc {
+            color: var(--silver-text);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .footer-title {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.6rem;
+        }
+
+        .footer-links a {
+            color: var(--silver-text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--pink-primary);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            text-align: center;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 1024px) {
+            .article-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .article-sidebar {
+                position: relative;
+                top: 0;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .subscribe-box {
+                grid-column: span 2;
+            }
+
+            .article-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 10, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem 0;
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 1rem 2rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                width: 100%;
+                text-align: center;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .article-header {
+                padding: 100px 1rem 2rem;
+            }
+
+            .article-title {
+                font-size: 1.6rem;
+            }
+
+            .article-layout {
+                padding: 2rem 1rem;
+            }
+
+            .article-content {
+                font-size: 1rem;
+            }
+
+            .article-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .subscribe-box {
+                grid-column: span 1;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .author-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .article-nav {
+                padding: 0.75rem 1rem;
+            }
+
+            .nav-article {
+                max-width: 35%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-title {
+                font-size: 1.4rem;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .article-stats {
+                margin-left: 0;
+            }
+
+            .quote-box {
+                padding: 1.5rem;
+            }
+
+            .quote-text {
+                font-size: 1.1rem;
+            }
+
+            .comment-item {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== 后台编辑模式 ===== */
+        .admin-mode .editable:hover {
+            outline: 2px dashed var(--pink-primary);
+            cursor: text;
+        }
+
+        .admin-toolbar {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #0a0a0a;
+            border: 1px solid var(--pink-primary);
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 10000;
+            box-shadow: 0 4px 20px rgba(255, 0, 102, 0.3);
+        }
+
+        .admin-toolbar-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .admin-toolbar-btn:hover {
+            background: var(--pink-primary);
+            border-color: var(--pink-primary);
+        }
+
+        .admin-toolbar-btn.primary {
+            background: var(--pink-primary);
+            border-color: var(--pink-primary);
+        }
+
+        /* 草稿模式提示 */
+        .draft-banner {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: #FFA500;
+            color: #0a0a0a;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 700;
+            z-index: 999;
+        }
+
+        /* 预览模式水印 */
+        .preview-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(255, 0, 102, 0.1);
+            pointer-events: none;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
+            </a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="news.html">NEWS</a>
+                <span class="nav-separator">★</span>
+                <a href="charts.html">CHARTS</a>
+                <span class="nav-separator">★</span>
+                <a href="magazine.html">MAGAZINE</a>
+                <span class="nav-separator">★</span>
+                <a href="index.html#shows-section">SHOWS</a>
+                <span class="nav-separator">★</span>
+                <a href="#" onclick="showLiveTVComingSoon(); return false;">LIVE TV</a>
+                <a href="#" class="login-btn" id="userMenuBtn" onclick="handleUserMenuClick(); return false;">LOGIN</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 文章头部 -->
+    <header class="article-header">
+        <div class="article-header-content">
+            <!-- 面包屑 -->
+            <nav class="breadcrumb">
+                <a href="index.html">首页</a>
+                <span class="breadcrumb-separator">/</span>
+                <a href="news.html">新闻</a>
+                <span class="breadcrumb-separator">/</span>
+                <span>{{CATEGORY_NAME}}</span>
+            </nav>
+
+            <!-- 分类标签 -->
+            <span class="article-category {{CATEGORY_CLASS}}">{{CATEGORY_NAME}}</span>
+
+            <!-- 标题 -->
+            <h1 class="article-title">{{ARTICLE_TITLE}}</h1>
+
+            <!-- 元信息 -->
+            <div class="article-meta">
+                <div class="article-author">
+                    <img src="{{AUTHOR_AVATAR}}" alt="{{AUTHOR_NAME}}" class="author-avatar">
+                    <div class="author-info">
+                        <span class="author-name">{{AUTHOR_NAME}}</span>
+                        <span class="author-role">{{AUTHOR_ROLE}}</span>
+                    </div>
+                </div>
+
+                <div class="article-stats">
+                    <span class="stat-item">
+                        <span class="icon">👁</span>
+                        <span>{{VIEW_COUNT}}</span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="icon">♥</span>
+                        <span>{{LIKE_COUNT}}</span>
+                    </span>
+                    <span class="stat-item">
+                        <span class="icon">💬</span>
+                        <span>{{COMMENT_COUNT}}</span>
+                    </span>
+                </div>
+
+                <time class="publish-date">{{PUBLISH_DATE}}</time>
+            </div>
+        </div>
+    </header>
+
+    <!-- 文章主体 -->
+    <div class="article-layout">
+        <article class="article-main">
+            <!-- 特色图片 -->
+            <img src="{{ARTICLE_IMAGE}}" alt="{{ARTICLE_TITLE}}" class="article-hero-image">
+            <p class="image-caption">{{IMAGE_CAPTION}}</p>
+
+            <!-- 文章正文 -->
+            <div class="article-content">
+                {{ARTICLE_CONTENT}}
+            </div>
+
+            <!-- 重点标注示例 -->
+            <div class="highlight-box">
+                <div class="highlight-box-title">★ 重点摘要</div>
+                <p>{{HIGHLIGHT_TEXT}}</p>
+            </div>
+
+            <!-- 引用框示例 -->
+            <div class="quote-box">
+                <p class="quote-text">{{QUOTE_TEXT}}</p>
+                <p class="quote-author">—— {{QUOTE_AUTHOR}}</p>
+            </div>
+
+            <!-- 视频嵌入示例 -->
+            <div class="video-embed">
+                <iframe src="{{VIDEO_URL}}" allowfullscreen></iframe>
+            </div>
+
+            <!-- 音频播放器示例 -->
+            <div class="audio-player">
+                <img src="{{AUDIO_COVER}}" alt="" class="audio-cover">
+                <div class="audio-info">
+                    <div class="audio-title">{{AUDIO_TITLE}}</div>
+                    <div class="audio-artist">{{AUDIO_ARTIST}}</div>
+                </div>
+                <div class="audio-controls">
+                    <button class="play-btn">▶</button>
+                </div>
+            </div>
+
+            <!-- 标签 -->
+            <div class="article-tags">
+                <h3 class="tags-title">标签 TAGS</h3>
+                <div class="tags-list">
+                    {{TAGS_LIST}}
+                </div>
+            </div>
+
+            <!-- 分享 -->
+            <div class="article-share">
+                <span class="share-title">分享 SHARE</span>
+                <div class="share-buttons">
+                    <button class="share-btn" onclick="shareToWechat()">📱</button>
+                    <button class="share-btn" onclick="shareToWeibo()">📝</button>
+                    <button class="share-btn" onclick="shareToTwitter()">🐦</button>
+                    <button class="share-btn" onclick="copyLink()">🔗</button>
+                </div>
+            </div>
+
+            <!-- 作者卡片 -->
+            <div class="author-card">
+                <img src="{{AUTHOR_AVATAR}}" alt="{{AUTHOR_NAME}}" class="author-card-avatar">
+                <div class="author-card-info">
+                    <h3 class="author-card-name">{{AUTHOR_NAME}}</h3>
+                    <p class="author-card-role">{{AUTHOR_ROLE}}</p>
+                    <p class="author-card-bio">{{AUTHOR_BIO}}</p>
+                    <button class="follow-btn" onclick="followAuthor()">+ 关注作者</button>
+                </div>
+            </div>
+
+            <!-- 相关文章 -->
+            <div class="related-articles">
+                <h3 class="related-title">相关文章 RELATED</h3>
+                <div class="related-grid">
+                    {{RELATED_ARTICLES}}
+                </div>
+            </div>
+        </article>
+
+        <!-- 侧边栏 -->
+        <aside class="article-sidebar">
+            <!-- 阅读进度 -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">阅读进度</h4>
+                <div class="reading-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="readingProgress"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">0%</p>
+                </div>
+            </div>
+
+            <!-- 热门文章 -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">热门文章</h4>
+                <div class="trending-list">
+                    {{TRENDING_LIST}}
+                </div>
+            </div>
+
+            <!-- 订阅 -->
+            <div class="subscribe-box">
+                <h4 class="subscribe-title">订阅 ChineseRocks</h4>
+                <p class="subscribe-text">获取最新摇滚资讯</p>
+                <input type="email" class="subscribe-input" placeholder="输入邮箱地址">
+                <button class="subscribe-btn">立即订阅</button>
+            </div>
+
+            <!-- 广告位 -->
+            <div class="sidebar-widget">
+                <h4 class="widget-title">推广</h4>
+                <div class="ad-placeholder">
+                    广告位<br>300x250
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- 评论区 -->
+    <section class="comments-section">
+        <div class="comments-header">
+            <h2 class="comments-title">评论区</h2>
+            <span class="comments-count">{{COMMENT_COUNT}} 条评论</span>
+        </div>
+
+        <div class="comment-form">
+            <textarea class="comment-textarea" placeholder="分享你的看法..."></textarea>
+            <button class="comment-submit">发表评论</button>
+        </div>
+
+        <div class="comment-list">
+            {{COMMENT_LIST}}
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary); letter-spacing: 2px; text-transform: uppercase; line-height: 1;">CHINESE ROCKS</div>
+                    <div style="font-size: 0.6rem; color: var(--silver-text); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE <span style="color: var(--pink-primary);">搖滾萬歲</span></div>
+                </div>
+                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷<br>始於2025</p>
+            </div>
+            <div>
+                <h4 class="footer-title">榜單 CHARTS</h4>
+                <ul class="footer-links">
+                    <li><a href="charts.html">藝人榜 ARTISTS</a></li>
+                    <li><a href="charts.html">歌曲榜 SONGS</a></li>
+                    <li><a href="charts.html">專輯榜 ALBUMS</a></li>
+                    <li><a href="charts.html">音樂節 FESTIVALS</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">內容 CONTENT</h4>
+                <ul class="footer-links">
+                    <li><a href="news.html">新聞 NEWS</a></li>
+                    <li><a href="index.html#shows-section">演出 SHOWS</a></li>
+                    <li><a href="magazine.html">雜誌 MAGAZINE</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">服務 SERVICE</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html#pricing">會員服務 MEMBERSHIP</a></li>
+                    <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
+                    <li><a href="#">廣告投放 ADVERTISING</a></li>
+                    <li><a href="#">聯繫我們 CONTACT</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ChineseRocks. All rights reserved. 搖滾萬歲 ★ Emanon Ent.</p>
+        </div>
+    
+    <!-- 社交媒體板塊 -->
+    <div class="social-section">
+        <p class="social-title">Follow Us 關注我們</p>
+        <div class="social-links">
+            <a href="https://instagram.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                <span>Instagram</span>
+            </a>
+            <a href="https://facebook.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.126-5.864 10.126-11.854z"/>
+                </svg>
+                <span>Facebook</span>
+            </a>
+            <a href="https://x.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span>X / Twitter</span>
+            </a>
+            <a href="https://weibo.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.194.573zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.401-.649.386-1.02.425-1.899.003-2.525-.789-1.168-2.947-1.108-5.388-.031 0 0-.772.338-.575-.274.381-1.204.324-2.212-.27-2.796-1.346-1.327-4.928.047-8.001 3.067C1.189 10.875 0 13.021 0 14.89c0 3.579 4.591 5.758 9.085 5.758 5.892 0 9.813-3.423 9.813-6.143 0-1.643-1.385-2.573-2.839-2.856z"/>
+                </svg>
+                <span>微博 Weibo</span>
+            </a>
+            <a href="https://weixin.qq.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01-.023-.156.49.49 0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 110 1.936.968.968 0 010-1.936zm4.048 0a.968.968 0 110 1.936.968.968 0 010-1.936z"/>
+                </svg>
+                <span>微信 WeChat</span>
+            </a>
+            <a href="https://xiaohongshu.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5 7h-2v-3c0-.55-.45-1-1-1s-1 .45-1 1v3h-2v-6h2v.5c.5-.5 1.17-.83 1.9-.83 1.38 0 2.6 1.12 2.6 2.5v3.83z"/>
+                </svg>
+                <span>小紅書 RED</span>
+            </a>
+            <a href="https://bilibili.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 01-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 01.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                </svg>
+                <span>Bilibili</span>
+            </a>
+            <a href="https://douyin.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                </svg>
+                <span>抖音 Douyin</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 會員購買卡板塊 -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-container">
+            <div class="pricing-header">
+                <h2>選擇你的搖滾身份</h2>
+                <p>加入ChineseRocks會員，解鎖完整搖滾體驗</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- 體驗卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">體驗卡</div>
+                    <div class="pricing-price">免費<span>/3天</span></div>
+                    <div class="pricing-daily">限時體驗</div>
+                    <ul class="pricing-features">
+                        <li>3天體驗會員權益</li>
+                        <li>投票權重 ×0.5</li>
+                        <li>每日3次新聞閱讀</li>
+                        <li>480P LIVE TV</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">免費領取體驗卡</button>
+                </div>
+                <!-- 周卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">周卡</div>
+                    <div class="pricing-price">¥19.9<span>/週</span></div>
+                    <div class="pricing-daily">¥2.84/天</div>
+                    <ul class="pricing-features">
+                        <li>7天完整會員權益</li>
+                        <li>投票權重 ×1.0</li>
+                        <li>每天7次新聞閱讀</li>
+                        <li>720P LIVE TV</li>
+                        <li>演出優先購票</li>
+                        <li>獨家雜誌內容預覽</li>
+                        <li>廣告彈窗優化</li>
+                    </ul>
+                    <button class="pricing-btn">升級周卡會員</button>
+                </div>
+                <!-- 月卡 - 主推 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最熱門</div>
+                    <div class="pricing-name">月卡</div>
+                    <div class="pricing-price">¥66<span>/月</span></div>
+                    <div class="pricing-daily">¥2.20/天 · 省¥13</div>
+                    <ul class="pricing-features">
+                        <li>30天完整會員權益</li>
+                        <li>投票權重 ×2.0</li>
+                        <li>每天30次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及95折優惠</li>
+                        <li>獨家雜誌內容</li>
+                        <li>廣告彈窗優化</li>
+                        <li>特享會員名稱效果</li>
+                        <li>線下活動入場抽獎資格</li>
+                    </ul>
+                    <button class="pricing-btn">升級月卡會員</button>
+                </div>
+                <!-- 季卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">季卡</div>
+                    <div class="pricing-price">¥158<span>/季</span></div>
+                    <div class="pricing-daily">¥1.76/天 · 省¥40</div>
+                    <ul class="pricing-features">
+                        <li>90天完整會員權益</li>
+                        <li>投票權重 ×3.0</li>
+                        <li>每天100次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及85折優惠</li>
+                        <li>獨家雜誌內容+實體年刊預購資格</li>
+                        <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎資格</li>
+                    </ul>
+                    <button class="pricing-btn">升級季卡會員</button>
+                </div>
+                <!-- 年卡 - 最大受益 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最佳價值</div>
+                    <div class="pricing-name">年卡</div>
+                    <div class="pricing-price">¥365<span>/年</span></div>
+                    <div class="pricing-daily">¥1.00/天 · 省¥427</div>
+                    <ul class="pricing-features">
+                        <li>365天完整會員權益</li>
+                        <li>投票權重 ×5.0 [最高]</li>
+                        <li>無限新聞閱讀</li>
+                        <li>2K+ LIVE TV [獨享]</li>
+                        <li>演出提前48小時購票 [獨享]及75折優惠</li>
+                        <li>獨家雜誌內容+實體年刊禮品</li>
+                        <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎必中1次/年+折扣權益</li>
+                        <li>VIP專屬客服</li>
+                    </ul>
+                    <button class="pricing-btn">升級年卡會員</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+    /* 社交媒體板塊樣式 */
+    .social-section {
+        background: #c0c0c0;
+        border-top: 1px solid #0a0a0a;
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+    .social-section .social-title {
+        color: #0a0a0a;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+    .social-section .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+    .social-section .social-link {
+        color: #333;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .social-section .social-link:hover {
+        color: #FF0066;
+        transform: translateY(-3px);
+    }
+    .social-section .social-icon {
+        width: 36px;
+        height: 36px;
+        fill: #333;
+        transition: fill 0.3s;
+    }
+    .social-section .social-link:hover .social-icon {
+        fill: #FF0066;
+    }
+    .social-section .social-link span {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    /* 會員購買卡板塊樣式 */
+    .pricing-section {
+        padding: 4rem 0;
+        background: #0a0a0a;
+        border-top: 1px solid #222;
+    }
+    .pricing-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+    .pricing-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    .pricing-header h2 {
+        font-size: 2rem;
+        font-weight: 900;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .pricing-header p {
+        color: #888;
+    }
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1rem;
+        gap: 1.5rem;
+    }
+    .pricing-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 1.25rem;
+        text-align: center;
+        position: relative;
+        min-width: 0;
+    }
+
+    @media (min-width:1025px) {
+        .pricing-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: nowrap;
+        }
+        .pricing-card {
+            padding: 1.5rem;
+            width: 280px;
+            flex-shrink: 0;
+        }
+    }
+
+    .pricing-card.featured {
+        border-color: #FF0066;
+        background: rgba(255,0,102,0.05);
+        transform: scale(1.02);
+        z-index: 2;
+    }
+    .pricing-badge {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #FF0066;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 800;
+    }
+    .pricing-name {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+    }
+    .pricing-price {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: white;
+    }
+    .pricing-price span {
+        font-size: 0.9rem;
+        color: #888;
+    }
+    .pricing-daily {
+        color: #FF0066;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .pricing-features {
+        list-style: none;
+        margin-bottom: 1.5rem;
+        text-align: left;
+        font-size: 0.8rem;
+    }
+    .pricing-features li {
+        padding: 0.3rem 0;
+        color: #aaa;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .pricing-features li::before {
+        content: '✓';
+        color: #FF0066;
+        font-weight: 900;
+    }
+    .pricing-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: transparent;
+        border: 2px solid #FF0066;
+        color: #FF0066;
+        border-radius: 6px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .pricing-card.featured .pricing-btn {
+        background: #FF0066;
+        color: white;
+    }
+    .pricing-btn:hover {
+        background: #FF0066;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 1024px) {
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .pricing-card {
+            flex: none;
+            width: auto;
+            min-width: auto;
+            max-width: none;
+            padding: 1rem;
+        }
+        .pricing-card.featured {
+            transform: scale(1.02);
+        }
+        .pricing-price {
+            font-size: 2rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .pricing-grid {
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.75rem;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            padding: 0.875rem;
+            grid-column: span 2;
+        }
+        .pricing-card:nth-child(1) { grid-column: 1 / 3; }
+        .pricing-card:nth-child(2) { grid-column: 3 / 5; }
+        .pricing-card:nth-child(3) { grid-column: 5 / 7; }
+        .pricing-card:nth-child(4) { grid-column: 2 / 4; }
+        .pricing-card:nth-child(5) { grid-column: 4 / 6; }
+        .pricing-name { font-size: 0.9rem; }
+        .pricing-price { font-size: 1.5rem; }
+        .pricing-price span { font-size: 0.75rem; }
+        .pricing-daily { font-size: 0.7rem; }
+        .pricing-features { font-size: 0.7rem; }
+        .pricing-features li { padding: 0.2rem 0; }
+        .pricing-btn { padding: 0.6rem; font-size: 0.75rem; }
+    }
+    @media (max-width: 480px) {
+        .pricing-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+        }
+        .pricing-card {
+            grid-column: span 1 !important;
+        }
+        .pricing-card:nth-child(5) {
+            grid-column: 1 / 3 !important;
+            max-width: 50%;
+            margin: 0 auto;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .pricing-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+        }
+        .pricing-card {
+            grid-column: span 1 !important;
+        }
+        .pricing-card:nth-child(5) {
+            grid-column: 1 / 3 !important;
+            max-width: 50%;
+            margin: 0 auto;
+        }
+        .social-section .social-links {
+            gap: 1rem;
+        }
+        .social-section .social-link span {
+            font-size: 0.65rem;
+        }
+    }
+    </style>
+
+    </footer>
+
+    <!-- 底部导航 -->
+    <nav class="article-nav">
+        <div class="nav-article" onclick="goToPrevArticle()">
+            <div>
+                <div class="nav-label">← 上一篇</div>
+                <div class="nav-title">{{PREV_ARTICLE_TITLE}}</div>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <button class="nav-action-btn" onclick="toggleLike()" id="likeBtn">
+                ♥
+                <span class="action-count" id="likeCount">{{LIKE_COUNT}}</span>
+            </button>
+            <button class="nav-action-btn" onclick="toggleBookmark()" id="bookmarkBtn">
+                ☆
+            </button>
+            <button class="nav-action-btn" onclick="shareArticle()">
+                ↗
+            </button>
+        </div>
+
+        <div class="nav-article" onclick="goToNextArticle()" style="text-align: right;">
+            <div>
+                <div class="nav-label">下一篇 →</div>
+                <div class="nav-title">{{NEXT_ARTICLE_TITLE}}</div>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        // 移动端菜单
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // 阅读进度
+        function updateReadingProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+
+            document.getElementById('readingProgress').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '%';
+        }
+
+        window.addEventListener('scroll', updateReadingProgress);
+
+        // 点赞
+        function toggleLike() {
+            const btn = document.getElementById('likeBtn');
+            const count = document.getElementById('likeCount');
+
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                count.textContent = parseInt(count.textContent) - 1;
+            } else {
+                btn.classList.add('active');
+                count.textContent = parseInt(count.textContent) + 1;
+            }
+        }
+
+        // 收藏
+        function toggleBookmark() {
+            const btn = document.getElementById('bookmarkBtn');
+            btn.classList.toggle('active');
+            btn.textContent = btn.classList.contains('active') ? '★' : '☆';
+        }
+
+        // 分享功能
+        function shareToWechat() {
+            alert('请使用微信扫一扫分享');
+        }
+
+        function shareToWeibo() {
+            window.open('https://service.weibo.com/share/share.php?title=' + encodeURIComponent(document.title) + '&url=' + encodeURIComponent(window.location.href));
+        }
+
+        function shareToTwitter() {
+            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + '&url=' + encodeURIComponent(window.location.href));
+        }
+
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert('链接已复制到剪贴板');
+        }
+
+        function shareArticle() {
+            if (navigator.share) {
+                navigator.share({
+                    title: document.title,
+                    url: window.location.href
+                });
+            } else {
+                copyLink();
+            }
+        }
+
+        // 关注作者
+        function followAuthor() {
+            alert('已关注作者');
+        }
+
+        // 文章导航
+        function goToPrevArticle() {
+            window.location.href = '{{PREV_ARTICLE_URL}}';
+        }
+
+        function goToNextArticle() {
+            window.location.href = '{{NEXT_ARTICLE_URL}}';
+        }
+
+        // LIVE TV 提示
+        function showLiveTVComingSoon() {
+            alert('COMING SOON / 即將上線，敬請期待');
+        }
+
+        // 用户菜单
+        function handleUserMenuClick() {
+            alert('用户菜单功能');
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateReadingProgress();
+        });
+    
+        // 從 URL 獲取文章標題參數
+        function getArticleTitleFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const title = urlParams.get('title');
+            if (title) {
+                // 更新頁面標題
+                document.title = title + ' - ChineseRocks 中國搖滾官方榜單';
+                // 更新文章標題顯示（如果頁面中有對應元素）
+                const titleEl = document.querySelector('.article-title');
+                if (titleEl) {
+                    titleEl.textContent = title;
+                }
+            }
+        }
+
+        // 頁面加載時執行
+        document.addEventListener('DOMContentLoaded', getArticleTitleFromUrl);
+
+    </script>
+</body>
+</html>
