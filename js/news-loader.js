@@ -1,96 +1,134 @@
-// News Loader - 強制更新版
+// News Loader - 完整替換版
 (function() {
     const NEWS_JSON_URL = 'data/news.json';
 
     async function loadNews() {
         try {
-            console.log('📰 強制更新新聞...');
+            console.log('📰 加載真實新聞...');
 
             const res = await fetch(`${NEWS_JSON_URL}?t=${Date.now()}`, {cache: 'no-store'});
             const data = await res.json();
-            const newsList = data.data?.all || [];
+            const newsList = data.data?.all || data.news || [];
 
-            console.log('新聞數量:', newsList.length);
+            console.log('獲取到', newsList.length, '條真實新聞');
 
-            if (newsList.length === 0) return;
+            if (newsList.length === 0) {
+                console.log('⚠️ 沒有真實新聞數據');
+                return;
+            }
 
-            // 策略：直接查找所有新聞卡片，強制替換內容
-            updateAllNewsCards(newsList);
+            // 強制替換所有新聞區域
+            replaceAllNews(newsList);
 
         } catch (e) {
-            console.error('錯誤:', e);
+            console.error('❌ 錯誤:', e);
         }
     }
 
-    function updateAllNewsCards(newsList) {
-        // 查找所有可能的新聞卡片（通過圖片容器）
-        const allImages = document.querySelectorAll('img');
-        console.log('頁面圖片總數:', allImages.length);
+    function replaceAllNews(newsList) {
+        // 1. 找到所有新聞卡片（通過查找包含圖片和標題的容器）
+        const allCards = findAllNewsCards();
+        console.log('找到', allCards.length, '個新聞卡片');
 
-        // 查找大圖（通常是尺寸最大的那個）
-        let bigImage = null;
-        let maxArea = 0;
-
-        allImages.forEach(img => {
-            const rect = img.getBoundingClientRect();
-            const area = rect.width * rect.height;
-            if (area > maxArea && rect.width > 300) {
-                maxArea = area;
-                bigImage = img;
+        // 2. 用真實數據替換每個卡片
+        allCards.forEach((card, index) => {
+            if (index < newsList.length) {
+                const news = newsList[index];
+                updateCard(card, news);
+                console.log(`✅ 卡片 ${index + 1} 已更新:`, news.title.substring(0, 30));
+            } else if (newsList.length > 0) {
+                // 如果新聞不夠，循環使用
+                const news = newsList[index % newsList.length];
+                updateCard(card, news);
+                console.log(`✅ 卡片 ${index + 1} 已更新（循環）:`, news.title.substring(0, 30));
             }
         });
+    }
 
-        console.log('找到大圖:', bigImage ? '是' : '否');
+    function findAllNewsCards() {
+        const cards = [];
 
-        // 更新大圖區域
-        if (bigImage && newsList[0]) {
-            const news = newsList[0];
-            bigImage.src = news.cover_image || news.image;
+        // 策略1: 查找常見的新聞容器 class
+        const selectors = [
+            '.news-item', '.news-card', '.article-card',
+            '.featured-news', '.side-news-item',
+            '[class*="news"]', '[class*="article"]'
+        ];
 
-            // 查找大圖的父容器，更新標題
-            let parent = bigImage.parentElement;
-            for (let i = 0; i < 5 && parent; i++) {
-                const title = parent.querySelector('h1, h2, h3, h4, .title');
-                if (title) {
-                    title.textContent = news.title;
-                    console.log('✅ 更新大圖標題:', news.title);
-                    break;
+        selectors.forEach(sel => {
+            document.querySelectorAll(sel).forEach(el => {
+                if (!cards.includes(el)) cards.push(el);
+            });
+        });
+
+        // 策略2: 如果沒找到，查找包含大圖片的容器
+        if (cards.length === 0) {
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                const rect = img.getBoundingClientRect();
+                // 只取可見的、尺寸合適的圖片
+                if (rect.width > 200 && rect.height > 100) {
+                    let parent = img.parentElement;
+                    // 向上查找3層，找到包含標題的容器
+                    for (let i = 0; i < 3 && parent; i++) {
+                        if (parent.querySelector('h1, h2, h3, h4, .title, [class*="title"]')) {
+                            if (!cards.includes(parent)) {
+                                cards.push(parent);
+                                break;
+                            }
+                        }
+                        parent = parent.parentElement;
+                    }
                 }
-                parent = parent.parentElement;
+            });
+        }
+
+        return cards;
+    }
+
+    function updateCard(card, news) {
+        // 更新圖片
+        const img = card.querySelector('img');
+        if (img) {
+            const newSrc = news.cover_image || news.image || news.coverImage;
+            if (newSrc) img.src = newSrc;
+        }
+
+        // 更新標題（查找 h1-h6 或包含 title 的 class）
+        const titleSelectors = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', '.title', '[class*="title"]', '.news-title'];
+        for (const sel of titleSelectors) {
+            const title = card.querySelector(sel);
+            if (title) {
+                title.textContent = news.title;
+                break;
             }
         }
 
-        // 查找側邊小圖（尺寸較小的圖片）
-        const sideImages = [];
-        allImages.forEach(img => {
-            const rect = img.getBoundingClientRect();
-            if (rect.width > 100 && rect.width < 400 && rect.height > 80) {
-                sideImages.push(img);
+        // 更新摘要/內容
+        const summarySelectors = ['.summary', '.excerpt', '.description', '.content', 'p'];
+        for (const sel of summarySelectors) {
+            const summary = card.querySelector(sel);
+            if (summary && summary.textContent.length > 10) {
+                summary.textContent = news.content || news.summary || news.description || '';
+                break;
             }
-        });
+        }
 
-        console.log('找到側邊圖片:', sideImages.length);
-
-        // 更新側邊圖片
-        sideImages.forEach((img, index) => {
-            const newsIndex = index + 1; // 跳過第一個（大圖）
-            if (newsIndex < newsList.length) {
-                const news = newsList[newsIndex];
-                img.src = news.cover_image || news.image;
-
-                // 更新旁邊的標題
-                let parent = img.parentElement;
-                for (let i = 0; i < 3 && parent; i++) {
-                    const title = parent.querySelector('h4, h5, .title, .news-title');
-                    if (title) {
-                        title.textContent = news.title;
-                        console.log('✅ 更新側邊標題:', news.title);
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
+        // 更新分類標籤
+        const catSelectors = ['.category', '.tag', '.label', '[class*="category"]', '[class*="tag"]'];
+        for (const sel of catSelectors) {
+            const cat = card.querySelector(sel);
+            if (cat) {
+                cat.textContent = news.category || news.tag || '新聞';
+                break;
             }
-        });
+        }
+
+        // 更新鏈接
+        const link = card.querySelector('a') || (card.tagName === 'A' ? card : null);
+        if (link && news.source_url) {
+            link.href = news.source_url;
+        }
     }
 
     // 頁面加載後執行
@@ -100,6 +138,8 @@
         loadNews();
     }
 
-    // 也延遲執行一次（確保動態內容加載完成）
-    setTimeout(loadNews, 1000);
+    // 延遲再執行一次（確保動態內容加載完成）
+    setTimeout(loadNews, 500);
+    setTimeout(loadNews, 1500);
+
 })();
