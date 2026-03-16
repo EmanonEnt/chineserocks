@@ -28,10 +28,10 @@ module.exports = async (req, res) => {
   try {
     // 查询 Notion 数据库
     const response = await notion.databases.query({
-      database_id: databaseId,
-      filter: phone 
-        ? { property: 'Phone', phone_number: { equals: phone } }
-        : { property: 'UserID', rich_text: { equals: userId } }
+    database_id: databaseId,
+    filter: phone
+      ? { property: 'Phone', phone_number: { equals: phone } }
+      : { property: 'Nickname', title: { equals: userId } }
     });
 
     if (response.results.length === 0) {
@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
 
     res.json({
       exists: true,
-      userId: props.UserID?.rich_text?.[0]?.text?.content || userId,
+      userId: props.Nickname?.title?.[0]?.text?.content || userId,
       phone: props.Phone?.phone_number || null,
       name: props.Name?.title?.[0]?.text?.content || null,
       email: props.Email?.email || null,
