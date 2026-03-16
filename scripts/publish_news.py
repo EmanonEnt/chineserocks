@@ -40,17 +40,27 @@ def fetch_published_articles():
             for page in response['results']:
                 props = page['properties']
 
+                # 检测是否会员专享
+                tags = extract_multi_select(props, '标签')
+                is_premium = (
+                    '会员专享' in tags or
+                    extract_checkbox(props, '是否会员专享') or
+                    '獨家' in tags or
+                    '独家' in tags
+                )
+
                 article = {
                     "id": page['id'],
                     "title": extract_title(props),
                     "content": extract_content(props),
                     "category": extract_select(props, '类型'),
-                    "tags": extract_multi_select(props, '标签'),
+                    "tags": tags,
                     "status": extract_select(props, '状态'),
                     "source_url": extract_url(props, '来源'),
                     "published_date": extract_date(props, '发布时间'),
                     "is_ai_generated": extract_checkbox(props, 'AI生成'),
                     "featured": extract_checkbox(props, '头条'),
+                    "is_premium": is_premium,
                     "cover_image": extract_url(props, '封面图') or get_default_image()
                 }
 
@@ -139,32 +149,43 @@ def categorize_articles(articles):
         "featured": [],
         "latest": [],
         "by_category": {
-            "演出预告": [],
-            "新闻": [],
-            "专访": [],
-            "乐评": []
+            "全部": [],
+            "獨家": [],
+            "現場": [],
+            "專題": [],
+            "國際": [],
+            "新發行": []
         }
     }
 
     for article in articles:
-        # 头条文章
+        tags = article.get('tags', [])
+        category = article.get('category', '')
+
+        # 头条文章（前3篇）
         if article.get('featured') or len(categorized['hero']) < 3:
             if len(categorized['hero']) < 3:
                 categorized['hero'].append(article)
                 continue
 
-        # 精选文章
-        if '会员专享' in article.get('tags', []) or '独家' in article.get('tags', []):
+        # 精选文章（会员专享或独家）
+        if article.get('is_premium') or '独家' in tags or '獨家' in tags:
             if len(categorized['featured']) < 4:
                 categorized['featured'].append(article)
-                continue
 
-        # 按类型分类
-        category = article.get('category', '新闻')
-        if category in categorized['by_category']:
-            categorized['by_category'][category].append(article)
+        # 按分类归档
+        if '獨家' in tags or '独家' in tags or category == '獨家':
+            categorized['by_category']['獨家'].append(article)
+        elif '現場' in tags or '现场' in tags or category in ['演出预告', '現場']:
+            categorized['by_category']['現場'].append(article)
+        elif '專題' in tags or '专题' in tags or category in ['专访', '專題']:
+            categorized['by_category']['專題'].append(article)
+        elif '國際' in tags or '国际' in tags:
+            categorized['by_category']['國際'].append(article)
+        elif '新發行' in tags or '新发行' in tags or category in ['乐评', '新發行']:
+            categorized['by_category']['新發行'].append(article)
         else:
-            categorized['by_category']['新闻'].append(article)
+            categorized['by_category']['全部'].append(article)
 
         categorized['latest'].append(article)
 
@@ -216,6 +237,11 @@ def main():
     print(f" 头条文章: {len(categorized['hero'])} 篇")
     print(f" 精选文章: {len(categorized['featured'])} 篇")
     print(f" 最新文章: {len(categorized['latest'])} 篇")
+    print(f" 獨家: {len(categorized['by_category']['獨家'])} 篇")
+    print(f" 現場: {len(categorized['by_category']['現場'])} 篇")
+    print(f" 專題: {len(categorized['by_category']['專題'])} 篇")
+    print(f" 國際: {len(categorized['by_category']['國際'])} 篇")
+    print(f" 新發行: {len(categorized['by_category']['新發行'])} 篇")
     print("="*70)
     print("\n✅ 发布完成！前端将自动读取 data/news.json")
 
