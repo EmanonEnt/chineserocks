@@ -237,8 +237,12 @@
             margin-top: 30px;
         }
 
-        .hidden {
+        .state-section {
             display: none;
+        }
+
+        .state-section.active {
+            display: block;
         }
 
         .tips {
@@ -276,6 +280,12 @@
         .contact-options .form-group {
             flex: 1;
         }
+
+        .countdown {
+            font-size: 12px;
+            color: #FF0066;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -286,7 +296,7 @@
         </div>
 
         <!-- 主页面：填写信息 -->
-        <div id="main-state">
+        <div id="main-state" class="state-section active">
             <div class="star-decoration">★</div>
             <h1>欢迎加入 ChineseRocks！</h1>
             <p>创建您的摇滚身份</p>
@@ -316,7 +326,7 @@
         </div>
 
         <!-- 同步中 -->
-        <div id="loading-state" class="hidden">
+        <div id="loading-state" class="state-section">
             <div class="star-decoration">★</div>
             <div class="spinner"></div>
             <h1>正在创建账号...</h1>
@@ -324,7 +334,7 @@
         </div>
 
         <!-- 同步成功 -->
-        <div id="success-state" class="hidden">
+        <div id="success-state" class="state-section">
             <div class="star-decoration">★</div>
             <div class="status-icon success"></div>
             <h1>注册成功！</h1>
@@ -349,17 +359,21 @@
                 </div>
                 <div class="user-info-item">
                     <span class="user-info-label">当前积分</span>
-                    <span class="user-info-value points" id="user-points">100</span>
+                    <span class="user-info-value points" id="user-points">-</span>
                 </div>
             </div>
 
             <button class="btn" onclick="enterWebsite()">进入网站</button>
+            <p class="countdown" id="countdown-text">5秒后自动进入...</p>
         </div>
 
         <div class="brand-footer">搖滾萬歲 ★ Emanon Ent.</div>
     </div>
 
     <script>
+        let autoEnterTimer = null;
+        let countdownInterval = null;
+
         // 验证手机号
         function isValidChinesePhone(phone) {
             if (!phone) return false;
@@ -386,6 +400,19 @@
             return email.substring(0, 2) + '***' + email.substring(atIndex);
         }
 
+        // 切换页面状态
+        function switchState(stateName) {
+            // 隐藏所有状态
+            document.getElementById('main-state').classList.remove('active');
+            document.getElementById('loading-state').classList.remove('active');
+            document.getElementById('success-state').classList.remove('active');
+
+            // 显示指定状态
+            if (stateName) {
+                document.getElementById(stateName + '-state').classList.add('active');
+            }
+        }
+
         // 页面加载
         window.onload = function() {
             // 检查是否已存在该用户
@@ -398,11 +425,13 @@
                 const existing = localStorage.getItem('chineserocks_user');
                 if (existing) {
                     const user = JSON.parse(existing);
-                    // 如果本地有数据，直接显示成功
+                    // 有用户数据，显示成功页面
                     showSuccess(user);
                 }
+                // 没有数据则保持注册页面（默认就是active）
             } catch (e) {
                 console.log('Check existing error:', e);
+                // 出错也保持注册页面
             }
         }
 
@@ -441,11 +470,9 @@
             }
 
             // 显示加载
-            document.getElementById('main-state').classList.add('hidden');
-            document.getElementById('loading-state').classList.remove('hidden');
+            switchState('loading');
 
             // 生成用户ID
-            const contact = phone || email;
             const userId = 'CR_' + (phone ? phone.slice(-8) : email.substring(0, 8));
 
             const userInfo = {
@@ -476,14 +503,18 @@
 
         // 显示成功
         function showSuccess(user) {
-            document.getElementById('loading-state').classList.add('hidden');
-            document.getElementById('success-state').classList.remove('hidden');
+            // 切换到成功状态
+            switchState('success');
 
-            document.getElementById('user-name').textContent = user.name;
-            document.getElementById('user-id').textContent = user.userId;
+            // 填充用户数据
+            document.getElementById('user-name').textContent = user.name || '-';
+            document.getElementById('user-id').textContent = user.userId || '-';
+
+            // 显示实际积分（从user数据读取）
+            document.getElementById('user-points').textContent = user.points || 0;
 
             // 显示联系方式（脱敏）
-            let contactDisplay = '';
+            let contactDisplay = '-';
             if (user.phone) {
                 contactDisplay = maskPhone(user.phone);
             } else if (user.email) {
@@ -491,14 +522,43 @@
             }
             document.getElementById('user-contact').textContent = contactDisplay;
 
-            // 3秒后自动跳转
-            setTimeout(() => {
+            // 启动倒计时（5秒）
+            startCountdown(5);
+        }
+
+        // 倒计时
+        function startCountdown(seconds) {
+            let remaining = seconds;
+            const countdownEl = document.getElementById('countdown-text');
+
+            // 清除之前的定时器
+            if (autoEnterTimer) clearTimeout(autoEnterTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            if (countdownEl) {
+                countdownEl.textContent = remaining + '秒后自动进入...';
+            }
+
+            countdownInterval = setInterval(() => {
+                remaining--;
+                if (countdownEl) {
+                    countdownEl.textContent = remaining + '秒后自动进入...';
+                }
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+            autoEnterTimer = setTimeout(() => {
                 enterWebsite();
-            }, 3000);
+            }, seconds * 1000);
         }
 
         // 进入主站
         function enterWebsite() {
+            // 清除定时器
+            if (autoEnterTimer) clearTimeout(autoEnterTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
             window.location.href = 'https://chineserocks.net/?registered=1';
         }
     </script> 
