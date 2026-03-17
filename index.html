@@ -2522,8 +2522,6 @@ html {
             border-radius: 4px;
         }
 
-        
-
         /* 响应式 */
         @media (max-width: 768px) {
             .ticker-content {
@@ -2549,7 +2547,13 @@ html {
 
             .ticker-countdown {
                 font-size: 0.8rem;
-            }
+            
+            .footer-content {
+                grid-template-columns:1fr !important;
+                gap:2rem !important;
+                padding:2rem 1rem !important;}
+            .footer-bottom {
+                padding:1rem !important;}}
         }
     </style>
 
@@ -4703,7 +4707,7 @@ html {
                 // 清除 URL 参数，避免刷新重复登录
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
-        
+        }
 
         // 處理文章點擊 - 檢查會員權限並記錄閱讀
         function handleArticleClick(element, title) {
@@ -4718,7 +4722,6 @@ html {
 
             if (isMember) {
                 // 會員直接跳轉到文章頁面
-                // 從元素中獲取文章ID或URL
                 const articleId = element.dataset.articleId || title;
                 window.location.href = './article.html?id=' + encodeURIComponent(articleId);
             } else if (remainingReads > 0) {
@@ -4757,7 +4760,7 @@ html {
                 modal.classList.remove('active');
             }
         }
-}
+
     </script>
 
     <!-- 登录弹窗 -->
