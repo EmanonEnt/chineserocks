@@ -2752,6 +2752,7 @@ html {
                     }
 
                     const result = await response.json();
+                    console.log('新聞數據:', result);
 
                     // 解析數據（兼容多種格式）
                     let allNews = [];
@@ -2761,6 +2762,11 @@ html {
                         allNews = result.all;
                     } else if (Array.isArray(result)) {
                         allNews = result;
+                    }
+
+                    console.log('所有新聞:', allNews.length, '篇');
+                    if (allNews.length > 0) {
+                        console.log('第一篇新聞:', allNews[0]);
                     }
 
                     if (allNews.length === 0) {
@@ -2782,6 +2788,8 @@ html {
                     // 取前5個
                     featuredNews = featuredNews.slice(0, 5);
 
+                    console.log('精選新聞:', featuredNews);
+
                     // 存儲到全局對象
                     window._homeNewsData = featuredNews;
 
@@ -2796,6 +2804,7 @@ html {
 
             function renderHomeNews(container, news) {
                 console.log('渲染新聞:', news.length, '篇');
+                console.log('第一篇新聞數據:', news[0]);
 
                 if (!news || news.length === 0) {
                     renderDefaultNews(container);
@@ -2804,6 +2813,12 @@ html {
 
                 // 存儲到全局對象供點擊處理函數使用
                 window._homeNewsData = news;
+
+                // 驗證 URL 字段
+                news.forEach((item, i) => {
+                    const url = item.external_url || item.externalUrl || item.url || item.link;
+                    console.log(`新聞 ${i}: ${item.title?.substring(0, 30)}... URL: ${url ? '有' : '無'}`);
+                });
 
                 // 第一個是大圖
                 const mainNews = news[0];
@@ -2842,38 +2857,64 @@ html {
 
             // 處理首頁主圖新聞點擊
             function handleHomeHeroClick() {
-                if (!window._homeNewsData || window._homeNewsData.length === 0) return;
+                if (!window._homeNewsData || window._homeNewsData.length === 0) {
+                    console.log('無主圖數據');
+                    return;
+                }
                 const mainNews = window._homeNewsData[0];
-                const url = mainNews.external_url || mainNews.url;
+
+                // 嘗試所有可能的 URL 字段
+                const url = mainNews.external_url || mainNews.externalUrl || mainNews.url || mainNews.link || mainNews.source_url || mainNews.sourceUrl;
                 const title = mainNews.title || '';
 
-                // 記錄閱讀
-                recordRead({ title: title });
+                console.log('點擊主圖:', title, url, mainNews);
 
                 // 直接打開外鏈（與 news.html 一致）
-                if (url) {
+                if (url && url !== 'undefined' && url !== 'null' && url !== '') {
+                    console.log('打開外鏈:', url);
                     window.open(url, '_blank');
                 } else {
-                    alert('正在打開: ' + title);
+                    console.log('無外鏈，顯示提示:', title);
+                    alert('正在打開: ' + title + '（暫無外鏈）');
                 }
+
+                // 記錄閱讀（異步）
+                setTimeout(() => {
+                    if (typeof recordRead === 'function') {
+                        recordRead({ title: title });
+                    }
+                }, 0);
             }
 
             // 處理首頁側邊欄新聞點擊
             function handleHomeArticleClick(index) {
-                if (!window._homeNewsData || !window._homeNewsData[index]) return;
+                if (!window._homeNewsData || !window._homeNewsData[index]) {
+                    console.log('無數據:', index);
+                    return;
+                }
                 const item = window._homeNewsData[index];
-                const url = item.external_url || item.url;
+
+                // 嘗試所有可能的 URL 字段
+                const url = item.external_url || item.externalUrl || item.url || item.link || item.source_url || item.sourceUrl;
                 const title = item.title || '';
 
-                // 記錄閱讀
-                recordRead({ title: title });
+                console.log('點擊新聞:', index, title, url, item);
 
                 // 直接打開外鏈（與 news.html 一致）
-                if (url) {
+                if (url && url !== 'undefined' && url !== 'null' && url !== '') {
+                    console.log('打開外鏈:', url);
                     window.open(url, '_blank');
                 } else {
-                    alert('正在打開: ' + title);
+                    console.log('無外鏈，顯示提示:', title);
+                    alert('正在打開: ' + title + '（暫無外鏈）');
                 }
+
+                // 記錄閱讀（異步）
+                setTimeout(() => {
+                    if (typeof recordRead === 'function') {
+                        recordRead({ title: title });
+                    }
+                }, 0);
             }
 
             function renderDefaultNews(container) {
