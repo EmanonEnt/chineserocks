@@ -2722,7 +2722,51 @@ html {
         </div>
 
         <script>
-            // 首頁精選新聞加載 - 與 news.html 使用相同數據源
+            
+// ===== 分類標籤雙語轉換（提前定義供新聞渲染使用）=====
+const categoryBilingualMap = {
+    '獨家': '獨家 EXCLUSIVE',
+    '現場': '現場 LIVE',
+    '專題': '專題 FEATURE',
+    '國際': '國際 INTERNATIONAL',
+    '新發行': '新發行 RELEASES',
+    '新聞': '新聞 NEWS',
+    '音樂': '音樂 MUSIC',
+    'ALL': '全部 ALL',
+    'EXCLUSIVE': '獨家 EXCLUSIVE',
+    'LIVE': '現場 LIVE',
+    'FEATURE': '專題 FEATURE',
+    'INTERNATIONAL': '國際 INTERNATIONAL',
+    'RELEASES': '新發行 RELEASES'
+};
+
+function translateCategory(category) {
+    if (!category) return '新聞 NEWS';
+    // 如果已經是雙語格式，直接返回
+    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
+        return category;
+    }
+    // 查找映射
+    return categoryBilingualMap[category] || category + ' NEWS';
+}
+
+// 自動轉換頁面中所有分類標籤
+function convertAllCategoryTags() {
+    document.querySelectorAll('.featured-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    document.querySelectorAll('.hero-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    document.querySelectorAll('.side-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    document.querySelectorAll('.news-category').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+}
+
+// 首頁精選新聞加載 - 與 news.html 使用相同數據源
             async function loadHomeFeaturedNews() {
                 const container = document.getElementById('home-news-container');
                 if (!container) {
@@ -2861,7 +2905,6 @@ html {
                 if (!window._homeNewsData || window._homeNewsData.length === 0) {
                     console.error('新聞數據未加載，嘗試重新加載...');
                     alert('新聞數據加載中，請稍後再試');
-                    // 嘗試重新加載
                     loadHomeFeaturedNews();
                     return;
                 }
@@ -2884,10 +2927,7 @@ html {
                     window.open(url, '_blank');
                 } else {
                     console.log('無有效外鏈:', title);
-                    // 如果沒有外鏈，顯示提示但不阻礙用戶
-                    alert('「' + title + '」
-
-暫無外部鏈接，請稍後再試');
+                    alert('「' + title + '」\n\n暫無外部鏈接，請稍後再試');
                 }
 
                 // 記錄閱讀（異步，不影響主流程）
@@ -2924,9 +2964,7 @@ html {
                     window.open(url, '_blank');
                 } else {
                     console.log('無有效外鏈:', title);
-                    alert('「' + title + '」
-
-暫無外部鏈接，請稍後再試');
+                    alert('「' + title + '」\n\n暫無外部鏈接，請稍後再試');
                 }
 
                 // 記錄閱讀（異步，不影響主流程）
@@ -5219,60 +5257,14 @@ initQuotaSystem();
         </div>
     </div>
 
+
 <script>
-// ===== 分類標籤雙語轉換 =====
-const categoryBilingualMap = {
-    '獨家': '獨家 EXCLUSIVE',
-    '現場': '現場 LIVE',
-    '專題': '專題 FEATURE',
-    '國際': '國際 INTERNATIONAL',
-    '新發行': '新發行 RELEASES',
-    '新聞': '新聞 NEWS',
-    '音樂': '音樂 MUSIC',
-    'ALL': '全部 ALL',
-    'EXCLUSIVE': '獨家 EXCLUSIVE',
-    'LIVE': '現場 LIVE',
-    'FEATURE': '專題 FEATURE',
-    'INTERNATIONAL': '國際 INTERNATIONAL',
-    'RELEASES': '新發行 RELEASES'
-};
-
-function translateCategory(category) {
-    if (!category) return '新聞 NEWS';
-    // 如果已經是雙語格式，直接返回
-    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
-        return category;
-    }
-    // 查找映射
-    return categoryBilingualMap[category] || category + ' NEWS';
-}
-
-// 自動轉換頁面中所有分類標籤
-function convertAllCategoryTags() {
-    // 轉換 featured-tag
-    document.querySelectorAll('.featured-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 hero-tag
-    document.querySelectorAll('.hero-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 side-tag
-    document.querySelectorAll('.side-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 news-category
-    document.querySelectorAll('.news-category').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-}
-
-// 頁面加載完成後執行轉換
+// 頁面加載完成後執行分類標籤轉換
 document.addEventListener('DOMContentLoaded', function() {
-    // 延遲執行，確保動態內容已加載
     setTimeout(convertAllCategoryTags, 100);
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
 });
-</script></body>
+</script>
+</body>
 </html>
