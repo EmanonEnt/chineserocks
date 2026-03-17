@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - ChineseRocks</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23FF0066'>CR</text></svg>">
+    <style>
+        :root {
+            --pink-primary: #FF0066;
+            --pink-dark: #CC0052;
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --silver-text: #c0c0c0;
+            --text-secondary: #888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0f 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c0c0c0;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: rgba(10,10,10,0.95);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--pink-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* 社交登录按钮 */
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.9rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .social-btn.wechat {
+            background: #07C160;
+            border-color: #07C160;
+        }
+
+        .social-btn.wechat:hover {
+            background: #06AD56;
+        }
+
+        .social-btn.google {
+            background: white;
+            color: #333;
+        }
+
+        .social-btn.google:hover {
+            background: #f5f5f5;
+        }
+
+        .social-btn.facebook {
+            background: #1877F2;
+            border-color: #1877F2;
+        }
+
+        .social-btn.facebook:hover {
+            background: #166fe5;
+        }
+
+        .social-btn.full-width {
+            grid-column: span 2;
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 分隔线 */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        /* 表单 */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--silver-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--pink-primary);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* 手机号输入 */
+        .phone-input-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .country-code {
+            width: 100px;
+            padding: 1rem;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FF0066' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .country-code option {
+            background: #1a1a1a;
+            color: white;
+            padding: 10px;
+        }
+
+        .country-code:focus {
+            outline: none;
+            border-color: var(--pink-primary);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .verify-btn {
+            padding: 0 1.5rem;
+            background: var(--pink-primary);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .verify-btn:hover {
+            background: var(--pink-dark);
+        }
+
+        .verify-btn:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        /* 登录按钮 */
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--pink-primary);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .login-btn:hover {
+            background: var(--pink-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,0,102,0.3);
+        }
+
+        /* 切换登录方式 */
+        .login-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            padding: 0.25rem;
+            border-radius: 10px;
+        }
+
+        .login-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-tab.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        /* 底部链接 */
+        .login-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .login-footer a {
+            color: var(--pink-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .login-footer p {
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* 错误提示 */
+        .error-message {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid rgba(255,0,0,0.3);
+            color: #ff6666;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .login-box {
+                padding: 2rem 1.5rem;
+            }
+
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+
+            .social-btn.full-width {
+                grid-column: span 1;
+            }
+
+            .phone-input-group {
+                flex-direction: column;
+            }
+
+            .country-code {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo">CHINESE ROCKS</div>
+                <p class="login-subtitle">登录以解锁完整摇滚体验</p>
+            </div>
+
+            <!-- 错误提示 -->
+            <div class="error-message" id="errorMsg"></div>
+
+            <!-- 社交登录 -->
+            <div class="social-login">
+                <a href="#" class="social-btn wechat full-width" onclick="loginWithWechat()">
+                    <svg class="social-icon" viewBox="0 0 24 24" fill="white">
+                        <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936zm4.048 0a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936z"/>
+                    </svg>
+                    微信一键登录
+                </a>
+
+                <button class="social-btn google" onclick="loginWithGoogle()">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google
+                </button>
+
+                <button class="social-btn facebook" onclick="loginWithFacebook()">
+                    <svg class="social-icon" viewBox="0 0 24 24" fill="white">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Facebook
+                </button>
+            </div>
+
+            <div class="divider"><span>或使用邮箱/手机</span></div>
+
+            <!-- 登录方式切换 -->
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchTab('phone')">手机号</button>
+                <button class="login-tab" onclick="switchTab('email')">邮箱</button>
+            </div>
+
+            <!-- 手机号登录 -->
+            <form id="phoneForm" onsubmit="return loginWithPhone(event)">
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <div class="phone-input-group">
+                        <select class="country-code">
+                            <option value="+86">+86</option>
+                            <option value="+852">+852</option>
+                            <option value="+853">+853</option>
+                            <option value="+886">+886</option>
+                        </select>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="phoneInput" style="flex: 1;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="codeInput" maxlength="6">
+                        <button type="button" class="verify-btn" id="verifyBtn" onclick="sendCode()">获取验证码</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn">登录 / 注册</button>
+            </form>
+
+            <!-- 邮箱登录 -->
+            <form id="emailForm" style="display: none;" onsubmit="return loginWithEmail(event)">
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="email" class="form-input" placeholder="your@email.com" id="emailInput">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" placeholder="请输入密码" id="passwordInput">
+                </div>
+
+                <button type="submit" class="login-btn">登录</button>
+            </form>
+
+            <div class="login-footer">
+                <a href="#" onclick="showForgotPassword()">忘记密码？</a>
+                <p>还没有账号？<a href="#" onclick="showRegister()">立即注册</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'phone';
+        let countdown = 0;
+
+        // 切换登录方式
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'phone') {
+                document.getElementById('phoneForm').style.display = 'block';
+                document.getElementById('emailForm').style.display = 'none';
+            } else {
+                document.getElementById('phoneForm').style.display = 'none';
+                document.getElementById('emailForm').style.display = 'block';
+            }
+        }
+
+        // 发送验证码
+        function sendCode() {
+            const phone = document.getElementById('phoneInput').value;
+            if (!phone || phone.length !== 11) {
+                showError('请输入正确的手机号');
+                return;
+            }
+
+            const btn = document.getElementById('verifyBtn');
+            countdown = 60;
+            btn.disabled = true;
+            btn.textContent = `${countdown}s`;
+
+            const timer = setInterval(() => {
+                countdown--;
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = `${countdown}s`;
+                }
+            }, 1000);
+
+            // 模拟发送验证码
+            alert(`验证码已发送至 ${phone}\n（演示模式：验证码是 123456）`);
+        }
+
+        // 手机号登录
+        function loginWithPhone(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phoneInput').value;
+            const code = document.getElementById('codeInput').value;
+
+            if (!phone || !code) {
+                showError('请填写手机号和验证码');
+                return false;
+            }
+
+            // 演示模式
+            if (code === '123456') {
+                alert('登录成功！\n欢迎回到 ChineseRocks');
+                location.href = 'index.html';
+            } else {
+                showError('验证码错误，演示模式请输入 123456');
+            }
+            return false;
+        }
+
+        // 邮箱登录
+        function loginWithEmail(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if (!email || !password) {
+                showError('请填写邮箱和密码');
+                return false;
+            }
+
+            alert('登录成功！\n欢迎回到 ChineseRocks');
+            location.href = 'index.html';
+            return false;
+        }
+
+        // 社交登录
+        function loginWithWechat() {
+            alert('正在唤起微信登录...\n（需要配置微信OAuth）');
+        }
+
+        function loginWithGoogle() {
+            alert('正在唤起Google登录...\n（需要配置Google OAuth）');
+        }
+
+        function loginWithFacebook() {
+            alert('正在唤起Facebook登录...\n（需要配置Facebook Login）');
+        }
+
+        // 显示错误
+        function showError(msg) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = msg;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 3000);
+        }
+
+        // 忘记密码
+        function showForgotPassword() {
+            alert('密码重置功能\n请输入注册邮箱，我们将发送重置链接');
+        }
+
+        // 注册
+        function showRegister() {
+            alert('注册功能\n使用手机号/邮箱自动注册');
+        }
+    </script>
+</body>
+</html>
