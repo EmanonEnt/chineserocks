@@ -2722,51 +2722,7 @@ html {
         </div>
 
         <script>
-            
-// ===== 分類標籤雙語轉換（提前定義供新聞渲染使用）=====
-const categoryBilingualMap = {
-    '獨家': '獨家 EXCLUSIVE',
-    '現場': '現場 LIVE',
-    '專題': '專題 FEATURE',
-    '國際': '國際 INTERNATIONAL',
-    '新發行': '新發行 RELEASES',
-    '新聞': '新聞 NEWS',
-    '音樂': '音樂 MUSIC',
-    'ALL': '全部 ALL',
-    'EXCLUSIVE': '獨家 EXCLUSIVE',
-    'LIVE': '現場 LIVE',
-    'FEATURE': '專題 FEATURE',
-    'INTERNATIONAL': '國際 INTERNATIONAL',
-    'RELEASES': '新發行 RELEASES'
-};
-
-function translateCategory(category) {
-    if (!category) return '新聞 NEWS';
-    // 如果已經是雙語格式，直接返回
-    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
-        return category;
-    }
-    // 查找映射
-    return categoryBilingualMap[category] || category + ' NEWS';
-}
-
-// 自動轉換頁面中所有分類標籤
-function convertAllCategoryTags() {
-    document.querySelectorAll('.featured-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    document.querySelectorAll('.hero-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    document.querySelectorAll('.side-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    document.querySelectorAll('.news-category').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-}
-
-// 首頁精選新聞加載 - 與 news.html 使用相同數據源
+            // 首頁精選新聞加載 - 與 news.html 使用相同數據源
             async function loadHomeFeaturedNews() {
                 const container = document.getElementById('home-news-container');
                 if (!container) {
@@ -2796,7 +2752,6 @@ function convertAllCategoryTags() {
                     }
 
                     const result = await response.json();
-                    console.log('新聞數據:', result);
 
                     // 解析數據（兼容多種格式）
                     let allNews = [];
@@ -2806,11 +2761,6 @@ function convertAllCategoryTags() {
                         allNews = result.all;
                     } else if (Array.isArray(result)) {
                         allNews = result;
-                    }
-
-                    console.log('所有新聞:', allNews.length, '篇');
-                    if (allNews.length > 0) {
-                        console.log('第一篇新聞:', allNews[0]);
                     }
 
                     if (allNews.length === 0) {
@@ -2832,8 +2782,6 @@ function convertAllCategoryTags() {
                     // 取前5個
                     featuredNews = featuredNews.slice(0, 5);
 
-                    console.log('精選新聞:', featuredNews);
-
                     // 存儲到全局對象
                     window._homeNewsData = featuredNews;
 
@@ -2848,7 +2796,6 @@ function convertAllCategoryTags() {
 
             function renderHomeNews(container, news) {
                 console.log('渲染新聞:', news.length, '篇');
-                console.log('第一篇新聞數據:', news[0]);
 
                 if (!news || news.length === 0) {
                     renderDefaultNews(container);
@@ -2857,12 +2804,6 @@ function convertAllCategoryTags() {
 
                 // 存儲到全局對象供點擊處理函數使用
                 window._homeNewsData = news;
-
-                // 驗證 URL 字段
-                news.forEach((item, i) => {
-                    const url = item.external_url || item.externalUrl || item.url || item.link;
-                    console.log(`新聞 ${i}: ${item.title?.substring(0, 30)}... URL: ${url ? '有' : '無'}`);
-                });
 
                 // 第一個是大圖
                 const mainNews = news[0];
@@ -2901,75 +2842,37 @@ function convertAllCategoryTags() {
 
             // 處理首頁主圖新聞點擊
             function handleHomeHeroClick() {
-                // 检查数据是否已加载
-                if (!window._homeNewsData || window._homeNewsData.length === 0) {
-                    console.error('新聞數據未加載，嘗試重新加載...');
-                    alert('新聞數據加載中，請稍後再試');
-                    loadHomeFeaturedNews();
-                    return;
-                }
-
+                if (!window._homeNewsData || window._homeNewsData.length === 0) return;
                 const mainNews = window._homeNewsData[0];
-                if (!mainNews) {
-                    console.error('主圖新聞數據無效');
-                    return;
-                }
+                const url = mainNews.external_url || mainNews.url;
+                const title = mainNews.title || '';
 
-                // 嘗試所有可能的 URL 字段（與 NEWS 頁面保持一致）
-                const url = mainNews.external_url || mainNews.externalUrl || mainNews.url || mainNews.link || mainNews.source_url || mainNews.sourceUrl;
-                const title = mainNews.title || '無標題';
+                // 記錄閱讀
+                recordRead({ title: title });
 
-                console.log('首頁主圖點擊:', { title, url, data: mainNews });
-
-                // 直接打開外鏈（與 news.html 完全一致）
-                if (url && typeof url === 'string' && url.trim() !== '' && url !== 'undefined' && url !== 'null') {
-                    console.log('打開外鏈:', url);
+                // 直接打開外鏈（與 news.html 一致）
+                if (url) {
                     window.open(url, '_blank');
                 } else {
-                    console.log('無有效外鏈:', title);
-                    alert('「' + title + '」\n\n暫無外部鏈接，請稍後再試');
-                }
-
-                // 記錄閱讀（異步，不影響主流程）
-                if (typeof recordRead === 'function') {
-                    setTimeout(() => recordRead({ title: title }), 0);
+                    alert('正在打開: ' + title);
                 }
             }
 
             // 處理首頁側邊欄新聞點擊
             function handleHomeArticleClick(index) {
-                // 检查数据是否已加载
-                if (!window._homeNewsData) {
-                    console.error('新聞數據未加載');
-                    alert('新聞數據加載中，請稍後再試');
-                    return;
-                }
-
-                if (!window._homeNewsData[index]) {
-                    console.error('新聞索引無效:', index, '可用數據:', window._homeNewsData.length);
-                    return;
-                }
-
+                if (!window._homeNewsData || !window._homeNewsData[index]) return;
                 const item = window._homeNewsData[index];
+                const url = item.external_url || item.url;
+                const title = item.title || '';
 
-                // 嘗試所有可能的 URL 字段（與 NEWS 頁面保持一致）
-                const url = item.external_url || item.externalUrl || item.url || item.link || item.source_url || item.sourceUrl;
-                const title = item.title || '無標題';
+                // 記錄閱讀
+                recordRead({ title: title });
 
-                console.log('首頁新聞點擊:', { index, title, url, data: item });
-
-                // 直接打開外鏈（與 news.html 完全一致）
-                if (url && typeof url === 'string' && url.trim() !== '' && url !== 'undefined' && url !== 'null') {
-                    console.log('打開外鏈:', url);
+                // 直接打開外鏈（與 news.html 一致）
+                if (url) {
                     window.open(url, '_blank');
                 } else {
-                    console.log('無有效外鏈:', title);
-                    alert('「' + title + '」\n\n暫無外部鏈接，請稍後再試');
-                }
-
-                // 記錄閱讀（異步，不影響主流程）
-                if (typeof recordRead === 'function') {
-                    setTimeout(() => recordRead({ title: title }), 0);
+                    alert('正在打開: ' + title);
                 }
             }
 
@@ -5257,14 +5160,60 @@ initQuotaSystem();
         </div>
     </div>
 
-
 <script>
-// 頁面加載完成後執行分類標籤轉換
+// ===== 分類標籤雙語轉換 =====
+const categoryBilingualMap = {
+    '獨家': '獨家 EXCLUSIVE',
+    '現場': '現場 LIVE',
+    '專題': '專題 FEATURE',
+    '國際': '國際 INTERNATIONAL',
+    '新發行': '新發行 RELEASES',
+    '新聞': '新聞 NEWS',
+    '音樂': '音樂 MUSIC',
+    'ALL': '全部 ALL',
+    'EXCLUSIVE': '獨家 EXCLUSIVE',
+    'LIVE': '現場 LIVE',
+    'FEATURE': '專題 FEATURE',
+    'INTERNATIONAL': '國際 INTERNATIONAL',
+    'RELEASES': '新發行 RELEASES'
+};
+
+function translateCategory(category) {
+    if (!category) return '新聞 NEWS';
+    // 如果已經是雙語格式，直接返回
+    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
+        return category;
+    }
+    // 查找映射
+    return categoryBilingualMap[category] || category + ' NEWS';
+}
+
+// 自動轉換頁面中所有分類標籤
+function convertAllCategoryTags() {
+    // 轉換 featured-tag
+    document.querySelectorAll('.featured-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 hero-tag
+    document.querySelectorAll('.hero-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 side-tag
+    document.querySelectorAll('.side-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 news-category
+    document.querySelectorAll('.news-category').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+}
+
+// 頁面加載完成後執行轉換
 document.addEventListener('DOMContentLoaded', function() {
+    // 延遲執行，確保動態內容已加載
     setTimeout(convertAllCategoryTags, 100);
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
 });
-</script>
-</body>
+</script></body>
 </html>
