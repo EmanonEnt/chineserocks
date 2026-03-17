@@ -1,20 +1,19 @@
 /**
- * ChineseRocks 新聞加載器 - 最終修復版
+ * ChineseRocks 新聞加載器 - 修復版
+ * 修復：圖片不顯示問題
  */
 (function() {
-    'use strict';
-
     var allNews = [];
     var currentCategory = 'all';
     var remainingReads = 3;
 
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('📰 新聞加載器 v3 啟動');
         loadNewsData();
         updateQuotaDisplay();
     });
 
     function loadNewsData() {
+        // 添加时间戳防止缓存
         fetch('data/news.json?t=' + Date.now(), {
             cache: 'no-store',
             headers: { 'Accept': 'application/json' }
@@ -24,30 +23,41 @@
             return res.json(); 
         })
         .then(function(data) {
-            console.log('✓ 數據加載成功');
+            console.log('✓ 數據加載成功:', data);
 
+            // 兼容多種數據格式
             if (Array.isArray(data)) {
                 allNews = data;
             } else if (data.data && data.data.all) {
                 allNews = data.data.all;
+            } else if (data.articles) {
+                allNews = data.articles;
             } else {
                 allNews = [];
             }
 
-            console.log('文章數:', allNews.length);
+            console.log('✓ 解析到 ' + allNews.length + ' 篇文章');
 
             // 排序
             allNews.sort(function(a, b) {
-                var dateA = new Date(a.publishDate || a.published_date || a.date || 0);
-                var dateB = new Date(b.publishDate || b.published_date || b.date || 0);
-                return dateB - dateA;
+                var dateA = new Date(b.published_date || b.publishDate || b.date || b.created_time || 0);
+                var dateB = new Date(a.published_date || a.publishDate || a.date || a.created_time || 0);
+                return dateA - dateB;
             });
 
             updateDisplay(allNews);
         })
         .catch(function(e) {
-            console.error('加載失敗:', e);
+            console.error('✗ 加載失敗:', e);
+            showError('新聞加載失敗，請檢查網絡連接');
         });
+    }
+
+    function showError(msg) {
+        var heroMain = document.getElementById('hero-main');
+        if (heroMain) {
+            heroMain.innerHTML = '<div style="padding:40px;text-align:center;color:#ff0066;">' + msg + '</div>';
+        }
     }
 
     function updateDisplay(news) {
@@ -62,15 +72,28 @@
     }
 
     function checkIsPremium(article) {
-        if (article.is_premium === true || article.isPremium === true) return true;
+        if (article.is_premium === true) return true;
+        if (article.isPremium === true) return true;
         if (article.tags && article.tags.indexOf('會員專享') !== -1) return true;
         return false;
     }
 
-    // 🔧 獲取圖片URL
+    // 🔧 修復：統一獲取圖片URL函數
     function getImageUrl(article) {
-        var url = article.coverImage || article.cover_image || article.image || article.cover;
-        return url || getDefaultImage();
+        // 嘗試多種可能的字段名
+        var url = article.cover_image || article.coverImage || article.image || article.cover || article.thumbnail;
+
+        if (!url) {
+            console.warn('文章沒有圖片:', article.title);
+            return getDefaultImage();
+        }
+
+        // 檢查是否是Notion過期URL
+        if (url.indexOf('notion.so') !== -1 || url.indexOf('amazonaws.com') !== -1) {
+            console.log('Notion圖片URL:', url.substring(0, 50) + '...');
+        }
+
+        return url;
     }
 
     function renderHero(news) {
@@ -80,28 +103,42 @@
 
         var main = news[0];
         var isPremium = checkIsPremium(main);
+        var imageUrl = getImageUrl(main);
 
-        console.log('主文章:', main.title, '圖片:', getImageUrl(main).substring(0, 50));
+        console.log('主圖URL:', imageUrl);
 
-        // 主圖
+        // 🔧 修復：添加圖片加載錯誤處理
         var heroImg = document.getElementById('hero-img');
         if (heroImg) {
-            heroImg.onerror = function() { this.src = getDefaultImage(); };
-            heroImg.src = getImageUrl(main);
+            heroImg.onerror = function() {
+                console.error('主圖加載失敗，使用默認圖');
+                this.src = getDefaultImage();
+            };
+            heroImg.onload = function() {
+                console.log('✓ 主圖加載成功');
+            };
+            heroImg.src = imageUrl;
         }
 
-        if (document.getElementById('hero-tag')) 
-            document.getElementById('hero-tag').textContent = main.category || '新聞';
-        if (document.getElementById('hero-title')) 
-            document.getElementById('hero-title').textContent = main.title || '無標題';
-        if (document.getElementById('hero-excerpt')) {
+        var heroTag = document.getElementById('hero-tag');
+        if (heroTag) heroTag.textContent = main.category || '新聞';
+
+        var heroTitle = document.getElementById('hero-title');
+        if (heroTitle) heroTitle.textContent = main.title || '無標題';
+
+        var heroExcerpt = document.getElementById('hero-excerpt');
+        if (heroExcerpt) {
             var content = main.content || main.excerpt || main.summary || '';
-            document.getElementById('hero-excerpt').textContent = content.substring(0, 120) + '...';
+            heroExcerpt.textContent = content.substring(0, 120) + (content.length > 120 ? '...' : '');
         }
-        if (document.getElementById('hero-date')) 
-            document.getElementById('hero-date').textContent = formatDate(main.publishDate || main.published_date || main.date);
-        if (document.getElementById('hero-premium')) 
-            document.getElementById('hero-premium').innerHTML = isPremium ? '<span style="color:#FFD700;">★ 會員專享</span>' : '';
+
+        var heroDate = document.getElementById('hero-date');
+        if (heroDate) heroDate.textContent = formatDate(main.published_date || main.publishDate || main.date);
+
+        var heroPremium = document.getElementById('hero-premium');
+        if (heroPremium) {
+            heroPremium.innerHTML = isPremium ? '<span style="color:#FFD700;">★ 會員專享</span>' : '';
+        }
 
         heroMain.onclick = function() { openArticle(main); };
 
@@ -109,18 +146,16 @@
         if (heroSide) {
             heroSide.innerHTML = '';
             for (var i = 1; i < Math.min(3, news.length); i++) {
-                (function(article, index) {
-                    var imgUrl = getImageUrl(article);
-                    console.log('側邊' + index + ':', article.title, '圖片:', imgUrl.substring(0, 50));
+                var n = news[i];
+                var sideImageUrl = getImageUrl(n);
 
-                    var div = document.createElement('article');
-                    div.className = 'side-card';
-                    div.innerHTML = '<img src="' + imgUrl + '" onerror="this.src=\'' + getDefaultImage() + '\'">' +
-                        '<div class="side-overlay"><span class="side-tag">' + (article.category || '新聞') + '</span>' +
-                        '<h3 class="side-title">' + (article.title || '無標題') + '</h3></div>';
-                    div.onclick = function() { openArticle(article); };
-                    heroSide.appendChild(div);
-                })(news[i], i);
+                var div = document.createElement('article');
+                div.className = 'side-card';
+                div.innerHTML = '<img src="' + sideImageUrl + '" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
+                    '<div class="side-overlay"><span class="side-tag">' + (n.category || '新聞') + '</span>' +
+                    '<h3 class="side-title">' + (n.title || '無標題') + '</h3></div>';
+                div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
+                heroSide.appendChild(div);
             }
         }
     }
@@ -131,33 +166,30 @@
 
         var list = news.slice(3);
         if (!list.length) {
-            container.innerHTML = '<div style="text-align:center;padding:2rem;grid-column:1/-1;">暫無更多新聞</div>';
+            container.innerHTML = '<div style="text-align:center;padding:2rem;grid-column:1/-1;">該分類暫無更多新聞</div>';
             return;
         }
         container.innerHTML = '';
 
         for (var i = 0; i < list.length; i++) {
-            (function(article, index) {
-                var isPremium = checkIsPremium(article);
-                var cardClass = isPremium ? 'news-card premium' : 'news-card';
-                var imgUrl = getImageUrl(article);
+            var n = list[i];
+            var isPremium = checkIsPremium(n);
+            var cardClass = isPremium ? 'news-card premium' : 'news-card';
+            var listImageUrl = getImageUrl(n);
 
-                console.log('列表' + index + ':', article.title, '圖片:', imgUrl.substring(0, 50));
-
-                var div = document.createElement('article');
-                div.className = cardClass;
-                div.innerHTML = '<div class="news-thumb"><img src="' + imgUrl + '" onerror="this.src=\'' + getDefaultImage() + '\'"></div>' +
-                    '<div class="news-content">' +
-                    '<span class="news-category">' + (article.category || '新聞') + '</span>' +
-                    '<h3 class="news-title">' + (article.title || '無標題') + '</h3>' +
-                    '<p class="news-excerpt">' + (article.content || article.excerpt || '').substring(0, 100) + '...</p>' +
-                    '<div class="news-footer">' +
-                    '<div class="news-meta"><span>' + formatDate(article.publishDate || article.published_date || article.date) + '</span>' +
-                    (isPremium ? '<span style="color:#B8860B;font-weight:700;">★ 會員專享</span>' : '') +
-                    '</div></div></div>';
-                div.onclick = function() { openArticle(article); };
-                container.appendChild(div);
-            })(list[i], i);
+            var div = document.createElement('article');
+            div.className = cardClass;
+            div.innerHTML = '<div class="news-thumb"><img src="' + listImageUrl + '" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'"></div>' +
+                '<div class="news-content">' +
+                '<span class="news-category">' + (n.category || '新聞') + '</span>' +
+                '<h3 class="news-title">' + (n.title || '無標題') + '</h3>' +
+                '<p class="news-excerpt">' + (n.content || n.excerpt || '').substring(0, 100) + '...</p>' +
+                '<div class="news-footer">' +
+                '<div class="news-meta"><span>' + formatDate(n.published_date || n.publishDate || n.date) + '</span>' +
+                (isPremium ? '<span style="color:#B8860B;font-weight:700;">★ 會員專享</span>' : '') +
+                '</div></div></div>';
+            div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
+            container.appendChild(div);
         }
     }
 
@@ -185,14 +217,15 @@
         if (!container) return;
         var picks = [];
         for (var i = 0; i < news.length; i++) {
-            if (news[i].featured || (news[i].tags && news[i].tags.indexOf('編輯精選') !== -1)) {
+            if (news[i].featured || (news[i].tags && (news[i].tags.indexOf('編輯精選') !== -1 || news[i].tags.indexOf('编辑精选') !== -1))) {
                 picks.push(news[i]);
             }
         }
         var display = picks.length > 0 ? picks.slice(0, 4) : news.slice(0, 4);
         container.innerHTML = display.map(function(n) {
-            return '<div class="pick-item" onclick="openArticleById(' + JSON.stringify(n.id) + ')">' +
-                '<img src="' + getImageUrl(n) + '" class="pick-thumb" onerror="this.src=\'' + getDefaultImage() + '\'">' +
+            var pickImageUrl = getImageUrl(n);
+            return '<div class="pick-item" onclick="openArticle(' + JSON.stringify(n).replace(/"/g, '&quot;') + ')">' +
+                '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + (n.category || '新聞') + '</span></div></div>';
         }).join('');
     }
@@ -216,11 +249,6 @@
         updateDisplay(filtered);
     };
 
-    window.openArticleById = function(id) {
-        var article = allNews.find(function(n) { return n.id === id; });
-        if (article) openArticle(article);
-    };
-
     window.openArticle = function(article) {
         if (!isMember() && remainingReads <= 0) {
             showMobilePaywall();
@@ -237,7 +265,7 @@
         if (article.source_url || article.sourceUrl) {
             window.open(article.source_url || article.sourceUrl, '_blank');
         } else {
-            alert('文章詳情頁開發中...\n' + article.title);
+            alert('文章詳情頁功能開發中...\n標題: ' + article.title);
         }
     };
 
