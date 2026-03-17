@@ -128,6 +128,7 @@
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
+            justify-content: center;
             gap: 0.5rem;
             overflow-x: auto;
             scrollbar-width: none;
@@ -194,6 +195,49 @@
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1.2fr 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1.2fr 1fr;
+                gap: 1.5rem;
+            }
+            .hero-side {
+                gap: 1rem;
+            }
+            .news-list {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .hero-side {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            .side-card {
+                aspect-ratio: 16/10;
+            }
         }
         .hero-main {
             position: relative;
@@ -279,7 +323,15 @@
             left: 0; right: 0;
             padding: 2rem 1.5rem 1.5rem;
             background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
-        }
+        
+            .category-container {
+                justify-content: flex-start;
+                padding: 0 1rem;
+            }
+            .category-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.75rem;
+            }}
         .side-tag {
             display: inline-block;
             background: rgba(255, 255, 255, 0.2);
@@ -310,6 +362,32 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
             align-content: start;
+        }
+
+        /* 隱藏超出8個的新聞（電腦端） */
+        @media (min-width: 769px) {
+            .news-list .news-card:nth-child(n+9) {
+                display: none;
+            }
+        }
+
+        /* 移動端顯示前10個，之後的有LOAD MORE */
+        @media (max-width: 768px) {
+            .news-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                max-width: 100%;
+                margin: 0;
+            }
+            .news-list .news-card:nth-child(n+11) {
+                display: none;
+            }
+            .news-list .news-card.hidden {
+                display: none;
+            }
+            .news-list .news-card.visible {
+                display: flex;
+            }
         }
         .news-card {
             position: relative;
@@ -907,6 +985,7 @@
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
+                z-index: 999;
                 position: absolute;
                 top: 70px;
                 left: 0;
@@ -949,15 +1028,13 @@
             }
             .mobile-menu-btn { display: block; }
             .mobile-menu-btn:hover { background: rgba(255, 255, 255, 0.1); }
+            .nav-links a:last-child {
+                border-bottom: none;
+                margin-top: 0.5rem;
+            }
             .page-title h1 { font-size: 2.2rem; }
             .hero-title { font-size: 1.4rem; }
             .hero-excerpt { -webkit-line-clamp: 2; }
-            .hero-side { flex-direction: column; }
-            .news-list {
-                grid-template-columns: 1fr;
-                max-width: 480px;
-                margin: 0 auto;
-            }
             .sidebar { grid-template-columns: 1fr; }
             .footer-content {
                 grid-template-columns: 1fr 1fr;
@@ -1106,6 +1183,44 @@
                 margin: 0 auto;
             }
         }
+    
+        /* LOAD MORE 按鈕樣式 */
+        .load-more-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .load-more-container {
+                display: block;
+            }
+            .load-more-container.hidden {
+                display: none;
+            }
+        }
+
+        .load-more-btn {
+            background: transparent;
+            border: 2px solid var(--pink-primary);
+            color: var(--pink-primary);
+            padding: 1rem 3rem;
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .load-more-btn:hover {
+            background: var(--pink-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
     </style>
 </head>
 <body>
@@ -1173,7 +1288,10 @@
     </section>
 
     <div class="main-content">
-        <div class="news-list" id="news-list"></div>
+        <div class="news-list" id="news-list">
+            <div class="load-more-container" id="loadMoreContainer">
+                <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreNews()">LOAD MORE 查看更多</button>
+            </div></div>
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h3 class="sidebar-title">熱門標籤</h3>
@@ -1423,5 +1541,103 @@
             }
         });
     </script>
+
+    <script>
+        // LOAD MORE 功能
+        let currentVisibleCount = 10; // 移動端初始顯示10個（5排）
+        const batchSize = 6; // 每次加載6個（3排）
+        let allNewsData = []; // 存儲所有新聞數據
+
+        function loadMoreNews() {
+            const newsCards = document.querySelectorAll('.news-list .news-card');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            let newlyShown = 0;
+            let count = 0;
+
+            // 顯示下一批隱藏的新聞
+            for (let card of newsCards) {
+                if (card.style.display === 'none' || getComputedStyle(card).display === 'none') {
+                    if (newlyShown < batchSize) {
+                        card.style.display = 'flex';
+                        card.classList.add('visible');
+                        card.classList.remove('hidden');
+                        newlyShown++;
+                    }
+                }
+                // 只計算之前隱藏的
+                if (getComputedStyle(card).display !== 'none' || card.classList.contains('visible')) {
+                    count++;
+                }
+            }
+
+            // 檢查是否還有更多
+            let remainingHidden = 0;
+            for (let card of newsCards) {
+                if (card.style.display === 'none' || getComputedStyle(card).display === 'none') {
+                    remainingHidden++;
+                }
+            }
+
+            // 如果沒有更多，隱藏按鈕
+            if (remainingHidden === 0) {
+                loadMoreContainer.classList.add('hidden');
+            }
+
+            currentVisibleCount += newlyShown;
+        }
+
+        // 初始化新聞顯示
+        function initNewsDisplay() {
+            const newsCards = document.querySelectorAll('.news-list .news-card');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            if (window.innerWidth <= 768) {
+                // 移動端：只顯示前10個
+                newsCards.forEach((card, index) => {
+                    if (index >= 10) {
+                        card.style.display = 'none';
+                        card.classList.add('hidden');
+                    } else {
+                        card.classList.add('visible');
+                    }
+                });
+
+                // 如果有超過10個，顯示 LOAD MORE
+                if (newsCards.length > 10) {
+                    loadMoreContainer.classList.remove('hidden');
+                } else {
+                    loadMoreContainer.classList.add('hidden');
+                }
+            } else {
+                // 電腦端：顯示前8個
+                newsCards.forEach((card, index) => {
+                    if (index >= 8) {
+                        card.style.display = 'none';
+                    } else {
+                        card.style.display = 'flex';
+                    }
+                });
+                loadMoreContainer.classList.add('hidden');
+            }
+        }
+
+        // 監聽窗口大小變化
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                initNewsDisplay();
+            }, 250);
+        });
+
+        // 頁面加載完成後初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延遲初始化，確保新聞數據已加載
+            setTimeout(initNewsDisplay, 500);
+        });
+    </script>
+    
 </body>
 </html>
