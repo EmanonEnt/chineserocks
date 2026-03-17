@@ -256,20 +256,15 @@
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            height: 100%;
         }
         .side-card {
             position: relative;
+            aspect-ratio: 16/10;
             overflow: hidden;
             border-radius: 12px;
             cursor: pointer;
             flex: 1;
-            min-height: 200px;
-            max-height: 50%;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-        .side-card:only-child {
-            max-height: 100%;
         }
         .side-card img {
             width: 100%;
@@ -994,8 +989,13 @@
         @media (max-width: 480px) {
             .page-title h1 { font-size: 1.6rem; }
             .category-btn {
-                padding: 0.75rem 1rem;
-                font-size: 0.75rem;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.7rem;
+                letter-spacing: 0.5px;
+            }
+            .category-container {
+                padding: 0 0.5rem;
+                gap: 0.25rem;
             }
             .news-title { font-size: 1.1rem; }
             .footer-content {
@@ -1028,6 +1028,12 @@
                 width: 200px;
                 font-size: 0.65rem;
                 right: 0;
+            }
+        }
+        @media (max-width: 380px) {
+            .category-btn {
+                padding: 0.4rem 0.5rem;
+                font-size: 0.65rem;
             }
         }
         @media (max-width: 380px) {
