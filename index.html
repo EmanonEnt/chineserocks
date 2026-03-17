@@ -1420,7 +1420,7 @@ html {
         }
         </style>
     <!-- Google Sign-In SDK -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer>
 
     <!-- Facebook SDK -->
     <script>
@@ -2944,7 +2944,7 @@ html {
                 var imageUrl = getImageUrl(mainNews);
 
                 var html = '<article class="featured-main" onclick="openArticle(window._homeMainNews)">' +
-                    '<img src="' + imageUrl + '" alt="" onerror="this.src=\'' + getDefaultImage() + '\'">' +
+                    '<img src="' + imageUrl + '" alt="" onerror="this.src=\'" + getDefaultImage() + "\'">' +
                     '<div class="featured-overlay">' +
                     '<span class="featured-tag">' + translateCategory(mainNews.category) + '</span>' +
                     '<h3 class="featured-title">' + (mainNews.title || '無標題') + '</h3>' +
@@ -2960,7 +2960,7 @@ html {
                     window._homeSideNews.push(item);
                     var sideImageUrl = getImageUrl(item);
                     html += '<article class="sidebar-item" onclick="openArticle(window._homeSideNews[' + index + '])">' +
-                        '<img src="' + sideImageUrl + '" alt="" class="sidebar-thumb" onerror="this.src=\'' + getDefaultImage() + '\'">' +
+                        '<img src="' + sideImageUrl + '" alt="" class="sidebar-thumb" onerror="this.src=\'" + getDefaultImage() + "\'">' +
                         '<div class="sidebar-content">' +
                         '<h4>' + item.title + '</h4>' +
                         '<p class="meta">' + translateCategory(item.category) + ' · ' + formatDate(item.published_date) + '</p>' +
@@ -5188,7 +5188,8 @@ html {
         </div>
     </div>
 
-<script>
+</script>
+    <script>
 // ===== 分類標籤雙語轉換 =====
 const categoryBilingualMap = {
     '獨家': '獨家 EXCLUSIVE',
@@ -5243,5 +5244,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
 });
-</script></body>
+</script></script>
+    </body>
 </html>
