@@ -27,11 +27,6 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install notion-client requests
-
     - name: Publish approved articles
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
@@ -44,8 +39,22 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add data/news.json
-        git diff --staged --quiet || (
-          git commit -m "自動更新新聞數據 $(date +'%Y-%m-%d %H:%M')" &&
-          git pull --rebase origin main &&
-          git push origin main
-        )
+
+        # 檢查是否有變更
+        if git diff --staged --quiet; then
+          echo "沒有變更需要提交"
+          exit 0
+        fi
+
+        # 提交變更
+        git commit -m "自動更新新聞數據 $(date +'%Y-%m-%d %H:%M')"
+
+        # 拉取遠程更新並合併
+        git fetch origin main
+
+        # 嘗試推送，如果失敗則強制覆蓋（因為這是自動生成的數據文件）
+        if ! git push origin main; then
+          echo "推送失敗，嘗試強制覆蓋..."
+          git pull origin main --strategy=ours --no-edit || true
+          git push origin main --force-with-lease || git push origin main --force
+        fi
