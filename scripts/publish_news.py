@@ -6,40 +6,23 @@ ChineseRocks 新聞發布系統
 
 import os
 import json
+import urllib.request
+import urllib.error
 from datetime import datetime
-from notion_client import Client
 
-# 初始化 Notion 客戶端
-notion = Client(auth=os.environ.get('NOTION_TOKEN'))
-
-# 數據庫 ID
+# 數據庫 ID 和 Token
 NEWS_DATABASE_ID = os.environ.get('NOTION_DATABASE_ID')
+NOTION_TOKEN = os.environ.get('NOTION_TOKEN')
 
 def fetch_published_articles():
     """從 Notion 獲取已發布狀態的文章"""
     articles = []
 
     try:
-        # 新版 notion-client API 調用方式
-        response = notion.databases.query(
-            database_id=NEWS_DATABASE_ID,
-            filter={
-                "property": "狀態",
-                "status": {
-                    "equals": "已發佈"
-                }
-            },
-            sorts=[
-                {
-                    "property": "發布時間",
-                    "direction": "descending"
-                }
-            ]
-        )
+        results = query_database_http()
+        print(f"成功獲取 {len(results)} 篇文章")
 
-        print(f"成功獲取 {len(response['results'])} 篇文章")
-
-        for page in response['results']:
+        for page in results:
             article = parse_article(page)
             if article:
                 articles.append(article)
@@ -51,12 +34,48 @@ def fetch_published_articles():
 
     return articles
 
+def query_database_http():
+    """使用 HTTP API 直接查詢數據庫"""
+    url = f"https://api.notion.com/v1/databases/{NEWS_DATABASE_ID}/query"
+
+    headers = {
+        "Authorization": f"Bearer {NOTION_TOKEN}",
+        "Content-Type": "application/json",
+        "Notion-Version": "2022-06-28"
+    }
+
+    data = {
+        "filter": {
+            "property": "狀態",
+            "status": {
+                "equals": "已發佈"
+            }
+        },
+        "sorts": [
+            {
+                "property": "發布時間",
+                "direction": "descending"
+            }
+        ]
+    }
+
+    req = urllib.request.Request(
+        url,
+        data=json.dumps(data).encode('utf-8'),
+        headers=headers,
+        method='POST'
+    )
+
+    with urllib.request.urlopen(req) as response:
+        result = json.loads(response.read().decode('utf-8'))
+        return result.get('results', [])
+
 def parse_article(page):
     """解析 Notion 頁面數據為文章對象"""
     try:
         props = page.get('properties', {})
 
-        # 標題 - 處理兩種可能的欄位名稱
+        # 標題
         title = ""
         if '標題' in props:
             title_data = props['標題']
@@ -91,7 +110,6 @@ def parse_article(page):
             if cover_data.get('files'):
                 files = cover_data['files']
                 if files:
-                    # 優先使用 external URL，否則使用 file URL
                     if files[0].get('external'):
                         cover_image = files[0]['external'].get('url', '')
                     elif files[0].get('file'):
@@ -175,7 +193,7 @@ def main():
     print("=" * 60)
 
     # 檢查環境變量
-    if not os.environ.get('NOTION_TOKEN'):
+    if not NOTION_TOKEN:
         print("錯誤: 未設置 NOTION_TOKEN")
         return
 
