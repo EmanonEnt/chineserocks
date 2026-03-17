@@ -364,30 +364,12 @@
             align-content: start;
         }
 
-        /* 隱藏超出8個的新聞（電腦端） */
-        @media (min-width: 769px) {
-            .news-list .news-card:nth-child(n+9) {
-                display: none;
-            }
+        /* 所有設備統一：初始顯示8個，之後LOAD MORE加載 */
+        .news-list .news-card.hidden {
+            display: none;
         }
-
-        /* 移動端顯示前10個，之後的有LOAD MORE */
-        @media (max-width: 768px) {
-            .news-list {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-                max-width: 100%;
-                margin: 0;
-            }
-            .news-list .news-card:nth-child(n+11) {
-                display: none;
-            }
-            .news-list .news-card.hidden {
-                display: none;
-            }
-            .news-list .news-card.visible {
-                display: flex;
-            }
+        .news-list .news-card.visible {
+            display: flex;
         }
         .news-card {
             position: relative;
@@ -671,7 +653,12 @@
             color: #888;
             font-size: 0.8rem;
         }
-        .invite-float {
+        .news-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .invite-float {
             position: fixed;
             bottom: 30px;
             right: 30px;
@@ -962,6 +949,11 @@
                 grid-template-columns: 1fr 1fr;
                 gap: 2rem;
             }
+            .news-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
             .invite-float {
                 bottom: 20px;
                 right: 15px;
@@ -1046,6 +1038,11 @@
                 flex-direction: column;
                 padding: 0.75rem 1rem;
             }
+            .news-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
             .invite-float {
                 bottom: 15px;
                 right: 10px;
@@ -1085,6 +1082,11 @@
                 font-size: 0.75rem;
                 padding: 0.3rem 0.8rem;
             }
+            .news-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
             .invite-float {
                 bottom: 10px;
                 right: 8px;
@@ -1192,13 +1194,9 @@
             display: none;
         }
 
-        @media (max-width: 768px) {
-            .load-more-container {
-                display: block;
-            }
-            .load-more-container.hidden {
-                display: none;
-            }
+        /* LOAD MORE 在所有設備都顯示 */
+        .load-more-container.hidden {
+            display: none;
         }
 
         .load-more-btn {
@@ -1543,49 +1541,32 @@
     </script>
 
     <script>
-        // LOAD MORE 功能
-        let currentVisibleCount = 10; // 移動端初始顯示10個（5排）
-        const batchSize = 6; // 每次加載6個（3排）
-        let allNewsData = []; // 存儲所有新聞數據
+        // LOAD MORE 功能 - 統一邏輯
+        const INITIAL_COUNT = 8;  // 初始顯示8個
+        const BATCH_SIZE = 6;     // 每次加載6個（3排）
+        let currentVisibleCount = INITIAL_COUNT;
 
         function loadMoreNews() {
             const newsCards = document.querySelectorAll('.news-list .news-card');
-            const loadMoreBtn = document.getElementById('loadMoreBtn');
             const loadMoreContainer = document.getElementById('loadMoreContainer');
 
             let newlyShown = 0;
-            let count = 0;
 
             // 顯示下一批隱藏的新聞
-            for (let card of newsCards) {
-                if (card.style.display === 'none' || getComputedStyle(card).display === 'none') {
-                    if (newlyShown < batchSize) {
-                        card.style.display = 'flex';
-                        card.classList.add('visible');
-                        card.classList.remove('hidden');
-                        newlyShown++;
-                    }
+            newsCards.forEach((card, index) => {
+                if (index >= currentVisibleCount && index < currentVisibleCount + BATCH_SIZE) {
+                    card.classList.remove('hidden');
+                    card.classList.add('visible');
+                    newlyShown++;
                 }
-                // 只計算之前隱藏的
-                if (getComputedStyle(card).display !== 'none' || card.classList.contains('visible')) {
-                    count++;
-                }
-            }
-
-            // 檢查是否還有更多
-            let remainingHidden = 0;
-            for (let card of newsCards) {
-                if (card.style.display === 'none' || getComputedStyle(card).display === 'none') {
-                    remainingHidden++;
-                }
-            }
-
-            // 如果沒有更多，隱藏按鈕
-            if (remainingHidden === 0) {
-                loadMoreContainer.classList.add('hidden');
-            }
+            });
 
             currentVisibleCount += newlyShown;
+
+            // 檢查是否還有更多
+            if (currentVisibleCount >= newsCards.length) {
+                loadMoreContainer.classList.add('hidden');
+            }
         }
 
         // 初始化新聞顯示
@@ -1593,44 +1574,26 @@
             const newsCards = document.querySelectorAll('.news-list .news-card');
             const loadMoreContainer = document.getElementById('loadMoreContainer');
 
-            if (window.innerWidth <= 768) {
-                // 移動端：只顯示前10個
-                newsCards.forEach((card, index) => {
-                    if (index >= 10) {
-                        card.style.display = 'none';
-                        card.classList.add('hidden');
-                    } else {
-                        card.classList.add('visible');
-                    }
-                });
-
-                // 如果有超過10個，顯示 LOAD MORE
-                if (newsCards.length > 10) {
-                    loadMoreContainer.classList.remove('hidden');
+            // 重置所有卡片
+            newsCards.forEach((card, index) => {
+                if (index < INITIAL_COUNT) {
+                    card.classList.remove('hidden');
+                    card.classList.add('visible');
                 } else {
-                    loadMoreContainer.classList.add('hidden');
+                    card.classList.add('hidden');
+                    card.classList.remove('visible');
                 }
+            });
+
+            currentVisibleCount = INITIAL_COUNT;
+
+            // 如果有超過8個，顯示 LOAD MORE
+            if (newsCards.length > INITIAL_COUNT) {
+                loadMoreContainer.classList.remove('hidden');
             } else {
-                // 電腦端：顯示前8個
-                newsCards.forEach((card, index) => {
-                    if (index >= 8) {
-                        card.style.display = 'none';
-                    } else {
-                        card.style.display = 'flex';
-                    }
-                });
                 loadMoreContainer.classList.add('hidden');
             }
         }
-
-        // 監聽窗口大小變化
-        let resizeTimer;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function() {
-                initNewsDisplay();
-            }, 250);
-        });
 
         // 頁面加載完成後初始化
         document.addEventListener('DOMContentLoaded', function() {
