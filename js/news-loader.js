@@ -44,6 +44,19 @@
         }
     }
 
+    // 檢查是否為會員專享（支持 Checkbox 和標籤兩種方式）
+    function checkIsPremium(article) {
+        // 優先檢查 is_premium 欄位（Checkbox）
+        if (article.is_premium === true) {
+            return true;
+        }
+        // 檢查標籤
+        if (article.tags && Array.isArray(article.tags)) {
+            return article.tags.includes('會員專享');
+        }
+        return false;
+    }
+
     // 顯示空狀態
     function showEmptyState() {
         const heroMain = document.getElementById('hero-main');
@@ -115,7 +128,7 @@
         if (heroDate) heroDate.textContent = formatDate(dateStr);
 
         if (heroPremium) {
-            if (main.is_premium || (main.tags && main.tags.includes('會員專享'))) {
+            if (checkIsPremium(main)) {
                 heroPremium.innerHTML = '<span style="color:#FFD700;">★ 會員專享</span>';
             } else {
                 heroPremium.textContent = '';
@@ -184,7 +197,7 @@
         container.innerHTML = '';
 
         listNews.forEach(n => {
-            const isPremium = n.is_premium || (n.tags && n.tags.includes('會員專享'));
+            const isPremium = checkIsPremium(n);
             const cardClass = isPremium ? 'news-card premium' : 'news-card';
             const imgUrl = n.cover_image || n.image || getDefaultImage();
             const excerpt = (n.content || n.summary || '').substring(0, 100);
@@ -237,7 +250,8 @@
         news.forEach(n => {
             if (n.tags && Array.isArray(n.tags)) {
                 n.tags.forEach(tag => {
-                    if (tag && !tag.includes('會員專享')) {
+                    // 排除系統標籤
+                    if (tag && !tag.includes('會員專享') && !tag.includes('編輯精選')) {
                         allTags.add(tag);
                     }
                 });
@@ -262,8 +276,9 @@
         if (!container) return;
 
         const picks = news.filter(n => {
+            if (n.featured === true) return true;
             if (!n.tags) return false;
-            return n.tags.includes('編輯精選') || n.tags.includes('编辑精选') || n.featured;
+            return n.tags.includes('編輯精選') || n.tags.includes('编辑精选');
         }).slice(0, 4);
 
         const displayPicks = picks.length > 0 ? picks : news.slice(0, 4);
@@ -325,7 +340,7 @@
             return;
         }
 
-        const isPremium = article.is_premium || (article.tags && article.tags.includes('會員專享'));
+        const isPremium = checkIsPremium(article);
         if (isPremium && !isMember()) {
             showMobilePaywall();
             return;
