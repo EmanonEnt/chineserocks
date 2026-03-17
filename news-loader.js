@@ -229,7 +229,7 @@
                 }
             }
         }
-        container.innerHTML = tags.slice(0, 12).map(function(t) {
+        container.innerHTML = tags.slice(0, 20).map(function(t) {
             return '<button class="tag-item" onclick="filterByTag(' + JSON.stringify(t) + ', this)">#' + t + '</button>';
         }).join('');
     }
