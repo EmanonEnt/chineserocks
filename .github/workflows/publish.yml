@@ -20,6 +20,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -43,4 +44,8 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add data/news.json
-        git diff --staged --quiet || (git commit -m "自動更新新聞數據 $(date +'%Y-%m-%d %H:%M')" && git push)
+        git diff --staged --quiet || (
+          git commit -m "自動更新新聞數據 $(date +'%Y-%m-%d %H:%M')" &&
+          git pull --rebase origin main &&
+          git push origin main
+        )
