@@ -247,15 +247,24 @@
 
         // 有標籤才顯示，不足不顯示默認標籤
         if (tags.length > 0) {
-            container.innerHTML = tags.slice(0, 20).map(function(t) {
-                return '<button class="tag-item" onclick="filterByTag(' + JSON.stringify(t) + ', this)">#' + t + '</button>';
+            // 🔧 修復：存儲到全局對象，避免 JSON.stringify 嵌入 HTML
+            window._tagData = tags.slice(0, 20);
+            container.innerHTML = window._tagData.map(function(t, index) {
+                return '<button class="tag-item" onclick="filterByTagIndex(' + index + ')">#' + t + '</button>';
             }).join('');
             console.log('✓ 渲染 ' + Math.min(tags.length, 20) + ' 個熱門標籤');
         } else {
-            // 沒有標籤時清空容器（不顯示任何內容）
             container.innerHTML = '';
             console.log('✓ 無熱門標籤可顯示');
         }
+    }
+
+    // 🔧 新增：通過索引過濾標籤
+    window.filterByTagIndex = function(index) {
+        if (window._tagData && window._tagData[index]) {
+            filterByTag(window._tagData[index], event.target);
+        }
+    };
     }
 
     // 🔧 修復：編輯精選函數 - 有幾個顯示幾個，最多6個，不足不補充
@@ -280,15 +289,25 @@
         // 只顯示精選文章，有幾個顯示幾個（最多6個），不足不補充
         var display = picks.slice(0, 6);
 
-        container.innerHTML = display.map(function(n) {
+        // 🔧 修復：存儲到全局對象，避免 JSON.stringify 嵌入 HTML
+        window._pickArticles = display;
+
+        container.innerHTML = display.map(function(n, index) {
             var pickImageUrl = getImageUrl(n);
-            return '<div class="pick-item" onclick="openArticle(' + JSON.stringify(n).replace(/"/g, '&quot;') + ')">' +
-                '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
+            return '<div class="pick-item" onclick="openPickArticle(' + index + ')">' +
+                '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src='' + getDefaultImage() + ''">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
         }).join('');
 
         console.log('✓ 渲染編輯精選: ' + display.length + ' 個');
     }
+
+    // 🔧 新增：通過索引打開文章
+    window.openPickArticle = function(index) {
+        if (window._pickArticles && window._pickArticles[index]) {
+            openArticle(window._pickArticles[index]);
+        }
+    };
 
     window.filterNews = function(category, btn) {
         currentCategory = category;
@@ -351,6 +370,29 @@
 
     function updateQuotaDisplay() {
         var el = document.getElementById('remainingReads');
+        if (el) el.textContent = remainingReads;
+    }
+
+    window.showMobilePaywall = function() {
+        var modal = document.getElementById('mobilePaywallModal');
+        if (modal) modal.classList.add('active');
+    };
+
+    window.closeMobilePaywall = function() {
+        var modal = document.getElementById('mobilePaywallModal');
+        if (modal) modal.classList.remove('active');
+    };
+
+    window.toggleFav = function(btn, title) {
+        if (!isMember()) {
+            alert('請先登入');
+            return;
+        }
+        btn.classList.toggle('active');
+        btn.textContent = btn.classList.contains('active') ? '★' : '☆';
+    };
+})();
+etElementById('remainingReads');
         if (el) el.textContent = remainingReads;
     }
 
