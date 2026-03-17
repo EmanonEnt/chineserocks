@@ -5102,9 +5102,12 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
 });
-</script>        <!-- 首頁新聞加載腳本 - 直接從 NOTION 調取 -->
+</script>            <!-- 首頁新聞加載腳本 v2.0 - 直接從 NOTION 調取 -->
     <script>
     (function() {
+        console.log('%c【首頁新聞】', 'background: #ff0066; color: white; padding: 4px 8px; border-radius: 4px;', '腳本加載開始 v2.0');
+        console.log('當前時間:', new Date().toLocaleString());
+
         // NOTION API 配置
         const NOTION_API_KEY = 'ntn_5Fd5dKZ5kD614jE7a4qJRJ8ee9c6BaH1lbT1yYtc6M7';
         const NOTION_DATABASE_ID = '1a4f8e3b-4f28-4b3f-bb92-4c3611e26c9e';
@@ -5117,13 +5120,7 @@ document.addEventListener('DOMContentLoaded', function() {
             '國際': '國際 INTERNATIONAL',
             '新發行': '新發行 RELEASES',
             '新聞': '新聞 NEWS',
-            '音樂': '音樂 MUSIC',
-            'ALL': '全部 ALL',
-            'EXCLUSIVE': '獨家 EXCLUSIVE',
-            'LIVE': '現場 LIVE',
-            'FEATURE': '專題 FEATURE',
-            'INTERNATIONAL': '國際 INTERNATIONAL',
-            'RELEASES': '新發行 RELEASES'
+            '音樂': '音樂 MUSIC'
         };
 
         function translateCategory(category) {
@@ -5132,18 +5129,28 @@ document.addEventListener('DOMContentLoaded', function() {
             return categoryMap[category] || category + ' NEWS';
         }
 
-        // 轉義標題中的引號
-        function escapeTitle(title) {
-            return title.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
-                // 從 NOTION 獲取新聞數據
-        async function fetchNewsFromNotion() {
+        // 從 NOTION 獲取新聞
+        async function loadNewsFromNotion() {
+            const container = document.getElementById('home-news-container');
+            if (!container) {
+                console.error('【首頁新聞】找不到 home-news-container');
+                return;
+            }
+
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:#666;">加載中...</div>';
+
             try {
-                const response = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`, {
+                console.log('【首頁新聞】開始調用 NOTION API');
+
+                const response = await fetch('https://api.notion.com/v1/databases/' + NOTION_DATABASE_ID + '/query', {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${NOTION_API_KEY}`,
+                        'Authorization': 'Bearer ' + NOTION_API_KEY,
                         'Notion-Version': '2022-06-28',
                         'Content-Type': 'application/json'
                     },
@@ -5155,190 +5162,151 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         },
                         sorts: [
-                            { property: 'Display Order', direction: 'ascending' },
-                            { timestamp: 'created_time', direction: 'descending' }
+                            { property: 'Display Order', direction: 'ascending' }
                         ],
                         page_size: 5
                     })
                 });
 
+                console.log('【首頁新聞】API 響應狀態:', response.status);
+
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error('HTTP ' + response.status);
                 }
 
                 const data = await response.json();
-                console.log('NOTION API 響應:', data);
-                return data.results || [];
-            } catch (error) {
-                console.error('獲取 NOTION 新聞失敗:', error);
-                // 如果筛选失败，尝试不加筛选获取
-                try {
-                    const fallbackResponse = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${NOTION_API_KEY}`,
-                            'Notion-Version': '2022-06-28',
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            sorts: [{ timestamp: 'created_time', direction: 'descending' }],
-                            page_size: 5
-                        })
-                    });
-                    const fallbackData = await fallbackResponse.json();
-                    return fallbackData.results || [];
-                } catch (fallbackError) {
-                    console.error('備援獲取也失敗:', fallbackError);
-                    return [];
+                console.log('【首頁新聞】API 返回數據:', data);
+                console.log('【首頁新聞】結果數量:', data.results ? data.results.length : 0);
+
+                if (!data.results || data.results.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;padding:2rem;color:#666;">暫無新聞</div>';
+                    return;
                 }
+
+                // 解析文章
+                const articles = [];
+                for (let i = 0; i < data.results.length; i++) {
+                    const page = data.results[i];
+                    const props = page.properties || {};
+
+                    // 獲取標題
+                    let title = '';
+                    if (props['標題'] && props['標題'].title && props['標題'].title[0]) {
+                        title = props['標題'].title[0].text.content;
+                    } else if (props.Title && props.Title.title && props.Title.title[0]) {
+                        title = props.Title.title[0].text.content;
+                    } else if (props.Name && props.Name.title && props.Name.title[0]) {
+                        title = props.Name.title[0].text.content;
+                    }
+
+                    // 獲取分類
+                    let category = '新聞';
+                    if (props['類型'] && props['類型'].select) {
+                        category = props['類型'].select.name;
+                    } else if (props.Category && props.Category.select) {
+                        category = props.Category.select.name;
+                    }
+
+                    // 獲取摘要
+                    let excerpt = '';
+                    if (props['內容'] && props['內容'].rich_text && props['內容'].rich_text[0]) {
+                        excerpt = props['內容'].rich_text[0].text.content;
+                    } else if (props.Excerpt && props.Excerpt.rich_text && props.Excerpt.rich_text[0]) {
+                        excerpt = props.Excerpt.rich_text[0].text.content;
+                    }
+
+                    // 獲取圖片
+                    let image = '';
+                    if (props['封面圖'] && props['封面圖'].files && props['封面圖'].files[0]) {
+                        image = props['封面圖'].files[0].file ? props['封面圖'].files[0].file.url : props['封面圖'].files[0].external.url;
+                    } else if (props.Image && props.Image.files && props.Image.files[0]) {
+                        image = props.Image.files[0].file ? props.Image.files[0].file.url : props.Image.files[0].external.url;
+                    }
+
+                    if (!image) {
+                        image = 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=450&fit=crop';
+                    }
+
+                    // 獲取日期
+                    let date = '';
+                    if (props.Date && props.Date.date) {
+                        date = props.Date.date.start;
+                    } else if (page.created_time) {
+                        date = page.created_time.split('T')[0];
+                    }
+
+                    // 獲取 slug
+                    let slug = '';
+                    if (props.Slug && props.Slug.rich_text && props.Slug.rich_text[0]) {
+                        slug = props.Slug.rich_text[0].text.content;
+                    } else {
+                        slug = page.id.replace(/-/g, '');
+                    }
+
+                    // 檢查是否付費
+                    let isPremium = false;
+                    if (props['會員專屬'] && props['會員專屬'].checkbox === true) {
+                        isPremium = true;
+                    } else if (props.Premium && props.Premium.checkbox === true) {
+                        isPremium = true;
+                    }
+
+                    if (title) {
+                        articles.push({
+                            title: title,
+                            category: translateCategory(category),
+                            excerpt: excerpt.substring(0, 120) + (excerpt.length > 120 ? '...' : ''),
+                            image: image,
+                            date: date,
+                            slug: slug,
+                            isPremium: isPremium
+                        });
+                    }
+                }
+
+                console.log('【首頁新聞】解析後文章:', articles);
+
+                if (articles.length === 0) {
+                    container.innerHTML = '<div style="text-align:center;padding:2rem;color:#666;">暫無新聞</div>';
+                    return;
+                }
+
+                // 渲染文章
+                renderArticles(articles, container);
+
+            } catch (error) {
+                console.error('【首頁新聞】加載失敗:', error);
+                container.innerHTML = '<div style="text-align:center;padding:2rem;color:#ff0066;">加載失敗: ' + escapeHtml(error.message) + '</div>';
             }
         }
-        // 解析 NOTION 頁面數據
-        function parseNotionPage(page) {
-            const properties = page.properties || {};
 
-            // 獲取標題 - 支持中文 "標題" 或英文 "Title"
-            let title = '';
-            if (properties['標題']?.title?.[0]?.text?.content) {
-                title = properties['標題'].title[0].text.content;
-            } else if (properties.Title?.title?.[0]?.text?.content) {
-                title = properties.Title.title[0].text.content;
-            } else if (properties.title?.title?.[0]?.text?.content) {
-                title = properties.title.title[0].text.content;
-            } else if (properties.Name?.title?.[0]?.text?.content) {
-                title = properties.Name.title[0].text.content;
-            }
-
-            // 獲取分類 - 支持中文 "類型" 或英文 "Category"
-            let category = '新聞';
-            if (properties['類型']?.select?.name) {
-                category = properties['類型'].select.name;
-            } else if (properties['类型']?.select?.name) {
-                category = properties['类型'].select.name;
-            } else if (properties.Category?.select?.name) {
-                category = properties.Category.select.name;
-            } else if (properties.Tags?.multi_select?.[0]?.name) {
-                category = properties.Tags.multi_select[0].name;
-            }
-
-            // 獲取摘要 - 支持中文 "內容" 或英文 "Content/Excerpt"
-            let excerpt = '';
-            if (properties['內容']?.rich_text?.[0]?.text?.content) {
-                excerpt = properties['內容'].rich_text[0].text.content;
-            } else if (properties['内容']?.rich_text?.[0]?.text?.content) {
-                excerpt = properties['内容'].rich_text[0].text.content;
-            } else if (properties.Excerpt?.rich_text?.[0]?.text?.content) {
-                excerpt = properties.Excerpt.rich_text[0].text.content;
-            } else if (properties.Summary?.rich_text?.[0]?.text?.content) {
-                excerpt = properties.Summary.rich_text[0].text.content;
-            } else if (properties.Description?.rich_text?.[0]?.text?.content) {
-                excerpt = properties.Description.rich_text[0].text.content;
-            }
-
-            // 獲取圖片 - 支持中文 "封面圖" 或英文 "Image/Cover"
-            let image = '';
-            if (properties['封面圖']?.files?.[0]?.file?.url) {
-                image = properties['封面圖'].files[0].file.url;
-            } else if (properties['封面图']?.files?.[0]?.file?.url) {
-                image = properties['封面图'].files[0].file.url;
-            } else if (properties.Image?.files?.[0]?.file?.url) {
-                image = properties.Image.files[0].file.url;
-            } else if (properties.Image?.files?.[0]?.external?.url) {
-                image = properties.Image.files[0].external.url;
-            } else if (properties.Cover?.files?.[0]?.file?.url) {
-                image = properties.Cover.files[0].file.url;
-            } else if (properties['Hero Image']?.files?.[0]?.file?.url) {
-                image = properties['Hero Image'].files[0].file.url;
-            }
-
-            // 如果沒有圖片，使用默認圖片
-            if (!image) {
-                const defaultImages = [
-                    '1493225457124-a3eb161ffa5f',
-                    '1514525253161-7a46d19cd819',
-                    '1459749411175-04bf5292ceea',
-                    '1501386761578-eac5c94b800a',
-                    '1470225620780-dba8ba36b745'
-                ];
-                image = `https://images.unsplash.com/photo-${defaultImages[Math.floor(Math.random() * defaultImages.length)]}?w=800&h=450&fit=crop`;
-            }
-
-            // 獲取日期
-            let date = '';
-            if (properties.Date?.date?.start) {
-                date = properties.Date.date.start;
-            } else if (properties.PublishDate?.date?.start) {
-                date = properties.PublishDate.date.start;
-            } else if (properties['發布日期']?.date?.start) {
-                date = properties['發布日期'].date.start;
-            } else if (properties['发布日期']?.date?.start) {
-                date = properties['发布日期'].date.start;
-            } else {
-                date = page.created_time ? page.created_time.split('T')[0] : new Date().toISOString().split('T')[0];
-            }
-
-            // 獲取 slug 或 ID
-            const slug = properties.Slug?.rich_text?.[0]?.text?.content || 
-                        properties['網址别名']?.rich_text?.[0]?.text?.content ||
-                        page.id.replace(/-/g, '');
-
-            // 檢查是否付費文章 - 支持中文 "會員專屬" 或英文 "Premium"
-            const isPremium = properties['會員專屬']?.checkbox === true || 
-                             properties['会员专属']?.checkbox === true ||
-                             properties.Premium?.checkbox === true || 
-                             properties['Paywall']?.checkbox === true;
-
-            return {
-                id: page.id,
-                title: title,
-                category: translateCategory(category),
-                excerpt: excerpt.substring(0, 120) + (excerpt.length > 120 ? '...' : ''),
-                image: image,
-                date: date,
-                slug: slug,
-                isPremium: isPremium
-            };
-        }// 渲染首頁新聞
-        function renderHomeNews(articles) {
-            const container = document.getElementById('home-news-container');
-            if (!container) {
-                console.error('找不到 home-news-container 容器');
-                return;
-            }
-
-            if (articles.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">暫無新聞</div>';
-                return;
-            }
-
-            // 第一篇文章作為主打
+        function renderArticles(articles, container) {
             const mainArticle = articles[0];
-            const sidebarArticles = articles.slice(1, 5);
+            const sidebarArticles = articles.slice(1);
 
-            // 渲染主打文章
-            const mainHTML = '<div class="featured-main" data-slug="' + mainArticle.slug + '" data-premium="' + mainArticle.isPremium + '" data-title="' + escapeTitle(mainArticle.title) + '">' +
-                '<img src="' + mainArticle.image + '" alt="' + escapeTitle(mainArticle.title) + '" loading="lazy">' +
-                '<div class="featured-overlay">' +
-                    '<span class="featured-tag">' + mainArticle.category + '</span>' +
-                    '<h3 class="featured-title">' + mainArticle.title + '</h3>' +
-                    '<p class="featured-excerpt">' + mainArticle.excerpt + '</p>' +
-                '</div>' +
-            '</div>';
+            // 主打文章 HTML - 使用 data 屬性
+            let html = '<div class="featured-main" data-slug="' + escapeHtml(mainArticle.slug) + '" data-premium="' + mainArticle.isPremium + '" data-title="' + escapeHtml(mainArticle.title) + '">';
+            html += '<img src="' + escapeHtml(mainArticle.image) + '" alt="' + escapeHtml(mainArticle.title) + '" loading="lazy">';
+            html += '<div class="featured-overlay">';
+            html += '<span class="featured-tag">' + escapeHtml(mainArticle.category) + '</span>';
+            html += '<h3 class="featured-title">' + escapeHtml(mainArticle.title) + '</h3>';
+            html += '<p class="featured-excerpt">' + escapeHtml(mainArticle.excerpt) + '</p>';
+            html += '</div></div>';
 
-            // 渲染側邊欄文章
-            let sidebarHTML = '<div class="featured-sidebar">';
-            sidebarArticles.forEach(function(article) {
-                sidebarHTML += '<div class="sidebar-item" data-slug="' + article.slug + '" data-premium="' + article.isPremium + '" data-title="' + escapeTitle(article.title) + '">' +
-                    '<img src="' + article.image + '" alt="' + escapeTitle(article.title) + '" class="sidebar-thumb" loading="lazy">' +
-                    '<div class="sidebar-content">' +
-                        '<h4 style="font-size: 0.9rem; font-weight: 700; color: #0a0a0a; margin-bottom: 0.3rem; line-height: 1.3;">' + article.title + '</h4>' +
-                        '<p class="meta" style="font-size: 0.75rem; color: #555;">' + article.category + ' · ' + article.date + '</p>' +
-                    '</div>' +
-                '</div>';
-            });
-            sidebarHTML += '</div>';
+            // 側邊欄文章
+            html += '<div class="featured-sidebar">';
+            for (let i = 0; i < sidebarArticles.length; i++) {
+                const article = sidebarArticles[i];
+                html += '<div class="sidebar-item" data-slug="' + escapeHtml(article.slug) + '" data-premium="' + article.isPremium + '" data-title="' + escapeHtml(article.title) + '">';
+                html += '<img src="' + escapeHtml(article.image) + '" alt="' + escapeHtml(article.title) + '" class="sidebar-thumb" loading="lazy">';
+                html += '<div class="sidebar-content">';
+                html += '<h4 style="font-size:0.9rem;font-weight:700;color:#0a0a0a;margin-bottom:0.3rem;line-height:1.3;">' + escapeHtml(article.title) + '</h4>';
+                html += '<p class="meta" style="font-size:0.75rem;color:#555;">' + escapeHtml(article.category) + ' · ' + escapeHtml(article.date) + '</p>';
+                html += '</div></div>';
+            }
+            html += '</div>';
 
-            container.innerHTML = mainHTML + sidebarHTML;
+            container.innerHTML = html;
 
             // 綁定點擊事件
             container.querySelectorAll('.featured-main, .sidebar-item').forEach(function(el) {
@@ -5349,67 +5317,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     handleArticleClick(slug, isPremium, title);
                 });
             });
+
+            console.log('【首頁新聞】渲染完成');
         }
 
-        // 處理文章點擊
-        function handleArticleClick(slug, isPremium, title) {
-            // 檢查閱讀權限
-            if (isPremium && typeof CRMemberSystem !== 'undefined' && !CRMemberSystem.isMember()) {
-                // 付費文章需要會員
-                if (window.innerWidth <= 768) {
-                    const modal = document.getElementById('mobilePaywallModal');
-                    if (modal) modal.classList.add('active');
-                } else {
-                    alert('此文章為會員專屬內容，請升級會員後閱讀');
-                }
-                return;
-            }
+        window.handleArticleClick = function(slug, isPremium, title) {
+            console.log('【首頁新聞】點擊文章:', title, 'slug:', slug, 'isPremium:', isPremium);
 
-            // 檢查免費額度
-            if (typeof CRMemberSystem !== 'undefined' && !CRMemberSystem.canRead(isPremium)) {
-                if (window.innerWidth <= 768) {
-                    const modal = document.getElementById('mobilePaywallModal');
-                    if (modal) modal.classList.add('active');
-                } else {
-                    alert('今日免費閱讀額度已用完，請升級會員');
-                }
-                return;
-            }
-
-            // 記錄閱讀並跳轉
-            if (typeof recordRead === 'function') {
-                recordRead({ title: title, url: 'article.html?slug=' + slug });
-            }
+            // 檢查權限
             if (typeof CRMemberSystem !== 'undefined') {
+                if (isPremium && !CRMemberSystem.isMember()) {
+                    alert('此文章為會員專屬內容，請升級會員後閱讀');
+                    return;
+                }
+                if (!CRMemberSystem.canRead(isPremium)) {
+                    alert('今日免費閱讀額度已用完，請升級會員');
+                    return;
+                }
                 CRMemberSystem.recordRead();
-            }
-            if (typeof updateQuotaDisplay === 'function') {
-                updateQuotaDisplay();
-            }
-
-            window.location.href = 'article.html?slug=' + slug;
-        }
-
-        // 初始化加載
-        async function initHomeNews() {
-            const container = document.getElementById('home-news-container');
-            if (container) {
-                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">加載中...</div>';
+                if (typeof updateQuotaDisplay === 'function') {
+                    updateQuotaDisplay();
+                }
             }
 
-            const pages = await fetchNewsFromNotion();
-            console.log('NOTION 返回數據:', pages);
-            const articles = pages.map(parseNotionPage).filter(function(a) { return a.title; });
-            console.log('解析後文章:', articles);
-            renderHomeNews(articles);
-        }
+            // 跳轉到文章頁
+            window.location.href = 'article.html?slug=' + encodeURIComponent(slug);
+        };
 
         // 頁面加載完成後執行
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initHomeNews);
+            document.addEventListener('DOMContentLoaded', loadNewsFromNotion);
         } else {
-            initHomeNews();
+            loadNewsFromNotion();
         }
+
+        console.log('【首頁新聞】腳本加載完成');
     })();
     </script>
 </body>
