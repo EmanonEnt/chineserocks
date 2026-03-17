@@ -53,7 +53,16 @@ function convertAllCategoryTags() {
     });
 }
 
-function loadNewsData() {
+    var allNews = [];
+    var currentCategory = 'all';
+    var remainingReads = 3;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNewsData();
+        updateQuotaDisplay();
+    });
+
+    function loadNewsData() {
         // 添加时间戳防止缓存
         fetch('data/news.json?t=' + Date.now(), {
             cache: 'no-store',
