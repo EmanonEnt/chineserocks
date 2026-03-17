@@ -1,7 +1,6 @@
 name: Fetch News
 
 on:
-  # 多個定時任務
   schedule:
     # 中国新闻：周一到周四 21:00 (UTC 13:00)
     - cron: '0 13 * * 1,2,3,4'
@@ -20,11 +19,10 @@ on:
         default: 'test'
         type: choice
         options:
-          - china          # 中國大陸音樂新聞
-          - international  # 國際音樂新聞
-          - hongkong_taiwan # 港台音樂新聞
-          - social         # 社交媒體（需配置RSSHub）
-          - test           # 測試模式
+          - china
+          - international
+          - hongkong_taiwan
+          - test
       limit:
         description: '每源抓取數量'
         required: false
@@ -49,18 +47,16 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install feedparser requests notion-client beautifulsoup4
+        pip install feedparser requests notion-client beautifulsoup4 python-dateutil
 
     - name: Fetch News
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
       run: |
-        # 根據不同條件運行不同模式
         MODE="${{ github.event.inputs.mode }}"
         LIMIT="${{ github.event.inputs.limit }}"
 
-        # 如果沒有輸入，使用默認值
         if [ -z "$MODE" ]; then
           MODE="test"
         fi
@@ -73,7 +69,6 @@ jobs:
         echo "抓取數量: $LIMIT"
         echo "=========================================="
 
-        # 手動觸發
         if [ "$MODE" == "china" ]; then
           echo "Running CHINA mode..."
           python scripts/fetch_news.py --source china --limit $LIMIT
@@ -83,24 +78,20 @@ jobs:
         elif [ "$MODE" == "hongkong_taiwan" ]; then
           echo "Running HK/TW mode..."
           python scripts/fetch_news.py --source hongkong_taiwan --limit $LIMIT
-        elif [ "$MODE" == "social" ]; then
-          echo "Running SOCIAL mode..."
-          python scripts/fetch_news.py --source social --limit $LIMIT
         elif [ "$MODE" == "test" ]; then
           echo "Running TEST mode..."
           python scripts/fetch_news.py --source test --limit 3
         else
-          # 自動判斷定時任務類型
           HOUR=$(date -u +%H)
-          DOW=$(date -u +%u)  # 1-5 周一到周五, 6-7 周末
+          DOW=$(date -u +%u)
 
           echo "Auto-detecting mode... Hour: $HOUR, Day: $DOW"
 
           if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
-            echo "Auto: INTERNATIONAL mode (Wed/Sat 12:00 CST)"
+            echo "Auto: INTERNATIONAL mode"
             python scripts/fetch_news.py --source international --limit 8
           elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
-            echo "Auto: HK/TW mode (Tue/Fri 12:00 CST)"
+            echo "Auto: HK/TW mode"
             python scripts/fetch_news.py --source hongkong_taiwan --limit 8
           else
             echo "Auto: CHINA mode"
