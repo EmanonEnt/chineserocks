@@ -137,7 +137,7 @@
 
             var imgUrl = n.cover_image || n.image || getDefaultImage();
             sideCard.innerHTML = 
-                '<img src="' + imgUrl + '" alt="' + (n.title || '') + '" onerror="this.src='' + getDefaultImage() + ''">' +
+                '<img src="' + imgUrl + '" alt="' + (n.title || '') + '" onerror="this.src='"+getDefaultImage()+"">' +
                 '<div class="side-overlay">' +
                     '<span class="side-tag">' + (n.category || '新聞') + '</span>' +
                     '<h3 class="side-title">' + (n.title || '無標題') + '</h3>' +
@@ -175,7 +175,7 @@
             })(n);
 
             card.innerHTML = 
-                '<div class="news-thumb"><img src="' + imgUrl + '" alt="' + (n.title || '') + '" loading="lazy" onerror="this.src='' + getDefaultImage() + ''"></div>' +
+                '<div class="news-thumb"><img src="' + imgUrl + '" alt="' + (n.title || '') + '" loading="lazy" onerror="this.src='"+getDefaultImage()+""></div>' +
                 '<div class="news-content">' +
                     '<span class="news-category">' + (n.category || '新聞') + '</span>' +
                     '<h3 class="news-title">' + (n.title || '無標題') + '</h3>' +
@@ -245,7 +245,7 @@
             var n = displayPicks[j];
             var imgUrl = n.cover_image || n.image || getDefaultImage();
             html += '<div class="pick-item" onclick="handleArticleClick(' + JSON.stringify(n).replace(/'/g, "&#39;") + ')">' +
-                '<img src="' + imgUrl + '" alt="" class="pick-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
+                '<img src="' + imgUrl + '" alt="" class="pick-thumb" onerror="this.src='"+getDefaultImage()+"">' +
                 '<div class="pick-content"><h4>' + (n.title || '無標題') + '</h4><span>' + (n.category || '新聞') + '</span></div>' +
             '</div>';
         }
