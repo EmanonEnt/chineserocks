@@ -447,9 +447,7 @@ html {
 
         
 
-        .featured-main:hover img { transform:scale(1.02);}
-        .featured-main { cursor:pointer;transition:all 0.3s;}
-        .featured-main:hover { box-shadow:0 20px 60px rgba(255,0,102,0.2);}
+        .featured-main:hover img { transform:scale(1.02);z-index:2;}
 
         
 
@@ -462,11 +460,9 @@ html {
         .featured-sidebar { display:flex;flex-direction:column;gap:1.2rem;}
 
         .sidebar-item {
-            display:flex;gap:1rem;cursor:pointer;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);transition:all 0.3s;border-radius:8px;padding:0.75rem;}
+            display:flex;gap:1rem;cursor:pointer;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);transition:all 0.3s;}
 
-        .sidebar-item:hover { background:rgba(255,0,102,0.05);border-color:rgba(255,0,102,0.3);}
-
-        .sidebar-item:active { transform:scale(0.98);}
+        .sidebar-item:hover { background:rgba(255,255,255,0.05);}
 
         .sidebar-item:last-child { border-bottom:none;}
 
@@ -2694,9 +2690,9 @@ html {
     <!-- 免费额度提示 -->
     <div class="free-quota-bar">
         <div class="free-quota-text">
-            ★ 今日免費閱讀額度：僅剩 <strong id="remainingReads">3</strong> 篇
+            ★ 今日免费阅读额度:仅剩<strong id="remainingReads">2</strong>篇(升级会员更多畅读及权益）
         </div>
-        <a href="#pricing" class="free-quota-btn">升級會員解鎖無限暢讀</a>
+        <a href="#pricing" class="free-quota-btn">升级月卡会员 ￥66/月</a>
     </div>
 
     <!-- 移动端会员弹窗 -->
@@ -2722,7 +2718,7 @@ html {
         </div>
 
         <script>
-            // 首頁精選新聞加載 - 與 news.html 使用相同數據源
+            // 首頁精選新聞加載
             async function loadHomeFeaturedNews() {
                 const container = document.getElementById('home-news-container');
                 if (!container) {
@@ -2734,26 +2730,33 @@ html {
                 container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;"><div style="font-size: 2rem; margin-bottom: 1rem;">📰</div><p>加載新聞中...</p></div>';
 
                 try {
-                    // 與 news.html 使用相同的數據源
+                    // 嘗試多個可能的數據路徑
                     let response = null;
-                    const paths = ['/data/news.json', './data/news.json', 'data/news.json'];
+                    let lastError = null;
+
+                    const paths = ['data/news.json', './data/news.json', '/data/news.json'];
 
                     for (const path of paths) {
                         try {
                             response = await fetch(path, { cache: 'no-cache' });
-                            if (response.ok) break;
+                            if (response.ok) {
+                                console.log('成功加載:', path);
+                                break;
+                            }
                         } catch (e) {
-                            console.log('嘗試路徑失敗:', path);
+                            lastError = e;
+                            console.log('嘗試路徑失敗:', path, e.message);
                         }
                     }
 
                     if (!response || !response.ok) {
-                        throw new Error('無法加載新聞數據');
+                        throw new Error('無法加載新聞數據: ' + (lastError?.message || '所有路徑都失敗'));
                     }
 
                     const result = await response.json();
+                    console.log('新聞數據:', result);
 
-                    // 解析數據（兼容多種格式）
+                    // 獲取所有新聞（兼容多種格式）
                     let allNews = [];
                     if (result.data && result.data.all) {
                         allNews = result.data.all;
@@ -2763,29 +2766,41 @@ html {
                         allNews = result;
                     }
 
+                    console.log('所有新聞數量:', allNews.length);
+
                     if (allNews.length === 0) {
+                        console.log('沒有新聞數據，顯示默認');
                         renderDefaultNews(container);
                         return;
                     }
 
-                    // 篩選首頁推薦新聞（homeFeatured = true）
+                    // 篩選 Home Featured（優先）
                     let featuredNews = allNews.filter(item => item.homeFeatured === true);
+                    console.log('Home Featured 數量:', featuredNews.length);
 
-                    // 如果沒有，使用 featured 標記的
+                    // 如果沒有 Home Featured，使用 featured 標記的
                     if (featuredNews.length === 0) {
                         featuredNews = allNews.filter(item => item.featured === true);
+                        console.log('使用 featured 標記，數量:', featuredNews.length);
                     }
 
-                    // 按 displayOrder 排序
-                    featuredNews.sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
+                    // 按 Display Order 排序
+                    featuredNews.sort((a, b) => {
+                        const orderA = a.displayOrder || 999;
+                        const orderB = b.displayOrder || 999;
+                        return orderA - orderB;
+                    });
 
                     // 取前5個
                     featuredNews = featuredNews.slice(0, 5);
+                    console.log('最終顯示數量:', featuredNews.length);
 
-                    // 存儲到全局對象
-                    window._homeNewsData = featuredNews;
+                    // 如果還是沒有，顯示最新的5個
+                    if (featuredNews.length === 0) {
+                        featuredNews = allNews.slice(0, 5);
+                        console.log('使用最新的5個');
+                    }
 
-                    // 渲染新聞
                     renderHomeNews(container, featuredNews);
 
                 } catch (error) {
@@ -2802,18 +2817,13 @@ html {
                     return;
                 }
 
-                window._homeNewsData = news;
-
+                // 第一個是大圖
                 const mainNews = news[0];
-                const sideNews = news.slice(1);
-
-                // 修复：使用与NEWS页面一致的URL字段
-                const mainUrl = mainNews.source_url || mainNews.sourceUrl || mainNews.external_url || mainNews.url || '';
-                const mainTitle = (mainNews.title || '').replace(/"/g, '&quot;');
+                const sideNews = news.slice(1); // 剩餘的作為側邊新聞
 
                 let html = `
-                    <article class="featured-main" onclick="handleHomeNewsClick('${mainUrl}', '${mainTitle}')">
-                        <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainTitle}" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'">
+                    <article class="featured-main" onclick="handleArticleClick(this, '${(mainNews.title || '').replace(/'/g, "\'")}', '${(mainNews.external_url || mainNews.url || '')}')">
+                        <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainNews.title || ''}" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'">
                         <div class="featured-overlay">
                             <span class="featured-tag">${translateCategory(mainNews.category) || '新聞 NEWS'}</span>
                             <h3 class="featured-title">${mainNews.title || ''}</h3>
@@ -2823,13 +2833,11 @@ html {
                     <div class="featured-sidebar">
                 `;
 
+                // 側邊新聞（最多4個）
                 sideNews.slice(0, 4).forEach((item, index) => {
-                    const sideUrl = item.source_url || item.sourceUrl || item.external_url || item.url || '';
-                    const sideTitle = (item.title || '').replace(/"/g, '&quot;');
-
                     html += `
-                        <article class="sidebar-item" onclick="handleHomeNewsClick('${sideUrl}', '${sideTitle}')">
-                            <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${sideTitle}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'">
+                        <article class="sidebar-item" onclick="handleArticleClick(this, '${(item.title || '').replace(/'/g, "\'")}', '${(item.external_url || item.url || '')}')">
+                            <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${item.title || ''}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'">
                             <div class="sidebar-content">
                                 <h4>${item.title || ''}</h4>
                                 <p class="meta">${translateCategory(item.category) || '新聞 NEWS'} · ${formatHomeDate(item.published_date)}</p>
@@ -2844,38 +2852,65 @@ html {
                 console.log('渲染完成: 1大圖 +', sideNews.slice(0, 4).length, '小圖');
             }
 
-            // 修复：统一新闻点击处理函数，与NEWS页面逻辑完全一致
-            function handleHomeNewsClick(url, title) {
-                const remainingReads = parseInt(localStorage.getItem('remainingReads') || '3');
-                const isMember = localStorage.getItem('userLoggedIn') === 'true';
-
-                if (!isMember && remainingReads <= 0) {
-                    const modal = document.getElementById('mobilePaywallModal');
-                    if (modal) modal.classList.add('active');
-                    return false;
-                }
-
-                recordRead({ title: title });
-
-                if (!isMember) {
-                    localStorage.setItem('remainingReads', String(remainingReads - 1));
-                    updateQuotaDisplay();
-                }
-
-                if (url && url !== 'undefined' && url !== 'null' && url !== '') {
-                    console.log('打開外鏈:', title, url);
-                    window.open(url, '_blank');
-                } else {
-                    alert('文章詳情頁功能開發中...\n標題: ' + title);
-                }
-                return false;
+            function renderDefaultNews(container) {
+                console.log('顯示默認新聞');
+                container.innerHTML = `
+                    <article class="featured-main" onclick="handleArticleClick(this, '重塑雕像的權利新專輯首發深度解析')">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop" alt="Featured News">
+                        <div class="featured-overlay">
+                            <span class="featured-tag">獨家 EXCLUSIVE</span>
+                            <h3 class="featured-title">重塑雕像的權利新專輯首發深度解析</h3>
+                            <p class="featured-excerpt">這張醞釀三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型，我們與華東深度對談...</p>
+                        </div>
+                    </article>
+                    <div class="featured-sidebar">
+                        <article class="sidebar-item" onclick="handleArticleClick(this, 'Radiohead 宣佈2026年亞洲巡演')">
+                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                            <div class="sidebar-content">
+                                <h4>Radiohead 宣佈2026年亞洲巡演</h4>
+                                <p class="meta">國際 INTERNATIONAL · 5小時前</p>
+                            </div>
+                        </article>
+                        <article class="sidebar-item" onclick="handleArticleClick(this, '迷笛音樂節2026陣容公佈')">
+                            <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                            <div class="sidebar-content">
+                                <h4>迷笛音樂節2026陣容公佈</h4>
+                                <p class="meta">現場 LIVE · 昨天</p>
+                            </div>
+                        </article>
+                        <article class="sidebar-item" onclick="handleArticleClick(this, '專訪：刺蝟樂隊石璐')">
+                            <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                            <div class="sidebar-content">
+                                <h4>專訪：刺蝟樂隊石璐</h4>
+                                <p class="meta">專題 FEATURE · 昨天</p>
+                            </div>
+                        </article>
+                        <article class="sidebar-item" onclick="handleArticleClick(this, '草東沒有派對新專輯發行')">
+                            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                            <div class="sidebar-content">
+                                <h4>草東沒有派對新專輯發行</h4>
+                                <p class="meta">音樂 MUSIC · 2天前</p>
+                            </div>
+                        </article>
+                    </div>
+                `;
             }
 
-            function handleHomeHeroClick() {
-                console.log('已棄用');
-            }
-            function handleHomeArticleClick(index) {
-                console.log('已棄用');
+            function formatHomeDate(dateStr) {
+                if (!dateStr) return '今天';
+                try {
+                    const date = new Date(dateStr);
+                    const now = new Date();
+                    const diff = now - date;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+                    if (days === 0) return '今天';
+                    if (days === 1) return '昨天';
+                    if (days < 7) return days + '天前';
+                    return date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' });
+                } catch (e) {
+                    return '今天';
+                }
             }
 
             // 頁面加載後執行
@@ -4691,12 +4726,34 @@ html {
     
 
         // 處理文章點擊 - 與 NEWS 頁面保持一致
-        // 處理文章點擊 - 與 NEWS 頁面一致：直接打開外鏈
+        // 處理文章點擊 - 修復外鏈跳轉
         function handleArticleClick(element, title, url) {
             // 記錄閱讀行為
             recordRead({ title: title });
 
-            // 直接打開外鏈（與 news.html 行為一致）
+            // 檢查是否還有免費閱讀額度
+            const remainingReads = parseInt(localStorage.getItem('remainingReads') || '3');
+            const isMember = localStorage.getItem('memberType') === '月卡' || 
+                            localStorage.getItem('memberType') === '季卡' || 
+                            localStorage.getItem('memberType') === '年卡';
+
+            if (remainingReads <= 0 && !isMember) {
+                // 顯示付費牆
+                if (window.innerWidth <= 768) {
+                    document.getElementById('mobilePaywallModal').classList.add('active');
+                } else {
+                    alert('★ 今日免費閱讀額度已用完\n\n升級會員解鎖無限暢讀');
+                }
+                return false;
+            }
+
+            // 扣除閱讀額度
+            if (!isMember) {
+                localStorage.setItem('remainingReads', String(remainingReads - 1));
+                updateQuotaDisplay();
+            }
+
+            // 打開外鏈（修復：實際跳轉到外部鏈接）
             if (url && url !== 'undefined' && url !== 'null' && url !== '') {
                 console.log('打開外鏈:', title, url);
                 window.open(url, '_blank');
@@ -4718,7 +4775,7 @@ html {
         }
 
         // 初始化額度
-// 初始化額度系統（與 news.html 一致）
+// 初始化額度（帶每日重置檢查）
 function initQuotaSystem() {
     const today = new Date().toDateString();
     const lastResetDate = localStorage.getItem('lastResetDate');
@@ -4731,15 +4788,6 @@ function initQuotaSystem() {
     }
 
     updateQuotaDisplay();
-}
-
-// 更新額度顯示
-function updateQuotaDisplay() {
-    const remainingReads = localStorage.getItem('remainingReads') || '3';
-    const quotaElement = document.getElementById('remainingReads');
-    if (quotaElement) {
-        quotaElement.textContent = remainingReads;
-    }
 }
 
 initQuotaSystem();
