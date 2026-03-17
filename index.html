@@ -4709,49 +4709,16 @@ html {
             }
         }
 
-        // 處理文章點擊 - 檢查會員權限並記錄閱讀
+                // 處理文章點擊 - 跳轉到文章詳情頁
         function handleArticleClick(element, title) {
             // 記錄閱讀
             recordRead({ title: title });
 
-            // 檢查剩餘閱讀次數
-            let remainingReads = parseInt(localStorage.getItem('remainingReads') || '2');
-
-            // 檢查是否為會員
-            const isMember = localStorage.getItem('memberType') && localStorage.getItem('memberType') !== '免費用戶';
-
-            if (isMember) {
-                // 會員直接跳轉到文章頁面
-                const articleId = element.dataset.articleId || title;
-                window.location.href = './article.html?id=' + encodeURIComponent(articleId);
-            } else if (remainingReads > 0) {
-                // 非會員但有剩餘次數
-                remainingReads--;
-                localStorage.setItem('remainingReads', remainingReads);
-
-                // 更新顯示
-                const remainingEl = document.getElementById('remainingReads');
-                if (remainingEl) {
-                    remainingEl.textContent = remainingReads;
-                }
-
-                // 跳轉到文章頁面
-                const articleId = element.dataset.articleId || title;
-                window.location.href = './article.html?id=' + encodeURIComponent(articleId);
-            } else {
-                // 無剩餘次數，顯示付費牆
-                if (window.innerWidth <= 768) {
-                    // 移動端顯示彈窗
-                    const modal = document.getElementById('mobilePaywallModal');
-                    if (modal) {
-                        modal.classList.add('active');
-                    }
-                } else {
-                    // 桌面端滾動到定價區域
-                    document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
-                }
-            }
+            // 直接跳轉到文章頁面（額度檢查在文章頁面內進行）
+            const articleId = element.dataset.articleId || title;
+            window.location.href = './article.html?id=' + encodeURIComponent(articleId);
         }
+
 
         // 關閉移動端付費牆彈窗
         function closeMobilePaywall() {
