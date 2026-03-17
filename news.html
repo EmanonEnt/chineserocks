@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,17 +13,8 @@
             --text-secondary: #a0a0a0;
             --silver-bg: #c0c0c0;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            overflow-x: hidden;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { overflow-x: hidden; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #c0c0c0;
@@ -31,20 +22,15 @@
             overflow-x: hidden;
             line-height: 1.6;
         }
-
-        /* 导航栏 */
         .navbar {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 1000;
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -54,25 +40,13 @@
             align-items: center;
             height: 70px;
         }
-
-        .logo {
-            position: relative;
-            z-index: 1001;
-            display: inline-block;
-        }
-
-        .logo img {
-            height: 40px;
-            width: auto;
-            display: block;
-        }
-
+        .logo { position: relative; z-index: 1001; display: inline-block; }
+        .logo img { height: 40px; width: auto; display: block; }
         .nav-links {
             display: flex;
             align-items: center;
             gap: 1.5rem;
         }
-
         .nav-links a {
             color: var(--silver-text);
             text-decoration: none;
@@ -83,17 +57,8 @@
             transition: color 0.3s;
             padding: 0.5rem 1.5rem;
         }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--pink-primary);
-        }
-
-        .nav-separator {
-            color: var(--pink-primary);
-            font-size: 0.7rem;
-        }
-
+        .nav-links a:hover, .nav-links a.active { color: var(--pink-primary); }
+        .nav-separator { color: var(--pink-primary); font-size: 0.7rem; }
         .login-btn {
             border: 1.5px solid var(--pink-primary);
             padding: 0.4rem 1rem;
@@ -102,14 +67,12 @@
             border-radius: 4px;
             transition: all 0.3s ease;
         }
-
         .login-btn:hover {
             background: var(--pink-primary);
             color: white !important;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(255, 0, 102, 0.3);
         }
-
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -119,15 +82,12 @@
             cursor: pointer;
             z-index: 1002;
         }
-
-        /* 页面标题区 */
         .page-header {
             position: relative;
             padding: 140px 2rem 4rem;
             overflow: hidden;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
-
         .page-title {
             position: relative;
             z-index: 2;
@@ -135,7 +95,6 @@
             margin: 0 auto;
             text-align: center;
         }
-
         .page-title h1 {
             font-size: 4rem;
             font-weight: 900;
@@ -144,14 +103,12 @@
             letter-spacing: 8px;
             margin-bottom: 0.75rem;
         }
-
         .page-title p {
             color: #333;
             font-size: 1.1rem;
             letter-spacing: 3px;
             font-weight: 600;
         }
-
         .title-accent {
             width: 80px;
             height: 4px;
@@ -159,8 +116,6 @@
             margin: 1.5rem auto 0;
             border-radius: 2px;
         }
-
-        /* 新闻分类导航 */
         .news-categories {
             background: rgba(0, 0, 0, 0.05);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -168,7 +123,6 @@
             top: 70px;
             z-index: 100;
         }
-
         .category-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -178,11 +132,7 @@
             overflow-x: auto;
             scrollbar-width: none;
         }
-
-        .category-container::-webkit-scrollbar {
-            display: none;
-        }
-
+        .category-container::-webkit-scrollbar { display: none; }
         .category-btn {
             background: transparent;
             border: none;
@@ -197,11 +147,7 @@
             white-space: nowrap;
             position: relative;
         }
-
-        .category-btn.active {
-            color: var(--pink-primary);
-        }
-
+        .category-btn.active { color: var(--pink-primary); }
         .category-btn.active::after {
             content: '';
             position: absolute;
@@ -212,8 +158,6 @@
             height: 3px;
             background: var(--pink-primary);
         }
-
-        /* 免费额度提示条 - 修复版 */
         .quota-bar {
             background: #333;
             color: white;
@@ -226,12 +170,7 @@
             gap: 1rem;
             flex-wrap: wrap;
         }
-
-        .quota-bar strong {
-            color: #FFD700;
-            font-weight: 800;
-        }
-
+        .quota-bar strong { color: #FFD700; font-weight: 800; }
         .quota-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #0a0a0a;
@@ -242,25 +181,20 @@
             text-decoration: none;
             transition: all 0.3s;
         }
-
         .quota-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
         }
-
-        /* 头条区 */
         .hero-news {
             max-width: 1400px;
             margin: 0 auto;
             padding: 3rem 2rem;
         }
-
         .hero-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 2rem;
         }
-
         .hero-main {
             position: relative;
             aspect-ratio: 16/10;
@@ -269,27 +203,20 @@
             cursor: pointer;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
-
         .hero-main img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-
-        .hero-main:hover img {
-            transform: scale(1.03);
-        }
-
+        .hero-main:hover img { transform: scale(1.03); }
         .hero-overlay {
             position: absolute;
             bottom: 0;
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
             padding: 3rem 2rem 2rem;
             background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, transparent 100%);
         }
-
         .hero-tag {
             display: inline-block;
             background: var(--pink-primary);
@@ -301,7 +228,6 @@
             margin-bottom: 1rem;
             border-radius: 4px;
         }
-
         .hero-title {
             font-size: 2rem;
             font-weight: 900;
@@ -309,7 +235,6 @@
             line-height: 1.2;
             margin-bottom: 0.75rem;
         }
-
         .hero-excerpt {
             color: var(--silver-text);
             font-size: 1rem;
@@ -320,7 +245,6 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .hero-meta {
             display: flex;
             gap: 1rem;
@@ -328,13 +252,11 @@
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
-
         .hero-side {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
-
         .side-card {
             position: relative;
             aspect-ratio: 16/10;
@@ -344,27 +266,20 @@
             flex: 1;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
-
         .side-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-
-        .side-card:hover img {
-            transform: scale(1.03);
-        }
-
+        .side-card:hover img { transform: scale(1.03); }
         .side-overlay {
             position: absolute;
             bottom: 0;
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
             padding: 2rem 1.5rem 1.5rem;
             background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
         }
-
         .side-tag {
             display: inline-block;
             background: rgba(255, 255, 255, 0.2);
@@ -376,15 +291,12 @@
             margin-bottom: 0.5rem;
             border-radius: 4px;
         }
-
         .side-title {
             font-size: 1.1rem;
             font-weight: 800;
             color: white;
             line-height: 1.3;
         }
-
-        /* 主内容区 */
         .main-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -393,15 +305,12 @@
             grid-template-columns: 1fr 300px;
             gap: 2rem;
         }
-
-        /* 新闻列表 */
         .news-list {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
             align-content: start;
         }
-
         .news-card {
             position: relative;
             display: flex;
@@ -414,23 +323,19 @@
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
-
         .news-card:hover {
             border-color: var(--pink-primary);
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(255, 0, 102, 0.15);
         }
-
         .news-card.premium {
             border-color: rgba(255, 215, 0, 0.5);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 248, 220, 0.4));
         }
-
         .news-card.premium::before {
             content: '★ 會員專享';
             position: absolute;
-            top: 1rem;
-            right: 1rem;
+            top: 1rem; right: 1rem;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #0a0a0a;
             padding: 0.3rem 0.8rem;
@@ -439,31 +344,24 @@
             border-radius: 20px;
             z-index: 10;
         }
-
         .news-thumb {
             position: relative;
             aspect-ratio: 16/10;
             overflow: hidden;
         }
-
         .news-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
-
-        .news-card:hover .news-thumb img {
-            transform: scale(1.05);
-        }
-
+        .news-card:hover .news-thumb img { transform: scale(1.05); }
         .news-content {
             padding: 1.25rem;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
-
         .news-category {
             display: inline-block;
             color: var(--pink-primary);
@@ -473,7 +371,6 @@
             letter-spacing: 1px;
             margin-bottom: 0.5rem;
         }
-
         .news-title {
             font-size: 1.15rem;
             font-weight: 800;
@@ -481,7 +378,6 @@
             line-height: 1.3;
             margin-bottom: 0.5rem;
         }
-
         .news-excerpt {
             color: #555;
             font-size: 0.9rem;
@@ -493,7 +389,6 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .news-footer {
             display: flex;
             justify-content: space-between;
@@ -502,17 +397,8 @@
             color: #666;
             margin-top: auto;
         }
-
-        .news-meta {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .news-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-
+        .news-meta { display: flex; gap: 0.75rem; }
+        .news-actions { display: flex; gap: 0.75rem; }
         .action-btn {
             background: none;
             border: none;
@@ -521,22 +407,13 @@
             transition: color 0.3s;
             font-size: 1rem;
         }
-
-        .action-btn:hover {
-            color: var(--pink-primary);
-        }
-
-        .action-btn.active {
-            color: var(--pink-primary);
-        }
-
-        /* 加载更多 */
+        .action-btn:hover { color: var(--pink-primary); }
+        .action-btn.active { color: var(--pink-primary); }
         .load-more {
             grid-column: 1 / -1;
             text-align: center;
             padding: 2rem 0;
         }
-
         .load-more-btn {
             background: transparent;
             border: 2px solid var(--pink-primary);
@@ -550,20 +427,16 @@
             border-radius: 8px;
             transition: all 0.3s;
         }
-
         .load-more-btn:hover {
             background: var(--pink-primary);
             color: white;
             transform: translateY(-2px);
         }
-
-        /* 侧边栏 */
         .sidebar {
             display: flex;
             flex-direction: column;
             gap: 2rem;
         }
-
         .sidebar-section {
             background: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(0, 0, 0, 0.08);
@@ -571,7 +444,6 @@
             padding: 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
-
         .sidebar-title {
             font-size: 1rem;
             font-weight: 800;
@@ -582,14 +454,11 @@
             padding-bottom: 0.75rem;
             border-bottom: 2px solid var(--pink-primary);
         }
-
-        /* 热门标签 */
         .tag-cloud {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
-
         .tag-item {
             background: rgba(0, 0, 0, 0.05);
             color: #444;
@@ -601,20 +470,15 @@
             cursor: pointer;
             border: none;
         }
-
-        .tag-item:hover,
-        .tag-item.active {
+        .tag-item:hover, .tag-item.active {
             background: var(--pink-primary);
             color: white;
         }
-
-        /* 编辑精选 */
         .editors-pick {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
-
         .pick-item {
             display: flex;
             gap: 1rem;
@@ -623,11 +487,7 @@
             border-radius: 8px;
             transition: background 0.3s;
         }
-
-        .pick-item:hover {
-            background: rgba(0, 0, 0, 0.05);
-        }
-
+        .pick-item:hover { background: rgba(0, 0, 0, 0.05); }
         .pick-thumb {
             width: 80px;
             height: 60px;
@@ -635,7 +495,6 @@
             border-radius: 6px;
             flex-shrink: 0;
         }
-
         .pick-content h4 {
             font-size: 0.9rem;
             font-weight: 700;
@@ -643,32 +502,73 @@
             line-height: 1.3;
             margin-bottom: 0.25rem;
         }
-
         .pick-content span {
             font-size: 0.75rem;
             color: var(--pink-primary);
         }
 
-        /* 页脚 */
-        .footer {
-            background: #0a0a0a;
-            padding: 4rem 2rem 2rem;
+        .social-section {
+            background: #c0c0c0;
+            border-top: 1px solid #0a0a0a;
+            padding: 2.5rem 2rem;
+            text-align: center;
         }
-
+        .social-title {
+            color: #0a0a0a;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .social-link {
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .social-link:hover {
+            color: var(--pink-primary);
+            transform: translateY(-3px);
+        }
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            fill: #333;
+            transition: fill 0.3s;
+        }
+        .social-link:hover .social-icon { fill: var(--pink-primary); }
+        .social-link span {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .footer {
+            background: #000000;
+            padding: 0;
+        }
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 4rem 2rem 2rem;
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 3rem;
         }
-
         .footer-desc {
             color: var(--silver-text);
             font-size: 0.9rem;
             line-height: 1.6;
         }
-
         .footer-title {
             color: white;
             font-size: 0.85rem;
@@ -677,26 +577,15 @@
             letter-spacing: 1px;
             margin-bottom: 1.2rem;
         }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.6rem;
-        }
-
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.6rem; }
         .footer-links a {
             color: var(--silver-text);
             text-decoration: none;
             font-size: 0.85rem;
             transition: color 0.3s;
         }
-
-        .footer-links a:hover {
-            color: var(--pink-primary);
-        }
-
+        .footer-links a:hover { color: var(--pink-primary); }
         .footer-bottom {
             text-align: center;
             padding: 1rem 0;
@@ -704,13 +593,95 @@
             color: #888;
             font-size: 0.8rem;
         }
-
-        /* 移动端弹窗 */
+        .invite-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        .invite-btn {
+            width: 64px;
+            height: 64px;
+            background: radial-gradient(circle at 30% 30%, #FFF8DC, #FFD700, #FFA500, #B8860B);
+            border: 3px solid #DAA520;
+            color: #8B0000;
+            font-size: 0.75rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 40px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 165, 0, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.6), inset -3px -3px 10px rgba(184, 134, 11, 0.5);
+            transition: all 0.3s;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 1), 0 0 20px rgba(255, 165, 0, 0.8);
+            animation: coinShine 1.5s ease-in-out infinite alternate, coinFloat 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        .invite-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.8) 50%, transparent 60%);
+            animation: coinFlash 2s linear infinite;
+        }
+        .invite-btn:hover {
+            transform: scale(1.15) rotate(5deg);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.7), 0 0 90px rgba(255, 165, 0, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        .btn-line1, .btn-line2 {
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+        .btn-line1 { font-size: 0.7rem; margin-bottom: 1px; }
+        .btn-line2 { font-size: 0.65rem; }
+        .invite-tooltip {
+            position: absolute;
+            bottom: 65px;
+            right: 0;
+            background: white;
+            color: #0a0a0a;
+            padding: 0.75rem;
+            border-radius: 10px;
+            width: 280px;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        .invite-float:hover .invite-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        .invite-tooltip strong {
+            color: #FF0066;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        @keyframes coinShine {
+            from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.4), 0 0 45px rgba(255, 165, 0, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.5); }
+            to { box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 50px rgba(255, 215, 0, 0.6), 0 0 75px rgba(255, 165, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.7); }
+        }
+        @keyframes coinFlash {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        @keyframes coinFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
         .mobile-paywall-modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
@@ -719,11 +690,7 @@
             justify-content: center;
             padding: 1rem;
         }
-
-        .mobile-paywall-modal.active {
-            display: flex;
-        }
-
+        .mobile-paywall-modal.active { display: flex; }
         .mobile-paywall-content {
             background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
             border: 2px solid #FF0066;
@@ -734,7 +701,6 @@
             width: 90%;
             position: relative;
         }
-
         .mobile-paywall-close {
             position: absolute;
             top: 10px;
@@ -745,26 +711,22 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
-
         .mobile-paywall-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
         }
-
         .mobile-paywall-title {
             font-size: 1.3rem;
             font-weight: 800;
             color: white;
             margin-bottom: 0.5rem;
         }
-
         .mobile-paywall-text {
             color: #888;
             font-size: 0.9rem;
             margin-bottom: 1.5rem;
             line-height: 1.5;
         }
-
         .mobile-paywall-btn {
             display: inline-block;
             background: #FF0066;
@@ -776,64 +738,172 @@
             font-size: 0.95rem;
             width: 100%;
         }
-
-        .mobile-paywall-skip {
-            color: #666;
-            font-size: 0.8rem;
-            margin-top: 1rem;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        /* 空状态 */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 4rem 2rem;
             color: #666;
         }
-
         .empty-state-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
             opacity: 0.5;
         }
-
         .empty-state h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
             color: #333;
         }
+        .pricing-section {
+            padding: 4rem 0;
+            background: #0a0a0a;
+            border-top: 1px solid #222;
+        }
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .pricing-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-header p { color: #888; }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+        }
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            position: relative;
+            min-width: 0;
+        }
+        .pricing-card.featured {
+            border-color: #FF0066;
+            background: rgba(255, 0, 102, 0.05);
+            transform: scale(1.02);
+            z-index: 2;
+        }
+        .pricing-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FF0066;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+        .pricing-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: white;
+        }
+        .pricing-price span {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .pricing-daily {
+            color: #FF0066;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+        .pricing-features li {
+            padding: 0.3rem 0;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pricing-features li::before {
+            content: '✓';
+            color: #FF0066;
+            font-weight: 900;
+        }
+        .pricing-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 2px solid #FF0066;
+            color: #FF0066;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pricing-btn:hover {
+            background: #FF0066;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .pricing-card.featured .pricing-btn {
+            background: #FF0066;
+            color: white;
+        }
 
-        /* 响应式 */
         @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
+            .main-content { grid-template-columns: 1fr; }
             .sidebar {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 1.5rem;
             }
-
-            .hero-grid {
-                grid-template-columns: 1fr;
+            .hero-grid { grid-template-columns: 1fr; }
+            .hero-side { flex-direction: row; }
+            .side-card { aspect-ratio: 16/9; }
+            .page-title h1 { font-size: 3rem; }
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
             }
-
-            .hero-side {
-                flex-direction: row;
+            .invite-float {
+                bottom: 20px;
+                right: 15px;
+                z-index: 998;
             }
-
-            .side-card {
-                aspect-ratio: 16/9;
+            .invite-btn {
+                width: 52px;
+                height: 52px;
+                font-size: 0.65rem;
+                border-width: 2px;
             }
-
-            .page-title h1 {
-                font-size: 3rem;
+            .btn-line1 { font-size: 0.6rem; }
+            .btn-line2 { font-size: 0.55rem; }
+            .invite-tooltip {
+                width: 240px;
+                font-size: 0.75rem;
+                bottom: 60px;
+                right: 0;
             }
         }
-
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -841,84 +911,204 @@
                 top: 70px;
                 left: 0;
                 right: 0;
-                background: rgba(10, 10, 10, 0.98);
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(20px);
                 flex-direction: column;
-                padding: 1rem 0;
+                padding: 0.5rem 0 1rem;
                 gap: 0;
+                border-bottom: none;
+                overflow: visible;
+                max-height: calc(100vh - 70px);
             }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
+            .nav-links.active { display: flex; }
+            .nav-links a {
+                color: var(--silver-text);
+                padding: 1rem 2rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                 display: block;
+                width: 100%;
+                text-align: center;
             }
-
-            .page-title h1 {
-                font-size: 2.2rem;
+            .nav-links a:hover, .nav-links a.active {
+                color: var(--pink-primary);
+                background: rgba(255, 0, 102, 0.1);
             }
-
-            .hero-title {
-                font-size: 1.4rem;
+            .nav-links .login-btn {
+                display: inline-block;
+                margin: 0.5rem auto 1rem;
+                width: 120px;
+                text-align: center;
+                box-sizing: content-box;
+                border: 2px solid #FF0066;
+                padding: 0.6rem 1rem;
+                border-radius: 4px;
+                font-size: 0.85rem;
+                line-height: 1;
+                height: auto;
+                border-bottom: 2px solid #FF0066 !important;
             }
-
-            .hero-excerpt {
-                -webkit-line-clamp: 2;
-            }
-
-            .hero-side {
-                flex-direction: column;
-            }
-
+            .mobile-menu-btn { display: block; }
+            .mobile-menu-btn:hover { background: rgba(255, 255, 255, 0.1); }
+            .page-title h1 { font-size: 2.2rem; }
+            .hero-title { font-size: 1.4rem; }
+            .hero-excerpt { -webkit-line-clamp: 2; }
+            .hero-side { flex-direction: column; }
             .news-list {
                 grid-template-columns: 1fr;
                 max-width: 480px;
                 margin: 0 auto;
             }
-
-            .sidebar {
-                grid-template-columns: 1fr;
-            }
-
+            .sidebar { grid-template-columns: 1fr; }
             .footer-content {
                 grid-template-columns: 1fr 1fr;
-                gap: 2rem;
+                gap: 2rem 1.5rem;
+                padding: 2rem 1rem;
+            }
+            .footer-content > div:first-child { grid-column: 1 / -1; }
+            .quota-bar {
+                flex-direction: column;
+                padding: 0.75rem 1rem;
+            }
+            .invite-float {
+                bottom: 15px;
+                right: 10px;
+            }
+            .invite-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 0.6rem;
+            }
+            .btn-line1 { font-size: 0.55rem; }
+            .btn-line2 { font-size: 0.5rem; }
+            .invite-tooltip {
+                width: 220px;
+                font-size: 0.7rem;
+                right: 0;
             }
         }
-
         @media (max-width: 480px) {
-            .page-title h1 {
-                font-size: 1.6rem;
-            }
-
+            .page-title h1 { font-size: 1.6rem; }
             .category-btn {
                 padding: 0.75rem 1rem;
                 font-size: 0.75rem;
             }
-
-            .news-title {
-                font-size: 1.1rem;
-            }
-
+            .news-title { font-size: 1.1rem; }
             .footer-content {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.5rem 1rem !important;
+                padding: 1.5rem 1rem !important;
             }
-
+            .footer-title { font-size: 0.75rem !important; }
+            .footer-links a { font-size: 0.75rem !important; }
             .quota-bar {
                 font-size: 0.8rem;
                 padding: 0.75rem 1rem;
             }
-
             .quota-btn {
                 font-size: 0.75rem;
                 padding: 0.3rem 0.8rem;
+            }
+            .invite-float {
+                bottom: 10px;
+                right: 8px;
+            }
+            .invite-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 0.55rem;
+            }
+            .btn-line1 { font-size: 0.5rem; }
+            .btn-line2 { font-size: 0.45rem; }
+            .invite-tooltip {
+                width: 200px;
+                font-size: 0.65rem;
+                right: 0;
+            }
+        }
+        @media (max-width: 380px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+                padding: 1rem !important;
+            }
+            .footer-title { font-size: 0.7rem !important; }
+            .footer-links a { font-size: 0.7rem !important; }
+            .footer-bottom { font-size: 0.7rem !important; }
+        }
+        @media (min-width:1025px) {
+            .pricing-grid {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: nowrap;
+            }
+            .pricing-card {
+                padding: 1.5rem;
+                width: 280px;
+                flex-shrink: 0;
+            }
+        }
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: nowrap;
+            }
+            .pricing-card {
+                padding: 1rem;
+                width: 280px;
+                flex-shrink: 0;
+            }
+            .pricing-card.featured { transform: scale(1.02); }
+            .pricing-price { font-size: 2rem; }
+        }
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 0.75rem;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+            .pricing-card {
+                padding: 0.875rem;
+                grid-column: span 2;
+                width: auto;
+            }
+            .pricing-card:nth-child(1) { grid-column: 1 / 3; }
+            .pricing-card:nth-child(2) { grid-column: 3 / 5; }
+            .pricing-card:nth-child(3) { grid-column: 5 / 7; }
+            .pricing-card:nth-child(4) { grid-column: 2 / 4; }
+            .pricing-card:nth-child(5) { grid-column: 4 / 6; }
+            .pricing-name { font-size: 0.9rem; }
+            .pricing-price { font-size: 1.5rem; }
+            .pricing-price span { font-size: 0.75rem; }
+            .pricing-daily { font-size: 0.7rem; }
+            .pricing-features { font-size: 0.7rem; }
+            .pricing-features li { padding: 0.2rem 0; }
+            .pricing-btn {
+                padding: 0.6rem;
+                font-size: 0.75rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
+            }
+            .pricing-card {
+                grid-column: span 1 !important;
+                width: auto;
+            }
+            .pricing-card:nth-child(5) {
+                grid-column: 1 / 3 !important;
+                max-width: 50%;
+                margin: 0 auto;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
@@ -940,7 +1130,6 @@
         </div>
     </nav>
 
-    <!-- 页面标题区 -->
     <section class="page-header">
         <div class="page-title">
             <h1>NEWS</h1>
@@ -949,7 +1138,6 @@
         </div>
     </section>
 
-    <!-- 分类导航 -->
     <div class="news-categories">
         <div class="category-container">
             <button class="category-btn active" onclick="filterNews('all', this)">全部 ALL</button>
@@ -961,13 +1149,11 @@
         </div>
     </div>
 
-    <!-- 免费额度提示 -->
     <div class="quota-bar" id="quotaBar">
         <span>★ 今日免費閱讀額度: 僅剩 <strong id="remainingReads">3</strong> 篇</span>
-        <a href="index.html#pricing" class="quota-btn">升級月卡會員 ￥66/月</a>
+        <a href="index.html#pricing" class="quota-btn">升級月卡會員 ¥66/月</a>
     </div>
 
-    <!-- 头条区 -->
     <section class="hero-news" id="hero-section">
         <div class="hero-grid">
             <article class="hero-main" id="hero-main" onclick="handleHeroClick()">
@@ -982,79 +1168,212 @@
                     </div>
                 </div>
             </article>
-            <div class="hero-side" id="hero-side">
-                <!-- JS 動態填充 -->
-            </div>
+            <div class="hero-side" id="hero-side"></div>
         </div>
     </section>
 
-    <!-- 主内容区 -->
     <div class="main-content">
-        <!-- 新闻列表 -->
-        <div class="news-list" id="news-list">
-            <!-- JS 動態填充 -->
-        </div>
-
-        <!-- 侧边栏 -->
+        <div class="news-list" id="news-list"></div>
         <aside class="sidebar">
-            <!-- 热门标签 -->
             <div class="sidebar-section">
                 <h3 class="sidebar-title">熱門標籤</h3>
-                <div class="tag-cloud" id="tag-cloud">
-                    <!-- JS 動態填充 -->
-                </div>
+                <div class="tag-cloud" id="tag-cloud"></div>
             </div>
-
-            <!-- 编辑精选 -->
             <div class="sidebar-section">
                 <h3 class="sidebar-title">編輯精選</h3>
-                <div class="editors-pick" id="editors-pick">
-                    <!-- JS 動態填充 -->
-                </div>
+                <div class="editors-pick" id="editors-pick"></div>
             </div>
         </aside>
     </div>
 
-    <!-- 页脚 -->
+    <div class="social-section">
+        <p class="social-title">Follow Us 關注我們</p>
+        <div class="social-links">
+            <a href="https://instagram.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                <span>Instagram</span>
+            </a>
+            <a href="https://facebook.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.126-5.864 10.126-11.854z"/></svg>
+                <span>Facebook</span>
+            </a>
+            <a href="https://x.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <span>X / Twitter</span>
+            </a>
+            <a href="https://weibo.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.194.573zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.401-.649.386-1.02.425-1.899.003-2.525-.789-1.168-2.947-1.108-5.388-.031 0 0-.772.338-.575-.274.381-1.204.324-2.212-.27-2.796-1.346-1.327-4.928.047-8.001 3.067C1.189 10.875 0 13.021 0 14.89c0 3.579 4.591 5.758 9.085 5.758 5.892 0 9.813-3.423 9.813-6.143 0-1.643-1.385-2.573-2.839-2.856z"/></svg>
+                <span>微博 Weibo</span>
+            </a>
+            <a href="https://weixin.qq.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936zm4.048 0a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936z"/></svg>
+                <span>微信 WeChat</span>
+            </a>
+            <a href="https://xiaohongshu.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5 7h-2v-3c0-.55-.45-1-1-1s-1 .45-1 1v3h-2v-6h2v.5c.5-.5 1.17-.83 1.9-.83 1.38 0 2.6 1.12 2.6 2.5v3.83z"/></svg>
+                <span>小紅書 RED</span>
+            </a>
+            <a href="https://bilibili.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+                <span>Bilibili</span>
+            </a>
+            <a href="https://douyin.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                <span>抖音 Douyin</span>
+            </a>
+        </div>
+    </div>
+
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-container">
+            <div class="pricing-header">
+                <h2>選擇你的搖滾身份</h2>
+                <p>加入 ChineseRocks 會員，解鎖完整搖滾體驗</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-name">體驗卡</div>
+                    <div class="pricing-price">免費<span>/3天</span></div>
+                    <div class="pricing-daily">限時體驗</div>
+                    <ul class="pricing-features">
+                        <li>3天體驗會員權益</li>
+                        <li>投票權重 ×0.5</li>
+                        <li>每日3次新聞閱讀</li>
+                        <li>480P LIVE TV</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">免費領取體驗卡</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-name">周卡</div>
+                    <div class="pricing-price">¥19.9<span>/週</span></div>
+                    <div class="pricing-daily">¥2.84/天</div>
+                    <ul class="pricing-features">
+                        <li>7天完整會員權益</li>
+                        <li>投票權重 ×1.0</li>
+                        <li>每天7次新聞閱讀</li>
+                        <li>720P LIVE TV</li>
+                        <li>演出優先購票</li>
+                        <li>獨家雜誌內容預覽</li>
+                        <li>廣告彈窗優化</li>
+                    </ul>
+                    <button class="pricing-btn">升級周卡會員</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最熱門</div>
+                    <div class="pricing-name">月卡</div>
+                    <div class="pricing-price">¥66<span>/月</span></div>
+                    <div class="pricing-daily">¥2.20/天 · 省¥13</div>
+                    <ul class="pricing-features">
+                        <li>30天完整會員權益</li>
+                        <li>投票權重 ×2.0</li>
+                        <li>每天30次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及95折優惠</li>
+                        <li>獨家雜誌內容</li>
+                        <li>廣告彈窗優化</li>
+                        <li>特享會員名稱效果</li>
+                        <li>線下活動入場抽獎資格</li>
+                    </ul>
+                    <button class="pricing-btn">升級月卡會員</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-name">季卡</div>
+                    <div class="pricing-price">¥158<span>/季</span></div>
+                    <div class="pricing-daily">¥1.76/天 · 省¥40</div>
+                    <ul class="pricing-features">
+                        <li>90天完整會員權益</li>
+                        <li>投票權重 ×3.0</li>
+                        <li>每天100次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及85折優惠</li>
+                        <li>獨家雜誌內容+實體年刊預購資格</li>
+                        <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎資格</li>
+                    </ul>
+                    <button class="pricing-btn">升級季卡會員</button>
+                </div>
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最佳價值</div>
+                    <div class="pricing-name">年卡</div>
+                    <div class="pricing-price">¥365<span>/年</span></div>
+                    <div class="pricing-daily">¥1.00/天 · 省¥427</div>
+                    <ul class="pricing-features">
+                        <li>365天完整會員權益</li>
+                        <li>投票權重 ×5.0 [最高]</li>
+                        <li>無限新聞閱讀</li>
+                        <li>2K+ LIVE TV [獨享]</li>
+                        <li>演出提前48小時購票 [獨享]及75折優惠</li>
+                        <li>獨家雜誌內容+實體年刊禮品</li>
+                        <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎必中1次/年+折扣權益</li>
+                        <li>VIP專屬客服</li>
+                    </ul>
+                    <button class="pricing-btn">升級年卡會員</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer">
         <div class="footer-content">
             <div>
                 <div style="margin-bottom: 1rem;">
-                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary);">CHINESE ROCKS</div>
-                    <div style="font-size: 0.6rem; color: var(--silver-text);">NEWS ★ CHARTS ★ MAGAZINE</div>
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary); letter-spacing: 2px; text-transform: uppercase; line-height: 1;">CHINESE ROCKS</div>
+                    <div style="font-size: 0.6rem; color: var(--silver-text); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE <span style="color: var(--pink-primary);">搖滾萬歲</span></div>
                 </div>
-                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷</p>
+                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷<br>始於2025</p>
             </div>
             <div>
-                <h4 class="footer-title">榜單</h4>
+                <h4 class="footer-title">榜單 CHARTS</h4>
                 <ul class="footer-links">
-                    <li><a href="charts.html">藝人榜</a></li>
-                    <li><a href="charts.html">歌曲榜</a></li>
-                    <li><a href="charts.html">專輯榜</a></li>
+                    <li><a href="charts.html">藝人榜 ARTISTS</a></li>
+                    <li><a href="charts.html">歌曲榜 SONGS</a></li>
+                    <li><a href="charts.html">專輯榜 ALBUMS</a></li>
+                    <li><a href="charts.html">音樂節 FESTIVALS</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="footer-title">內容</h4>
+                <h4 class="footer-title">內容 CONTENT</h4>
                 <ul class="footer-links">
-                    <li><a href="news.html">新聞</a></li>
-                    <li><a href="index.html#shows-section">演出</a></li>
-                    <li><a href="magazine.html">雜誌</a></li>
+                    <li><a href="news.html">新聞 NEWS</a></li>
+                    <li><a href="index.html#shows-section">演出 SHOWS</a></li>
+                    <li><a href="magazine.html">雜誌 MAGAZINE</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="footer-title">服務</h4>
+                <h4 class="footer-title">服務 SERVICE</h4>
                 <ul class="footer-links">
-                    <li><a href="index.html#pricing">會員服務</a></li>
-                    <li><a href="#">聯繫我們</a></li>
+                    <li><a href="index.html#pricing">會員服務 MEMBERSHIP</a></li>
+                    <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
+                    <li><a href="#">廣告投放 ADVERTISING</a></li>
+                    <li><a href="#">聯繫我們 CONTACT</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 ChineseRocks. All rights reserved.</p>
+            <p>&copy; 2026 ChineseRocks. All rights reserved. 搖滾萬歲 ★ Emanon Ent.</p>
         </div>
     </footer>
 
-    <!-- 移动端付费弹窗 -->
+    <div class="invite-float">
+        <div class="invite-tooltip">
+            <strong>★ 邀請好友賺現金 ★</strong>
+            複製專屬邀請鏈接分享給好友：<br>
+            1. 好友通過鏈接註冊並首次付費<br>
+            2. 好友享首月85折優惠<br>
+            3. 你得30%現金返利（可提現或轉會員時長1.5倍增值）<br><br>
+            <em>示例：好友購買年卡¥365，你得¥109.5現金或季卡會員！</em>
+        </div>
+        <button class="invite-btn" onclick="scrollToTopAndInvite()">
+            <span class="btn-line1">邀請</span>
+            <span class="btn-line2">賺現金</span>
+        </button>
+    </div>
+
     <div id="mobilePaywallModal" class="mobile-paywall-modal">
         <div class="mobile-paywall-content">
             <button class="mobile-paywall-close" onclick="closeMobilePaywall()">×</button>
@@ -1065,395 +1384,14 @@
         </div>
     </div>
 
+    <script src="js/news-loader.js"></script>
     <script>
-        // 全局變量
-        let allNews = [];
-        let currentCategory = 'all';
-        let remainingReads = 3;
-        let newsData = null;
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            loadNewsData();
-            updateQuotaDisplay();
-        });
-
-        // 加載新聞數據
-        async function loadNewsData() {
-            try {
-                const res = await fetch('data/news.json?t=' + Date.now(), {cache: 'no-store'});
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-
-                newsData = await res.json();
-                allNews = newsData.data?.all || newsData.data?.latest || [];
-
-                console.log('加載新聞:', allNews.length, '條');
-
-                if (allNews.length === 0) {
-                    showEmptyState();
-                    return;
-                }
-
-                renderHeroSection(allNews);
-                renderNewsList(allNews);
-                renderTags(allNews);
-                renderEditorsPick(allNews);
-            } catch (e) {
-                console.error('加載失敗:', e);
-                document.getElementById('news-list').innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">⚠️</div>
-                        <h3>加載失敗</h3>
-                        <p>請檢查網絡連接或刷新頁面重試</p>
-                    </div>
-                `;
-            }
-        }
-
-        // 顯示空狀態
-        function showEmptyState() {
-            document.getElementById('hero-main').style.display = 'none';
-            document.getElementById('hero-side').innerHTML = '';
-            document.getElementById('news-list').innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-state-icon">📰</div>
-                    <h3>暫無新聞</h3>
-                    <p>請在Notion後台添加新聞後發布</p>
-                </div>
-            `;
-            document.getElementById('tag-cloud').innerHTML = '<span style="color:#999;">暫無標籤</span>';
-            document.getElementById('editors-pick').innerHTML = '<span style="color:#999;">暫無精選</span>';
-        }
-
-        // 渲染頭條區
-        function renderHeroSection(news) {
-            if (news.length === 0) return;
-
-            // 大圖新聞 - 取第一個
-            const main = news[0];
-            const heroMain = document.getElementById('hero-main');
-            const heroImg = document.getElementById('hero-img');
-
-            heroImg.src = main.cover_image || main.image || getDefaultImage();
-            heroImg.alt = main.title || '新聞圖片';
-            heroImg.onerror = function() {
-                this.src = getDefaultImage();
-            };
-
-            document.getElementById('hero-tag').textContent = main.category || '新聞';
-            document.getElementById('hero-title').textContent = main.title || '無標題';
-
-            const excerpt = (main.content || main.summary || '').substring(0, 120);
-            document.getElementById('hero-excerpt').textContent = excerpt ? excerpt + '...' : '';
-
-            const dateStr = main.published_date || main.created_time || '';
-            document.getElementById('hero-date').textContent = formatDate(dateStr);
-
-            // 會員專享標記
-            const premiumEl = document.getElementById('hero-premium');
-            if (main.is_premium || (main.tags && main.tags.includes('會員專享'))) {
-                premiumEl.innerHTML = '<span style="color:#FFD700;">★ 會員專享</span>';
-            } else {
-                premiumEl.textContent = '';
-            }
-
-            // 設置點擊事件
-            heroMain.onclick = () => handleArticleClick(main);
-
-            // 側邊新聞（第2-3個）
-            const sideContainer = document.getElementById('hero-side');
-            sideContainer.innerHTML = '';
-
-            const sideNews = news.slice(1, 3);
-            if (sideNews.length === 0) {
-                sideContainer.style.display = 'none';
-            } else {
-                sideContainer.style.display = 'flex';
-                sideNews.forEach(n => {
-                    const sideCard = document.createElement('article');
-                    sideCard.className = 'side-card';
-                    sideCard.onclick = () => handleArticleClick(n);
-
-                    const imgUrl = n.cover_image || n.image || getDefaultImage();
-                    const tag = n.category || '新聞';
-                    const title = n.title || '無標題';
-
-                    sideCard.innerHTML = `
-                        <img src="${imgUrl}" alt="${title}" onerror="this.src='${getDefaultImage()}'">
-                        <div class="side-overlay">
-                            <span class="side-tag">${tag}</span>
-                            <h3 class="side-title">${title}</h3>
-                        </div>
-                    `;
-                    sideContainer.appendChild(sideCard);
-                });
-            }
-        }
-
-        // 渲染新聞列表
-        function renderNewsList(news) {
-            const container = document.getElementById('news-list');
-
-            // 過濾新聞
-            let filtered = news;
-            if (currentCategory !== 'all') {
-                filtered = news.filter(n => {
-                    const cat = n.category || '';
-                    const tags = n.tags || [];
-                    return cat === currentCategory || tags.includes(currentCategory);
-                });
-            }
-
-            // 跳過頭條的3個，顯示剩餘的
-            const listNews = filtered.slice(3);
-
-            if (listNews.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📭</div>
-                        <h3>該分類暫無更多新聞</h3>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = '';
-
-            listNews.forEach(n => {
-                const isPremium = n.is_premium || (n.tags && n.tags.includes('會員專享'));
-                const cardClass = isPremium ? 'news-card premium' : 'news-card';
-                const imgUrl = n.cover_image || n.image || getDefaultImage();
-                const excerpt = (n.content || n.summary || '').substring(0, 100);
-                const dateStr = formatDate(n.published_date || n.created_time || '');
-
-                const card = document.createElement('article');
-                card.className = cardClass;
-                card.setAttribute('data-category', n.category || '');
-                card.onclick = () => handleArticleClick(n);
-
-                card.innerHTML = `
-                    <div class="news-thumb">
-                        <img src="${imgUrl}" alt="${n.title || '新聞'}" loading="lazy" onerror="this.src='${getDefaultImage()}'">
-                    </div>
-                    <div class="news-content">
-                        <span class="news-category">${n.category || '新聞'}</span>
-                        <h3 class="news-title">${n.title || '無標題'}</h3>
-                        <p class="news-excerpt">${excerpt ? excerpt + '...' : '暫無摘要'}</p>
-                        <div class="news-footer">
-                            <div class="news-meta">
-                                <span>${dateStr}</span>
-                                ${isPremium ? '<span style="color:#B8860B;font-weight:700;">★ 會員專享</span>' : ''}
-                            </div>
-                            <div class="news-actions">
-                                <button class="action-btn" onclick="event.stopPropagation(); toggleFav(this, '${(n.title || '').replace(/'/g, "\'")}')">☆</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            // 加載更多按鈕
-            if (filtered.length > 3 + listNews.length) {
-                const loadMoreDiv = document.createElement('div');
-                loadMoreDiv.className = 'load-more';
-                loadMoreDiv.innerHTML = `
-                    <button class="load-more-btn" onclick="loadMore()">加載更多 LOAD MORE</button>
-                `;
-                container.appendChild(loadMoreDiv);
-            }
-        }
-
-        // 渲染標籤
-        function renderTags(news) {
-            const container = document.getElementById('tag-cloud');
-            const allTags = new Set();
-
-            news.forEach(n => {
-                if (n.tags && Array.isArray(n.tags)) {
-                    n.tags.forEach(tag => {
-                        if (tag && !tag.includes('會員專享')) {
-                            allTags.add(tag);
-                        }
-                    });
-                }
-            });
-
-            const tags = Array.from(allTags).slice(0, 12);
-
-            if (tags.length === 0) {
-                container.innerHTML = '<span style="color:#999;">暫無標籤</span>';
-                return;
-            }
-
-            container.innerHTML = tags.map(tag => 
-                `<button class="tag-item" onclick="filterByTag('${tag.replace(/'/g, "\'")}', this)">#${tag}</button>`
-            ).join('');
-        }
-
-        // 渲染編輯精選
-        function renderEditorsPick(news) {
-            const container = document.getElementById('editors-pick');
-            const picks = news.filter(n => {
-                if (!n.tags) return false;
-                return n.tags.includes('編輯精選') || n.tags.includes('编辑精选') || n.featured;
-            }).slice(0, 4);
-
-            // 如果沒有精選，取最新的4個
-            const displayPicks = picks.length > 0 ? picks : news.slice(0, 4);
-
-            if (displayPicks.length === 0) {
-                container.innerHTML = '<span style="color:#999;">暫無精選</span>';
-                return;
-            }
-
-            container.innerHTML = displayPicks.map(n => {
-                const imgUrl = n.cover_image || n.image || getDefaultImage();
-                return `
-                    <div class="pick-item" onclick='handleArticleClick(${JSON.stringify(n).replace(/'/g, "&#39;")})'>
-                        <img src="${imgUrl}" alt="" class="pick-thumb" onerror="this.src='${getDefaultImage()}'">
-                        <div class="pick-content">
-                            <h4>${n.title || '無標題'}</h4>
-                            <span>${n.category || '新聞'}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // 分類篩選
-        function filterNews(category, btn) {
-            currentCategory = category;
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderNewsList(allNews);
-
-            // 滾動到新聞列表
-            document.getElementById('news-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // 標籤篩選
-        function filterByTag(tag, btn) {
-            const filtered = allNews.filter(n => {
-                if (!n.tags) return false;
-                return n.tags.includes(tag) || (n.title && n.title.includes(tag));
-            });
-
-            currentCategory = 'tag:' + tag;
-            renderNewsList(filtered);
-
-            document.querySelectorAll('.tag-item').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-
-            // 重置分類按鈕
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-        }
-
-        // 處理文章點擊
-        function handleArticleClick(article) {
-            console.log('點擊文章:', article.title);
-
-            // 檢查是否會員
-            if (!isMember() && remainingReads <= 0) {
-                showMobilePaywall();
-                return;
-            }
-
-            // 檢查是否會員專享
-            const isPremium = article.is_premium || (article.tags && article.tags.includes('會員專享'));
-            if (isPremium && !isMember()) {
-                showMobilePaywall();
-                return;
-            }
-
-            // 扣除免費額度
-            if (!isMember()) {
-                remainingReads--;
-                updateQuotaDisplay();
-            }
-
-            // 跳轉到文章頁或來源鏈接
-            if (article.source_url) {
-                window.open(article.source_url, '_blank');
-            } else {
-                // 可以跳轉到詳情頁
-                alert('文章詳情頁功能開發中...\n標題: ' + article.title);
-            }
-        }
-
-        function handleHeroClick() {
-            if (allNews.length > 0) {
-                handleArticleClick(allNews[0]);
-            }
-        }
-
-        // 工具函數
-        function getDefaultImage() {
-            return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            try {
-                const date = new Date(dateStr);
-                if (isNaN(date.getTime())) return dateStr;
-                return date.toLocaleDateString('zh-CN', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                }).replace(/\//g, '.');
-            } catch (e) {
-                return dateStr;
-            }
-        }
-
-        function isMember() {
-            return localStorage.getItem('userLoggedIn') === 'true';
-        }
-
-        function updateQuotaDisplay() {
-            const el = document.getElementById('remainingReads');
-            if (el) el.textContent = remainingReads;
-        }
-
-        function showMobilePaywall() {
-            document.getElementById('mobilePaywallModal').classList.add('active');
-        }
-
-        function closeMobilePaywall() {
-            document.getElementById('mobilePaywallModal').classList.remove('active');
-        }
-
-        function toggleFav(btn, title) {
-            if (!isMember()) {
-                alert('請先登錄');
-                return;
-            }
-            btn.classList.toggle('active');
-            btn.textContent = btn.classList.contains('active') ? '★' : '☆';
-
-            // 保存到本地存儲
-            let favorites = JSON.parse(localStorage.getItem('newsFavorites') || '[]');
-            if (btn.classList.contains('active')) {
-                favorites.push(title);
-            } else {
-                favorites = favorites.filter(t => t !== title);
-            }
-            localStorage.setItem('newsFavorites', JSON.stringify(favorites));
-        }
-
-        function loadMore() {
-            alert('加載更多功能（演示）');
-        }
-
         function toggleMobileMenu() {
             document.getElementById('navLinks').classList.toggle('active');
         }
-
         function handleUserMenuClick() {
-            if (isMember()) {
-                const confirmed = confirm('是否退出登錄？');
-                if (confirmed) {
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                if (confirm('是否退出登入？')) {
                     localStorage.removeItem('userLoggedIn');
                     location.reload();
                 }
@@ -1461,12 +1399,24 @@
                 window.location.href = 'index.html';
             }
         }
-
         function showLiveTVComingSoon() {
             alert('COMING SOON');
         }
-
-        // 點擊彈窗外部關閉
+        function scrollToTopAndInvite() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        function closeMobilePaywall() {
+            document.getElementById('mobilePaywallModal').classList.remove('active');
+        }
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('navLinks');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            if (navLinks && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            }
+        });
         document.getElementById('mobilePaywallModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeMobilePaywall();
