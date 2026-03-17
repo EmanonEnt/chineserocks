@@ -2857,64 +2857,82 @@ html {
 
             // 處理首頁主圖新聞點擊
             function handleHomeHeroClick() {
+                // 检查数据是否已加载
                 if (!window._homeNewsData || window._homeNewsData.length === 0) {
-                    console.log('無主圖數據');
+                    console.error('新聞數據未加載，嘗試重新加載...');
+                    alert('新聞數據加載中，請稍後再試');
+                    // 嘗試重新加載
+                    loadHomeFeaturedNews();
                     return;
                 }
+
                 const mainNews = window._homeNewsData[0];
+                if (!mainNews) {
+                    console.error('主圖新聞數據無效');
+                    return;
+                }
 
-                // 嘗試所有可能的 URL 字段
+                // 嘗試所有可能的 URL 字段（與 NEWS 頁面保持一致）
                 const url = mainNews.external_url || mainNews.externalUrl || mainNews.url || mainNews.link || mainNews.source_url || mainNews.sourceUrl;
-                const title = mainNews.title || '';
+                const title = mainNews.title || '無標題';
 
-                console.log('點擊主圖:', title, url, mainNews);
+                console.log('首頁主圖點擊:', { title, url, data: mainNews });
 
-                // 直接打開外鏈（與 news.html 一致）
-                if (url && url !== 'undefined' && url !== 'null' && url !== '') {
+                // 直接打開外鏈（與 news.html 完全一致）
+                if (url && typeof url === 'string' && url.trim() !== '' && url !== 'undefined' && url !== 'null') {
                     console.log('打開外鏈:', url);
                     window.open(url, '_blank');
                 } else {
-                    console.log('無外鏈，顯示提示:', title);
-                    alert('正在打開: ' + title + '（暫無外鏈）');
+                    console.log('無有效外鏈:', title);
+                    // 如果沒有外鏈，顯示提示但不阻礙用戶
+                    alert('「' + title + '」
+
+暫無外部鏈接，請稍後再試');
                 }
 
-                // 記錄閱讀（異步）
-                setTimeout(() => {
-                    if (typeof recordRead === 'function') {
-                        recordRead({ title: title });
-                    }
-                }, 0);
+                // 記錄閱讀（異步，不影響主流程）
+                if (typeof recordRead === 'function') {
+                    setTimeout(() => recordRead({ title: title }), 0);
+                }
             }
 
             // 處理首頁側邊欄新聞點擊
             function handleHomeArticleClick(index) {
-                if (!window._homeNewsData || !window._homeNewsData[index]) {
-                    console.log('無數據:', index);
+                // 检查数据是否已加载
+                if (!window._homeNewsData) {
+                    console.error('新聞數據未加載');
+                    alert('新聞數據加載中，請稍後再試');
                     return;
                 }
+
+                if (!window._homeNewsData[index]) {
+                    console.error('新聞索引無效:', index, '可用數據:', window._homeNewsData.length);
+                    return;
+                }
+
                 const item = window._homeNewsData[index];
 
-                // 嘗試所有可能的 URL 字段
+                // 嘗試所有可能的 URL 字段（與 NEWS 頁面保持一致）
                 const url = item.external_url || item.externalUrl || item.url || item.link || item.source_url || item.sourceUrl;
-                const title = item.title || '';
+                const title = item.title || '無標題';
 
-                console.log('點擊新聞:', index, title, url, item);
+                console.log('首頁新聞點擊:', { index, title, url, data: item });
 
-                // 直接打開外鏈（與 news.html 一致）
-                if (url && url !== 'undefined' && url !== 'null' && url !== '') {
+                // 直接打開外鏈（與 news.html 完全一致）
+                if (url && typeof url === 'string' && url.trim() !== '' && url !== 'undefined' && url !== 'null') {
                     console.log('打開外鏈:', url);
                     window.open(url, '_blank');
                 } else {
-                    console.log('無外鏈，顯示提示:', title);
-                    alert('正在打開: ' + title + '（暫無外鏈）');
+                    console.log('無有效外鏈:', title);
+                    alert('「' + title + '」
+
+暫無外部鏈接，請稍後再試');
                 }
 
-                // 記錄閱讀（異步）
-                setTimeout(() => {
-                    if (typeof recordRead === 'function') {
-                        recordRead({ title: title });
-                    }
-                }, 0);
+                // 記錄閱讀（異步，不影響主流程）
+                if (typeof recordRead === 'function') {
+                    setTimeout(() => recordRead({ title: title }), 0);
+                }
             }
 
             function renderDefaultNews(container) {
