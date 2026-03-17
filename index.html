@@ -2802,16 +2802,20 @@ html {
                     return;
                 }
 
-                // 存儲到全局對象供點擊處理函數使用
+                // 存儲到全局對象供點擊處理函數使用（保留向後兼容）
                 window._homeNewsData = news;
 
                 // 第一個是大圖
                 const mainNews = news[0];
                 const sideNews = news.slice(1);
 
+                // 處理 URL：優先使用 external_url，其次 url
+                const mainUrl = mainNews.external_url || mainNews.url || '';
+                const mainTitle = (mainNews.title || '').replace(/"/g, '&quot;');
+
                 let html = `
-                    <article class="featured-main" onclick="handleHomeHeroClick()">
-                        <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainNews.title || ''}" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'">
+                    <article class="featured-main" onclick="handleHomeNewsClick('${mainUrl}', '${mainTitle}')">
+                        <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainTitle}" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'">
                         <div class="featured-overlay">
                             <span class="featured-tag">${translateCategory(mainNews.category) || '新聞 NEWS'}</span>
                             <h3 class="featured-title">${mainNews.title || ''}</h3>
@@ -2821,11 +2825,14 @@ html {
                     <div class="featured-sidebar">
                 `;
 
-                // 側邊新聞（最多4個）- 使用索引而非直接嵌入 URL
+                // 側邊新聞（最多4個）- 直接將 URL 嵌入 onclick，與 NEWS 頁面邏輯一致
                 sideNews.slice(0, 4).forEach((item, index) => {
+                    const sideUrl = item.external_url || item.url || '';
+                    const sideTitle = (item.title || '').replace(/"/g, '&quot;');
+
                     html += `
-                        <article class="sidebar-item" onclick="handleHomeArticleClick(${index + 1})">
-                            <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${item.title || ''}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'">
+                        <article class="sidebar-item" onclick="handleHomeNewsClick('${sideUrl}', '${sideTitle}')">
+                            <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${sideTitle}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'">
                             <div class="sidebar-content">
                                 <h4>${item.title || ''}</h4>
                                 <p class="meta">${translateCategory(item.category) || '新聞 NEWS'} · ${formatHomeDate(item.published_date)}</p>
@@ -2840,40 +2847,28 @@ html {
                 console.log('渲染完成: 1大圖 +', sideNews.slice(0, 4).length, '小圖');
             }
 
-            // 處理首頁主圖新聞點擊
-            function handleHomeHeroClick() {
-                if (!window._homeNewsData || window._homeNewsData.length === 0) return;
-                const mainNews = window._homeNewsData[0];
-                const url = mainNews.external_url || mainNews.url;
-                const title = mainNews.title || '';
-
+            // 處理首頁新聞點擊（統一函數，URL 直接從 HTML 傳入，與 NEWS 頁面邏輯一致）
+            function handleHomeNewsClick(url, title) {
                 // 記錄閱讀
                 recordRead({ title: title });
 
                 // 直接打開外鏈（與 news.html 一致）
-                if (url) {
+                if (url && url !== 'undefined' && url !== 'null' && url !== '') {
+                    console.log('打開外鏈:', title, url);
                     window.open(url, '_blank');
                 } else {
-                    alert('正在打開: ' + title);
+                    console.log('無外鏈，顯示提示:', title);
+                    alert('正在打開: ' + title + '\n\n（文章詳情頁開發中）');
                 }
+                return false;
             }
 
-            // 處理首頁側邊欄新聞點擊
+            // 保留舊函數以向後兼容（但不再使用）
+            function handleHomeHeroClick() {
+                console.log('handleHomeHeroClick 已棄用，請使用 handleHomeNewsClick');
+            }
             function handleHomeArticleClick(index) {
-                if (!window._homeNewsData || !window._homeNewsData[index]) return;
-                const item = window._homeNewsData[index];
-                const url = item.external_url || item.url;
-                const title = item.title || '';
-
-                // 記錄閱讀
-                recordRead({ title: title });
-
-                // 直接打開外鏈（與 news.html 一致）
-                if (url) {
-                    window.open(url, '_blank');
-                } else {
-                    alert('正在打開: ' + title);
-                }
+                console.log('handleHomeArticleClick 已棄用，請使用 handleHomeNewsClick');
             }
 
             function renderDefaultNews(container) {
