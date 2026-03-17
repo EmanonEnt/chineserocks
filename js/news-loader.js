@@ -265,6 +265,7 @@
             filterByTag(window._tagData[index], event.target);
         }
     };
+    }
 
     // 🔧 修復：編輯精選函數 - 有幾個顯示幾個，最多6個，不足不補充
     function renderPicks(news) {
@@ -294,7 +295,7 @@
         container.innerHTML = display.map(function(n, index) {
             var pickImageUrl = getImageUrl(n);
             return '<div class="pick-item" onclick="openPickArticle(' + index + ')">' +
-                '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
+                '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src='' + getDefaultImage() + ''">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
         }).join('');
 
@@ -369,6 +370,29 @@
 
     function updateQuotaDisplay() {
         var el = document.getElementById('remainingReads');
+        if (el) el.textContent = remainingReads;
+    }
+
+    window.showMobilePaywall = function() {
+        var modal = document.getElementById('mobilePaywallModal');
+        if (modal) modal.classList.add('active');
+    };
+
+    window.closeMobilePaywall = function() {
+        var modal = document.getElementById('mobilePaywallModal');
+        if (modal) modal.classList.remove('active');
+    };
+
+    window.toggleFav = function(btn, title) {
+        if (!isMember()) {
+            alert('請先登入');
+            return;
+        }
+        btn.classList.toggle('active');
+        btn.textContent = btn.classList.contains('active') ? '★' : '☆';
+    };
+})();
+etElementById('remainingReads');
         if (el) el.textContent = remainingReads;
     }
 
