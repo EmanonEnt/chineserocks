@@ -4765,8 +4765,22 @@ html {
         }
 
         // 初始化額度
-        if (!localStorage.getItem('remainingReads')) {
-            localStorage.setItem('remainingReads', '3');
+// 初始化額度（帶每日重置檢查）
+function initQuotaSystem() {
+    const today = new Date().toDateString();
+    const lastResetDate = localStorage.getItem('lastResetDate');
+
+    if (lastResetDate !== today) {
+        localStorage.setItem('remainingReads', '3');
+        localStorage.setItem('lastResetDate', today);
+    } else if (!localStorage.getItem('remainingReads')) {
+        localStorage.setItem('remainingReads', '3');
+    }
+
+    updateQuotaDisplay();
+}
+
+initQuotaSystem();
         }
         updateQuotaDisplay();
 
