@@ -2822,7 +2822,7 @@ html {
                 const sideNews = news.slice(1); // 剩餘的作為側邊新聞
 
                 let html = `
-                    <article class="featured-main" onclick="handleArticleClick(this, '${(mainNews.title || '').replace(/'/g, "\'")}')">
+                    <article class="featured-main" onclick="handleArticleClick(this, '${(mainNews.title || '').replace(/'/g, "\'")}', '${(mainNews.external_url || mainNews.url || '')}')">
                         <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainNews.title || ''}" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'">
                         <div class="featured-overlay">
                             <span class="featured-tag">${translateCategory(mainNews.category) || '新聞 NEWS'}</span>
@@ -2836,7 +2836,7 @@ html {
                 // 側邊新聞（最多4個）
                 sideNews.slice(0, 4).forEach((item, index) => {
                     html += `
-                        <article class="sidebar-item" onclick="handleArticleClick(this, '${(item.title || '').replace(/'/g, "\'")}')">
+                        <article class="sidebar-item" onclick="handleArticleClick(this, '${(item.title || '').replace(/'/g, "\'")}', '${(item.external_url || item.url || '')}')">
                             <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${item.title || ''}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'">
                             <div class="sidebar-content">
                                 <h4>${item.title || ''}</h4>
@@ -4726,7 +4726,8 @@ html {
     
 
         // 處理文章點擊 - 與 NEWS 頁面保持一致
-        function handleArticleClick(element, title) {
+        // 處理文章點擊 - 修復外鏈跳轉
+        function handleArticleClick(element, title, url) {
             // 記錄閱讀行為
             recordRead({ title: title });
 
@@ -4743,7 +4744,7 @@ html {
                 } else {
                     alert('★ 今日免費閱讀額度已用完\n\n升級會員解鎖無限暢讀');
                 }
-                return;
+                return false;
             }
 
             // 扣除閱讀額度
@@ -4752,9 +4753,16 @@ html {
                 updateQuotaDisplay();
             }
 
-            // 顯示文章預覽（後續可跳轉到詳情頁）
-            console.log('打開文章:', title);
-            alert('正在打開: ' + title + '\n\n（文章詳情頁開發中）');
+            // 打開外鏈（修復：實際跳轉到外部鏈接）
+            if (url && url !== 'undefined' && url !== 'null' && url !== '') {
+                console.log('打開外鏈:', title, url);
+                window.open(url, '_blank');
+            } else {
+                console.log('打開文章（無外鏈）:', title);
+                alert('正在打開: ' + title + '\n\n（文章詳情頁開發中）');
+            }
+
+            return false;
         }
 
         // 更新額度顯示
