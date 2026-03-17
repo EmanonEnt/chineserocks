@@ -1,6 +1,8 @@
 /**
- * ChineseRocks 新聞加載器 - 修復版
- * 修復：圖片不顯示問題
+ * ChineseRocks 新聞加載器 - 修復版 v3
+ * 修復：
+ * 1. 編輯精選有幾個顯示幾個，最多6個，不足不補充
+ * 2. 熱門標籤有幾個顯示幾個，超過20個選最多的前20個，不足不顯示默認標籤
  */
 (function() {
     var allNews = [];
@@ -90,7 +92,7 @@
         renderHero(news);
         renderList(news);
         renderTags(allNews);
-        renderPicks(news);
+        renderPicks(allNews);
     }
 
     function checkIsPremium(article) {
@@ -215,41 +217,77 @@
         }
     }
 
+    // 🔧 修復：熱門標籤函數 - 不足不顯示，超過20個選最多的
     function renderTags(news) {
         var container = document.getElementById('tag-cloud');
         if (!container) return;
+
         var tags = [];
+        var tagCount = {}; // 統計標籤出現次數
+
         for (var i = 0; i < news.length; i++) {
-            if (news[i].tags) {
+            if (news[i].tags && Array.isArray(news[i].tags)) {
                 for (var j = 0; j < news[i].tags.length; j++) {
                     var tag = news[i].tags[j];
-                    if (tags.indexOf(tag) === -1 && tag !== '會員專享' && tag !== '編輯精選') {
-                        tags.push(tag);
+                    // 過濾掉會員專享和編輯精選
+                    if (tag !== '會員專享' && tag !== '編輯精選' && tag !== '编辑精选') {
+                        tagCount[tag] = (tagCount[tag] || 0) + 1;
+                        if (tags.indexOf(tag) === -1) {
+                            tags.push(tag);
+                        }
                     }
                 }
             }
         }
-        container.innerHTML = tags.slice(0, 12).map(function(t) {
-            return '<button class="tag-item" onclick="filterByTag(' + JSON.stringify(t) + ', this)">#' + t + '</button>';
-        }).join('');
+
+        // 按出現次數排序（熱門標籤優先）
+        tags.sort(function(a, b) {
+            return (tagCount[b] || 0) - (tagCount[a] || 0);
+        });
+
+        // 有標籤才顯示，不足不顯示默認標籤
+        if (tags.length > 0) {
+            container.innerHTML = tags.slice(0, 20).map(function(t) {
+                return '<button class="tag-item" onclick="filterByTag(' + JSON.stringify(t) + ', this)">#' + t + '</button>';
+            }).join('');
+            console.log('✓ 渲染 ' + Math.min(tags.length, 20) + ' 個熱門標籤');
+        } else {
+            // 沒有標籤時清空容器（不顯示任何內容）
+            container.innerHTML = '';
+            console.log('✓ 無熱門標籤可顯示');
+        }
     }
 
+    // 🔧 修復：編輯精選函數 - 有幾個顯示幾個，最多6個，不足不補充
     function renderPicks(news) {
         var container = document.getElementById('editors-pick');
         if (!container) return;
+
         var picks = [];
+
+        // 收集精選文章
         for (var i = 0; i < news.length; i++) {
-            if (news[i].featured || (news[i].tags && (news[i].tags.indexOf('編輯精選') !== -1 || news[i].tags.indexOf('编辑精选') !== -1))) {
+            var isPick = news[i].featured || 
+                         (news[i].tags && (
+                             news[i].tags.indexOf('編輯精選') !== -1 || 
+                             news[i].tags.indexOf('编辑精选') !== -1
+                         ));
+            if (isPick) {
                 picks.push(news[i]);
             }
         }
-        var display = picks.length > 0 ? picks.slice(0, 4) : news.slice(0, 4);
+
+        // 只顯示精選文章，有幾個顯示幾個（最多6個），不足不補充
+        var display = picks.slice(0, 6);
+
         container.innerHTML = display.map(function(n) {
             var pickImageUrl = getImageUrl(n);
             return '<div class="pick-item" onclick="openArticle(' + JSON.stringify(n).replace(/"/g, '&quot;') + ')">' +
                 '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
         }).join('');
+
+        console.log('✓ 渲染編輯精選: ' + display.length + ' 個');
     }
 
     window.filterNews = function(category, btn) {
