@@ -53,38 +53,7 @@ function convertAllCategoryTags() {
     });
 }
 
-    var allNews = [];
-    var currentCategory = 'all';
-    // ===== 分類雙語映射 =====
-    var categoryBilingualMap = {
-        '獨家': '獨家 EXCLUSIVE',
-        '現場': '現場 LIVE',
-        '專題': '專題 FEATURE',
-        '國際': '國際 INTERNATIONAL',
-        '新發行': '新發行 RELEASES',
-        '新聞': '新聞 NEWS',
-        '音樂': '音樂 MUSIC'
-    };
-
-    function translateCategory(category) {
-        if (!category) return '新聞 NEWS';
-        // 如果已經是雙語格式，直接返回
-        if (category.indexOf(' ') !== -1 && /[a-zA-Z]/.test(category)) {
-            return category;
-        }
-        return categoryBilingualMap[category] || category + ' NEWS';
-    }
-    // ==========================
-
-
-    var remainingReads = 3;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        loadNewsData();
-        updateQuotaDisplay();
-    });
-
-    function loadNewsData() {
+function loadNewsData() {
         // 添加时间戳防止缓存
         fetch('data/news.json?t=' + Date.now(), {
             cache: 'no-store',
