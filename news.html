@@ -1264,7 +1264,7 @@
 
     <div class="quota-bar" id="quotaBar">
         <span>★ 今日免費閱讀額度: 僅剩 <strong id="remainingReads">3</strong> 篇</span>
-        <a href="index.html#pricing" class="quota-btn">升級月卡會員 ¥66/月</a>
+        <a href="#pricing" class="quota-btn">升級月卡會員 ¥66/月</a>
     </div>
 
     <section class="hero-news" id="hero-section">
@@ -1463,7 +1463,7 @@
             <div>
                 <h4 class="footer-title">服務 SERVICE</h4>
                 <ul class="footer-links">
-                    <li><a href="index.html#pricing">會員服務 MEMBERSHIP</a></li>
+                    <li><a href="#pricing">會員服務 MEMBERSHIP</a></li>
                     <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
                     <li><a href="#">廣告投放 ADVERTISING</a></li>
                     <li><a href="#">聯繫我們 CONTACT</a></li>
@@ -1496,7 +1496,7 @@
             <div class="mobile-paywall-icon">★</div>
             <h3 class="mobile-paywall-title">今日免費閱讀額度已用完</h3>
             <p class="mobile-paywall-text">升級會員解鎖無限暢讀</p>
-            <a href="index.html#pricing" class="mobile-paywall-btn">升級會員</a>
+            <a href="#pricing" class="mobile-paywall-btn" onclick="closeMobilePaywall()">升級會員</a>
         </div>
     </div>
 
@@ -1602,5 +1602,32 @@
         });
     </script>
     
-</body>
+
+    <script>
+        // 初始化額度（帶每日重置檢查）
+        function initQuotaSystem() {
+            const today = new Date().toDateString();
+            const lastResetDate = localStorage.getItem('lastResetDate');
+
+            if (lastResetDate !== today) {
+                localStorage.setItem('remainingReads', '3');
+                localStorage.setItem('lastResetDate', today);
+            } else if (!localStorage.getItem('remainingReads')) {
+                localStorage.setItem('remainingReads', '3');
+            }
+
+            updateQuotaDisplay();
+        }
+
+        function updateQuotaDisplay() {
+            const remainingReads = localStorage.getItem('remainingReads') || '3';
+            const quotaElement = document.getElementById('remainingReads');
+            if (quotaElement) {
+                quotaElement.textContent = remainingReads;
+            }
+        }
+
+        initQuotaSystem();
+    </script>
+    </body>
 </html>
