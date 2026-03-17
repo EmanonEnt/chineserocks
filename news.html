@@ -1286,7 +1286,10 @@
     </section>
 
     <div class="main-content">
-        <div class="news-list" id="news-list"></div>
+        <div class="news-list" id="news-list">
+            <div class="load-more-container" id="loadMoreContainer">
+                <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreNews()">LOAD MORE 查看更多</button>
+            </div></div>
         <aside class="sidebar">
             <div class="sidebar-section">
                 <h3 class="sidebar-title">熱門標籤</h3>
@@ -1537,12 +1540,72 @@
         });
     </script>
 
+    <script>
+        // LOAD MORE 功能 - 統一邏輯
+        const INITIAL_COUNT = 8;  // 初始顯示8個
+        const BATCH_SIZE = 6;     // 每次加載6個（3排）
+        let currentVisibleCount = INITIAL_COUNT;
 
+        function loadMoreNews() {
+            const newsCards = document.querySelectorAll('.news-list .news-card');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            let newlyShown = 0;
+
+            // 顯示下一批隱藏的新聞
+            newsCards.forEach((card, index) => {
+                if (index >= currentVisibleCount && index < currentVisibleCount + BATCH_SIZE) {
+                    card.classList.remove('hidden');
+                    card.classList.add('visible');
+                    newlyShown++;
+                }
+            });
+
+            currentVisibleCount += newlyShown;
+
+            // 檢查是否還有更多
+            if (currentVisibleCount >= newsCards.length) {
+                loadMoreContainer.classList.add('hidden');
+            }
+        }
+
+        // 初始化新聞顯示
+        function initNewsDisplay() {
+            const newsCards = document.querySelectorAll('.news-list .news-card');
+            const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+            // 重置所有卡片
+            newsCards.forEach((card, index) => {
+                if (index < INITIAL_COUNT) {
+                    card.classList.remove('hidden');
+                    card.classList.add('visible');
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('visible');
+                }
+            });
+
+            currentVisibleCount = INITIAL_COUNT;
+
+            // 如果有超過8個，顯示 LOAD MORE
+            if (newsCards.length > INITIAL_COUNT) {
+                loadMoreContainer.classList.remove('hidden');
+            } else {
+                loadMoreContainer.classList.add('hidden');
+            }
+        }
+
+        // 頁面加載完成後初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 延遲初始化，確保新聞數據已加載
+            setTimeout(initNewsDisplay, 500);
+        });
+    </script>
     
 
     <script>
-        // 初始化額度（帶每日重置檢查）- 只在 HTML 中執行一次
-        (function() {
+        // 初始化額度（帶每日重置檢查）
+        function initQuotaSystem() {
             const today = new Date().toDateString();
             const lastResetDate = localStorage.getItem('lastResetDate');
 
@@ -1553,12 +1616,18 @@
                 localStorage.setItem('remainingReads', '3');
             }
 
+            updateQuotaDisplay();
+        }
+
+        function updateQuotaDisplay() {
             const remainingReads = localStorage.getItem('remainingReads') || '3';
             const quotaElement = document.getElementById('remainingReads');
             if (quotaElement) {
                 quotaElement.textContent = remainingReads;
             }
-        })();
+        }
+
+        initQuotaSystem();
     </script>
-</body>
+    </body>
 </html>
