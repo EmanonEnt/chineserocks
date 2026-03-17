@@ -2718,7 +2718,7 @@ html {
         </div>
 
         <script>
-            // 首頁精選新聞加載
+            // 首頁精選新聞加載 - 使用與 NEWS 頁面相同的數據源
             async function loadHomeFeaturedNews() {
                 const container = document.getElementById('home-news-container');
                 if (!container) {
@@ -2730,31 +2730,33 @@ html {
                 container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;"><div style="font-size: 2rem; margin-bottom: 1rem;">📰</div><p>加載新聞中...</p></div>';
 
                 try {
-                    // 嘗試多個可能的數據路徑
+                    // 使用與 NEWS 頁面相同的數據源
                     let response = null;
-                    let lastError = null;
-
-                    const paths = ['data/news.json', './data/news.json', '/data/news.json'];
+                    const paths = [
+                        'data/news.json',
+                        './data/news.json', 
+                        '/data/news.json',
+                        '../data/news.json',
+                        'https://chineserocks.netlify.app/data/news.json'
+                    ];
 
                     for (const path of paths) {
                         try {
                             response = await fetch(path, { cache: 'no-cache' });
                             if (response.ok) {
-                                console.log('成功加載:', path);
+                                console.log('成功加載新聞數據:', path);
                                 break;
                             }
                         } catch (e) {
-                            lastError = e;
-                            console.log('嘗試路徑失敗:', path, e.message);
+                            console.log('嘗試路徑失敗:', path);
                         }
                     }
 
                     if (!response || !response.ok) {
-                        throw new Error('無法加載新聞數據: ' + (lastError?.message || '所有路徑都失敗'));
+                        throw new Error('無法加載新聞數據');
                     }
 
                     const result = await response.json();
-                    console.log('新聞數據:', result);
 
                     // 獲取所有新聞（兼容多種格式）
                     let allNews = [];
@@ -2766,50 +2768,40 @@ html {
                         allNews = result;
                     }
 
-                    console.log('所有新聞數量:', allNews.length);
+                    console.log('獲取到新聞數量:', allNews.length);
 
                     if (allNews.length === 0) {
-                        console.log('沒有新聞數據，顯示默認');
-                        renderDefaultNews(container);
+                        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;"><p>暫無新聞數據</p></div>';
                         return;
                     }
 
-                    // 篩選 Home Featured（優先）
-                    let featuredNews = allNews.filter(item => item.homeFeatured === true);
-                    console.log('Home Featured 數量:', featuredNews.length);
+                    // 篩選 Home Featured 或 featured 標記的新聞
+                    let featuredNews = allNews.filter(item => item.homeFeatured === true || item.featured === true);
 
-                    // 如果沒有 Home Featured，使用 featured 標記的
+                    // 如果沒有標記的，使用最新的5個
                     if (featuredNews.length === 0) {
-                        featuredNews = allNews.filter(item => item.featured === true);
-                        console.log('使用 featured 標記，數量:', featuredNews.length);
+                        // 按日期排序，取最新的
+                        featuredNews = allNews.sort((a, b) => {
+                            return new Date(b.published_date || 0) - new Date(a.published_date || 0);
+                        }).slice(0, 5);
+                    } else {
+                        // 按 Display Order 排序
+                        featuredNews.sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
+                        featuredNews = featuredNews.slice(0, 5);
                     }
 
-                    // 按 Display Order 排序
-                    featuredNews.sort((a, b) => {
-                        const orderA = a.displayOrder || 999;
-                        const orderB = b.displayOrder || 999;
-                        return orderA - orderB;
-                    });
-
-                    // 取前5個
-                    featuredNews = featuredNews.slice(0, 5);
-                    console.log('最終顯示數量:', featuredNews.length);
-
-                    // 如果還是沒有，顯示最新的5個
-                    if (featuredNews.length === 0) {
-                        featuredNews = allNews.slice(0, 5);
-                        console.log('使用最新的5個');
-                    }
-
+                    console.log('渲染新聞數量:', featuredNews.length);
                     renderHomeNews(container, featuredNews);
 
                 } catch (error) {
-                    console.error('加載失敗:', error);
-                    renderDefaultNews(container);
+                    console.error('加載新聞失敗:', error);
+                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;"><p>新聞加載失敗，請稍後重試</p></div>';
                 }
             }
 
             function renderHomeNews(container, news) {
+                console.log('renderHomeNews 被調用，新聞數量:', news.length);
+                console.log('第一條新聞:', news[0]);
                 console.log('渲染新聞:', news.length, '篇');
 
                 if (!news || news.length === 0) {
@@ -2852,49 +2844,7 @@ html {
                 console.log('渲染完成: 1大圖 +', sideNews.slice(0, 4).length, '小圖');
             }
 
-            function renderDefaultNews(container) {
-                console.log('顯示默認新聞');
-                container.innerHTML = `
-                    <article class="featured-main" onclick="handleArticleClick(this, '重塑雕像的權利新專輯首發深度解析')">
-                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop" alt="Featured News">
-                        <div class="featured-overlay">
-                            <span class="featured-tag">獨家 EXCLUSIVE</span>
-                            <h3 class="featured-title">重塑雕像的權利新專輯首發深度解析</h3>
-                            <p class="featured-excerpt">這張醞釀三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型，我們與華東深度對談...</p>
-                        </div>
-                    </article>
-                    <div class="featured-sidebar">
-                        <article class="sidebar-item" onclick="handleArticleClick(this, 'Radiohead 宣佈2026年亞洲巡演')">
-                            <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                            <div class="sidebar-content">
-                                <h4>Radiohead 宣佈2026年亞洲巡演</h4>
-                                <p class="meta">國際 INTERNATIONAL · 5小時前</p>
-                            </div>
-                        </article>
-                        <article class="sidebar-item" onclick="handleArticleClick(this, '迷笛音樂節2026陣容公佈')">
-                            <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                            <div class="sidebar-content">
-                                <h4>迷笛音樂節2026陣容公佈</h4>
-                                <p class="meta">現場 LIVE · 昨天</p>
-                            </div>
-                        </article>
-                        <article class="sidebar-item" onclick="handleArticleClick(this, '專訪：刺蝟樂隊石璐')">
-                            <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                            <div class="sidebar-content">
-                                <h4>專訪：刺蝟樂隊石璐</h4>
-                                <p class="meta">專題 FEATURE · 昨天</p>
-                            </div>
-                        </article>
-                        <article class="sidebar-item" onclick="handleArticleClick(this, '草東沒有派對新專輯發行')">
-                            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                            <div class="sidebar-content">
-                                <h4>草東沒有派對新專輯發行</h4>
-                                <p class="meta">音樂 MUSIC · 2天前</p>
-                            </div>
-                        </article>
-                    </div>
-                `;
-            }
+            
 
             function formatHomeDate(dateStr) {
                 if (!dateStr) return '今天';
@@ -4728,7 +4678,10 @@ html {
         // 處理文章點擊 - 與 NEWS 頁面保持一致
         // 處理文章點擊 - 修復外鏈跳轉
         function handleArticleClick(element, title, url) {
-            // 記錄閱讀行為
+            // 調試日誌
+            console.log('handleArticleClick:', { title, url, urlType: typeof url });
+
+            // 記錄閱讀行為（只記錄一次）
             recordRead({ title: title });
 
             // 檢查是否還有免費閱讀額度
@@ -4737,8 +4690,10 @@ html {
                             localStorage.getItem('memberType') === '季卡' || 
                             localStorage.getItem('memberType') === '年卡';
 
+            console.log('額度檢查:', { remainingReads, isMember });
+
             if (remainingReads <= 0 && !isMember) {
-                // 顯示付費牆
+                console.log('額度已用完，顯示付費牆');
                 if (window.innerWidth <= 768) {
                     document.getElementById('mobilePaywallModal').classList.add('active');
                 } else {
@@ -4749,17 +4704,25 @@ html {
 
             // 扣除閱讀額度
             if (!isMember) {
-                localStorage.setItem('remainingReads', String(remainingReads - 1));
+                const newRemaining = remainingReads - 1;
+                localStorage.setItem('remainingReads', String(newRemaining));
                 updateQuotaDisplay();
+                console.log('扣除額度，剩餘:', newRemaining);
             }
 
-            // 打開外鏈（修復：實際跳轉到外部鏈接）
-            if (url && url !== 'undefined' && url !== 'null' && url !== '') {
-                console.log('打開外鏈:', title, url);
-                window.open(url, '_blank');
+            // 處理 URL - 支持多種數據格式
+            let targetUrl = url;
+            if (typeof targetUrl === 'undefined' || targetUrl === null || targetUrl === 'null' || targetUrl === '') {
+                targetUrl = null;
+            }
+
+            // 打開外鏈
+            if (targetUrl) {
+                console.log('✅ 打開外鏈:', title, targetUrl);
+                window.open(targetUrl, '_blank');
             } else {
-                console.log('打開文章（無外鏈）:', title);
-                alert('正在打開: ' + title + '\n\n（文章詳情頁開發中）');
+                console.warn('⚠️ 無外鏈URL:', title);
+                alert('【調試】此新聞暫無外部鏈接\n標題: ' + title + '\nURL: ' + (url || '空') + '\n\n請檢查數據源中的 external_url 或 url 字段');
             }
 
             return false;
@@ -4776,7 +4739,25 @@ html {
 
         // 初始化額度
 // 初始化額度（帶每日重置檢查）
-function initQuotaSystem() {
+
+        // 調試工具：重置額度
+        function resetQuota() {
+            localStorage.setItem('remainingReads', '3');
+            localStorage.setItem('lastResetDate', new Date().toDateString());
+            updateQuotaDisplay();
+            alert('額度已重置為 3 篇');
+            console.log('額度已手動重置');
+        }
+
+        // 調試工具：查看當前額度
+        function checkQuota() {
+            const reads = localStorage.getItem('remainingReads');
+            const date = localStorage.getItem('lastResetDate');
+            console.log('當前額度:', reads, '最後重置日期:', date);
+            alert('當前剩餘額度: ' + reads + ' 篇\n最後重置日期: ' + date);
+        }
+
+        function initQuotaSystem() {
     const today = new Date().toDateString();
     const lastResetDate = localStorage.getItem('lastResetDate');
 
