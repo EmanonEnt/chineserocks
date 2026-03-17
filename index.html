@@ -2781,7 +2781,6 @@ html {
         // ===== 首頁新聞加載 - 與 NEWS 頁面邏輯一致 =====
         (function() {
             var allNews = [];
-            var remainingReads = parseInt(localStorage.getItem('remainingReads') || '3');
 
             // 分類標籤雙語轉換
             var categoryBilingualMap = {
@@ -2804,13 +2803,6 @@ html {
 
             function isMember() {
                 return localStorage.getItem('userLoggedIn') === 'true';
-            }
-
-            function updateQuotaDisplay() {
-                var el = document.getElementById('remainingReads');
-                if (el) el.textContent = remainingReads;
-                // 同時更新 localStorage
-                localStorage.setItem('remainingReads', remainingReads);
             }
 
             function showMobilePaywall() {
@@ -2846,23 +2838,28 @@ html {
                 return false;
             }
 
-            // 統一的文章打開函數 - 與 NEWS 頁面一致
+            // 統一的文章打開函數 - 使用 CRMemberSystem
             window.openArticle = function(article) {
+                // 使用统一的 MemberSystem 检查额度
+                if (!window.CRMemberSystem) {
+                    console.error('MemberSystem not loaded');
+                    return;
+                }
+
                 // 檢查是否還有免費額度
-                if (!isMember() && remainingReads <= 0) {
+                if (!window.CRMemberSystem.canRead(checkIsPremium(article))) {
                     showMobilePaywall();
                     return;
                 }
-                // 檢查是否為會員專享
-                if (checkIsPremium(article) && !isMember()) {
-                    showMobilePaywall();
-                    return;
+
+                // 扣除額度并记录
+                window.CRMemberSystem.recordRead();
+
+                // 更新显示
+                if (window.updateQuotaDisplay) {
+                    window.updateQuotaDisplay();
                 }
-                // 扣除額度
-                if (!isMember()) {
-                    remainingReads--;
-                    updateQuotaDisplay();
-                }
+
                 // 打開外鏈
                 if (article.source_url || article.sourceUrl) {
                     window.open(article.source_url || article.sourceUrl, '_blank');
@@ -4799,7 +4796,7 @@ html {
     updateQuotaDisplay();
 }
 
-initQuotaSystem();
+// 额度系统由 CRMemberSystem 统一管理
         
         updateQuotaDisplay();
 

@@ -1220,6 +1220,67 @@
         }
         
     </style>
+
+    <!-- 统一会员系统 -->
+<script>
+(function() {
+    if (window.CRMemberSystem) return;
+
+    const MemberSystem = {
+        DAILY_QUOTA: 3,
+
+        getTodayReads: function() {
+            const today = new Date().toDateString();
+            const stored = localStorage.getItem('cr_readHistory');
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.date === today) return data.count || 0;
+            }
+            return 0;
+        },
+
+        recordRead: function() {
+            if (this.isMember()) return true;
+            const today = new Date().toDateString();
+            const current = this.getTodayReads();
+            localStorage.setItem('cr_readHistory', JSON.stringify({
+                date: today,
+                count: current + 1
+            }));
+            return current + 1;
+        },
+
+        isMember: function() {
+            return localStorage.getItem('userLoggedIn') === 'true' || 
+                   localStorage.getItem('cr_member') === 'true';
+        },
+
+        getRemaining: function() {
+            if (this.isMember()) return Infinity;
+            return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
+        },
+
+        canRead: function(isPremium) {
+            if (this.isMember()) return true;
+            if (isPremium) return false;
+            return this.getRemaining() > 0;
+        }
+    };
+
+    window.CRMemberSystem = MemberSystem;
+    window.MemberSystem = MemberSystem;
+
+    // 更新额度显示
+    window.updateQuotaDisplay = function() {
+        const remaining = MemberSystem.getRemaining();
+        const el = document.getElementById('remainingReads');
+        if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
+    };
+
+    // 页面加载时更新
+    document.addEventListener('DOMContentLoaded', updateQuotaDisplay);
+})();
+</script>
 </head>
 <body>
     <nav class="navbar">
@@ -1544,30 +1605,22 @@
     
 
     <script>
-        // 初始化額度（帶每日重置檢查）
-        function initQuotaSystem() {
-            const today = new Date().toDateString();
-            const lastResetDate = localStorage.getItem('lastResetDate');
-
-            if (lastResetDate !== today) {
-                localStorage.setItem('remainingReads', '3');
-                localStorage.setItem('lastResetDate', today);
-            } else if (!localStorage.getItem('remainingReads')) {
-                localStorage.setItem('remainingReads', '3');
-            }
-
-            updateQuotaDisplay();
-        }
-
+        // 使用统一的 CRMemberSystem 管理额度
+        // 额度显示更新函数
         function updateQuotaDisplay() {
-            const remainingReads = localStorage.getItem('remainingReads') || '3';
-            const quotaElement = document.getElementById('remainingReads');
-            if (quotaElement) {
-                quotaElement.textContent = remainingReads;
+            if (window.CRMemberSystem) {
+                const remaining = window.CRMemberSystem.getRemaining();
+                const quotaElement = document.getElementById('remainingReads');
+                if (quotaElement) {
+                    quotaElement.textContent = remaining === Infinity ? '無限' : remaining;
+                }
             }
         }
 
-        initQuotaSystem();
+        // 页面加载完成后更新显示
+        document.addEventListener('DOMContentLoaded', function() {
+            updateQuotaDisplay();
+        });
     </script>
     <script>
 // ===== 分類標籤雙語轉換 =====
