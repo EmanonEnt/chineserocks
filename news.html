@@ -1629,5 +1629,60 @@
 
         initQuotaSystem();
     </script>
-    </body>
+    <script>
+// ===== 分類標籤雙語轉換 =====
+const categoryBilingualMap = {
+    '獨家': '獨家 EXCLUSIVE',
+    '現場': '現場 LIVE',
+    '專題': '專題 FEATURE',
+    '國際': '國際 INTERNATIONAL',
+    '新發行': '新發行 RELEASES',
+    '新聞': '新聞 NEWS',
+    '音樂': '音樂 MUSIC',
+    'ALL': '全部 ALL',
+    'EXCLUSIVE': '獨家 EXCLUSIVE',
+    'LIVE': '現場 LIVE',
+    'FEATURE': '專題 FEATURE',
+    'INTERNATIONAL': '國際 INTERNATIONAL',
+    'RELEASES': '新發行 RELEASES'
+};
+
+function translateCategory(category) {
+    if (!category) return '新聞 NEWS';
+    // 如果已經是雙語格式，直接返回
+    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
+        return category;
+    }
+    // 查找映射
+    return categoryBilingualMap[category] || category + ' NEWS';
+}
+
+// 自動轉換頁面中所有分類標籤
+function convertAllCategoryTags() {
+    // 轉換 featured-tag
+    document.querySelectorAll('.featured-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 hero-tag
+    document.querySelectorAll('.hero-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 side-tag
+    document.querySelectorAll('.side-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 news-category
+    document.querySelectorAll('.news-category').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+}
+
+// 頁面加載完成後執行轉換
+document.addEventListener('DOMContentLoaded', function() {
+    // 延遲執行，確保動態內容已加載
+    setTimeout(convertAllCategoryTags, 100);
+    setTimeout(convertAllCategoryTags, 500);
+    setTimeout(convertAllCategoryTags, 1000);
+});
+</script></body>
 </html>
