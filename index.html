@@ -2522,6 +2522,8 @@ html {
             border-radius: 4px;
         }
 
+        
+
         /* 响应式 */
         @media (max-width: 768px) {
             .ticker-content {
@@ -2547,124 +2549,9 @@ html {
 
             .ticker-countdown {
                 font-size: 0.8rem;
-            
-            .footer-content {
-                grid-template-columns:1fr !important;
-                gap:2rem !important;
-                padding:2rem 1rem !important;}
-            .footer-bottom {
-                padding:1rem !important;}}
+            }
         }
-    
-        /* 移动端新闻网格 - 强制覆盖 */
-        @media (max-width:768px) {
-            .news-grid-section {
-                padding:2rem 0 !important;}
-            .news-grid-section .section-header,
-            .news-grid-section .featured-news {
-                padding:0 1rem !important;}
-            .news-grid-section .featured-news {
-                display:grid !important;
-                grid-template-columns:1fr !important;
-                gap:1rem !important;
-                margin-bottom:2rem !important;}
-            .news-grid-section .featured-main {
-                display:block !important;
-                aspect-ratio:16/10 !important;
-                width:100% !important;}
-            .news-grid-section .featured-main img {
-                width:100% !important;
-                height:100% !important;
-                object-fit:cover !important;}
-            .news-grid-section .featured-overlay {
-                padding:2rem 1rem 1rem !important;}
-            .news-grid-section .featured-title {
-                font-size:1.2rem !important;}
-            .news-grid-section .featured-excerpt {
-                font-size:0.85rem !important;
-                display:none !important;}
-            .news-grid-section .featured-sidebar {
-                display:grid !important;
-                grid-template-columns:1fr 1fr !important;
-                gap:1rem !important;}
-            .news-grid-section .sidebar-item {
-                flex-direction:column !important;
-                padding-bottom:0 !important;
-                border-bottom:none !important;
-                background:rgba(0,0,0,0.05);
-                border-radius:8px;
-                overflow:hidden;}
-            .news-grid-section .sidebar-thumb {
-                width:100% !important;
-                height:auto !important;
-                aspect-ratio:16/10 !important;
-                margin-bottom:0 !important;}
-            .news-grid-section .sidebar-content {
-                padding:0.75rem !important;}
-            .news-grid-section .sidebar-content h4 {
-                font-size:0.85rem !important;
-                line-height:1.3 !important;
-                margin-bottom:0.25rem !important;}
-            .news-grid-section .sidebar-content .meta {
-                font-size:0.7rem !important;}
-            .news-grid-section .paywall-card {
-                display:none !important;}
-        
-            /* 移动端 Footer 布局 */
-            .footer-content {
-                grid-template-columns: 1fr 1fr !important;
-                gap: 2rem 1.5rem !important;
-                padding: 2rem 1rem !important;
-            }
-            .footer-content > div:first-child {
-                grid-column: 1 / -1;
-                text-align: center;
-                margin-bottom: 1rem;
-            }
-            .footer-title {
-                font-size: 0.8rem !important;
-                margin-bottom: 0.8rem !important;
-            }
-            .footer-links li {
-                margin-bottom: 0.4rem !important;
-            }
-            .footer-links a {
-                font-size: 0.8rem !important;
-            }
-            .footer-desc {
-                font-size: 0.85rem !important;
-            }
-            .footer-bottom {
-                padding: 1rem !important;
-                font-size: 0.75rem !important;
-            }
-}
-        
-        /* 全局溢出保护 */
-        img, video, canvas, iframe {
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* 确保固定定位元素不会导致滚动 */
-        .invite-float, .invite-btn {
-            transform: translateZ(0);
-        }
-        
-        /* 模态框溢出保护 */
-        .login-modal, .mobile-paywall-modal {
-            width: 100vw;
-            height: 100vh;
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .login-modal-content, .mobile-paywall-content {
-            max-height: 90vh;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        </style>
+    </style>
 
     <script>
         // 滚播新闻条功能
@@ -4816,7 +4703,61 @@ html {
                 // 清除 URL 参数，避免刷新重复登录
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
+        
+
+        // 處理文章點擊 - 檢查會員權限並記錄閱讀
+        function handleArticleClick(element, title) {
+            // 記錄閱讀
+            recordRead({ title: title });
+
+            // 檢查剩餘閱讀次數
+            let remainingReads = parseInt(localStorage.getItem('remainingReads') || '2');
+
+            // 檢查是否為會員
+            const isMember = localStorage.getItem('memberType') && localStorage.getItem('memberType') !== '免費用戶';
+
+            if (isMember) {
+                // 會員直接跳轉到文章頁面
+                // 從元素中獲取文章ID或URL
+                const articleId = element.dataset.articleId || title;
+                window.location.href = './article.html?id=' + encodeURIComponent(articleId);
+            } else if (remainingReads > 0) {
+                // 非會員但有剩餘次數
+                remainingReads--;
+                localStorage.setItem('remainingReads', remainingReads);
+
+                // 更新顯示
+                const remainingEl = document.getElementById('remainingReads');
+                if (remainingEl) {
+                    remainingEl.textContent = remainingReads;
+                }
+
+                // 跳轉到文章頁面
+                const articleId = element.dataset.articleId || title;
+                window.location.href = './article.html?id=' + encodeURIComponent(articleId);
+            } else {
+                // 無剩餘次數，顯示付費牆
+                if (window.innerWidth <= 768) {
+                    // 移動端顯示彈窗
+                    const modal = document.getElementById('mobilePaywallModal');
+                    if (modal) {
+                        modal.classList.add('active');
+                    }
+                } else {
+                    // 桌面端滾動到定價區域
+                    document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+                }
+            }
         }
+
+        // 關閉移動端付費牆彈窗
+        function closeMobilePaywall() {
+            const modal = document.getElementById('mobilePaywallModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+}
     </script>
 
     <!-- 登录弹窗 -->
