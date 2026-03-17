@@ -9,6 +9,8 @@ on:
     - cron: '0 4,10,14 * * 5,6,0'
     # 国际新闻：每周三和周六 12:00 (UTC 4:00)
     - cron: '0 4 * * 3,6'
+    # 港台新闻：每周二、五 12:00 (UTC 4:00)
+    - cron: '0 4 * * 2,5'
 
   workflow_dispatch:
     inputs:
@@ -18,9 +20,21 @@ on:
         default: 'test'
         type: choice
         options:
-          - china
-          - international
-          - test
+          - china          # 中國大陸音樂新聞
+          - international  # 國際音樂新聞
+          - hongkong_taiwan # 港台音樂新聞
+          - social         # 社交媒體（需配置RSSHub）
+          - test           # 測試模式
+      limit:
+        description: '每源抓取數量'
+        required: false
+        default: '10'
+        type: choice
+        options:
+          - '5'
+          - '10'
+          - '15'
+          - '20'
 
 jobs:
   fetch-news:
@@ -43,25 +57,57 @@ jobs:
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
       run: |
         # 根據不同條件運行不同模式
-        if [ "${{ github.event.inputs.mode }}" == "test" ]; then
-          echo "Running TEST mode..."
-          python scripts/fetch_news.py --source china --limit 1
-        elif [ "${{ github.event.inputs.mode }}" == "international" ]; then
-          echo "Running INTERNATIONAL mode..."
-          python scripts/fetch_news.py --source international --limit 8
-        elif [ "${{ github.event.inputs.mode }}" == "china" ]; then
+        MODE="${{ github.event.inputs.mode }}"
+        LIMIT="${{ github.event.inputs.limit }}"
+
+        # 如果沒有輸入，使用默認值
+        if [ -z "$MODE" ]; then
+          MODE="test"
+        fi
+        if [ -z "$LIMIT" ]; then
+          LIMIT="10"
+        fi
+
+        echo "=========================================="
+        echo "運行模式: $MODE"
+        echo "抓取數量: $LIMIT"
+        echo "=========================================="
+
+        # 手動觸發
+        if [ "$MODE" == "china" ]; then
           echo "Running CHINA mode..."
-          python scripts/fetch_news.py --source china --limit 15
+          python scripts/fetch_news.py --source china --limit $LIMIT
+        elif [ "$MODE" == "international" ]; then
+          echo "Running INTERNATIONAL mode..."
+          python scripts/fetch_news.py --source international --limit $LIMIT
+        elif [ "$MODE" == "hongkong_taiwan" ]; then
+          echo "Running HK/TW mode..."
+          python scripts/fetch_news.py --source hongkong_taiwan --limit $LIMIT
+        elif [ "$MODE" == "social" ]; then
+          echo "Running SOCIAL mode..."
+          python scripts/fetch_news.py --source social --limit $LIMIT
+        elif [ "$MODE" == "test" ]; then
+          echo "Running TEST mode..."
+          python scripts/fetch_news.py --source test --limit 3
         else
           # 自動判斷定時任務類型
           HOUR=$(date -u +%H)
           DOW=$(date -u +%u)  # 1-5 周一到周五, 6-7 周末
 
+          echo "Auto-detecting mode... Hour: $HOUR, Day: $DOW"
+
           if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
             echo "Auto: INTERNATIONAL mode (Wed/Sat 12:00 CST)"
             python scripts/fetch_news.py --source international --limit 8
+          elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
+            echo "Auto: HK/TW mode (Tue/Fri 12:00 CST)"
+            python scripts/fetch_news.py --source hongkong_taiwan --limit 8
           else
             echo "Auto: CHINA mode"
             python scripts/fetch_news.py --source china --limit 15
           fi
         fi
+
+        echo "=========================================="
+        echo "抓取完成"
+        echo "=========================================="
