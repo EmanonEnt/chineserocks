@@ -1420,7 +1420,7 @@ html {
         }
         </style>
     <!-- Google Sign-In SDK -->
-    <script src="https://accounts.google.com/gsi/client" async defer>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <!-- Facebook SDK -->
     <script>
@@ -1501,6 +1501,66 @@ html {
     document.addEventListener('DOMContentLoaded', updateQuotaDisplay);
 })();
 </script>
+    <!-- 统一会员系统 -->
+    <script>
+    (function() {
+        if (window.CRMemberSystem) return;
+
+        const MemberSystem = {
+            DAILY_QUOTA: 3,
+
+            getTodayReads: function() {
+                const today = new Date().toDateString();
+                const stored = localStorage.getItem('cr_readHistory');
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data.date === today) return data.count || 0;
+                }
+                return 0;
+            },
+
+            recordRead: function() {
+                if (this.isMember()) return true;
+                const today = new Date().toDateString();
+                const current = this.getTodayReads();
+                localStorage.setItem('cr_readHistory', JSON.stringify({
+                    date: today,
+                    count: current + 1
+                }));
+                return current + 1;
+            },
+
+            isMember: function() {
+                return localStorage.getItem('userLoggedIn') === 'true' || 
+                       localStorage.getItem('cr_member') === 'true';
+            },
+
+            getRemaining: function() {
+                if (this.isMember()) return Infinity;
+                return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
+            },
+
+            canRead: function(isPremium) {
+                if (this.isMember()) return true;
+                if (isPremium) return false;
+                return this.getRemaining() > 0;
+            }
+        };
+
+        window.CRMemberSystem = MemberSystem;
+        window.MemberSystem = MemberSystem;
+
+        // 更新额度显示
+        window.updateQuotaDisplay = function() {
+            const remaining = MemberSystem.getRemaining();
+            const el = document.getElementById('remainingReads');
+            if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
+        };
+
+        // 页面加载时更新
+        document.addEventListener('DOMContentLoaded', window.updateQuotaDisplay);
+    })();
+    </script>
 </head>
 <body>
 
@@ -2781,6 +2841,7 @@ html {
         // ===== 首頁新聞加載 - 與 NEWS 頁面邏輯一致 =====
         (function() {
             var allNews = [];
+            var remainingReads = parseInt(localStorage.getItem('remainingReads') || '3');
 
             // 分類標籤雙語轉換
             var categoryBilingualMap = {
@@ -2803,6 +2864,13 @@ html {
 
             function isMember() {
                 return localStorage.getItem('userLoggedIn') === 'true';
+            }
+
+            function updateQuotaDisplay() {
+                var el = document.getElementById('remainingReads');
+                if (el) el.textContent = remainingReads;
+                // 同時更新 localStorage
+                localStorage.setItem('remainingReads', remainingReads);
             }
 
             function showMobilePaywall() {
@@ -2838,28 +2906,23 @@ html {
                 return false;
             }
 
-            // 統一的文章打開函數 - 使用 CRMemberSystem
+            // 統一的文章打開函數 - 與 NEWS 頁面一致
             window.openArticle = function(article) {
-                // 使用统一的 MemberSystem 检查额度
-                if (!window.CRMemberSystem) {
-                    console.error('MemberSystem not loaded');
-                    return;
-                }
-
                 // 檢查是否還有免費額度
-                if (!window.CRMemberSystem.canRead(checkIsPremium(article))) {
+                if (!isMember() && remainingReads <= 0) {
                     showMobilePaywall();
                     return;
                 }
-
-                // 扣除額度并记录
-                window.CRMemberSystem.recordRead();
-
-                // 更新显示
-                if (window.updateQuotaDisplay) {
-                    window.updateQuotaDisplay();
+                // 檢查是否為會員專享
+                if (checkIsPremium(article) && !isMember()) {
+                    showMobilePaywall();
+                    return;
                 }
-
+                // 扣除額度
+                if (!isMember()) {
+                    remainingReads--;
+                    updateQuotaDisplay();
+                }
                 // 打開外鏈
                 if (article.source_url || article.sourceUrl) {
                     window.open(article.source_url || article.sourceUrl, '_blank');
@@ -2944,7 +3007,7 @@ html {
                 var imageUrl = getImageUrl(mainNews);
 
                 var html = '<article class="featured-main" onclick="openArticle(window._homeMainNews)">' +
-                    '<img src="' + imageUrl + '" alt="" onerror="this.src=\'" + getDefaultImage() + "\'">' +
+                    '<img src="' + imageUrl + '" alt="" onerror="this.src='' + getDefaultImage() + ''">' +
                     '<div class="featured-overlay">' +
                     '<span class="featured-tag">' + translateCategory(mainNews.category) + '</span>' +
                     '<h3 class="featured-title">' + (mainNews.title || '無標題') + '</h3>' +
@@ -2960,7 +3023,7 @@ html {
                     window._homeSideNews.push(item);
                     var sideImageUrl = getImageUrl(item);
                     html += '<article class="sidebar-item" onclick="openArticle(window._homeSideNews[' + index + '])">' +
-                        '<img src="' + sideImageUrl + '" alt="" class="sidebar-thumb" onerror="this.src=\'" + getDefaultImage() + "\'">' +
+                        '<img src="' + sideImageUrl + '" alt="" class="sidebar-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
                         '<div class="sidebar-content">' +
                         '<h4>' + item.title + '</h4>' +
                         '<p class="meta">' + translateCategory(item.category) + ' · ' + formatDate(item.published_date) + '</p>' +
@@ -4796,7 +4859,7 @@ html {
     updateQuotaDisplay();
 }
 
-// 额度系统由 CRMemberSystem 统一管理
+initQuotaSystem();
         
         updateQuotaDisplay();
 
@@ -5188,8 +5251,7 @@ html {
         </div>
     </div>
 
-</script>
-    <script>
+<script>
 // ===== 分類標籤雙語轉換 =====
 const categoryBilingualMap = {
     '獨家': '獨家 EXCLUSIVE',
