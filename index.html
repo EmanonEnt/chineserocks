@@ -2825,7 +2825,7 @@ html {
                     <article class="featured-main" onclick="handleArticleClick(this, '${(mainNews.title || '').replace(/'/g, "\'")}')">
                         <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainNews.title || ''}" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'">
                         <div class="featured-overlay">
-                            <span class="featured-tag">${mainNews.category || '新聞'}</span>
+                            <span class="featured-tag">${translateCategory(mainNews.category) || '新聞 NEWS'}</span>
                             <h3 class="featured-title">${mainNews.title || ''}</h3>
                             <p class="featured-excerpt">${(mainNews.content || '').substring(0, 80)}...</p>
                         </div>
@@ -2840,7 +2840,7 @@ html {
                             <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${item.title || ''}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'">
                             <div class="sidebar-content">
                                 <h4>${item.title || ''}</h4>
-                                <p class="meta">${item.category || '新聞'} · ${formatHomeDate(item.published_date)}</p>
+                                <p class="meta">${translateCategory(item.category) || '新聞 NEWS'} · ${formatHomeDate(item.published_date)}</p>
                             </div>
                         </article>
                     `;
