@@ -27,6 +27,13 @@
             newsData = await res.json();
             allNews = newsData.data?.all || newsData.data?.latest || [];
 
+            // 按发布日期排序（最新的在前）
+            allNews.sort((a, b) => {
+                const dateA = new Date(a.published_date || a.created_time || 0);
+                const dateB = new Date(b.published_date || b.created_time || 0);
+                return dateB - dateA; // 倒序：新的在前
+            });
+
             console.log('加載新聞:', allNews.length, '條');
 
             if (allNews.length === 0) {
