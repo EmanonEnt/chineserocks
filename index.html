@@ -2837,211 +2837,7 @@ html {
         </div>
     </section>
 
-    <script>
-        // ===== 首頁新聞加載 - 與 NEWS 頁面邏輯一致 =====
-        (function() {
-            var allNews = [];
-            var remainingReads = parseInt(localStorage.getItem('remainingReads') || '3');
-
-            // 分類標籤雙語轉換
-            var categoryBilingualMap = {
-                '獨家': '獨家 EXCLUSIVE',
-                '現場': '現場 LIVE',
-                '專題': '專題 FEATURE',
-                '國際': '國際 INTERNATIONAL',
-                '新發行': '新發行 RELEASES',
-                '新聞': '新聞 NEWS',
-                '音樂': '音樂 MUSIC'
-            };
-
-            function translateCategory(category) {
-                if (!category) return '新聞 NEWS';
-                if (category.indexOf(' ') !== -1 && /[a-zA-Z]/.test(category)) {
-                    return category;
-                }
-                return categoryBilingualMap[category] || category + ' NEWS';
-            }
-
-            function isMember() {
-                return localStorage.getItem('userLoggedIn') === 'true';
-            }
-
-            function updateQuotaDisplay() {
-                var el = document.getElementById('remainingReads');
-                if (el) el.textContent = remainingReads;
-                // 同時更新 localStorage
-                localStorage.setItem('remainingReads', remainingReads);
-            }
-
-            function showMobilePaywall() {
-                var modal = document.getElementById('mobilePaywallModal');
-                if (modal) modal.classList.add('active');
-            }
-
-            function getDefaultImage() {
-                return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
-            }
-
-            function formatDate(date) {
-                if (!date) return '';
-                var d = new Date(date);
-                if (isNaN(d.getTime())) return '';
-                var now = new Date();
-                var diff = now - d;
-                var days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                if (days === 0) return '今天';
-                if (days === 1) return '昨天';
-                if (days < 7) return days + '天前';
-                return d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate();
-            }
-
-            function getImageUrl(article) {
-                return article.cover_image || article.coverImage || article.image || article.cover || article.thumbnail || getDefaultImage();
-            }
-
-            function checkIsPremium(article) {
-                if (article.is_premium === true) return true;
-                if (article.isPremium === true) return true;
-                if (article.tags && article.tags.indexOf('會員專享') !== -1) return true;
-                return false;
-            }
-
-            // 統一的文章打開函數 - 與 NEWS 頁面一致
-            window.openArticle = function(article) {
-                // 檢查是否還有免費額度
-                if (!isMember() && remainingReads <= 0) {
-                    showMobilePaywall();
-                    return;
-                }
-                // 檢查是否為會員專享
-                if (checkIsPremium(article) && !isMember()) {
-                    showMobilePaywall();
-                    return;
-                }
-                // 扣除額度
-                if (!isMember()) {
-                    remainingReads--;
-                    updateQuotaDisplay();
-                }
-                // 打開外鏈
-                if (article.source_url || article.sourceUrl) {
-                    window.open(article.source_url || article.sourceUrl, '_blank');
-                } else {
-                    alert('文章詳情頁功能開發中...\n標題: ' + article.title);
-                }
-            };
-
-            // 加載新聞數據
-            function loadHomeFeaturedNews() {
-                var container = document.getElementById('home-news-container');
-                if (!container) return;
-
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;"><div style="font-size: 2rem; margin-bottom: 1rem;">📰</div><p>加載新聞中...</p></div>';
-
-                fetch('data/news.json?t=' + Date.now(), {
-                    cache: 'no-store',
-                    headers: { 'Accept': 'application/json' }
-                })
-                .then(function(res) {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.json();
-                })
-                .then(function(data) {
-                    // 兼容多種數據格式
-                    if (Array.isArray(data)) {
-                        allNews = data;
-                    } else if (data.data && data.data.all) {
-                        allNews = data.data.all;
-                    } else if (data.articles) {
-                        allNews = data.articles;
-                    } else {
-                        allNews = [];
-                    }
-
-                    // 排序
-                    allNews.sort(function(a, b) {
-                        var dateA = new Date(b.published_date || b.publishDate || b.date || b.created_time || 0);
-                        var dateB = new Date(a.published_date || a.publishDate || a.date || a.created_time || 0);
-                        return dateA - dateB;
-                    });
-
-                    renderHomeNews(container, allNews);
-                })
-                .catch(function(e) {
-                    console.error('加載失敗:', e);
-                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">新聞加載失敗</div>';
-                });
-            }
-
-            function renderHomeNews(container, news) {
-                if (!news || !news.length) {
-                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">暫無新聞</div>';
-                    return;
-                }
-
-                // 篩選 featured 文章
-                var featuredNews = news.filter(function(item) {
-                    return item.featured === true || item.homeFeatured === true;
-                });
-
-                // 如果沒有 featured，使用最新的5個
-                if (featuredNews.length === 0) {
-                    featuredNews = news.slice(0, 5);
-                } else {
-                    // 按 displayOrder 排序
-                    featuredNews.sort(function(a, b) {
-                        return (a.displayOrder || 999) - (b.displayOrder || 999);
-                    });
-                    // 最多取5個
-                    featuredNews = featuredNews.slice(0, 5);
-                }
-
-                if (featuredNews.length === 0) {
-                    container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">暫無新聞</div>';
-                    return;
-                }
-
-                var mainNews = featuredNews[0];
-                var sideNews = featuredNews.slice(1);
-                var isPremium = checkIsPremium(mainNews);
-                var imageUrl = getImageUrl(mainNews);
-
-                var html = '<article class="featured-main" onclick="openArticle(window._homeMainNews)">' +
-                    '<img src="' + imageUrl + '" alt="" onerror="this.src='' + getDefaultImage() + ''">' +
-                    '<div class="featured-overlay">' +
-                    '<span class="featured-tag">' + translateCategory(mainNews.category) + '</span>' +
-                    '<h3 class="featured-title">' + (mainNews.title || '無標題') + '</h3>' +
-                    '<p class="featured-excerpt">' + (mainNews.content || '').substring(0, 80) + '...</p>' +
-                    '</div></article>' +
-                    '<div class="featured-sidebar">';
-
-                // 存儲主新聞到全局變量
-                window._homeMainNews = mainNews;
-                window._homeSideNews = [];
-
-                sideNews.slice(0, 4).forEach(function(item, index) {
-                    window._homeSideNews.push(item);
-                    var sideImageUrl = getImageUrl(item);
-                    html += '<article class="sidebar-item" onclick="openArticle(window._homeSideNews[' + index + '])">' +
-                        '<img src="' + sideImageUrl + '" alt="" class="sidebar-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
-                        '<div class="sidebar-content">' +
-                        '<h4>' + item.title + '</h4>' +
-                        '<p class="meta">' + translateCategory(item.category) + ' · ' + formatDate(item.published_date) + '</p>' +
-                        '</div></article>';
-                });
-
-                html += '</div>';
-                container.innerHTML = html;
-            }
-
-            // 頁面加載完成後執行
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', loadHomeFeaturedNews);
-            } else {
-                loadHomeFeaturedNews();
-            }
-        })();
-    </script><!-- 榜单区 -->
+    <!-- 榜单区 -->
     <section class="charts-section">
         <div class="charts-container">
             <div class="charts-header">
@@ -5114,6 +4910,210 @@ initQuotaSystem();
                 <button class="sidebar-btn-primary" onclick="openLoginModalFromSidebar()">立即登录</button>
                 <div class="sidebar-divider"><span>会员特权</span></div>
                 <ul class="sidebar-features">
+                    <li>✓ 无限新闻阅读</li>
+                    <li>✓ 高权重投票</li>
+                    <li>✓ 1080P LIVE TV</li>
+                    <li>✓ 演出优先购票</li>
+                </ul>
+            </div>
+
+            <!-- 已登录状态 -->
+            <div id="sidebarLoggedIn" class="sidebar-section" style="display: none;">
+                <div class="user-info-header">
+                    <img id="sidebarAvatar" src="" alt="头像" class="user-avatar">
+                    <div class="user-meta">
+                        <h3 id="sidebarNickname" class="user-name">摇滚用户</h3>
+                        <span id="sidebarMemberBadge" class="member-badge">体验会员</span>
+                    </div>
+                </div>
+
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <span id="statVotes" class="stat-num">0</span>
+                        <span class="stat-label">投票</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="statReads" class="stat-num">0</span>
+                        <span class="stat-label">阅读</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="statFavs" class="stat-num">0</span>
+                        <span class="stat-label">收藏</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-menu">
+                    <div class="menu-group">
+                        <div class="menu-title">我的活动</div>
+                        <a href="#" class="menu-item" onclick="showMyVotes(); return false;">
+                            <span class="menu-icon">🗳️</span>
+                            <span class="menu-text">我的投票</span>
+                            <span id="menuVoteCount" class="menu-badge">0</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showMyReads(); return false;">
+                            <span class="menu-icon">📰</span>
+                            <span class="menu-text">阅读历史</span>
+                            <span id="menuReadCount" class="menu-badge">0</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showMyFavs(); return false;">
+                            <span class="menu-icon">⭐</span>
+                            <span class="menu-text">我的收藏</span>
+                            <span id="menuFavCount" class="menu-badge">0</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-group">
+                        <div class="menu-title">会员服务</div>
+                        <a href="#pricing" class="menu-item" onclick="closeUserSidebar(); return true;">
+                            <span class="menu-icon">👑</span>
+                            <span class="menu-text">升级会员</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showInvite(); return false;">
+                            <span class="menu-icon">🎁</span>
+                            <span class="menu-text">邀请返利</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-group">
+                        <div class="menu-title">账号设置</div>
+                        <a href="#" class="menu-item" onclick="showAccountSettings(); return false;">
+                            <span class="menu-icon">⚙️</span>
+                            <span class="menu-text">账号管理</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showSyncStatus(); return false;">
+                            <span class="menu-icon">☁️</span>
+                            <span class="menu-text">同步状态</span>
+                            <span id="syncStatusBadge" class="sync-badge">已同步</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button class="sidebar-btn-logout" onclick="logout()">退出登录</button>
+            </div>
+
+            <!-- 子页面：我的投票 -->
+            <div id="sidebarPageVotes" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">我的投票</h3>
+                <div id="votesList" class="activity-list">
+                    <div class="empty-state">暂无投票记录</div>
+                </div>
+            </div>
+
+            <!-- 子页面：阅读历史 -->
+            <div id="sidebarPageReads" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">阅读历史</h3>
+                <div id="readsList" class="activity-list">
+                    <div class="empty-state">暂无阅读记录</div>
+                </div>
+            </div>
+
+            <!-- 子页面：我的收藏 -->
+            <div id="sidebarPageFavs" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">我的收藏</h3>
+                <div id="favsList" class="activity-list">
+                    <div class="empty-state">暂无收藏</div>
+                </div>
+            </div>
+
+            <!-- 子页面：账号设置 -->
+            <div id="sidebarPageSettings" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">账号管理</h3>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="settingNickname" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>绑定手机</label>
+                        <div class="setting-item">
+                            <span id="settingPhone">未绑定</span>
+                            <button class="setting-btn" onclick="bindPhone()">绑定</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>绑定邮箱</label>
+                        <div class="setting-item">
+                            <span id="settingEmail">未绑定</span>
+                            <button class="setting-btn" onclick="bindEmail()">绑定</button>
+                        </div>
+                    </div>
+                    <button class="sidebar-btn-primary" onclick="saveSettings()">保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ===== 分類標籤雙語轉換 =====
+const categoryBilingualMap = {
+    '獨家': '獨家 EXCLUSIVE',
+    '現場': '現場 LIVE',
+    '專題': '專題 FEATURE',
+    '國際': '國際 INTERNATIONAL',
+    '新發行': '新發行 RELEASES',
+    '新聞': '新聞 NEWS',
+    '音樂': '音樂 MUSIC',
+    'ALL': '全部 ALL',
+    'EXCLUSIVE': '獨家 EXCLUSIVE',
+    'LIVE': '現場 LIVE',
+    'FEATURE': '專題 FEATURE',
+    'INTERNATIONAL': '國際 INTERNATIONAL',
+    'RELEASES': '新發行 RELEASES'
+};
+
+function translateCategory(category) {
+    if (!category) return '新聞 NEWS';
+    // 如果已經是雙語格式，直接返回
+    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
+        return category;
+    }
+    // 查找映射
+    return categoryBilingualMap[category] || category + ' NEWS';
+}
+
+// 自動轉換頁面中所有分類標籤
+function convertAllCategoryTags() {
+    // 轉換 featured-tag
+    document.querySelectorAll('.featured-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 hero-tag
+    document.querySelectorAll('.hero-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 side-tag
+    document.querySelectorAll('.side-tag').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+    // 轉換 news-category
+    document.querySelectorAll('.news-category').forEach(el => {
+        el.textContent = translateCategory(el.textContent.trim());
+    });
+}
+
+// 頁面加載完成後執行轉換
+document.addEventListener('DOMContentLoaded', function() {
+    // 延遲執行，確保動態內容已加載
+    setTimeout(convertAllCategoryTags, 100);
+    setTimeout(convertAllCategoryTags, 500);
+    setTimeout(convertAllCategoryTags, 1000);
+});
+</script>    <script src="js/news-loader.js"></script>
+    <script>
+        // 首页新闻初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof loadNews === 'function') {
+                loadNews('home');
+            }
+        });
+    </script>
+</body>
+</html>
+res">
                     <li>✓ 无限新闻阅读</li>
                     <li>✓ 高权重投票</li>
                     <li>✓ 1080P LIVE TV</li>
