@@ -5102,7 +5102,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
 });
-</script>    <!-- 首頁新聞加載腳本 - 直接從 NOTION 調取 -->
+</script>        <!-- 首頁新聞加載腳本 - 直接從 NOTION 調取 -->
     <script>
     (function() {
         // NOTION API 配置
@@ -5132,7 +5132,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return categoryMap[category] || category + ' NEWS';
         }
 
-        // 從 NOTION 獲取新聞數據
+        // 轉義標題中的引號
+        function escapeTitle(title) {
+            return title.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+        }
+
+                // 從 NOTION 獲取新聞數據
         async function fetchNewsFromNotion() {
             try {
                 const response = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`, {
@@ -5143,7 +5148,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        sorts: [{ timestamp: 'created_time', direction: 'descending' }],
+                        filter: {
+                            property: 'Home Featured',
+                            checkbox: {
+                                equals: true
+                            }
+                        },
+                        sorts: [
+                            { property: 'Display Order', direction: 'ascending' },
+                            { timestamp: 'created_time', direction: 'descending' }
+                        ],
                         page_size: 5
                     })
                 });
@@ -5153,20 +5167,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 const data = await response.json();
+                console.log('NOTION API 響應:', data);
                 return data.results || [];
             } catch (error) {
                 console.error('獲取 NOTION 新聞失敗:', error);
-                return [];
+                // 如果筛选失败，尝试不加筛选获取
+                try {
+                    const fallbackResponse = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}/query`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${NOTION_API_KEY}`,
+                            'Notion-Version': '2022-06-28',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            sorts: [{ timestamp: 'created_time', direction: 'descending' }],
+                            page_size: 5
+                        })
+                    });
+                    const fallbackData = await fallbackResponse.json();
+                    return fallbackData.results || [];
+                } catch (fallbackError) {
+                    console.error('備援獲取也失敗:', fallbackError);
+                    return [];
+                }
             }
         }
-
         // 解析 NOTION 頁面數據
         function parseNotionPage(page) {
             const properties = page.properties || {};
 
-            // 獲取標題
+            // 獲取標題 - 支持中文 "標題" 或英文 "Title"
             let title = '';
-            if (properties.Title?.title?.[0]?.text?.content) {
+            if (properties['標題']?.title?.[0]?.text?.content) {
+                title = properties['標題'].title[0].text.content;
+            } else if (properties.Title?.title?.[0]?.text?.content) {
                 title = properties.Title.title[0].text.content;
             } else if (properties.title?.title?.[0]?.text?.content) {
                 title = properties.title.title[0].text.content;
@@ -5174,17 +5209,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 title = properties.Name.title[0].text.content;
             }
 
-            // 獲取分類
+            // 獲取分類 - 支持中文 "類型" 或英文 "Category"
             let category = '新聞';
-            if (properties.Category?.select?.name) {
+            if (properties['類型']?.select?.name) {
+                category = properties['類型'].select.name;
+            } else if (properties['类型']?.select?.name) {
+                category = properties['类型'].select.name;
+            } else if (properties.Category?.select?.name) {
                 category = properties.Category.select.name;
             } else if (properties.Tags?.multi_select?.[0]?.name) {
                 category = properties.Tags.multi_select[0].name;
             }
 
-            // 獲取摘要
+            // 獲取摘要 - 支持中文 "內容" 或英文 "Content/Excerpt"
             let excerpt = '';
-            if (properties.Excerpt?.rich_text?.[0]?.text?.content) {
+            if (properties['內容']?.rich_text?.[0]?.text?.content) {
+                excerpt = properties['內容'].rich_text[0].text.content;
+            } else if (properties['内容']?.rich_text?.[0]?.text?.content) {
+                excerpt = properties['内容'].rich_text[0].text.content;
+            } else if (properties.Excerpt?.rich_text?.[0]?.text?.content) {
                 excerpt = properties.Excerpt.rich_text[0].text.content;
             } else if (properties.Summary?.rich_text?.[0]?.text?.content) {
                 excerpt = properties.Summary.rich_text[0].text.content;
@@ -5192,9 +5235,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 excerpt = properties.Description.rich_text[0].text.content;
             }
 
-            // 獲取圖片
+            // 獲取圖片 - 支持中文 "封面圖" 或英文 "Image/Cover"
             let image = '';
-            if (properties.Image?.files?.[0]?.file?.url) {
+            if (properties['封面圖']?.files?.[0]?.file?.url) {
+                image = properties['封面圖'].files[0].file.url;
+            } else if (properties['封面图']?.files?.[0]?.file?.url) {
+                image = properties['封面图'].files[0].file.url;
+            } else if (properties.Image?.files?.[0]?.file?.url) {
                 image = properties.Image.files[0].file.url;
             } else if (properties.Image?.files?.[0]?.external?.url) {
                 image = properties.Image.files[0].external.url;
@@ -5206,7 +5253,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 如果沒有圖片，使用默認圖片
             if (!image) {
-                image = `https://images.unsplash.com/photo-${['1493225457124-a3eb161ffa5f', '1514525253161-7a46d19cd819', '1459749411175-04bf5292ceea', '1501386761578-eac5c94b800a', '1470225620780-dba8ba36b745'][Math.floor(Math.random() * 5)]}?w=800&h=450&fit=crop`;
+                const defaultImages = [
+                    '1493225457124-a3eb161ffa5f',
+                    '1514525253161-7a46d19cd819',
+                    '1459749411175-04bf5292ceea',
+                    '1501386761578-eac5c94b800a',
+                    '1470225620780-dba8ba36b745'
+                ];
+                image = `https://images.unsplash.com/photo-${defaultImages[Math.floor(Math.random() * defaultImages.length)]}?w=800&h=450&fit=crop`;
             }
 
             // 獲取日期
@@ -5215,35 +5269,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 date = properties.Date.date.start;
             } else if (properties.PublishDate?.date?.start) {
                 date = properties.PublishDate.date.start;
+            } else if (properties['發布日期']?.date?.start) {
+                date = properties['發布日期'].date.start;
+            } else if (properties['发布日期']?.date?.start) {
+                date = properties['发布日期'].date.start;
             } else {
                 date = page.created_time ? page.created_time.split('T')[0] : new Date().toISOString().split('T')[0];
             }
 
             // 獲取 slug 或 ID
-            const slug = properties.Slug?.rich_text?.[0]?.text?.content || page.id.replace(/-/g, '');
+            const slug = properties.Slug?.rich_text?.[0]?.text?.content || 
+                        properties['網址别名']?.rich_text?.[0]?.text?.content ||
+                        page.id.replace(/-/g, '');
 
-            // 檢查是否付費文章
-            const isPremium = properties.Premium?.checkbox === true || 
-                             properties['Paywall']?.checkbox === true ||
-                             properties['會員專屬']?.checkbox === true;
+            // 檢查是否付費文章 - 支持中文 "會員專屬" 或英文 "Premium"
+            const isPremium = properties['會員專屬']?.checkbox === true || 
+                             properties['会员专属']?.checkbox === true ||
+                             properties.Premium?.checkbox === true || 
+                             properties['Paywall']?.checkbox === true;
 
             return {
                 id: page.id,
-                title,
+                title: title,
                 category: translateCategory(category),
                 excerpt: excerpt.substring(0, 120) + (excerpt.length > 120 ? '...' : ''),
-                image,
-                date,
-                slug,
-                isPremium
+                image: image,
+                date: date,
+                slug: slug,
+                isPremium: isPremium
             };
-        }
-
-        // 渲染首頁新聞
+        }// 渲染首頁新聞
         function renderHomeNews(articles) {
             const container = document.getElementById('home-news-container');
-            if (!container || articles.length === 0) {
-                if (container) container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">暫無新聞</div>';
+            if (!container) {
+                console.error('找不到 home-news-container 容器');
+                return;
+            }
+
+            if (articles.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #666;">暫無新聞</div>';
                 return;
             }
 
@@ -5252,39 +5316,45 @@ document.addEventListener('DOMContentLoaded', function() {
             const sidebarArticles = articles.slice(1, 5);
 
             // 渲染主打文章
-            const mainHTML = `
-                <div class="featured-main" onclick="handleArticleClick('${mainArticle.slug}', ${mainArticle.isPremium}, '${mainArticle.title.replace(/'/g, "\'")}')">
-                    <img src="${mainArticle.image}" alt="${mainArticle.title}" loading="lazy">
-                    <div class="featured-overlay">
-                        <span class="featured-tag">${mainArticle.category}</span>
-                        <h3 class="featured-title">${mainArticle.title}</h3>
-                        <p class="featured-excerpt">${mainArticle.excerpt}</p>
-                    </div>
-                </div>
-            `;
+            const mainHTML = '<div class="featured-main" data-slug="' + mainArticle.slug + '" data-premium="' + mainArticle.isPremium + '" data-title="' + escapeTitle(mainArticle.title) + '">' +
+                '<img src="' + mainArticle.image + '" alt="' + escapeTitle(mainArticle.title) + '" loading="lazy">' +
+                '<div class="featured-overlay">' +
+                    '<span class="featured-tag">' + mainArticle.category + '</span>' +
+                    '<h3 class="featured-title">' + mainArticle.title + '</h3>' +
+                    '<p class="featured-excerpt">' + mainArticle.excerpt + '</p>' +
+                '</div>' +
+            '</div>';
 
             // 渲染側邊欄文章
-            const sidebarHTML = sidebarArticles.map(article => `
-                <div class="sidebar-item" onclick="handleArticleClick('${article.slug}', ${article.isPremium}, '${article.title.replace(/'/g, "\'")}')">
-                    <img src="${article.image}" alt="${article.title}" class="sidebar-thumb" loading="lazy">
-                    <div class="sidebar-content">
-                        <h4 style="font-size: 0.9rem; font-weight: 700; color: #0a0a0a; margin-bottom: 0.3rem; line-height: 1.3;">${article.title}</h4>
-                        <p class="meta" style="font-size: 0.75rem; color: #555;">${article.category} · ${article.date}</p>
-                    </div>
-                </div>
-            `).join('');
+            let sidebarHTML = '<div class="featured-sidebar">';
+            sidebarArticles.forEach(function(article) {
+                sidebarHTML += '<div class="sidebar-item" data-slug="' + article.slug + '" data-premium="' + article.isPremium + '" data-title="' + escapeTitle(article.title) + '">' +
+                    '<img src="' + article.image + '" alt="' + escapeTitle(article.title) + '" class="sidebar-thumb" loading="lazy">' +
+                    '<div class="sidebar-content">' +
+                        '<h4 style="font-size: 0.9rem; font-weight: 700; color: #0a0a0a; margin-bottom: 0.3rem; line-height: 1.3;">' + article.title + '</h4>' +
+                        '<p class="meta" style="font-size: 0.75rem; color: #555;">' + article.category + ' · ' + article.date + '</p>' +
+                    '</div>' +
+                '</div>';
+            });
+            sidebarHTML += '</div>';
 
-            container.innerHTML = mainHTML + `
-                <div class="featured-sidebar">
-                    ${sidebarHTML}
-                </div>
-            `;
+            container.innerHTML = mainHTML + sidebarHTML;
+
+            // 綁定點擊事件
+            container.querySelectorAll('.featured-main, .sidebar-item').forEach(function(el) {
+                el.addEventListener('click', function() {
+                    const slug = this.getAttribute('data-slug');
+                    const isPremium = this.getAttribute('data-premium') === 'true';
+                    const title = this.getAttribute('data-title');
+                    handleArticleClick(slug, isPremium, title);
+                });
+            });
         }
 
         // 處理文章點擊
-        window.handleArticleClick = function(slug, isPremium, title) {
+        function handleArticleClick(slug, isPremium, title) {
             // 檢查閱讀權限
-            if (isPremium && !window.CRMemberSystem?.isMember()) {
+            if (isPremium && typeof CRMemberSystem !== 'undefined' && !CRMemberSystem.isMember()) {
                 // 付費文章需要會員
                 if (window.innerWidth <= 768) {
                     const modal = document.getElementById('mobilePaywallModal');
@@ -5295,24 +5365,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // 記錄閱讀
-            if (window.CRMemberSystem && !window.CRMemberSystem.canRead(isPremium)) {
+            // 檢查免費額度
+            if (typeof CRMemberSystem !== 'undefined' && !CRMemberSystem.canRead(isPremium)) {
                 if (window.innerWidth <= 768) {
                     const modal = document.getElementById('mobilePaywallModal');
                     if (modal) modal.classList.add('active');
+                } else {
+                    alert('今日免費閱讀額度已用完，請升級會員');
                 }
                 return;
             }
 
             // 記錄閱讀並跳轉
-            if (window.recordRead) {
-                window.recordRead({ title: title, url: `article.html?slug=${slug}` });
+            if (typeof recordRead === 'function') {
+                recordRead({ title: title, url: 'article.html?slug=' + slug });
             }
-            window.CRMemberSystem?.recordRead();
-            window.updateQuotaDisplay?.();
+            if (typeof CRMemberSystem !== 'undefined') {
+                CRMemberSystem.recordRead();
+            }
+            if (typeof updateQuotaDisplay === 'function') {
+                updateQuotaDisplay();
+            }
 
-            window.location.href = `article.html?slug=${slug}`;
-        };
+            window.location.href = 'article.html?slug=' + slug;
+        }
 
         // 初始化加載
         async function initHomeNews() {
@@ -5322,7 +5398,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const pages = await fetchNewsFromNotion();
-            const articles = pages.map(parseNotionPage).filter(a => a.title);
+            console.log('NOTION 返回數據:', pages);
+            const articles = pages.map(parseNotionPage).filter(function(a) { return a.title; });
+            console.log('解析後文章:', articles);
             renderHomeNews(articles);
         }
 
@@ -5529,6 +5607,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
 });
-</script></script>
+</script>
     </body>
 </html>
