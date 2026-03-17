@@ -190,7 +190,6 @@ def save_to_json(articles):
     data = {
         "last_updated": datetime.now().isoformat(),
         "total_count": len(articles),
-        "news": articles,
         "data": {
             "all": articles,
             "latest": articles[:10] if len(articles) >= 10 else articles
