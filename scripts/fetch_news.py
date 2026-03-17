@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v5.0 - 多源版
-添加更多音樂新聞 RSS 源
+ChineseRocks 新闻抓取脚本 v5.1 - 修復版
+修復 Notion API 調用和日期格式問題
 """
 
 import os
@@ -12,6 +12,7 @@ import hashlib
 import re
 import argparse
 from datetime import datetime
+from dateutil import parser as date_parser
 import feedparser
 import requests
 from notion_client import Client
@@ -25,8 +26,6 @@ SOURCES = {
     "china": [
         {"name": "豆瓣音乐", "url": "https://www.douban.com/feed/review/music", "enabled": True, "category": "新聞"},
         {"name": "新浪音乐", "url": "https://rss.sina.com.cn/ent/music/focus15.xml", "enabled": True, "category": "新聞"},
-        {"name": "QQ音乐", "url": "https://y.qq.com/feed.xml", "enabled": False, "category": "新聞"},  # 需要驗證
-        {"name": "网易云音乐", "url": "https://music.163.com/rss", "enabled": False, "category": "新聞"},  # 需要驗證
     ],
     "international": [
         {"name": "Pitchfork", "url": "https://pitchfork.com/rss/news", "enabled": True, "category": "國際"},
@@ -38,11 +37,6 @@ SOURCES = {
     ],
     "hongkong_taiwan": [
         {"name": "KKBOX", "url": "https://www.kkbox.com/hk/tc/rss/news.xml", "enabled": True, "category": "新聞"},
-    ],
-    "social": [
-        # 社交媒體需要 RSSHub 或特殊處理
-        {"name": "小红书-音乐", "url": "https://rsshub.app/xiaohongshu/board/音樂", "enabled": False, "category": "新聞"},
-        {"name": "Facebook-音樂", "url": "https://rsshub.app/facebook/page/音樂頁面", "enabled": False, "category": "國際"},
     ],
     "test": [
         {"name": "豆瓣音乐", "url": "https://www.douban.com/feed/review/music", "enabled": True, "category": "新聞"},
@@ -59,14 +53,14 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v5.0 - 多源版")
+        print("ChineseRocks 新闻抓取系统 v5.1")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print("="*70)
 
         sources = SOURCES.get(self.source_type, [])
         enabled_sources = [s for s in sources if s["enabled"]]
-        print(f"\n抓取 {len(enabled_sources)} 个源 (共 {len(sources)} 个)")
+        print(f"\n抓取 {len(enabled_sources)} 个源")
         print("-"*50)
 
         for source in sources:
@@ -81,16 +75,7 @@ class NewsFetcher:
     def _fetch_source(self, source):
         try:
             print(f"[{source['name']}]")
-            print(f"  URL: {source['url'][:60]}...")
-
             feed = feedparser.parse(source['url'])
-
-            # 檢查抓取結果
-            if hasattr(feed, 'status') and feed.status != 200:
-                print(f"  ⚠️ HTTP狀態碼: {feed.status}")
-
-            if hasattr(feed, 'bozo') and feed.bozo:
-                print(f"  ⚠️ 解析警告: {feed.bozo_exception}")
 
             count = 0
             for entry in feed.entries[:self.limit]:
@@ -111,10 +96,8 @@ class NewsFetcher:
             summary = entry.get('summary', entry.get('description', ''))
             summary = self._clean_html(summary)
 
-            # 獲取發布時間
-            published = entry.get('published', entry.get('updated', ''))
-            if not published:
-                published = datetime.now().isoformat()
+            # 修復日期解析
+            published = self._parse_date(entry)
 
             # 獲取圖片
             image = self._extract_image(entry)
@@ -138,27 +121,47 @@ class NewsFetcher:
             print(f"    解析條目失敗: {e}")
             return None
 
+    def _parse_date(self, entry):
+        """修復日期解析，返回 ISO 8601 格式"""
+        try:
+            # 嘗試多個日期字段
+            date_str = entry.get('published', entry.get('updated', entry.get('pubDate', '')))
+
+            if date_str:
+                # 使用 dateutil 解析各種格式
+                dt = date_parser.parse(date_str)
+                return dt.strftime("%Y-%m-%d")
+            else:
+                # 默認今天
+                return datetime.now().strftime("%Y-%m-%d")
+        except Exception as e:
+            print(f"    日期解析失敗，使用今天: {e}")
+            return datetime.now().strftime("%Y-%m-%d")
+
     def _extract_image(self, entry):
         """從 RSS 條目提取圖片"""
-        # 1. 檢查 media:content
-        if 'media_content' in entry:
-            for media in entry.media_content:
-                if media.get('type', '').startswith('image/'):
-                    return media.get('url', '')
+        try:
+            # 1. 檢查 media:content
+            if 'media_content' in entry:
+                for media in entry.media_content:
+                    if media.get('type', '').startswith('image/'):
+                        return media.get('url', '')
 
-        # 2. 檢查 enclosures
-        if 'enclosures' in entry and entry.enclosures:
-            for enc in entry.enclosures:
-                if enc.get('type', '').startswith('image/'):
-                    return enc.get('href', '')
+            # 2. 檢查 enclosures
+            if 'enclosures' in entry and entry.enclosures:
+                for enc in entry.enclosures:
+                    if enc.get('type', '').startswith('image/'):
+                        return enc.get('href', '')
 
-        # 3. 從內容中提取
-        content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else entry.get('summary', '')
-        if content:
-            soup = BeautifulSoup(content, 'html.parser')
-            img = soup.find('img')
-            if img and img.get('src'):
-                return img['src']
+            # 3. 從內容中提取
+            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else entry.get('summary', '')
+            if content:
+                soup = BeautifulSoup(content, 'html.parser')
+                img = soup.find('img')
+                if img and img.get('src'):
+                    return img['src']
+        except:
+            pass
 
         return ''
 
@@ -188,13 +191,13 @@ class NewsFetcher:
             result = self._add_to_notion(article)
             if result == "added":
                 added += 1
-                print(f"  ✅ 新增: {article['title'][:40]}...")
+                print(f"  ✅ {article['title'][:40]}...")
             elif result == "exists":
                 exists += 1
-                print(f"  ⏭️ 已存在: {article['title'][:40]}...")
+                print(f"  ⏭️ 已存在: {article['title'][:30]}...")
             else:
                 failed += 1
-                print(f"  ❌ 失敗: {article['title'][:40]}...")
+                print(f"  ❌ 失敗: {article['title'][:30]}...")
 
         self.stats["added"] = added
         self.stats["exists"] = exists
@@ -202,28 +205,27 @@ class NewsFetcher:
         return added
 
     def _add_to_notion(self, article):
-        """添加單篇文章到 Notion"""
+        """添加單篇文章到 Notion - 修復版"""
         try:
-            # 檢查是否已存在（通過標題）
-            existing = self._check_exists(article['title'])
-            if existing:
+            # 檢查是否已存在（使用 HTTP API 而不是 query 方法）
+            if self._check_exists_http(article['title']):
                 return "exists"
 
             # 準備標籤
             tags = [{"name": "新聞"}, {"name": "自動抓取"}, {"name": article['source_name']}]
 
-            # 根據分類添加標籤
             if article['category'] == "國際":
                 tags.append({"name": "國際"})
 
+            # 構建 properties
             properties = {
                 "標題": {"title": [{"text": {"content": article['title'][:150]}}]},
                 "內容": {"rich_text": [{"text": {"content": article['summary'][:2000]}}]},
                 "狀態": {"select": {"name": "待審核"}},
                 "類型": {"select": {"name": article['category']}},
                 "標籤": {"multi_select": tags},
-                "來源": {"url": article['link']},
-                "發布時間": {"date": {"start": article['published'][:10] if article['published'] else datetime.now().strftime("%Y-%m-%d")}},
+                "來源": {"url": article['link']} if article['link'] else {"url": None},
+                "發布時間": {"date": {"start": article['published']}},
                 "AI生成": {"checkbox": False},
                 "是否會員專享": {"checkbox": False},
             }
@@ -241,22 +243,41 @@ class NewsFetcher:
             return "added"
 
         except Exception as e:
-            print(f"    錯誤詳情: {e}")
+            print(f"    錯誤: {e}")
             return "failed"
 
-    def _check_exists(self, title):
-        """檢查文章是否已存在"""
+    def _check_exists_http(self, title):
+        """使用 HTTP API 檢查文章是否已存在"""
         try:
-            response = self.notion.databases.query(
-                database_id=NEWS_DB_ID,
-                filter={
+            import urllib.request
+
+            url = f"https://api.notion.com/v1/databases/{NEWS_DB_ID}/query"
+            headers = {
+                "Authorization": f"Bearer {NOTION_TOKEN}",
+                "Content-Type": "application/json",
+                "Notion-Version": "2022-06-28"
+            }
+
+            data = {
+                "filter": {
                     "property": "標題",
                     "title": {
-                        "equals": title[:100]  # Notion 標題限制
+                        "equals": title[:100]
                     }
                 }
+            }
+
+            req = urllib.request.Request(
+                url,
+                data=json.dumps(data).encode('utf-8'),
+                headers=headers,
+                method='POST'
             )
-            return len(response.get("results", [])) > 0
+
+            with urllib.request.urlopen(req) as response:
+                result = json.loads(response.read().decode('utf-8'))
+                return len(result.get('results', [])) > 0
+
         except Exception as e:
             print(f"    檢查存在性失敗: {e}")
             return False
@@ -275,7 +296,7 @@ class NewsFetcher:
 def main():
     parser = argparse.ArgumentParser(description="ChineseRocks 新聞抓取")
     parser.add_argument('--source', default='test', 
-                       choices=['china', 'international', 'hongkong_taiwan', 'social', 'test'], 
+                       choices=['china', 'international', 'hongkong_taiwan', 'test'], 
                        help='抓取源類型')
     parser.add_argument('--limit', type=int, default=15, help='每源抓取數量')
     args = parser.parse_args()
