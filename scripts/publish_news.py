@@ -1,257 +1,211 @@
 #!/usr/bin/env python3
 """
 ChineseRocks 新聞發布系統
-從Notion獲取已發布文章，生成前端JSON
+從 Notion 獲取已審核文章並發布到網站
 """
 
 import os
 import json
+import requests
 from datetime import datetime
 from notion_client import Client
 
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
+# 初始化 Notion 客戶端
+notion = Client(auth=os.environ.get('NOTION_TOKEN'))
+
+# 數據庫 ID
+NEWS_DATABASE_ID = os.environ.get('NOTION_DATABASE_ID')
 
 def fetch_published_articles():
-    """從Notion獲取已發布的文章"""
-    if not NOTION_TOKEN:
-        print("❌ 錯誤: NOTION_TOKEN 未設置")
-        return []
-
-    notion = Client(auth=NOTION_TOKEN)
+    """從 Notion 獲取已發布狀態的文章"""
     articles = []
-    cursor = None
 
-    while True:
-        try:
-            # 構建查詢參數
-            query_params = {
-                "database_id": NEWS_DB_ID,
-                "page_size": 100
-            }
-
-            # 繁體中文欄位名
-            filter_obj = {
+    try:
+        # 使用新版 API 查詢數據庫 - 修正 filter 語法
+        query_params = {
+            "database_id": NEWS_DATABASE_ID,
+            "filter": {
                 "property": "狀態",
-                "status": {"equals": "已發佈"}
-            }
-
-            sorts_obj = [
-                {"timestamp": "created_time", "direction": "descending"}
-            ]
-
-            query_params["filter"] = filter_obj
-            query_params["sorts"] = sorts_obj
-
-            if cursor:
-                query_params["start_cursor"] = cursor
-
-            print(f"  查詢參數: {json.dumps(filter_obj, ensure_ascii=False)}")
-
-            # notion-client 2.0+ 正確調用方式
-            response = notion.databases.query(**query_params)
-
-            print(f"  獲取到 {len(response.get('results', []))} 條結果")
-
-            for page in response.get('results', []):
-                props = page.get('properties', {})
-
-                # 提取標籤
-                tags = extract_multi_select(props, '標籤')
-
-                # 檢測是否會員專享
-                is_premium = (
-                    '會員專享' in tags or
-                    extract_checkbox(props, '是否會員專享') or
-                    '獨家' in tags
-                )
-
-                article = {
-                    "id": page.get('id'),
-                    "title": extract_title(props),
-                    "content": extract_content(props),
-                    "category": extract_select(props, '類型'),
-                    "tags": tags,
-                    "status": extract_status(props, '狀態'),
-                    "source_url": extract_url(props, '來源'),
-                    "published_date": extract_date(props, '發布時間'),
-                    "is_ai_generated": extract_checkbox(props, 'AI生成'),
-                    "featured": extract_checkbox(props, '頭條'),
-                    "is_premium": is_premium,
-                    "cover_image": extract_url(props, '封面圖') or get_default_image(),
-                    "created_time": page.get('created_time'),
-                    "last_edited_time": page.get('last_edited_time')
+                "status": {
+                    "equals": "已發佈"
                 }
+            },
+            "sorts": [
+                {
+                    "property": "發布時間",
+                    "direction": "descending"
+                }
+            ]
+        }
 
+        print(f"查詢參數: {json.dumps(query_params['filter'], ensure_ascii=False)}")
+
+        # 新版 notion-client 使用正確的調用方式
+        response = notion.databases.query(**query_params)
+
+        print(f"成功獲取 {len(response['results'])} 篇文章")
+
+        for page in response['results']:
+            article = parse_article(page)
+            if article:
                 articles.append(article)
-                print(f"  ✓ {article['title'][:40]}...")
 
-            if not response.get('has_more'):
-                break
-            cursor = response.get('next_cursor')
-
-        except Exception as e:
-            print(f"❌ 獲取文章失敗: {e}")
-            import traceback
-            traceback.print_exc()
-            break
+    except Exception as e:
+        print(f"獲取文章失敗: {str(e)}")
+        import traceback
+        traceback.print_exc()
 
     return articles
 
-def extract_title(props):
+def parse_article(page):
+    """解析 Notion 頁面數據為文章對象"""
     try:
-        title_prop = props.get('標題', {})
-        if 'title' in title_prop and title_prop['title']:
-            return title_prop['title'][0]['text']['content']
-    except:
-        pass
-    return "無標題"
+        props = page.get('properties', {})
 
-def extract_content(props):
-    try:
-        content_prop = props.get('內容', {})
-        if 'rich_text' in content_prop and content_prop['rich_text']:
-            texts = []
-            for rt in content_prop['rich_text']:
-                if 'text' in rt and 'content' in rt['text']:
-                    texts.append(rt['text']['content'])
-            return ' '.join(texts)
-    except:
-        pass
-    return ""
+        # 標題
+        title = ""
+        if '標題' in props and props['標題'].get('title'):
+            title = props['標題']['title'][0].get('plain_text', '')
+        elif 'title' in props and props['title'].get('title'):
+            title = props['title']['title'][0].get('plain_text', '')
 
-def extract_select(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if 'select' in prop and prop['select']:
-            return prop['select']['name']
-    except:
-        pass
-    return ""
+        # 內容
+        content = ""
+        if '內容' in props and props['內容'].get('rich_text'):
+            content = props['內容']['rich_text'][0].get('plain_text', '')
+        elif 'content' in props and props['content'].get('rich_text'):
+            content = props['content']['rich_text'][0].get('plain_text', '')
 
-def extract_status(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if 'status' in prop and prop['status']:
-            return prop['status']['name']
-    except:
-        pass
-    return ""
+        # 類型/分類
+        category = ""
+        if '類型' in props and props['類型'].get('select'):
+            category = props['類型']['select'].get('name', '')
+        elif 'category' in props and props['category'].get('select'):
+            category = props['category']['select'].get('name', '')
 
-def extract_multi_select(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if 'multi_select' in prop:
-            return [tag['name'] for tag in prop['multi_select']]
-    except:
-        pass
-    return []
+        # 標籤
+        tags = []
+        if '標籤' in props and props['標籤'].get('multi_select'):
+            tags = [tag['name'] for tag in props['標籤']['multi_select']]
+        elif 'tags' in props and props['tags'].get('multi_select'):
+            tags = [tag['name'] for tag in props['tags']['multi_select']]
 
-def extract_url(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if 'url' in prop:
-            return prop['url']
-    except:
-        pass
-    return ""
+        # 封面圖
+        cover_image = ""
+        if '封面圖' in props and props['封面圖'].get('files'):
+            files = props['封面圖']['files']
+            if files:
+                cover_image = files[0].get('external', {}).get('url', '') or files[0].get('file', {}).get('url', '')
+        elif 'cover_image' in props and props['cover_image'].get('files'):
+            files = props['cover_image']['files']
+            if files:
+                cover_image = files[0].get('external', {}).get('url', '') or files[0].get('file', {}).get('url', '')
 
-def extract_date(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if 'date' in prop and prop['date']:
-            return prop['date']['start']
-    except:
-        pass
-    return datetime.now().isoformat()
+        # 來源鏈接
+        source_url = ""
+        if '來源' in props and props['來源'].get('url'):
+            source_url = props['來源']['url']
+        elif 'source' in props and props['source'].get('url'):
+            source_url = props['source']['url']
 
-def extract_checkbox(props, prop_name):
-    try:
-        prop = props.get(prop_name, {})
-        if 'checkbox' in prop:
-            return prop['checkbox']
-    except:
-        pass
-    return False
+        # 發布時間
+        published_date = ""
+        if '發布時間' in props and props['發布時間'].get('date'):
+            published_date = props['發布時間']['date'].get('start', '')
+        elif 'published_date' in props and props['published_date'].get('date'):
+            published_date = props['published_date']['date'].get('start', '')
 
-def get_default_image():
-    return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop"
+        # 是否會員專享
+        is_premium = False
+        if '標籤' in props and props['標籤'].get('multi_select'):
+            is_premium = any(tag['name'] == '會員專享' for tag in props['標籤']['multi_select'])
+
+        # 特色標記
+        featured = False
+        if '標籤' in props and props['標籤'].get('multi_select'):
+            featured = any(tag['name'] in ['編輯精選', '編輯精選'] for tag in props['標籤']['multi_select'])
+
+        return {
+            "id": page['id'],
+            "title": title,
+            "content": content,
+            "category": category,
+            "tags": tags,
+            "cover_image": cover_image,
+            "source_url": source_url,
+            "published_date": published_date or datetime.now().isoformat(),
+            "is_premium": is_premium,
+            "featured": featured,
+            "created_time": page.get('created_time', ''),
+            "last_edited_time": page.get('last_edited_time', '')
+        }
+
+    except Exception as e:
+        print(f"解析文章 {page.get('id')} 失敗: {str(e)}")
+        return None
 
 def save_to_json(articles):
-    """保存到JSON文件"""
+    """保存文章到 JSON 文件"""
+    output_dir = 'data'
+    os.makedirs(output_dir, exist_ok=True)
 
-    hero = articles[:3] if len(articles) >= 3 else articles
-    featured = [a for a in articles if a.get('featured') or a.get('is_premium')][:4]
+    output_file = os.path.join(output_dir, 'news.json')
 
-    by_category = {
-        "全部": articles,
-        "獨家": [],
-        "現場": [],
-        "專題": [],
-        "國際": [],
-        "新發行": []
-    }
-
-    for article in articles:
-        cat = article.get('category', '')
-        tags = article.get('tags', [])
-
-        if cat == '獨家' or '獨家' in tags:
-            by_category['獨家'].append(article)
-        elif cat == '現場' or '現場' in tags:
-            by_category['現場'].append(article)
-        elif cat == '專題' or '專題' in tags:
-            by_category['專題'].append(article)
-        elif cat == '國際' or '國際' in tags:
-            by_category['國際'].append(article)
-        elif cat == '新發行' or '新發行' in tags:
-            by_category['新發行'].append(article)
-
-    output = {
-        "updated_at": datetime.now().isoformat(),
+    data = {
+        "last_updated": datetime.now().isoformat(),
         "total_count": len(articles),
         "data": {
             "all": articles,
-            "hero": hero,
-            "featured": featured,
-            "latest": articles,
-            "by_category": by_category
+            "latest": articles[:10] if len(articles) >= 10 else articles
         }
     }
 
-    os.makedirs('data', exist_ok=True)
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
-    with open('data/news.json', 'w', encoding='utf-8') as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-
-    print(f"\n✅ 已保存 {len(articles)} 篇文章到 data/news.json")
+    print(f"已保存 {len(articles)} 篇文章到 {output_file}")
+    return output_file
 
 def main():
-    print("\n" + "="*70)
-    print("🎸 ChineseRocks 新聞發布系統")
-    print(f" 時間: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-    print("="*70)
+    print("=" * 60)
+    print("ChineseRocks 新聞發布系統")
+    print(f"時間: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("=" * 60)
 
-    print("\n📡 從Notion獲取已發布文章...")
+    # 檢查環境變量
+    if not os.environ.get('NOTION_TOKEN'):
+        print("錯誤: 未設置 NOTION_TOKEN")
+        return
+
+    if not NEWS_DATABASE_ID:
+        print("錯誤: 未設置 NOTION_DATABASE_ID")
+        return
+
+    print(f"數據庫 ID: {NEWS_DATABASE_ID[:8]}...{NEWS_DATABASE_ID[-4:]}")
+
+    # 獲取已發布文章
+    print("從 Notion 獲取已發布文章...")
     articles = fetch_published_articles()
 
     if not articles:
-        print("⚠️ 沒有已發布的文章")
+        print("沒有已發布的文章")
         save_to_json([])
         return
 
-    print(f"\n✅ 獲取到 {len(articles)} 篇已發布文章")
+    print(f"獲取到 {len(articles)} 篇文章:")
+    for i, article in enumerate(articles[:5], 1):
+        premium_mark = "會員" if article['is_premium'] else ""
+        print(f"   {i}. {article['title'][:40]}... {premium_mark}")
 
-    print("\n💾 保存到JSON文件...")
+    if len(articles) > 5:
+        print(f"   ... 還有 {len(articles) - 5} 篇")
+
+    # 保存到 JSON
+    print("保存到 JSON 文件...")
     save_to_json(articles)
 
-    print("\n" + "="*70)
-    print("📊 發布統計")
-    print("="*70)
-    print(f" 總文章數: {len(articles)} 篇")
-    print(f" 頭條文章: {min(3, len(articles))} 篇")
-    print("="*70)
-    print("\n✅ 發布完成！前端將自動讀取 data/news.json")
+    print("發布完成!")
+    print("=" * 60)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
