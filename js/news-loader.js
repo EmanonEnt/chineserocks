@@ -1,5 +1,6 @@
 /**
- * ChineseRocks 新聞加載器 - 完整版
+ * ChineseRocks 新聞加載器 - 修復版
+ * 修復：圖片不顯示問題
  */
 (function() {
     var allNews = [];
@@ -12,21 +13,58 @@
     });
 
     function loadNewsData() {
-        fetch('data/news.json?t=' + Date.now(), {cache: 'no-store'})
-            .then(function(res) { return res.json(); })
-            .then(function(data) {
-                allNews = data.data && data.data.all ? data.data.all : [];
-                allNews.sort(function(a, b) {
-                    return new Date(b.published_date || b.created_time || 0) - new Date(a.published_date || a.created_time || 0);
-                });
-                updateDisplay(allNews);
-            })
-            .catch(function(e) {
-                console.error('加载失败:', e);
+        // 添加时间戳防止缓存
+        fetch('data/news.json?t=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(function(res) { 
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json(); 
+        })
+        .then(function(data) {
+            console.log('✓ 數據加載成功:', data);
+
+            // 兼容多種數據格式
+            if (Array.isArray(data)) {
+                allNews = data;
+            } else if (data.data && data.data.all) {
+                allNews = data.data.all;
+            } else if (data.articles) {
+                allNews = data.articles;
+            } else {
+                allNews = [];
+            }
+
+            console.log('✓ 解析到 ' + allNews.length + ' 篇文章');
+
+            // 排序
+            allNews.sort(function(a, b) {
+                var dateA = new Date(b.published_date || b.publishDate || b.date || b.created_time || 0);
+                var dateB = new Date(a.published_date || a.publishDate || a.date || a.created_time || 0);
+                return dateA - dateB;
             });
+
+            updateDisplay(allNews);
+        })
+        .catch(function(e) {
+            console.error('✗ 加載失敗:', e);
+            showError('新聞加載失敗，請檢查網絡連接');
+        });
+    }
+
+    function showError(msg) {
+        var heroMain = document.getElementById('hero-main');
+        if (heroMain) {
+            heroMain.innerHTML = '<div style="padding:40px;text-align:center;color:#ff0066;">' + msg + '</div>';
+        }
     }
 
     function updateDisplay(news) {
+        if (!news || !news.length) {
+            console.warn('沒有新聞數據');
+            return;
+        }
         renderHero(news);
         renderList(news);
         renderTags(allNews);
@@ -35,8 +73,27 @@
 
     function checkIsPremium(article) {
         if (article.is_premium === true) return true;
+        if (article.isPremium === true) return true;
         if (article.tags && article.tags.indexOf('會員專享') !== -1) return true;
         return false;
+    }
+
+    // 🔧 修復：統一獲取圖片URL函數
+    function getImageUrl(article) {
+        // 嘗試多種可能的字段名
+        var url = article.cover_image || article.coverImage || article.image || article.cover || article.thumbnail;
+
+        if (!url) {
+            console.warn('文章沒有圖片:', article.title);
+            return getDefaultImage();
+        }
+
+        // 檢查是否是Notion過期URL
+        if (url.indexOf('notion.so') !== -1 || url.indexOf('amazonaws.com') !== -1) {
+            console.log('Notion圖片URL:', url.substring(0, 50) + '...');
+        }
+
+        return url;
     }
 
     function renderHero(news) {
@@ -46,12 +103,37 @@
 
         var main = news[0];
         var isPremium = checkIsPremium(main);
+        var imageUrl = getImageUrl(main);
 
-        document.getElementById('hero-img').src = main.cover_image || getDefaultImage();
-        document.getElementById('hero-tag').textContent = main.category || '新聞';
-        document.getElementById('hero-title').textContent = main.title || '無標題';
-        document.getElementById('hero-excerpt').textContent = (main.content || '').substring(0, 120) + '...';
-        document.getElementById('hero-date').textContent = formatDate(main.published_date);
+        console.log('主圖URL:', imageUrl);
+
+        // 🔧 修復：添加圖片加載錯誤處理
+        var heroImg = document.getElementById('hero-img');
+        if (heroImg) {
+            heroImg.onerror = function() {
+                console.error('主圖加載失敗，使用默認圖');
+                this.src = getDefaultImage();
+            };
+            heroImg.onload = function() {
+                console.log('✓ 主圖加載成功');
+            };
+            heroImg.src = imageUrl;
+        }
+
+        var heroTag = document.getElementById('hero-tag');
+        if (heroTag) heroTag.textContent = main.category || '新聞';
+
+        var heroTitle = document.getElementById('hero-title');
+        if (heroTitle) heroTitle.textContent = main.title || '無標題';
+
+        var heroExcerpt = document.getElementById('hero-excerpt');
+        if (heroExcerpt) {
+            var content = main.content || main.excerpt || main.summary || '';
+            heroExcerpt.textContent = content.substring(0, 120) + (content.length > 120 ? '...' : '');
+        }
+
+        var heroDate = document.getElementById('hero-date');
+        if (heroDate) heroDate.textContent = formatDate(main.published_date || main.publishDate || main.date);
 
         var heroPremium = document.getElementById('hero-premium');
         if (heroPremium) {
@@ -60,25 +142,31 @@
 
         heroMain.onclick = function() { openArticle(main); };
 
-        // 右侧2小图
-        heroSide.innerHTML = '';
-        for (var i = 1; i < Math.min(3, news.length); i++) {
-            var n = news[i];
-            var div = document.createElement('article');
-            div.className = 'side-card';
-            div.innerHTML = '<img src="' + (n.cover_image || getDefaultImage()) + '" onerror="this.src=getDefaultImage()">' +
-                '<div class="side-overlay"><span class="side-tag">' + (n.category || '新聞') + '</span>' +
-                '<h3 class="side-title">' + (n.title || '無標題') + '</h3></div>';
-            div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
-            heroSide.appendChild(div);
+        // 右側2小圖
+        if (heroSide) {
+            heroSide.innerHTML = '';
+            for (var i = 1; i < Math.min(3, news.length); i++) {
+                var n = news[i];
+                var sideImageUrl = getImageUrl(n);
+
+                var div = document.createElement('article');
+                div.className = 'side-card';
+                div.innerHTML = '<img src="' + sideImageUrl + '" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
+                    '<div class="side-overlay"><span class="side-tag">' + (n.category || '新聞') + '</span>' +
+                    '<h3 class="side-title">' + (n.title || '無標題') + '</h3></div>';
+                div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
+                heroSide.appendChild(div);
+            }
         }
     }
 
     function renderList(news) {
         var container = document.getElementById('news-list');
+        if (!container) return;
+
         var list = news.slice(3);
         if (!list.length) {
-            container.innerHTML = '<div style="text-align:center;padding:2rem;grid-column:1/-1;">该分类暂无更多新闻</div>';
+            container.innerHTML = '<div style="text-align:center;padding:2rem;grid-column:1/-1;">該分類暫無更多新聞</div>';
             return;
         }
         container.innerHTML = '';
@@ -87,16 +175,17 @@
             var n = list[i];
             var isPremium = checkIsPremium(n);
             var cardClass = isPremium ? 'news-card premium' : 'news-card';
+            var listImageUrl = getImageUrl(n);
 
             var div = document.createElement('article');
             div.className = cardClass;
-            div.innerHTML = '<div class="news-thumb"><img src="' + (n.cover_image || getDefaultImage()) + '"></div>' +
+            div.innerHTML = '<div class="news-thumb"><img src="' + listImageUrl + '" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'"></div>' +
                 '<div class="news-content">' +
                 '<span class="news-category">' + (n.category || '新聞') + '</span>' +
                 '<h3 class="news-title">' + (n.title || '無標題') + '</h3>' +
-                '<p class="news-excerpt">' + (n.content || '').substring(0, 100) + '...</p>' +
+                '<p class="news-excerpt">' + (n.content || n.excerpt || '').substring(0, 100) + '...</p>' +
                 '<div class="news-footer">' +
-                '<div class="news-meta"><span>' + formatDate(n.published_date) + '</span>' +
+                '<div class="news-meta"><span>' + formatDate(n.published_date || n.publishDate || n.date) + '</span>' +
                 (isPremium ? '<span style="color:#B8860B;font-weight:700;">★ 會員專享</span>' : '') +
                 '</div></div></div>';
             div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
@@ -134,8 +223,9 @@
         }
         var display = picks.length > 0 ? picks.slice(0, 4) : news.slice(0, 4);
         container.innerHTML = display.map(function(n) {
-            return '<div class="pick-item" onclick="openArticle(' + JSON.stringify(n) + ')">' +
-                '<img src="' + (n.cover_image || getDefaultImage()) + '" class="pick-thumb">' +
+            var pickImageUrl = getImageUrl(n);
+            return '<div class="pick-item" onclick="openArticle(' + JSON.stringify(n).replace(/"/g, '&quot;') + ')">' +
+                '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + (n.category || '新聞') + '</span></div></div>';
         }).join('');
     }
@@ -152,7 +242,6 @@
             return (n.category === category) || (n.tags && n.tags.indexOf(category) !== -1);
         });
         updateDisplay(filtered);
-        // 不滚动，只刷新内容
     };
 
     window.filterByTag = function(tag, btn) {
@@ -173,8 +262,8 @@
             remainingReads--;
             updateQuotaDisplay();
         }
-        if (article.source_url) {
-            window.open(article.source_url, '_blank');
+        if (article.source_url || article.sourceUrl) {
+            window.open(article.source_url || article.sourceUrl, '_blank');
         } else {
             alert('文章詳情頁功能開發中...\n標題: ' + article.title);
         }
@@ -187,6 +276,7 @@
     function formatDate(date) {
         if (!date) return '';
         var d = new Date(date);
+        if (isNaN(d.getTime())) return '';
         return d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate();
     }
 
