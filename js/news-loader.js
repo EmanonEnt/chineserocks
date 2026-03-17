@@ -152,9 +152,7 @@
             return (n.category === category) || (n.tags && n.tags.indexOf(category) !== -1);
         });
         updateDisplay(filtered);
-
-        var newsList = document.getElementById('news-list');
-        if (newsList) newsList.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // 不滚动，只刷新内容
     };
 
     window.filterByTag = function(tag, btn) {
