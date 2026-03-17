@@ -2811,12 +2811,161 @@ html {
         </div>
         <div class="featured-news" id="home-news-container">
             <!-- 動態加載首頁精選新聞 -->
-            <div class="loading-state" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">📰</div>
-                <p>加載新聞中...</p>
-            </div>
         </div>
     </section>
+
+    <!-- 首頁精選新聞加載腳本 -->
+    <script>
+        // 從 Notion 加載首頁精選新聞
+        async function loadHomeFeaturedNews() {
+            const container = document.getElementById('home-news-container');
+
+            try {
+                // 從 data/news.json 加載新聞數據（兼容現有格式）
+                const response = await fetch('data/news.json');
+                if (!response.ok) throw new Error('無法加載新聞數據');
+
+                const result = await response.json();
+
+                // 兼容現有數據格式：使用 data.data.all 或 data.all
+                const allNews = result.data?.all || result.data?.featured || result.all || [];
+
+                if (allNews.length === 0) {
+                    renderDefaultNews(container);
+                    return;
+                }
+
+                // 篩選 Home Featured = true 的新聞
+                let featuredNews = allNews.filter(item => item.homeFeatured === true);
+
+                // 如果沒有設置 Home Featured，使用 featured 標記的文章
+                if (featuredNews.length === 0) {
+                    featuredNews = allNews.filter(item => item.featured === true);
+                }
+
+                // 按 Display Order 排序（如果有的話）
+                featuredNews.sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
+
+                // 只取前5個
+                featuredNews = featuredNews.slice(0, 5);
+
+                if (featuredNews.length === 0) {
+                    // 如果都沒有，顯示最新的5個
+                    featuredNews = allNews.slice(0, 5);
+                }
+
+                // 渲染新聞
+                renderHomeNews(container, featuredNews);
+
+            } catch (error) {
+                console.error('加載首頁新聞失敗:', error);
+                renderDefaultNews(container);
+            }
+        }
+
+        // 渲染首頁新聞佈局（1大圖 + 4小圖）
+        function renderHomeNews(container, news) {
+            if (news.length === 0) {
+                renderDefaultNews(container);
+                return;
+            }
+
+            // 第一個是大圖
+            const mainNews = news[0];
+            const sideNews = news.slice(1, 5); // 最多4個側邊新聞
+
+            let html = `
+                <article class="featured-main" onclick="handleArticleClick(this, '${mainNews.title.replace(/'/g, "\'")}')">
+                    <img src="${mainNews.cover_image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainNews.title}">
+                    <div class="featured-overlay">
+                        <span class="featured-tag">${mainNews.category || '新聞'}</span>
+                        <h3 class="featured-title">${mainNews.title}</h3>
+                        <p class="featured-excerpt">${mainNews.content ? mainNews.content.substring(0, 100) + '...' : ''}</p>
+                    </div>
+                </article>
+                <div class="featured-sidebar">
+            `;
+
+            // 側邊新聞
+            sideNews.forEach(item => {
+                html += `
+                    <article class="sidebar-item" onclick="handleArticleClick(this, '${item.title.replace(/'/g, "\'")}')">
+                        <img src="${item.cover_image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${item.title}" class="sidebar-thumb">
+                        <div class="sidebar-content">
+                            <h4>${item.title}</h4>
+                            <p class="meta">${item.category || '新聞'} · ${formatDate(item.published_date)}</p>
+                        </div>
+                    </article>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // 默認新聞（當無法加載或無精選時顯示）
+        function renderDefaultNews(container) {
+            container.innerHTML = `
+                <article class="featured-main" onclick="handleArticleClick(this, '重塑雕像的權利新專輯首發深度解析')">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop" alt="Featured News">
+                    <div class="featured-overlay">
+                        <span class="featured-tag">獨家 EXCLUSIVE</span>
+                        <h3 class="featured-title">重塑雕像的權利新專輯首發深度解析</h3>
+                        <p class="featured-excerpt">這張醞釀三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型，我們與華東深度對談...</p>
+                    </div>
+                </article>
+                <div class="featured-sidebar">
+                    <article class="sidebar-item" onclick="handleArticleClick(this, 'Radiohead 宣佈2026年亞洲巡演')">
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                        <div class="sidebar-content">
+                            <h4>Radiohead 宣佈2026年亞洲巡演</h4>
+                            <p class="meta">國際 · 5小時前</p>
+                        </div>
+                    </article>
+                    <article class="sidebar-item" onclick="handleArticleClick(this, '迷笛音樂節2026陣容公佈')">
+                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                        <div class="sidebar-content">
+                            <h4>迷笛音樂節2026陣容公佈</h4>
+                            <p class="meta">現場 · 昨天</p>
+                        </div>
+                    </article>
+                    <article class="sidebar-item" onclick="handleArticleClick(this, '專訪：刺蝟樂隊石璐')">
+                        <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                        <div class="sidebar-content">
+                            <h4>專訪：刺蝟樂隊石璐</h4>
+                            <p class="meta">專題 · 昨天</p>
+                        </div>
+                    </article>
+                    <article class="sidebar-item" onclick="handleArticleClick(this, '草東沒有派對新專輯發行')">
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
+                        <div class="sidebar-content">
+                            <h4>草東沒有派對新專輯發行</h4>
+                            <p class="meta">音樂 · 2天前</p>
+                        </div>
+                    </article>
+                </div>
+            `;
+        }
+
+        // 格式化日期
+        function formatDate(dateStr) {
+            if (!dateStr) return '今天';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+            if (days === 0) return '今天';
+            if (days === 1) return '昨天';
+            if (days < 7) return days + '天前';
+            return date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' });
+        }
+
+        // 頁面加載完成後執行
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHomeFeaturedNews();
+        });
+    </script>
 
     <!-- 榜单区 -->
     <section class="charts-section">
@@ -4996,146 +5145,5 @@ html {
         </div>
     </div>
 
-
-    <!-- 首頁精選新聞加載 -->
-    <script>
-        // 從 Notion 加載首頁精選新聞
-        async function loadHomeFeaturedNews() {
-            const container = document.getElementById('home-news-container');
-
-            try {
-                // 從 data/news.json 加載新聞數據
-                const response = await fetch('data/news.json');
-                if (!response.ok) throw new Error('無法加載新聞數據');
-
-                const data = await response.json();
-
-                // 篩選 Home Featured = true 的新聞，按 Display Order 排序
-                let featuredNews = data.news.filter(item => item.homeFeatured === true);
-
-                // 按 Display Order 排序（數字越小越靠前）
-                featuredNews.sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
-
-                // 只取前5個
-                featuredNews = featuredNews.slice(0, 5);
-
-                if (featuredNews.length === 0) {
-                    // 如果沒有設置精選，顯示默認新聞
-                    renderDefaultNews(container);
-                    return;
-                }
-
-                // 渲染新聞
-                renderHomeNews(container, featuredNews);
-
-            } catch (error) {
-                console.error('加載首頁新聞失敗:', error);
-                renderDefaultNews(container);
-            }
-        }
-
-        // 渲染首頁新聞佈局（1大圖 + 4小圖）
-        function renderHomeNews(container, news) {
-            if (news.length === 0) {
-                renderDefaultNews(container);
-                return;
-            }
-
-            // 第一個是大圖
-            const mainNews = news[0];
-            const sideNews = news.slice(1, 5); // 最多4個側邊新聞
-
-            let html = `
-                <article class="featured-main" onclick="handleArticleClick(this, '${mainNews.title.replace(/'/g, "\'")}')">
-                    <img src="${mainNews.image || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop'}" alt="${mainNews.title}">
-                    <div class="featured-overlay">
-                        <span class="featured-tag">${mainNews.category || '新聞'}</span>
-                        <h3 class="featured-title">${mainNews.title}</h3>
-                        <p class="featured-excerpt">${mainNews.excerpt || ''}</p>
-                    </div>
-                </article>
-                <div class="featured-sidebar">
-            `;
-
-            // 側邊新聞
-            sideNews.forEach(item => {
-                html += `
-                    <article class="sidebar-item" onclick="handleArticleClick(this, '${item.title.replace(/'/g, "\'")}')">
-                        <img src="${item.image || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop'}" alt="${item.title}" class="sidebar-thumb">
-                        <div class="sidebar-content">
-                            <h4>${item.title}</h4>
-                            <p class="meta">${item.category || '新聞'} · ${formatDate(item.date)}</p>
-                        </div>
-                    </article>
-                `;
-            });
-
-            html += '</div>';
-            container.innerHTML = html;
-        }
-
-        // 默認新聞（當無法加載或無精選時顯示）
-        function renderDefaultNews(container) {
-            container.innerHTML = `
-                <article class="featured-main" onclick="handleArticleClick(this, '重塑雕像的權利新專輯首發深度解析')">
-                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=720&fit=crop" alt="Featured News">
-                    <div class="featured-overlay">
-                        <span class="featured-tag">獨家 EXCLUSIVE</span>
-                        <h3 class="featured-title">重塑雕像的權利新專輯首發深度解析</h3>
-                        <p class="featured-excerpt">這張醞釀三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型，我們與華東深度對談...</p>
-                    </div>
-                </article>
-                <div class="featured-sidebar">
-                    <article class="sidebar-item" onclick="handleArticleClick(this, 'Radiohead 宣佈2026年亞洲巡演')">
-                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                        <div class="sidebar-content">
-                            <h4>Radiohead 宣佈2026年亞洲巡演</h4>
-                            <p class="meta">國際 · 5小時前</p>
-                        </div>
-                    </article>
-                    <article class="sidebar-item" onclick="handleArticleClick(this, '迷笛音樂節2026陣容公佈')">
-                        <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                        <div class="sidebar-content">
-                            <h4>迷笛音樂節2026陣容公佈</h4>
-                            <p class="meta">現場 · 昨天</p>
-                        </div>
-                    </article>
-                    <article class="sidebar-item" onclick="handleArticleClick(this, '專訪：刺蝟樂隊石璐')">
-                        <img src="https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                        <div class="sidebar-content">
-                            <h4>專訪：刺蝟樂隊石璐</h4>
-                            <p class="meta">專題 · 昨天</p>
-                        </div>
-                    </article>
-                    <article class="sidebar-item" onclick="handleArticleClick(this, '草東沒有派對新專輯發行')">
-                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=300&fit=crop" alt="News" class="sidebar-thumb">
-                        <div class="sidebar-content">
-                            <h4>草東沒有派對新專輯發行</h4>
-                            <p class="meta">音樂 · 2天前</p>
-                        </div>
-                    </article>
-                </div>
-            `;
-        }
-
-        // 格式化日期
-        function formatDate(dateStr) {
-            if (!dateStr) return '今天';
-            const date = new Date(dateStr);
-            const now = new Date();
-            const diff = now - date;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-            if (days === 0) return '今天';
-            if (days === 1) return '昨天';
-            if (days < 7) return days + '天前';
-            return date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' });
-        }
-
-        // 頁面加載完成後執行
-        document.addEventListener('DOMContentLoaded', function() {
-            loadHomeFeaturedNews();
-        });
-    </script>
 </body>
 </html>
