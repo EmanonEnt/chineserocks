@@ -143,6 +143,20 @@ def parse_article(page):
         # 編輯精選標記
         featured = '編輯精選' in tags or '编辑精选' in tags
 
+        # 首頁精選標記 (Home Featured) - Checkbox 類型
+        home_featured = False
+        if 'Home Featured' in props:
+            home_featured_data = props['Home Featured']
+            if home_featured_data.get('checkbox') is not None:
+                home_featured = home_featured_data['checkbox']
+
+        # 顯示順序 (Display Order) - Number 類型
+        display_order = 999
+        if 'Display Order' in props:
+            order_data = props['Display Order']
+            if order_data.get('number') is not None:
+                display_order = int(order_data['number'])
+
         return {
             "id": page['id'],
             "title": title,
@@ -154,6 +168,8 @@ def parse_article(page):
             "published_date": published_date or datetime.now().isoformat(),
             "is_premium": is_premium,
             "featured": featured,
+            "homeFeatured": home_featured,
+            "displayOrder": display_order,
             "created_time": page.get('created_time', ''),
             "last_edited_time": page.get('last_edited_time', '')
         }
@@ -174,6 +190,7 @@ def save_to_json(articles):
     data = {
         "last_updated": datetime.now().isoformat(),
         "total_count": len(articles),
+        "news": articles,
         "data": {
             "all": articles,
             "latest": articles[:10] if len(articles) >= 10 else articles
