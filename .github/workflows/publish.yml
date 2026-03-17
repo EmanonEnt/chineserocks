@@ -1,60 +1,42 @@
 name: Publish News
 
 on:
-  schedule:
-    # 每小時運行一次
-    - cron: '0 * * * *'
+  # 手动触发
   workflow_dispatch:
-    inputs:
-      reason:
-        description: '手動觸發原因'
-        required: false
-        default: '手動發布'
+
+  # 定时触发（每2小时运行一次）
+  schedule:
+    - cron: '0 */2 * * *'
+
+  # 当Notion数据库有更新时（通过Webhook，需要额外配置）
+  # 暂时使用定时触发
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
+    - uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.10'
 
-    - name: Publish approved articles
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install notion-client
+
+    - name: Fetch and publish news
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-      run: |
-        python scripts/publish_news.py
+      run: python scripts/publish_news.py
 
     - name: Commit and push
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add data/news.json
-
-        # 檢查是否有變更
-        if git diff --staged --quiet; then
-          echo "沒有變更需要提交"
-          exit 0
-        fi
-
-        # 提交變更
-        git commit -m "自動更新新聞數據 $(date +'%Y-%m-%d %H:%M')"
-
-        # 拉取遠程更新並合併
-        git fetch origin main
-
-        # 嘗試推送，如果失敗則強制覆蓋（因為這是自動生成的數據文件）
-        if ! git push origin main; then
-          echo "推送失敗，嘗試強制覆蓋..."
-          git pull origin main --strategy=ours --no-edit || true
-          git push origin main --force-with-lease || git push origin main --force
-        fi
+        git diff --staged --quiet || (git commit -m "Update news from Notion" && git push)
