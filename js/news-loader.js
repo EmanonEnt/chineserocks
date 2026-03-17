@@ -90,7 +90,7 @@
         renderHero(news);
         renderList(news);
         renderTags(allNews);
-        renderPicks(allNews);
+        renderPicks(news);
     }
 
     function checkIsPremium(article) {
@@ -261,7 +261,12 @@
         btn.classList.add('active');
 
         var filtered = category === 'all' ? allNews : allNews.filter(function(n) {
-            return (n.category === category) || (n.tags && n.tags.indexOf(category) !== -1);
+            // 檢查原始 category、雙語轉換後的 category，或 tags
+            var catMatch = n.category === category || 
+                          translateCategory(n.category) === category ||
+                          n.category === category.split(' ')[0]; // 匹配中文部分
+            var tagMatch = n.tags && n.tags.indexOf(category) !== -1;
+            return catMatch || tagMatch;
         });
         updateDisplay(filtered);
     };
