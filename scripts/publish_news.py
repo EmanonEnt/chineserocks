@@ -7,7 +7,6 @@ ChineseRocks 新聞發布系統
 import os
 import json
 import urllib.request
-import urllib.error
 from datetime import datetime
 
 # 數據庫 ID 和 Token
@@ -44,10 +43,11 @@ def query_database_http():
         "Notion-Version": "2022-06-28"
     }
 
+    # 修正：狀態是 Select 類型，使用 select.equals
     data = {
         "filter": {
             "property": "狀態",
-            "status": {
+            "select": {
                 "equals": "已發佈"
             }
         },
