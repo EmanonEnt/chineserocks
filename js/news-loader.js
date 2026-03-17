@@ -5,6 +5,28 @@
 (function() {
     var allNews = [];
     var currentCategory = 'all';
+    // ===== 分類雙語映射 =====
+    var categoryBilingualMap = {
+        '獨家': '獨家 EXCLUSIVE',
+        '現場': '現場 LIVE',
+        '專題': '專題 FEATURE',
+        '國際': '國際 INTERNATIONAL',
+        '新發行': '新發行 RELEASES',
+        '新聞': '新聞 NEWS',
+        '音樂': '音樂 MUSIC'
+    };
+
+    function translateCategory(category) {
+        if (!category) return '新聞 NEWS';
+        // 如果已經是雙語格式，直接返回
+        if (category.indexOf(' ') !== -1 && /[a-zA-Z]/.test(category)) {
+            return category;
+        }
+        return categoryBilingualMap[category] || category + ' NEWS';
+    }
+    // ==========================
+
+
     var remainingReads = 3;
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -121,7 +143,7 @@
         }
 
         var heroTag = document.getElementById('hero-tag');
-        if (heroTag) heroTag.textContent = main.category || '新聞';
+        if (heroTag) heroTag.textContent = translateCategory(main.category);
 
         var heroTitle = document.getElementById('hero-title');
         if (heroTitle) heroTitle.textContent = main.title || '無標題';
@@ -152,7 +174,7 @@
                 var div = document.createElement('article');
                 div.className = 'side-card';
                 div.innerHTML = '<img src="' + sideImageUrl + '" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
-                    '<div class="side-overlay"><span class="side-tag">' + (n.category || '新聞') + '</span>' +
+                    '<div class="side-overlay"><span class="side-tag">' + translateCategory(n.category) + '</span>' +
                     '<h3 class="side-title">' + (n.title || '無標題') + '</h3></div>';
                 div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
                 heroSide.appendChild(div);
@@ -181,7 +203,7 @@
             div.className = cardClass;
             div.innerHTML = '<div class="news-thumb"><img src="' + listImageUrl + '" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'"></div>' +
                 '<div class="news-content">' +
-                '<span class="news-category">' + (n.category || '新聞') + '</span>' +
+                '<span class="news-category">' + translateCategory(n.category) + '</span>' +
                 '<h3 class="news-title">' + (n.title || '無標題') + '</h3>' +
                 '<p class="news-excerpt">' + (n.content || n.excerpt || '').substring(0, 100) + '...</p>' +
                 '<div class="news-footer">' +
@@ -226,7 +248,7 @@
             var pickImageUrl = getImageUrl(n);
             return '<div class="pick-item" onclick="openArticle(' + JSON.stringify(n).replace(/"/g, '&quot;') + ')">' +
                 '<img src="' + pickImageUrl + '" class="pick-thumb" onerror="this.onerror=null;this.src=\'' + getDefaultImage() + '\'">' +
-                '<div class="pick-content"><h4>' + n.title + '</h4><span>' + (n.category || '新聞') + '</span></div></div>';
+                '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
         }).join('');
     }
 
