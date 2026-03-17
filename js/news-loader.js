@@ -1,40 +1,33 @@
 /**
- * ChineseRocks 新聞加載器 - 修復版
- * 修復：排序、右侧2个新闻、分类过滤
+ * ChineseRocks 新聞加載器
+ * 從 data/news.json 動態加載新聞內容
  */
 
 (function() {
     'use strict';
 
+    // 全局變量
     let allNews = [];
     let currentCategory = 'all';
     let remainingReads = 3;
+    let newsData = null;
 
+    // 初始化
     document.addEventListener('DOMContentLoaded', () => {
         loadNewsData();
         updateQuotaDisplay();
     });
 
+    // 加載新聞數據
     async function loadNewsData() {
         try {
-            const res = await fetch('data/news.json?t=' + Date.now() + '&r=' + Math.random(), {
-                cache: 'no-store',
-                headers: {'Cache-Control': 'no-cache'}
-            });
-
+            const res = await fetch('data/news.json?t=' + Date.now(), {cache: 'no-store'});
             if (!res.ok) throw new Error('HTTP ' + res.status);
 
-            const newsData = await res.json();
+            newsData = await res.json();
             allNews = newsData.data?.all || newsData.data?.latest || [];
 
-            // 🔧 修复1：按发布日期排序（最新的在前）
-            allNews.sort((a, b) => {
-                const dateA = new Date(a.published_date || a.created_time || 0);
-                const dateB = new Date(b.published_date || b.created_time || 0);
-                return dateB - dateA;
-            });
-
-            console.log('✅ 加载新闻:', allNews.length, '条');
+            console.log('加載新聞:', allNews.length, '條');
 
             if (allNews.length === 0) {
                 showEmptyState();
@@ -46,19 +39,25 @@
             renderTags(allNews);
             renderEditorsPick(allNews);
         } catch (e) {
-            console.error('❌ 加载失败:', e);
+            console.error('加載失敗:', e);
             showErrorState();
         }
     }
 
+    // 檢查是否為會員專享（支持 Checkbox 和標籤兩種方式）
     function checkIsPremium(article) {
-        if (article.is_premium === true) return true;
+        // 優先檢查 is_premium 欄位（Checkbox）
+        if (article.is_premium === true) {
+            return true;
+        }
+        // 檢查標籤
         if (article.tags && Array.isArray(article.tags)) {
             return article.tags.includes('會員專享');
         }
         return false;
     }
 
+    // 顯示空狀態
     function showEmptyState() {
         const heroMain = document.getElementById('hero-main');
         const heroSide = document.getElementById('hero-side');
@@ -75,8 +74,14 @@
                 </div>
             `;
         }
+
+        const tagCloud = document.getElementById('tag-cloud');
+        const editorsPick = document.getElementById('editors-pick');
+        if (tagCloud) tagCloud.innerHTML = '<span style="color:#999;">暫無標籤</span>';
+        if (editorsPick) editorsPick.innerHTML = '<span style="color:#999;">暫無精選</span>';
     }
 
+    // 顯示錯誤狀態
     function showErrorState() {
         const newsList = document.getElementById('news-list');
         if (newsList) {
@@ -91,8 +96,20 @@
         }
     }
 
+    // 渲染頭條區
     function renderHeroSection(news) {
-        if (news.length === 0) return;
+        if (news.length === 0) {
+            // 如果没有新闻，隐藏Hero区域
+            const heroMain = document.getElementById('hero-main');
+            const heroSide = document.getElementById('hero-side');
+            if (heroMain) heroMain.style.display = 'none';
+            if (heroSide) heroSide.style.display = 'none';
+            return;
+        }
+
+        // 显示Hero区域
+        const heroMain = document.getElementById('hero-main');
+        if (heroMain) heroMain.style.display = 'block';
 
         const main = news[0];
         const heroMain = document.getElementById('hero-main');
@@ -131,28 +148,19 @@
 
         heroMain.onclick = () => handleArticleClick(main);
 
-        // 🔧 修复2：右侧显示2个新闻
         const sideContainer = document.getElementById('hero-side');
         if (!sideContainer) return;
 
         sideContainer.innerHTML = '';
 
-        // 取第2和第3条新闻（如果存在）
-        const sideNews = [];
-        if (news.length > 1) sideNews.push(news[1]);
-        if (news.length > 2) sideNews.push(news[2]);
-
+        const sideNews = news.slice(1, 3);
         if (sideNews.length === 0) {
             sideContainer.style.display = 'none';
         } else {
             sideContainer.style.display = 'flex';
-            sideContainer.style.flexDirection = 'column';
-            sideContainer.style.gap = '20px';
-
             sideNews.forEach(n => {
                 const sideCard = document.createElement('article');
                 sideCard.className = 'side-card';
-                sideCard.style.flex = '1';
                 sideCard.onclick = () => handleArticleClick(n);
 
                 const imgUrl = n.cover_image || n.image || getDefaultImage();
@@ -160,7 +168,7 @@
                 const title = n.title || '無標題';
 
                 sideCard.innerHTML = `
-                    <img src="${imgUrl}" alt="${title}" onerror="this.src='${getDefaultImage()}'" style="width:100%;height:100%;object-fit:cover;">
+                    <img src="${imgUrl}" alt="${title}" onerror="this.src='${getDefaultImage()}'">
                     <div class="side-overlay">
                         <span class="side-tag">${tag}</span>
                         <h3 class="side-title">${title}</h3>
@@ -171,37 +179,17 @@
         }
     }
 
+    // 渲染新聞列表
     function renderNewsList(news) {
         const container = document.getElementById('news-list');
         if (!container) return;
 
-        // 过滤分类
-        let filtered = news;
-        if (currentCategory !== 'all') {
-            filtered = news.filter(n => {
-                const cat = n.category || '';
-                const tags = n.tags || [];
-
-                // 🔧 修复3：分类映射（英文按钮 -> 中文分类）
-                const catMap = {
-                    'exclusive': '獨家',
-                    'live': '現場',
-                    'feature': '專題',
-                    'international': '國際',
-                    'releases': '新發行'
-                };
-
-                const targetCat = catMap[currentCategory] || currentCategory;
-                return cat === targetCat || tags.includes(targetCat);
-            });
-        }
-
-        // 跳过前3条（已经在Hero区域显示）
-        const listNews = filtered.slice(3);
+        // 直接使用传入的已过滤数据，跳过前3篇（已在Hero显示）
+        const listNews = news.slice(3);
 
         if (listNews.length === 0) {
             container.innerHTML = `
-                <div class="empty-state" style="grid-column:1/-1;">
+                <div class="empty-state">
                     <div class="empty-state-icon">📭</div>
                     <h3>該分類暫無更多新聞</h3>
                 </div>
@@ -244,8 +232,18 @@
             `;
             container.appendChild(card);
         });
+
+        if (filtered.length > 3 + listNews.length) {
+            const loadMoreDiv = document.createElement('div');
+            loadMoreDiv.className = 'load-more';
+            loadMoreDiv.innerHTML = `
+                <button class="load-more-btn" onclick="loadMore()">加載更多 LOAD MORE</button>
+            `;
+            container.appendChild(loadMoreDiv);
+        }
     }
 
+    // 渲染標籤
     function renderTags(news) {
         const container = document.getElementById('tag-cloud');
         if (!container) return;
@@ -255,6 +253,7 @@
         news.forEach(n => {
             if (n.tags && Array.isArray(n.tags)) {
                 n.tags.forEach(tag => {
+                    // 排除系統標籤
                     if (tag && !tag.includes('會員專享') && !tag.includes('編輯精選')) {
                         allTags.add(tag);
                     }
@@ -274,6 +273,7 @@
         ).join('');
     }
 
+    // 渲染編輯精選
     function renderEditorsPick(news) {
         const container = document.getElementById('editors-pick');
         if (!container) return;
@@ -305,24 +305,34 @@
         }).join('');
     }
 
-    // 🔧 修复4：分类过滤函数
+    // 分類篩選
     window.filterNews = function(category, btn) {
         currentCategory = category;
-
-        // 更新按钮样式
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        // 重新渲染新闻列表（会根据currentCategory过滤）
-        renderNewsList(allNews);
+        // 根据分类过滤数据
+        let filtered = allNews;
+        if (category !== 'all') {
+            filtered = allNews.filter(n => {
+                const cat = n.category || '';
+                const tags = n.tags || [];
+                return cat === category || tags.includes(category);
+            });
+        }
 
-        // 滚动到新闻列表
+        // 重新渲染Hero区域（显示该分类的前3篇）
+        renderHeroSection(filtered);
+        // 渲染下方列表（从第4篇开始）
+        renderNewsList(filtered);
+
         const newsList = document.getElementById('news-list');
         if (newsList) {
             newsList.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
 
+    // 標籤篩選
     window.filterByTag = function(tag, btn) {
         const filtered = allNews.filter(n => {
             if (!n.tags) return false;
@@ -338,8 +348,9 @@
         document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
     };
 
+    // 處理文章點擊
     window.handleArticleClick = function(article) {
-        console.log('点击文章:', article.title);
+        console.log('點擊文章:', article.title);
 
         if (!isMember() && remainingReads <= 0) {
             showMobilePaywall();
@@ -370,6 +381,7 @@
         }
     };
 
+    // 工具函數
     function getDefaultImage() {
         return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
     }
@@ -434,7 +446,7 @@
         alert('加載更多功能（演示）');
     };
 
-    // 点击弹窗外部关闭
+    // 點擊彈窗外部關閉
     const mobilePaywallModal = document.getElementById('mobilePaywallModal');
     if (mobilePaywallModal) {
         mobilePaywallModal.addEventListener('click', function(e) {
