@@ -105,8 +105,7 @@ function convertAllCategoryTags() {
     });
 
     function loadNewsData() {
-        console.log('📡 正在加载新闻数据...');
-        fetch('/api/notion', 
+        fetch('/api/notion', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -116,42 +115,57 @@ function convertAllCategoryTags() {
                 databaseId: '3229f94580b78029ba1bf49e33e7e46c',
                 sorts: [{ property: 'Display Order', direction: 'ascending' }]
             })
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
         })
         .then(function(res) { 
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json(); 
         })
         .then(function(data) {
+            console.log('📡 Notion 返回数据:', data.results ? data.results.length : 0, '条');
             // Notion API 返回格式处理
             if (data.results && Array.isArray(data.results)) {
-                console.log('📡 Notion 返回数据:', data.results.length, '条');
                 allNews = data.results.filter(function(page) {
                     // 只显示已发布的文章
-                    var status = page.properties?.Status?.select?.name || 
-                                page.properties?.狀態?.select?.name || 
-                                page.properties?.状态?.select?.name;
-                    return status === '已發佈' || status === '已发布' || status === 'Published' || !status;
+                    var status = page.properties && (page.properties['Status'] || page.properties['狀態'] || page.properties['状态']);
+                    var statusName = status && status.select ? status.select.name : '';
+                    return statusName === '已發佈' || statusName === '已发布' || statusName === 'Published' || !statusName;
                 }).map(function(page) {
                     var props = page.properties || {};
+
+                    // 获取图片
+                    var imgUrl = '';
+                    var imgField = props['封面圖'] || props['Cover Image'] || props.Cover || props.cover;
+                    if (imgField && imgField.files && imgField.files[0]) {
+                        var file = imgField.files[0];
+                        if (file.file) imgUrl = file.file.url;
+                        else if (file.external) imgUrl = file.external.url;
+                    }
+
+                    return {
                         id: page.id,
-                        title: props.Title?.title?.[0]?.plain_text || props.標題?.title?.[0]?.plain_text || '無標題',
-                        content: props.Content?.rich_text?.[0]?.plain_text || props.內容?.rich_text?.[0]?.plain_text || '',
-                        excerpt: props.Excerpt?.rich_text?.[0]?.plain_text || props.摘要?.rich_text?.[0]?.plain_text || '',
-                        category: props.Category?.select?.name || props.類型?.select?.name || props.分類?.select?.name || '新聞',
-                        tags: props.Tags?.multi_select?.map(function(t) { return t.name; }) || props.標籤?.multi_select?.map(function(t) { return t.name; }) || [],
-                        cover_image: (function() {
-                            var img = props['封面圖'] || props['Cover Image'] || props.Cover || props.cover;
-                            if (img && img.files && img.files[0]) {
-                                var file = img.files[0];
-                                if (file.file) return file.file.url;
-                                if (file.external) return file.external.url;
-                            }
-                            return '';
-                        }()),
-                        published_date: props['Published Date']?.date?.start || props['發布日期']?.date?.start || props.Date?.date?.start || page.created_time,
-                        is_premium: props['Is Premium']?.checkbox === true || props['會員專享']?.checkbox === true,
-                        source_url: props['Source URL']?.url || props['來源網址']?.url || '',
-                        featured: props['Home Featured']?.checkbox === true || props['編輯精選']?.checkbox === true
+                        title: props.Title && props.Title.title && props.Title.title[0] ? props.Title.title[0].plain_text : 
+                               (props.標題 && props.標題.title && props.標題.title[0] ? props.標題.title[0].plain_text : '無標題'),
+                        content: props.Content && props.Content.rich_text && props.Content.rich_text[0] ? props.Content.rich_text[0].plain_text : 
+                                 (props.內容 && props.內容.rich_text && props.內容.rich_text[0] ? props.內容.rich_text[0].plain_text : ''),
+                        excerpt: props.Excerpt && props.Excerpt.rich_text && props.Excerpt.rich_text[0] ? props.Excerpt.rich_text[0].plain_text : 
+                                 (props.摘要 && props.摘要.rich_text && props.摘要.rich_text[0] ? props.摘要.rich_text[0].plain_text : ''),
+                        category: props.Category && props.Category.select ? props.Category.select.name : 
+                                  (props.類型 && props.類型.select ? props.類型.select.name : 
+                                   (props.分類 && props.分類.select ? props.分類.select.name : '新聞')),
+                        tags: props.Tags && props.Tags.multi_select ? props.Tags.multi_select.map(function(t) { return t.name; }) : 
+                              (props.標籤 && props.標籤.multi_select ? props.標籤.multi_select.map(function(t) { return t.name; }) : []),
+                        cover_image: imgUrl,
+                        published_date: props['Published Date'] && props['Published Date'].date ? props['Published Date'].date.start : 
+                                       (props['發布日期'] && props['發布日期'].date ? props['發布日期'].date.start : 
+                                        (props.Date && props.Date.date ? props.Date.date.start : page.created_time)),
+                        is_premium: props['Is Premium'] && props['Is Premium'].checkbox === true || 
+                                   (props['會員專享'] && props['會員專享'].checkbox === true),
+                        source_url: props['Source URL'] && props['Source URL'].url ? props['Source URL'].url : 
+                                   (props['來源網址'] && props['來源網址'].url ? props['來源網址'].url : ''),
+                        featured: props['Home Featured'] && props['Home Featured'].checkbox === true || 
+                                 (props['編輯精選'] && props['編輯精選'].checkbox === true)
                     };
                 });
             } else if (Array.isArray(data)) {
