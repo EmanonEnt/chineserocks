@@ -1599,10 +1599,10 @@ async function loadNewsFromAPI() {
         const requestBody = {
             databaseId: DB_CONFIG.news,
             filter: {
-                property: 'Status',
-                select: { equals: 'Published' }
+                property: '狀態',
+                select: { equals: '已發佈' }
             },
-            sorts: [{ property: 'Date', direction: 'descending' }]
+            sorts: [{ property: '發布時間', direction: 'descending' }]
         };
         console.log('请求体:', JSON.stringify(requestBody, null, 2));
 
@@ -1643,20 +1643,22 @@ async function loadNewsFromAPI() {
     }
 }
 
-// 解析 Notion 数据
+// 解析 Notion 数据（支持中英文属性名）
 function parseNotionData(results) {
     return results.map(page => {
         const props = page.properties;
 
-        // 获取标题
+        // 获取标题（支持 Name/Title/標題）
         let title = '无标题';
         if (props.Title?.title?.[0]?.text?.content) {
             title = props.Title.title[0].text.content;
         } else if (props.Name?.title?.[0]?.text?.content) {
             title = props.Name.title[0].text.content;
+        } else if (props.標題?.title?.[0]?.text?.content) {
+            title = props.標題.title[0].text.content;
         }
 
-        // 获取摘要
+        // 获取摘要（支持 Excerpt/Summary/Description/內容）
         let excerpt = '';
         if (props.Excerpt?.rich_text?.[0]?.text?.content) {
             excerpt = props.Excerpt.rich_text[0].text.content;
@@ -1664,9 +1666,11 @@ function parseNotionData(results) {
             excerpt = props.Summary.rich_text[0].text.content;
         } else if (props.Description?.rich_text?.[0]?.text?.content) {
             excerpt = props.Description.rich_text[0].text.content;
+        } else if (props.內容?.rich_text?.[0]?.text?.content) {
+            excerpt = props.內容.rich_text[0].text.content;
         }
 
-        // 获取分类
+        // 获取分类（支持 Category/Tag/Type/類型）
         let category = '新聞';
         if (props.Category?.select?.name) {
             category = props.Category.select.name;
@@ -1674,19 +1678,23 @@ function parseNotionData(results) {
             category = props.Tag.select.name;
         } else if (props.Type?.select?.name) {
             category = props.Type.select.name;
+        } else if (props.類型?.select?.name) {
+            category = props.類型.select.name;
         }
 
-        // 获取日期
+        // 获取日期（支持 Date/PublishDate/發布時間）
         let date = '';
         if (props.Date?.date?.start) {
             date = props.Date.date.start;
         } else if (props.PublishDate?.date?.start) {
             date = props.PublishDate.date.start;
+        } else if (props.發布時間?.date?.start) {
+            date = props.發布時間.date.start;
         } else {
             date = page.created_time?.split('T')[0] || '';
         }
 
-        // 获取封面图
+        // 获取封面图（支持 Image/Cover/封面圖）
         let image = '';
         if (props.Image?.files?.[0]?.file?.url) {
             image = props.Image.files[0].file.url;
@@ -1696,25 +1704,34 @@ function parseNotionData(results) {
             image = props.Cover.files[0].file.url;
         } else if (props.Cover?.files?.[0]?.external?.url) {
             image = props.Cover.files[0].external.url;
+        } else if (props.封面圖?.files?.[0]?.file?.url) {
+            image = props.封面圖.files[0].file.url;
+        } else if (props.封面圖?.files?.[0]?.external?.url) {
+            image = props.封面圖.files[0].external.url;
         }
 
-        // 获取标签
+        // 获取标签（支持 Tags/標籤）
         let tags = [];
         if (props.Tags?.multi_select) {
             tags = props.Tags.multi_select.map(t => t.name);
+        } else if (props.標籤?.multi_select) {
+            tags = props.標籤.multi_select.map(t => t.name);
         }
 
-        // 是否会员专享
+        // 是否会员专享（支持 Premium/MemberOnly/VIP/是否會員專享）
         const isPremium = props.Premium?.checkbox === true || 
                          props.MemberOnly?.checkbox === true ||
-                         props.VIP?.checkbox === true;
+                         props.VIP?.checkbox === true ||
+                         props.是否會員專享?.checkbox === true;
 
-        // 获取链接
+        // 获取链接（支持 Link/URL/來源）
         let link = '';
         if (props.Link?.url) {
             link = props.Link.url;
         } else if (props.URL?.url) {
             link = props.URL.url;
+        } else if (props.來源?.url) {
+            link = props.來源.url;
         }
 
         return {
