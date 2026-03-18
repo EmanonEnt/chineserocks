@@ -5157,6 +5157,9 @@ async function loadHomeNewsFromNotion() {
         mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
         mainExcerpt.textContent = getPropertyValue(mainProps, '摘要', '點擊閱讀更多...');
         mainImg.parentElement.setAttribute('data-article-id', mainArticle.id);
+        mainImg.parentElement.setAttribute('data-category', getPropertyValue(mainProps, '分類', '新聞'));
+        const mainExternalUrl = getPropertyValue(mainProps, '來源', '') || getPropertyValue(mainProps, 'Link', '');
+        if (mainExternalUrl) mainImg.parentElement.setAttribute('data-external-url', mainExternalUrl);
 
         // 接下來4個是編輯精選（小圖）
         sidebar.innerHTML = '';
@@ -5179,6 +5182,15 @@ function createSidebarItem(article, props) {
     const div = document.createElement('div');
     div.className = 'sidebar-item';
     div.setAttribute('data-article-id', article.id);
+
+    // 獲取分類和外部鏈接
+    const rawCategory = getPropertyValue(props, '分類', '新聞');
+    const category = translateCategory(rawCategory);
+    const externalUrl = getPropertyValue(props, '來源', '') || getPropertyValue(props, 'Link', '');
+
+    div.setAttribute('data-category', rawCategory);
+    if (externalUrl) div.setAttribute('data-external-url', externalUrl);
+
     div.onclick = function() { handleNewsClick(this); };
 
     let imgUrl = getNotionImageUrl(article);
@@ -5196,11 +5208,10 @@ function createSidebarItem(article, props) {
     }
     imgUrl = imgUrl || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop';
     const title = getPropertyValue(props, '標題', '新聞標題');
-    const category = translateCategory(getPropertyValue(props, '分類', '新聞'));
     const date = formatNotionDate(getPropertyValue(props, '發布日期', new Date().toISOString()));
 
     div.innerHTML = `
-        <img src="${imgUrl}" alt="${title}" class="sidebar-thumb">
+        <img src="${imgUrl}" alt="${title}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop'">
         <div class="sidebar-content">
             <span class="side-tag">${category}</span>
             <h4>${title}</h4>
@@ -5324,14 +5335,50 @@ function showDefaultNews() {
     console.log('⚠️ 顯示空狀態（無假新聞）');
 }
 
-// 處理新聞點擊
+// 處理新聞點擊 - 修復版：根據內容類型跳轉
 function handleNewsClick(element) {
     const articleId = element.getAttribute('data-article-id');
-    if (articleId) {
-        // 記錄閱讀
-        recordRead({ title: element.querySelector('h3, h4')?.textContent || '文章', id: articleId });
-        // 跳轉到詳情頁
-        window.location.href = `./news.html?id=${articleId}`;
+    const category = element.getAttribute('data-category') || '';
+    const articleType = element.getAttribute('data-type') || 'news';
+    const externalUrl = element.getAttribute('data-external-url');
+
+    if (!articleId) return;
+
+    // 記錄閱讀
+    recordRead({ 
+        title: element.querySelector('h3, h4')?.textContent || '文章', 
+        id: articleId,
+        category: category
+    });
+
+    // 如果有外部鏈接，直接打開
+    if (externalUrl && externalUrl !== 'null' && externalUrl !== '') {
+        window.open(externalUrl, '_blank');
+        return;
+    }
+
+    // 根據分類決定跳轉頁面
+    const categoryLower = category.toLowerCase();
+
+    // 雜誌類 -> 雜誌詳情頁
+    if (categoryLower.includes('magazine') || categoryLower.includes('雜誌')) {
+        window.location.href = `./magazine.html?issue=${articleId}`;
+    }
+    // 演出類 -> 演出詳情頁
+    else if (categoryLower.includes('show') || categoryLower.includes('演出') || categoryLower.includes('live')) {
+        window.location.href = `./show.html?id=${articleId}`;
+    }
+    // 藝人/樂隊類 -> 藝人詳情頁
+    else if (categoryLower.includes('artist') || categoryLower.includes('藝人') || categoryLower.includes('樂隊')) {
+        window.location.href = `./artist.html?id=${articleId}`;
+    }
+    // 榜單類 -> 榜單頁面
+    else if (categoryLower.includes('chart') || categoryLower.includes('榜單')) {
+        window.location.href = `./charts.html`;
+    }
+    // 默認 -> 新聞詳情頁（帶分類參數）
+    else {
+        window.location.href = `./news.html?id=${articleId}&cat=${encodeURIComponent(category)}`;
     }
 }
 
