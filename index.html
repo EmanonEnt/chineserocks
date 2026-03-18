@@ -1520,10 +1520,34 @@ html {
 
             // 更新额度显示
             window.updateQuotaDisplay = function() {
-                const remaining = MemberSystem.getRemaining();
-                const el = document.getElementById('remainingReads');
-                if (el) {
-                    el.textContent = remaining === Infinity ? '無限' : remaining;
+                const isMember = localStorage.getItem('userLoggedIn') === 'true';
+                const memberType = localStorage.getItem('memberType') || '';
+                const isTrialMember = memberType.includes('體驗') || memberType.includes('体验');
+                const bar = document.getElementById('membersQuotaBar');
+                const barText = bar?.querySelector('.free-quota-text');
+
+                if (!bar) return;
+
+                if (!isMember) {
+                    // 遊客：顯示升級提示
+                    bar.style.display = 'flex';
+                    if (barText) {
+                        barText.innerHTML = '★ 會員專享文章僅限會員閱讀（體驗會員每日3篇）';
+                    }
+                } else if (isTrialMember) {
+                    // 體驗會員：顯示剩餘額度
+                    bar.style.display = 'flex';
+                    const today = new Date().toDateString();
+                    const trialReads = JSON.parse(localStorage.getItem('trialReads') || '{}');
+                    const todayReads = trialReads[today] || 0;
+                    const remaining = Math.max(0, 3 - todayReads);
+
+                    if (barText) {
+                        barText.innerHTML = `★ 今日會員專享阅读额度:仅剩<strong>${remaining}</strong>篇(升級會員暢讀無限）`;
+                    }
+                } else {
+                    // 正式會員：隱藏提示
+                    bar.style.display = 'none';
                 }
             };
 
@@ -1539,14 +1563,18 @@ html {
             if (typeof FB === 'undefined') {
                 loadFacebookSDK();
             }
+
             const today = new Date().toDateString();
             const lastResetDate = localStorage.getItem('lastResetDate');
 
+            // 每日重置
             if (lastResetDate !== today) {
-                localStorage.setItem('remainingReads', '3');
                 localStorage.setItem('lastResetDate', today);
                 localStorage.removeItem('cr_readHistory');
             }
+
+            updateQuotaDisplay();
+        }
             updateQuotaDisplay();
         }
 
@@ -2821,12 +2849,12 @@ html {
         })();
     </script>
 
-    <!-- 免费额度提示 -->
-    <div class="free-quota-bar">
+    <!-- 会员专享提示 -->
+    <div class="free-quota-bar" id="membersQuotaBar">
         <div class="free-quota-text">
-            ★ 今日免费阅读额度:仅剩<strong id="remainingReads">2</strong>篇(升级会员更多畅读及权益）
+            ★ 會員專享文章僅限會員閱讀（體驗會員每日3篇）
         </div>
-        <a href="#pricing" class="free-quota-btn">升级月卡会员 ￥66/月</a>
+        <a href="#pricing" class="free-quota-btn">升级会员 ¥0起</a>
     </div>
 
     <!-- 移动端会员弹窗 -->
@@ -3919,7 +3947,7 @@ html {
                         const loginData = {
                             type: 'facebook',
                             id: userInfo.id,
-                            name: userInfo.name || 'Facebook用户',
+                            name: userInfo.name || (userInfo.email ? userInfo.email.split('@')[0] : 'Facebook用户'),
                             email: userInfo.email || '',
                             avatar: userInfo.picture?.data?.url || ''
                         };
@@ -4685,7 +4713,17 @@ html {
             // 检查是否在本地文件环境（file://协议）
             if (window.location.protocol === 'file:') {
                 console.log('本地文件环境，跳过API同步');
-                // 本地环境直接标记为已同步
+                localStorage.setItem('pendingSync', '[]');
+                localStorage.setItem('lastSyncTime', new Date().toISOString());
+                updateSyncBadge('synced');
+                return;
+            }
+
+            // 检查是否在 localhost 或没有后端的环境
+            if (window.location.hostname === 'localhost' || 
+                window.location.hostname === '127.0.0.1' ||
+                !window.location.hostname.includes('vercel.app')) {
+                console.log('开发环境，跳过API同步');
                 localStorage.setItem('pendingSync', '[]');
                 localStorage.setItem('lastSyncTime', new Date().toISOString());
                 updateSyncBadge('synced');
@@ -4706,16 +4744,19 @@ html {
                 });
 
                 if (response.ok) {
-                    // 同步成功，清空待同步队列
                     localStorage.setItem('pendingSync', '[]');
                     localStorage.setItem('lastSyncTime', new Date().toISOString());
                     updateSyncBadge('synced');
-                    console.log('用户数据已同步到 Notion');
+                    console.log('用户数据已同步');
+                } else {
+                    // API 返回错误，静默处理
+                    console.log('同步API返回错误，将在下次重试');
                 }
             } catch (error) {
-                console.error('同步失败:', error);
-                // 保留在队列中，下次再试
+                // 网络错误，静默处理
+                console.log('同步暂时不可用，将在下次重试');
             }
+        }
         }
 
         // 定期同步（每30秒）
@@ -4728,23 +4769,33 @@ html {
 
         // 更新登录按钮UI
         function updateLoginUI() {
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
-            const nickname = localStorage.getItem('userNickname');
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            let nickname = localStorage.getItem('userNickname') || '';
             const loginBtn = document.getElementById('userMenuBtn');
+
+            // 清理昵称（去除多余空格，限制长度）
+            nickname = nickname.trim();
+            if (nickname.length > 15) {
+                nickname = nickname.substring(0, 12) + '...';
+            }
 
             if (isLoggedIn && loginBtn) {
                 loginBtn.textContent = nickname || '我的账号';
-                loginBtn.onclick = function() {
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
                     openUserSidebar();
                     return false;
                 };
             } else if (loginBtn) {
                 loginBtn.textContent = 'LOGIN';
-                loginBtn.onclick = function() {
+                loginBtn.onclick = function(e) {
+                    e.preventDefault();
                     openLoginModal();
                     return false;
                 };
             }
+
+            console.log('UI已更新，登录状态:', isLoggedIn, '昵称:', nickname);
         }
 
         // 点击文章时记录阅读
@@ -5278,6 +5329,19 @@ initQuotaSystem();
         </div>
     </div>
 
+    
+    <!-- 新闻加载器（内联备用） -->
+    <script>
+        // 如果外部 news-loader.js 加载失败，使用内联版本
+        if (typeof loadNews === 'undefined') {
+            window.loadNews = function(type) {
+                console.log('使用内联新闻加载器，类型:', type);
+                // 这里可以添加基本的新闻加载逻辑
+                // 或者保持现状（从 Notion 加载的代码已经在页面中）
+            };
+        }
+    </script>
+
     <script src="js/news-loader.js"></script>
     <script>
         // 首页新闻初始化
@@ -5625,13 +5689,15 @@ function handleNewsClick(element) {
     // 檢查是否為會員專享內容
     const isMembersOnly = category === '會員專享' || category === 'MEMBERS ONLY' || category === '会员专享';
 
-    // 只有會員專享才檢查額度和扣除次數
-    if (isMembersOnly) {
-        // 檢查是否為會員
-        const isMember = localStorage.getItem('userLoggedIn') === 'true' || localStorage.getItem('cr_member') === 'true';
+    // 檢查是否為會員
+    const isMember = localStorage.getItem('userLoggedIn') === 'true' || localStorage.getItem('cr_member') === 'true';
+    const memberType = localStorage.getItem('memberType') || '';
+    const isTrialMember = memberType.includes('體驗') || memberType.includes('体验');
 
+    // 會員專享內容的權限控制
+    if (isMembersOnly) {
         if (!isMember) {
-            // 非會員點擊會員專享內容，顯示升級提示
+            // 遊客完全不能看會員專享
             if (window.innerWidth <= 768) {
                 document.getElementById('mobilePaywallModal').classList.add('active');
             } else {
@@ -5641,7 +5707,24 @@ function handleNewsClick(element) {
             return;
         }
 
-        // 記錄閱讀（僅會員專享）
+        // 體驗會員每天限制3篇
+        if (isTrialMember) {
+            const today = new Date().toDateString();
+            const trialReads = JSON.parse(localStorage.getItem('trialReads') || '{}');
+            const todayReads = trialReads[today] || 0;
+
+            if (todayReads >= 3) {
+                alert('⭐ 今日體驗額度已用完（3篇/天）\n\n升級正式會員暢讀無限');
+                location.href = '#pricing';
+                return;
+            }
+
+            // 記錄閱讀
+            trialReads[today] = todayReads + 1;
+            localStorage.setItem('trialReads', JSON.stringify(trialReads));
+        }
+
+        // 記錄閱讀（會員統計用）
         recordRead({ 
             title: element.querySelector('h3, h4')?.textContent || '文章', 
             id: articleId,
@@ -5687,7 +5770,6 @@ function handleNewsClick(element) {
         case '新聞':
         case 'NEWS':
         default:
-            // NEWS 和默認都跳轉到 ALL（全部新聞）
             window.location.href = `./news.html`;
             break;
     }
