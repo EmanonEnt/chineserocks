@@ -5007,55 +5007,7 @@ initQuotaSystem();
         </div>
     </div>
 
-<script>
-// ===== 分類標籤雙語轉換 =====
-const categoryBilingualMap = {
-    '獨家': '獨家 EXCLUSIVE',
-    '現場': '現場 LIVE',
-    '專題': '專題 FEATURE',
-    '國際': '國際 INTERNATIONAL',
-    '新發行': '新發行 RELEASES',
-    '新聞': '新聞 NEWS',
-    '音樂': '音樂 MUSIC',
-    'ALL': '全部 ALL',
-    'EXCLUSIVE': '獨家 EXCLUSIVE',
-    'LIVE': '現場 LIVE',
-    'FEATURE': '專題 FEATURE',
-    'INTERNATIONAL': '國際 INTERNATIONAL',
-    'RELEASES': '新發行 RELEASES'
-};
-
-function translateCategory(category) {
-    if (!category) return '新聞 NEWS';
-    // 如果已經是雙語格式，直接返回
-    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
-        return category;
-    }
-    // 查找映射
-    return categoryBilingualMap[category] || category + ' NEWS';
-}
-
-// 自動轉換頁面中所有分類標籤 - 修復版：只轉換純中文標籤
-function convertAllCategoryTags() {
-    const selectors = ['.featured-tag', '.hero-tag', '.side-tag', '.news-category'];
-
-    selectors.forEach(selector => {
-        document.querySelectorAll(selector).forEach(el => {
-            const text = el.textContent.trim();
-            // 只有純中文或單個詞時才轉換（避免重複轉換）
-            if (text && !text.includes(' ') && !/[A-Z]{2,}/.test(text)) {
-                el.textContent = translateCategory(text);
-            }
-        });
-    });
-}
-
-// 頁面加載完成後執行轉換（只執行一次）
-document.addEventListener('DOMContentLoaded', function() {
-    // 延遲執行一次，確保動態內容已加載
-    setTimeout(convertAllCategoryTags, 500);
-});
-</script>    <script src="js/news-loader.js"></script>
+    <script src="js/news-loader.js"></script>
     <script>
         // 首页新闻初始化
         document.addEventListener('DOMContentLoaded', function() {
@@ -5155,7 +5107,8 @@ async function loadHomeNewsFromNotion() {
         mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
         mainExcerpt.textContent = getPropertyValue(mainProps, '摘要', '點擊閱讀更多...');
         mainImg.parentElement.setAttribute('data-article-id', mainArticle.id);
-        mainImg.parentElement.setAttribute('data-category', getPropertyValue(mainProps, '分類', '新聞'));
+        let mainRawCategory = getPropertyValue(mainProps, '類型', '') || getPropertyValue(mainProps, 'Type', '') || getPropertyValue(mainProps, '分類', '') || getPropertyValue(mainProps, 'Category', '新聞');
+        mainImg.parentElement.setAttribute('data-category', mainRawCategory);
         const mainExternalUrl = getPropertyValue(mainProps, '來源', '') || getPropertyValue(mainProps, 'Link', '');
         if (mainExternalUrl) mainImg.parentElement.setAttribute('data-external-url', mainExternalUrl);
 
@@ -5191,7 +5144,7 @@ function createSidebarItem(article, props) {
     const category = translateCategory(rawCategory);
     const externalUrl = getPropertyValue(props, '來源', '') || getPropertyValue(props, 'Link', '');
 
-    div.setAttribute('data-category', rawCategory);
+    div.setAttribute('data-category', rawCategory || '新聞');
     if (externalUrl) div.setAttribute('data-external-url', externalUrl);
 
     div.onclick = function() { handleNewsClick(this); };
@@ -5329,63 +5282,42 @@ function formatNotionDate(dateString) {
     return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 }
 
-// 分類翻譯 - 6個主要分類完整映射
+// 分類翻譯 - 最終修復版：防止任何重複
 function translateCategory(category) {
     if (!category) return '新聞 NEWS';
 
-    // 清理輸入
-    const cleanCategory = category.toString().trim();
+    // 轉為字符串並清理
+    let cat = String(category).trim();
 
-    // 如果已經是雙語格式，直接返回
-    if (cleanCategory.includes(' ') && /[a-zA-Z]{2,}/.test(cleanCategory)) {
-        return cleanCategory;
+    // 如果已經包含英文後綴（如 "獨家 EXCLUSIVE"），直接返回
+    if (cat.indexOf(' ') > 0 && /[A-Z]{2,}/.test(cat)) {
+        return cat;
     }
 
-    // 6個主要分類 + 擴展（優先匹配）
-    const map = {
-        // === 6個主要分類 ===
-        '獨家': '獨家 EXCLUSIVE',
-        '現場': '現場 LIVE', 
-        '專題': '專題 FEATURE',
-        '國際': '國際 INTERNATIONAL',
-        '新發行': '新發行 RELEASES',
-        '新聞': '新聞 NEWS',
-        // === 擴展分類 ===
-        '音樂': '音樂 MUSIC',
-        '評論': '評論 REVIEW',
-        '人物': '人物 PEOPLE',
-        '設備': '設備 GEAR',
-        '影片': '影片 VIDEO',
-        '播客': '播客 PODCAST',
-        '活動': '活動 EVENT',
-        '榜單': '榜單 CHARTS',
-        '雜誌': '雜誌 MAGAZINE',
-        '演出': '演出 SHOWS',
-        '會員專享': '會員專享 MEMBERS ONLY',
-        '編輯精選': '編輯精選 EDITORS PICK',
-        // === 英文對照 ===
-        'EXCLUSIVE': '獨家 EXCLUSIVE',
-        'LIVE': '現場 LIVE',
-        'FEATURE': '專題 FEATURE',
-        'INTERNATIONAL': '國際 INTERNATIONAL',
-        'RELEASES': '新發行 RELEASES',
-        'NEWS': '新聞 NEWS'
-    };
+    // 6個主要分類映射
+    if (cat === '獨家' || cat === 'EXCLUSIVE') return '獨家 EXCLUSIVE';
+    if (cat === '現場' || cat === 'LIVE') return '現場 LIVE';
+    if (cat === '專題' || cat === 'FEATURE') return '專題 FEATURE';
+    if (cat === '國際' || cat === 'INTERNATIONAL') return '國際 INTERNATIONAL';
+    if (cat === '新發行' || cat === 'RELEASES') return '新發行 RELEASES';
+    if (cat === '新聞' || cat === 'NEWS') return '新聞 NEWS';
 
-    // 直接匹配
-    if (map[cleanCategory]) {
-        return map[cleanCategory];
-    }
+    // 擴展分類
+    if (cat === '音樂' || cat === 'MUSIC') return '音樂 MUSIC';
+    if (cat === '評論' || cat === 'REVIEW') return '評論 REVIEW';
+    if (cat === '人物' || cat === 'PEOPLE') return '人物 PEOPLE';
+    if (cat === '設備' || cat === 'GEAR') return '設備 GEAR';
+    if (cat === '影片' || cat === 'VIDEO') return '影片 VIDEO';
+    if (cat === '播客' || cat === 'PODCAST') return '播客 PODCAST';
+    if (cat === '活動' || cat === 'EVENT') return '活動 EVENT';
+    if (cat === '榜單' || cat === 'CHARTS') return '榜單 CHARTS';
+    if (cat === '雜誌' || cat === 'MAGAZINE') return '雜誌 MAGAZINE';
+    if (cat === '演出' || cat === 'SHOWS') return '演出 SHOWS';
+    if (cat === '會員專享') return '會員專享 MEMBERS ONLY';
+    if (cat === '編輯精選') return '編輯精選 EDITORS PICK';
 
-    // 嘗試包含匹配
-    for (const [key, value] of Object.entries(map)) {
-        if (cleanCategory.includes(key)) {
-            return value;
-        }
-    }
-
-    // 默認
-    return cleanCategory + ' NEWS';
+    // 默認：原樣返回 + NEWS（僅當沒有英文時）
+    return cat + ' NEWS';
 }
 
 // 顯示空狀態（當 API 失敗時，不顯示假新聞）
