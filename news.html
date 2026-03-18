@@ -1783,57 +1783,33 @@ function renderNews() {
 
     // 渲染侧边栏
     renderSidebar(filtered);
-
-    // 更新 Load More 按钮
-    updateLoadMoreButton();
 }
 
-// 渲染 Hero 区域（前3条）
-    renderHero(filtered.slice(0, 3));
+// 渲染 Hero
+function renderHero(heroNews) {
+    if (heroNews.length === 0) return;
 
-    // 渲染新闻列表
-    renderNewsList(filtered.slice(3));
+    // 主 Hero
+    const main = heroNews[0];
+    const heroMain = document.getElementById('hero-main');
+    const heroImg = document.getElementById('hero-img');
+    const heroTag = document.getElementById('hero-tag');
+    const heroTitle = document.getElementById('hero-title');
+    const heroExcerpt = document.getElementById('hero-excerpt');
+    const heroDate = document.getElementById('hero-date');
+    const heroPremium = document.getElementById('hero-premium');
 
-    // 渲染侧边栏
-    renderSidebar(filtered);
+    if (heroImg) heroImg.src = main.image || './image/default-news.jpg';
+    if (heroImg) heroImg.alt = main.title;
+    if (heroTag) heroTag.textContent = translateCategory(main.category);
+    if (heroTitle) heroTitle.textContent = main.title;
+    if (heroExcerpt) heroExcerpt.textContent = main.excerpt;
+    if (heroDate) heroDate.textContent = formatDate(main.date);
+    if (heroPremium) heroPremium.textContent = main.isPremium ? '★ 會員專享' : '';
 
-    // 更新 Load More 按钮
-function updateLoadMoreButton() {
-    const container = document.getElementById('loadMoreContainer');
-    if (!container) return;
-
-    // 获取当前筛选后的总新闻数
-    let filtered = allNews;
-    if (currentCategory !== 'all') {
-        filtered = allNews.filter(n => 
-            n.category === currentCategory || 
-            n.category.includes(currentCategory)
-        );
+    if (heroMain) {
+        heroMain.onclick = () => handleNewsClick(main);
     }
-    if (currentTag) {
-        filtered = filtered.filter(n => n.tags.includes(currentTag));
-    }
-
-    const totalNews = filtered.length;
-    const listNewsCount = Math.max(0, totalNews - HERO_COUNT); // 列表中的新闻数（减去hero的3条）
-    const hiddenCards = document.querySelectorAll('.news-card.hidden');
-
-    console.log('Load More Check:', {
-        totalNews: totalNews,
-        listNewsCount: listNewsCount,
-        hiddenCards: hiddenCards.length,
-        displayedCount: displayedCount,
-        minRequired: MIN_NEWS_FOR_LOAD_MORE
-    });
-
-    // 显示按钮的条件：
-    // 1. 总新闻数 >= MIN_NEWS_FOR_LOAD_MORE (12条，即hero 3条 + 列表 9条以上)
-    // 2. 还有隐藏的新闻未显示
-    const shouldShow = (totalNews >= MIN_NEWS_FOR_LOAD_MORE) && (hiddenCards.length > 0);
-
-    container.style.display = shouldShow ? 'block' : 'none';
-    console.log('Load More button display:', shouldShow ? 'block' : 'none');
-}
 
     // 侧边 Hero（第2、3条）
     const heroSide = document.getElementById('hero-side');
@@ -1927,24 +1903,42 @@ function renderNewsList(newsList) {
 // 更新 Load More 按钮
 function updateLoadMoreButton() {
     const container = document.getElementById('loadMoreContainer');
+    if (!container) return;
+
+    // 获取当前筛选后的总新闻数
+    let filtered = allNews;
+    if (currentCategory !== 'all') {
+        filtered = allNews.filter(n => 
+            n.category === currentCategory || 
+            n.category.includes(currentCategory)
+        );
+    }
+    if (currentTag) {
+        filtered = filtered.filter(n => n.tags.includes(currentTag));
+    }
+
+    const totalNews = filtered.length;
+    const listNewsCount = Math.max(0, totalNews - HERO_COUNT);
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
-    const visibleCards = document.querySelectorAll('.news-card.visible');
-    const totalCards = hiddenCards.length + visibleCards.length;
 
     console.log('Load More Check:', {
-        hidden: hiddenCards.length,
-        visible: visibleCards.length,
-        total: totalCards,
-        displayedCount: displayedCount
+        totalNews: totalNews,
+        listNewsCount: listNewsCount,
+        hiddenCards: hiddenCards.length,
+        displayedCount: displayedCount,
+        minRequired: MIN_NEWS_FOR_LOAD_MORE
     });
 
-    if (container) {
-        // 如果有隐藏卡片，或者总卡片数超过初始显示数，显示按钮
-        const shouldShow = hiddenCards.length > 0 || (totalCards > INITIAL_DISPLAY && displayedCount < totalCards);
-        container.style.display = shouldShow ? 'block' : 'none';
-        console.log('Load More button display:', shouldShow ? 'block' : 'none');
-    }
+    // 显示按钮的条件：
+    // 1. 总新闻数 >= MIN_NEWS_FOR_LOAD_MORE (12条)
+    // 2. 还有隐藏的新闻未显示
+    const shouldShow = (totalNews >= MIN_NEWS_FOR_LOAD_MORE) && (hiddenCards.length > 0);
+
+    container.style.display = shouldShow ? 'block' : 'none';
+    console.log('Load More button display:', shouldShow ? 'block' : 'none');
 }
+
+
 
 // 处理新闻点击
 function handleNewsClick(news) {
