@@ -5035,32 +5035,25 @@ function translateCategory(category) {
     return categoryBilingualMap[category] || category + ' NEWS';
 }
 
-// 自動轉換頁面中所有分類標籤
+// 自動轉換頁面中所有分類標籤 - 修復版：只轉換純中文標籤
 function convertAllCategoryTags() {
-    // 轉換 featured-tag
-    document.querySelectorAll('.featured-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 hero-tag
-    document.querySelectorAll('.hero-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 side-tag
-    document.querySelectorAll('.side-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 news-category
-    document.querySelectorAll('.news-category').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
+    const selectors = ['.featured-tag', '.hero-tag', '.side-tag', '.news-category'];
+
+    selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(el => {
+            const text = el.textContent.trim();
+            // 只有純中文或單個詞時才轉換（避免重複轉換）
+            if (text && !text.includes(' ') && !/[A-Z]{2,}/.test(text)) {
+                el.textContent = translateCategory(text);
+            }
+        });
     });
 }
 
-// 頁面加載完成後執行轉換
+// 頁面加載完成後執行轉換（只執行一次）
 document.addEventListener('DOMContentLoaded', function() {
-    // 延遲執行，確保動態內容已加載
-    setTimeout(convertAllCategoryTags, 100);
+    // 延遲執行一次，確保動態內容已加載
     setTimeout(convertAllCategoryTags, 500);
-    setTimeout(convertAllCategoryTags, 1000);
 });
 </script>    <script src="js/news-loader.js"></script>
     <script>
@@ -5153,10 +5146,10 @@ async function loadHomeNewsFromNotion() {
         }
         mainImg.src = mainImgUrl || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
         mainImg.alt = getPropertyValue(mainProps, '標題', '新聞標題');
-        // 獲取主新聞分類（嘗試多種字段名）
-        let mainCategory = getPropertyValue(mainProps, '分類', '');
-        if (!mainCategory) mainCategory = getPropertyValue(mainProps, '類型', '');
+        // 獲取主新聞分類（從 Notion"類型"欄位）
+        let mainCategory = getPropertyValue(mainProps, '類型', '');
         if (!mainCategory) mainCategory = getPropertyValue(mainProps, 'Type', '');
+        if (!mainCategory) mainCategory = getPropertyValue(mainProps, '分類', '');
         if (!mainCategory) mainCategory = getPropertyValue(mainProps, 'Category', '獨家');
         mainTag.textContent = translateCategory(mainCategory);
         mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
@@ -5188,18 +5181,13 @@ function createSidebarItem(article, props) {
     div.className = 'sidebar-item';
     div.setAttribute('data-article-id', article.id);
 
-    // 獲取分類和外部鏈接（優先嘗試多種字段名）
-    let rawCategory = getPropertyValue(props, '分類', '');
-    // 如果分類為空，嘗試從 Type 或 Category 獲取
-    if (!rawCategory) {
-        rawCategory = getPropertyValue(props, '類型', '');
-    }
-    if (!rawCategory) {
-        rawCategory = getPropertyValue(props, 'Type', '');
-    }
-    if (!rawCategory) {
-        rawCategory = getPropertyValue(props, 'Category', '新聞');
-    }
+    // 獲取分類和外部鏈接（從 Notion 的"類型"欄位讀取）
+    let rawCategory = getPropertyValue(props, '類型', '');
+    // 備用欄位名
+    if (!rawCategory) rawCategory = getPropertyValue(props, 'Type', '');
+    if (!rawCategory) rawCategory = getPropertyValue(props, '分類', '');
+    if (!rawCategory) rawCategory = getPropertyValue(props, 'Category', '新聞');
+
     const category = translateCategory(rawCategory);
     const externalUrl = getPropertyValue(props, '來源', '') || getPropertyValue(props, 'Link', '');
 
@@ -5341,49 +5329,63 @@ function formatNotionDate(dateString) {
     return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 }
 
-// 分類翻譯 - 修復版：保留原始分類
+// 分類翻譯 - 6個主要分類完整映射
 function translateCategory(category) {
     if (!category) return '新聞 NEWS';
 
+    // 清理輸入
+    const cleanCategory = category.toString().trim();
+
     // 如果已經是雙語格式，直接返回
-    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
-        return category;
+    if (cleanCategory.includes(' ') && /[a-zA-Z]{2,}/.test(cleanCategory)) {
+        return cleanCategory;
     }
 
-    // 精確映射表
+    // 6個主要分類 + 擴展（優先匹配）
     const map = {
+        // === 6個主要分類 ===
         '獨家': '獨家 EXCLUSIVE',
-        '現場': '現場 LIVE',
+        '現場': '現場 LIVE', 
         '專題': '專題 FEATURE',
         '國際': '國際 INTERNATIONAL',
         '新發行': '新發行 RELEASES',
         '新聞': '新聞 NEWS',
+        // === 擴展分類 ===
         '音樂': '音樂 MUSIC',
-        'ALL': '全部 ALL',
+        '評論': '評論 REVIEW',
+        '人物': '人物 PEOPLE',
+        '設備': '設備 GEAR',
+        '影片': '影片 VIDEO',
+        '播客': '播客 PODCAST',
+        '活動': '活動 EVENT',
+        '榜單': '榜單 CHARTS',
+        '雜誌': '雜誌 MAGAZINE',
+        '演出': '演出 SHOWS',
+        '會員專享': '會員專享 MEMBERS ONLY',
+        '編輯精選': '編輯精選 EDITORS PICK',
+        // === 英文對照 ===
         'EXCLUSIVE': '獨家 EXCLUSIVE',
         'LIVE': '現場 LIVE',
         'FEATURE': '專題 FEATURE',
         'INTERNATIONAL': '國際 INTERNATIONAL',
         'RELEASES': '新發行 RELEASES',
-        'NEWS': '新聞 NEWS',
-        'MUSIC': '音樂 MUSIC'
+        'NEWS': '新聞 NEWS'
     };
 
-    // 直接查找映射
-    if (map[category]) {
-        return map[category];
+    // 直接匹配
+    if (map[cleanCategory]) {
+        return map[cleanCategory];
     }
 
-    // 嘗試匹配部分字符串（處理可能的空格或變體）
-    const normalized = category.trim();
+    // 嘗試包含匹配
     for (const [key, value] of Object.entries(map)) {
-        if (normalized === key || normalized.includes(key)) {
+        if (cleanCategory.includes(key)) {
             return value;
         }
     }
 
-    // 默認：保留原分類名 + NEWS
-    return category + ' NEWS';
+    // 默認
+    return cleanCategory + ' NEWS';
 }
 
 // 顯示空狀態（當 API 失敗時，不顯示假新聞）
@@ -5405,11 +5407,10 @@ function showDefaultNews() {
     console.log('⚠️ 顯示空狀態（無假新聞）');
 }
 
-// 處理新聞點擊 - 修復版：根據內容類型跳轉
+// 處理新聞點擊 - 跳轉到對應分類頁面
 function handleNewsClick(element) {
     const articleId = element.getAttribute('data-article-id');
     const category = element.getAttribute('data-category') || '';
-    const articleType = element.getAttribute('data-type') || 'news';
     const externalUrl = element.getAttribute('data-external-url');
 
     if (!articleId) return;
@@ -5422,33 +5423,41 @@ function handleNewsClick(element) {
     });
 
     // 如果有外部鏈接，直接打開
-    if (externalUrl && externalUrl !== 'null' && externalUrl !== '') {
+    if (externalUrl && externalUrl !== 'null' && externalUrl !== '' && externalUrl !== 'undefined') {
         window.open(externalUrl, '_blank');
         return;
     }
 
-    // 根據分類決定跳轉頁面
-    const categoryLower = category.toLowerCase();
+    // 根據分類跳轉到對應頁面
+    const cat = category.trim();
 
-    // 雜誌類 -> 雜誌詳情頁
-    if (categoryLower.includes('magazine') || categoryLower.includes('雜誌')) {
-        window.location.href = `./magazine.html?issue=${articleId}`;
-    }
-    // 演出類 -> 演出詳情頁
-    else if (categoryLower.includes('show') || categoryLower.includes('演出') || categoryLower.includes('live')) {
-        window.location.href = `./show.html?id=${articleId}`;
-    }
-    // 藝人/樂隊類 -> 藝人詳情頁
-    else if (categoryLower.includes('artist') || categoryLower.includes('藝人') || categoryLower.includes('樂隊')) {
-        window.location.href = `./artist.html?id=${articleId}`;
-    }
-    // 榜單類 -> 榜單頁面
-    else if (categoryLower.includes('chart') || categoryLower.includes('榜單')) {
-        window.location.href = `./charts.html`;
-    }
-    // 默認 -> 新聞詳情頁（帶分類參數）
-    else {
-        window.location.href = `./news.html?id=${articleId}&cat=${encodeURIComponent(category)}`;
+    switch(cat) {
+        case '獨家':
+        case 'EXCLUSIVE':
+            window.location.href = `./news.html?cat=exclusive`;
+            break;
+        case '現場':
+        case 'LIVE':
+            window.location.href = `./news.html?cat=live`;
+            break;
+        case '專題':
+        case 'FEATURE':
+            window.location.href = `./news.html?cat=feature`;
+            break;
+        case '國際':
+        case 'INTERNATIONAL':
+            window.location.href = `./news.html?cat=international`;
+            break;
+        case '新發行':
+        case 'RELEASES':
+            window.location.href = `./news.html?cat=releases`;
+            break;
+        case '新聞':
+        case 'NEWS':
+        default:
+            // NEWS 和默認都跳轉到 ALL（全部新聞）
+            window.location.href = `./news.html`;
+            break;
     }
 }
 
