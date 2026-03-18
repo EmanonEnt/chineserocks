@@ -420,7 +420,21 @@ html {
 
         .section-title { font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#c0c0c0;}
 
-        .view-all-link { color:var(--pink-primary);text-decoration:none;font-weight:700;font-size:0.85rem;}
+        .view-all-link {
+            color: var(--pink-primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .view-all-link:hover {
+            color: #CC0052;
+            transform: translateX(5px);
+        }
 
         .featured-news { display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:4rem;}
 
@@ -1497,57 +1511,95 @@ html {
         .hero-side {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
+            height: 100%;
         }
 
         .side-card {
-            position: relative;
-            aspect-ratio: 16/10;
-            overflow: hidden;
-            border-radius: 12px;
+            display: flex;
+            gap: 1rem;
+            height: calc(25% - 0.75rem);
+            min-height: 80px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
             cursor: pointer;
-            flex: 1;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            flex: 0 0 auto;
+            overflow: hidden;
+            transition: all 0.3s;
         }
 
-        .side-card img {
+        .side-card:hover {
+            border-color: var(--pink-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 0, 102, 0.15);
+        }
+
+        .side-thumb {
+            width: 100px;
+            height: 100%;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .side-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
 
-        .side-card:hover img {
-            transform: scale(1.03);
+        .side-card:hover .side-thumb img {
+            transform: scale(1.05);
         }
 
-        .side-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2rem 1.5rem 1.5rem;
-            background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
-        }
-
-        .side-tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 0.2rem 0.6rem;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
+        .side-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            min-width: 0;
         }
 
         .side-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 800;
-            color: white;
-            line-height: 1.3;
+            color: #0a0a0a;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
+
+        .side-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .side-category {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .side-time {
+            color: #666;
+        }
+
+        /* 分類顏色 */
+        .cat-exclusive { color: #FF0066; }
+        .cat-live { color: #FF6600; }
+        .cat-feature { color: #9900FF; }
+        .cat-international { color: #0066FF; }
+        .cat-releases { color: #00AA66; }
+        .cat-music { color: #CC9900; }
+        .cat-news { color: #666; }
 
         @media (max-width: 768px) {
             .hero-grid {
@@ -1555,12 +1607,16 @@ html {
                 gap: 1rem;
             }
             .hero-side {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                height: auto;
             }
             .side-card {
-                aspect-ratio: 16/10;
+                height: 90px;
+            }
+            .side-thumb {
+                width: 120px;
             }
             .hero-title {
                 font-size: 1.4rem;
@@ -1568,11 +1624,20 @@ html {
             .hero-excerpt {
                 -webkit-line-clamp: 2;
             }
+            .side-title {
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .hero-side {
-                grid-template-columns: 1fr;
+            .side-card {
+                height: 80px;
+            }
+            .side-thumb {
+                width: 100px;
+            }
+            .side-title {
+                font-size: 0.9rem;
             }
         }
 </style>
@@ -2924,57 +2989,95 @@ html {
         .hero-side {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
+            height: 100%;
         }
 
         .side-card {
-            position: relative;
-            aspect-ratio: 16/10;
-            overflow: hidden;
-            border-radius: 12px;
+            display: flex;
+            gap: 1rem;
+            height: calc(25% - 0.75rem);
+            min-height: 80px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
             cursor: pointer;
-            flex: 1;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            flex: 0 0 auto;
+            overflow: hidden;
+            transition: all 0.3s;
         }
 
-        .side-card img {
+        .side-card:hover {
+            border-color: var(--pink-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 0, 102, 0.15);
+        }
+
+        .side-thumb {
+            width: 100px;
+            height: 100%;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .side-thumb img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.5s;
         }
 
-        .side-card:hover img {
-            transform: scale(1.03);
+        .side-card:hover .side-thumb img {
+            transform: scale(1.05);
         }
 
-        .side-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 2rem 1.5rem 1.5rem;
-            background: linear-gradient(to top, rgba(10, 10, 10, 0.9) 0%, transparent 100%);
-        }
-
-        .side-tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 0.2rem 0.6rem;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
+        .side-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            min-width: 0;
         }
 
         .side-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 800;
-            color: white;
-            line-height: 1.3;
+            color: #0a0a0a;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
+
+        .side-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .side-category {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .side-time {
+            color: #666;
+        }
+
+        /* 分類顏色 */
+        .cat-exclusive { color: #FF0066; }
+        .cat-live { color: #FF6600; }
+        .cat-feature { color: #9900FF; }
+        .cat-international { color: #0066FF; }
+        .cat-releases { color: #00AA66; }
+        .cat-music { color: #CC9900; }
+        .cat-news { color: #666; }
 
         @media (max-width: 768px) {
             .hero-grid {
@@ -2982,12 +3085,16 @@ html {
                 gap: 1rem;
             }
             .hero-side {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                height: auto;
             }
             .side-card {
-                aspect-ratio: 16/10;
+                height: 90px;
+            }
+            .side-thumb {
+                width: 120px;
             }
             .hero-title {
                 font-size: 1.4rem;
@@ -2995,11 +3102,20 @@ html {
             .hero-excerpt {
                 -webkit-line-clamp: 2;
             }
+            .side-title {
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .hero-side {
-                grid-template-columns: 1fr;
+            .side-card {
+                height: 80px;
+            }
+            .side-thumb {
+                width: 100px;
+            }
+            .side-title {
+                font-size: 0.9rem;
             }
         }
 </style>
@@ -5443,6 +5559,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- 首頁新聞加載腳本 -->
 <script>
+// 獲取分類對應的 CSS 類名
+function getCategoryClass(category) {
+    const categoryMap = {
+        '獨家': 'cat-exclusive',
+        'EXCLUSIVE': 'cat-exclusive',
+        '現場': 'cat-live',
+        'LIVE': 'cat-live',
+        '專題': 'cat-feature',
+        'FEATURE': 'cat-feature',
+        '國際': 'cat-international',
+        'INTERNATIONAL': 'cat-international',
+        '新發行': 'cat-releases',
+        'RELEASES': 'cat-releases',
+        '音樂': 'cat-music',
+        'MUSIC': 'cat-music',
+        '新聞': 'cat-news',
+        'NEWS': 'cat-news'
+    };
+    return categoryMap[category] || 'cat-news';
+}
+
 // 首頁新聞加載函數
 function loadHomeNews() {
     const NOTION_API_URL = 'https://api.notion.com/v1/databases/df7b4a8f5d3641b280d9db46a255b3a1/query';
@@ -5463,13 +5600,19 @@ function loadHomeNews() {
                         status: {
                             equals: '已發佈'
                         }
+                    },
+                    {
+                        property: 'Home Featured',
+                        checkbox: {
+                            equals: true
+                        }
                     }
                 ]
             },
             sorts: [
                 {
-                    property: '發布時間',
-                    direction: 'descending'
+                    property: 'Display Order',
+                    direction: 'ascending'
                 }
             ],
             page_size: 5
@@ -5551,11 +5694,37 @@ function renderHomeNews(articles) {
         const sideCategory = props['類型']?.select?.name || '新聞';
         const sideTitle = props['標題']?.title?.[0]?.plain_text || '無標題';
 
+        // 計算相對時間
+        const sideDateStr = props['發布時間']?.date?.start || article.created_time;
+        const sideDate = new Date(sideDateStr);
+        const now = new Date();
+        const diffHours = Math.floor((now - sideDate) / (1000 * 60 * 60));
+        let timeText;
+        if (diffHours < 1) {
+            timeText = '剛剛';
+        } else if (diffHours < 24) {
+            timeText = diffHours + '小時前';
+        } else {
+            const diffDays = Math.floor(diffHours / 24);
+            if (diffDays === 1) {
+                timeText = '昨天';
+            } else if (diffDays < 7) {
+                timeText = diffDays + '天前';
+            } else {
+                timeText = sideDate.toLocaleDateString('zh-TW', {month: 'short', day: 'numeric'});
+            }
+        }
+
         sideCard.innerHTML = `
-            <img src="${sideCoverUrl}" alt="${sideTitle}">
-            <div class="side-overlay">
-                <span class="side-tag">${translateCategory(sideCategory)}</span>
+            <div class="side-thumb">
+                <img src="${sideCoverUrl}" alt="${sideTitle}">
+            </div>
+            <div class="side-content">
                 <h3 class="side-title">${sideTitle}</h3>
+                <div class="side-meta">
+                    <span class="side-category ${getCategoryClass(sideCategory)}">${translateCategory(sideCategory)}</span>
+                    <span class="side-time">${timeText}</span>
+                </div>
             </div>
         `;
 
@@ -5821,6 +5990,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
 <!-- 首頁新聞加載腳本 -->
 <script>
+// 獲取分類對應的 CSS 類名
+function getCategoryClass(category) {
+    const categoryMap = {
+        '獨家': 'cat-exclusive',
+        'EXCLUSIVE': 'cat-exclusive',
+        '現場': 'cat-live',
+        'LIVE': 'cat-live',
+        '專題': 'cat-feature',
+        'FEATURE': 'cat-feature',
+        '國際': 'cat-international',
+        'INTERNATIONAL': 'cat-international',
+        '新發行': 'cat-releases',
+        'RELEASES': 'cat-releases',
+        '音樂': 'cat-music',
+        'MUSIC': 'cat-music',
+        '新聞': 'cat-news',
+        'NEWS': 'cat-news'
+    };
+    return categoryMap[category] || 'cat-news';
+}
+
 // 首頁新聞加載函數
 function loadHomeNews() {
     const NOTION_API_URL = 'https://api.notion.com/v1/databases/df7b4a8f5d3641b280d9db46a255b3a1/query';
@@ -5841,13 +6031,19 @@ function loadHomeNews() {
                         status: {
                             equals: '已發佈'
                         }
+                    },
+                    {
+                        property: 'Home Featured',
+                        checkbox: {
+                            equals: true
+                        }
                     }
                 ]
             },
             sorts: [
                 {
-                    property: '發布時間',
-                    direction: 'descending'
+                    property: 'Display Order',
+                    direction: 'ascending'
                 }
             ],
             page_size: 5
@@ -5929,11 +6125,37 @@ function renderHomeNews(articles) {
         const sideCategory = props['類型']?.select?.name || '新聞';
         const sideTitle = props['標題']?.title?.[0]?.plain_text || '無標題';
 
+        // 計算相對時間
+        const sideDateStr = props['發布時間']?.date?.start || article.created_time;
+        const sideDate = new Date(sideDateStr);
+        const now = new Date();
+        const diffHours = Math.floor((now - sideDate) / (1000 * 60 * 60));
+        let timeText;
+        if (diffHours < 1) {
+            timeText = '剛剛';
+        } else if (diffHours < 24) {
+            timeText = diffHours + '小時前';
+        } else {
+            const diffDays = Math.floor(diffHours / 24);
+            if (diffDays === 1) {
+                timeText = '昨天';
+            } else if (diffDays < 7) {
+                timeText = diffDays + '天前';
+            } else {
+                timeText = sideDate.toLocaleDateString('zh-TW', {month: 'short', day: 'numeric'});
+            }
+        }
+
         sideCard.innerHTML = `
-            <img src="${sideCoverUrl}" alt="${sideTitle}">
-            <div class="side-overlay">
-                <span class="side-tag">${translateCategory(sideCategory)}</span>
+            <div class="side-thumb">
+                <img src="${sideCoverUrl}" alt="${sideTitle}">
+            </div>
+            <div class="side-content">
                 <h3 class="side-title">${sideTitle}</h3>
+                <div class="side-meta">
+                    <span class="side-category ${getCategoryClass(sideCategory)}">${translateCategory(sideCategory)}</span>
+                    <span class="side-time">${timeText}</span>
+                </div>
             </div>
         `;
 
