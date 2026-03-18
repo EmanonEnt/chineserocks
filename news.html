@@ -1852,7 +1852,7 @@ function renderNewsList(newsList) {
     // 创建新闻卡片
     newsList.forEach((news, index) => {
         const card = document.createElement('article');
-        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${index >= INITIAL_DISPLAY ? 'hidden' : 'visible'}`;
+        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${index >= INITIAL_LIST_DISPLAY ? 'hidden' : 'visible'}`;
         card.innerHTML = `
             <div class="news-thumb">
                 <img src="${news.image || './image/default-news.jpg'}" alt="${news.title}" loading="lazy">
@@ -1888,12 +1888,12 @@ function renderNewsList(newsList) {
     console.log('RenderNewsList:', {
         newsListLength: newsList.length,
         visibleCards: displayedCount,
-        initialDisplay: INITIAL_DISPLAY
+        initialDisplay: INITIAL_LIST_DISPLAY
     });
 
     // 初始设置按钮状态（后续 updateLoadMoreButton 会再次更新）
     if (loadMoreContainer) {
-        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
+        loadMoreContainer.style.display = newsList.length > INITIAL_LIST_DISPLAY ? 'block' : 'none';
     }
 }
 
