@@ -105,7 +105,8 @@ function convertAllCategoryTags() {
     });
 
     function loadNewsData() {
-        fetch('/api/notion', {
+        console.log('📡 正在加载新闻数据...');
+        fetch('/api/notion', 
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -123,16 +124,30 @@ function convertAllCategoryTags() {
         .then(function(data) {
             // Notion API 返回格式处理
             if (data.results && Array.isArray(data.results)) {
-                allNews = data.results.map(function(page) {
+                console.log('📡 Notion 返回数据:', data.results.length, '条');
+                allNews = data.results.filter(function(page) {
+                    // 只显示已发布的文章
+                    var status = page.properties?.Status?.select?.name || 
+                                page.properties?.狀態?.select?.name || 
+                                page.properties?.状态?.select?.name;
+                    return status === '已發佈' || status === '已发布' || status === 'Published' || !status;
+                }).map(function(page) {
                     var props = page.properties || {};
-                    return {
                         id: page.id,
                         title: props.Title?.title?.[0]?.plain_text || props.標題?.title?.[0]?.plain_text || '無標題',
                         content: props.Content?.rich_text?.[0]?.plain_text || props.內容?.rich_text?.[0]?.plain_text || '',
                         excerpt: props.Excerpt?.rich_text?.[0]?.plain_text || props.摘要?.rich_text?.[0]?.plain_text || '',
                         category: props.Category?.select?.name || props.類型?.select?.name || props.分類?.select?.name || '新聞',
                         tags: props.Tags?.multi_select?.map(function(t) { return t.name; }) || props.標籤?.multi_select?.map(function(t) { return t.name; }) || [],
-                        cover_image: props['Cover Image']?.files?.[0]?.file?.url || props['封面圖']?.files?.[0]?.file?.url || props.Cover?.files?.[0]?.file?.url || '',
+                        cover_image: (function() {
+                            var img = props['封面圖'] || props['Cover Image'] || props.Cover || props.cover;
+                            if (img && img.files && img.files[0]) {
+                                var file = img.files[0];
+                                if (file.file) return file.file.url;
+                                if (file.external) return file.external.url;
+                            }
+                            return '';
+                        })(),
                         published_date: props['Published Date']?.date?.start || props['發布日期']?.date?.start || props.Date?.date?.start || page.created_time,
                         is_premium: props['Is Premium']?.checkbox === true || props['會員專享']?.checkbox === true,
                         source_url: props['Source URL']?.url || props['來源網址']?.url || '',
