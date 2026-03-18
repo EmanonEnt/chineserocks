@@ -1877,10 +1877,22 @@ function renderNewsList(newsList) {
     // 添加 Load More 按钮
     if (loadMoreContainer) {
         container.appendChild(loadMoreContainer);
-        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
     }
 
-    displayedCount = Math.min(INITIAL_DISPLAY, newsList.length);
+    // 计算实际显示的卡片数
+    const visibleCards = container.querySelectorAll('.news-card.visible');
+    displayedCount = visibleCards.length;
+
+    console.log('RenderNewsList:', {
+        newsListLength: newsList.length,
+        visibleCards: displayedCount,
+        initialDisplay: INITIAL_DISPLAY
+    });
+
+    // 初始设置按钮状态（后续 updateLoadMoreButton 会再次更新）
+    if (loadMoreContainer) {
+        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
+    }
 }
 
 // 渲染侧边栏
@@ -1978,9 +1990,21 @@ function loadMoreNews() {
 function updateLoadMoreButton() {
     const container = document.getElementById('loadMoreContainer');
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
+    const visibleCards = document.querySelectorAll('.news-card.visible');
+    const totalCards = hiddenCards.length + visibleCards.length;
+
+    console.log('Load More Check:', {
+        hidden: hiddenCards.length,
+        visible: visibleCards.length,
+        total: totalCards,
+        displayedCount: displayedCount
+    });
 
     if (container) {
-        container.style.display = hiddenCards.length > 0 ? 'block' : 'none';
+        // 如果有隐藏卡片，或者总卡片数超过初始显示数，显示按钮
+        const shouldShow = hiddenCards.length > 0 || (totalCards > INITIAL_DISPLAY && displayedCount < totalCards);
+        container.style.display = shouldShow ? 'block' : 'none';
+        console.log('Load More button display:', shouldShow ? 'block' : 'none');
     }
 }
 
