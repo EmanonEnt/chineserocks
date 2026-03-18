@@ -1533,6 +1533,12 @@ html {
 
         // 初始化额度系统
         function initQuotaSystem() {
+            // 检查 Google 登录回调
+            checkGoogleCallback();
+            // 检查 Facebook SDK
+            if (typeof FB === 'undefined') {
+                loadFacebookSDK();
+            }
             const today = new Date().toDateString();
             const lastResetDate = localStorage.getItem('lastResetDate');
 
@@ -3712,42 +3718,123 @@ html {
         }
 
         // Google 登录
+        // Google 登录
+        // Google 登录 - 简化可靠版本
         function loginWithGoogle() {
-            // 使用 Google Identity Services
-            if (typeof google !== 'undefined' && google.accounts) {
-                google.accounts.oauth2.initTokenClient({
-                    client_id: '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com',
-                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-                    callback: handleGoogleResponse
-                }).requestAccessToken();
-            } else {
-                // 备用方案：使用 OAuth 2.0 授权码流程
-                const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
-                const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
-                const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
-                const state = Math.random().toString(36).substring(2);
+            console.log('开始 Google 登录...');
 
-                sessionStorage.setItem('google_state', state);
+            // 使用 OAuth 2.0 直接跳转（最可靠的方法）
+            const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
+            const redirectUri = encodeURIComponent(window.location.href.split('#')[0]);
+            const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+            const state = 'google_' + Math.random().toString(36).substring(2);
 
-                const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
-                window.location.href = authUrl;
-            }
+            // 保存 state 用于验证
+            sessionStorage.setItem('google_state', state);
+            sessionStorage.setItem('google_login_pending', 'true');
+
+            // 构建授权 URL
+            const authUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' + 
+                'client_id=' + clientId +
+                '&redirect_uri=' + redirectUri +
+                '&response_type=token' +
+                '&scope=' + scope +
+                '&state=' + state +
+                '&prompt=select_account';
+
+            console.log('跳转到:', authUrl);
+            window.location.href = authUrl;
         }
 
-        // 处理 Google 登录响应
-        function handleGoogleResponse(tokenResponse) {
-            if (tokenResponse.error) {
-                console.error('Google授权错误:', tokenResponse);
-                showErrorModal('Google授权失败: ' + tokenResponse.error);
+        // 处理 Google 登录回调
+        function checkGoogleCallback() {
+            console.log('检查 Google 回调...');
+
+            const hash = window.location.hash;
+            if (!hash || hash.length < 10) {
+                console.log('没有检测到回调');
                 return;
             }
 
+            console.log('Hash:', hash);
+
+            // 解析 hash 参数
+            const params = new URLSearchParams(hash.substring(1));
+            const accessToken = params.get('access_token');
+            const state = params.get('state');
+            const error = params.get('error');
+
+            // 清除 hash，避免重复处理
+            window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+
+            // 检查是否是 Google 登录回调
+            if (!state || !state.startsWith('google_')) {
+                console.log('不是 Google 登录回调');
+                return;
+            }
+
+            if (error) {
+                console.error('Google 登录错误:', error);
+                alert('Google 登录失败: ' + error);
+                return;
+            }
+
+            if (!accessToken) {
+                console.error('没有获取到 access_token');
+                return;
+            }
+
+            // 验证 state
+            const savedState = sessionStorage.getItem('google_state');
+            if (state !== savedState) {
+                console.error('State 不匹配');
+                alert('安全验证失败，请重试');
+                return;
+            }
+
+            // 清除 pending 状态
+            sessionStorage.removeItem('google_login_pending');
+            sessionStorage.removeItem('google_state');
+
+            console.log('获取到 access_token，正在获取用户信息...');
+
             // 获取用户信息
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                headers: {
-                    'Authorization': 'Bearer ' + (tokenResponse.access_token || tokenResponse.credential)
-                }
+                headers: { 'Authorization': 'Bearer ' + accessToken }
             })
+            .then(res => {
+                if (!res.ok) throw new Error('获取用户信息失败: ' + res.status);
+                return res.json();
+            })
+            .then(data => {
+                console.log('Google 用户信息:', data);
+
+                const loginData = {
+                    type: 'google',
+                    id: data.sub,
+                    name: data.name || data.email.split('@')[0] || 'Google用户',
+                    email: data.email || '',
+                    avatar: data.picture || ''
+                };
+
+                // 完成登录
+                completeLogin(loginData);
+
+                // 关闭登录弹窗
+                const modal = document.getElementById('loginModal');
+                if (modal) modal.classList.remove('active');
+
+                // 显示成功消息
+                alert('🎸 Google 登录成功！\n欢迎回到 ChineseRocks，' + loginData.name + '！');
+            })
+            .catch(err => {
+                console.error('登录失败:', err);
+                alert('登录失败: ' + err.message);
+            });
+        }
+
+        }
+)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('获取用户信息失败: ' + response.status);
@@ -3783,20 +3870,51 @@ html {
 
 
         // Facebook 登录
+        // Facebook 登录
+        // Facebook 登录
         function loginWithFacebook() {
-            // 检查 FB SDK 是否加载
+            console.log('开始 Facebook 登录...');
+
+            // 检查 FB SDK
             if (typeof FB === 'undefined') {
-                showErrorModal('Facebook SDK 加载中，请稍后再试');
-                // 尝试重新加载 SDK
+                console.log('FB SDK 未加载，正在加载...');
                 loadFacebookSDK();
+
+                // 等待 SDK 加载
+                let attempts = 0;
+                const checkFB = setInterval(() => {
+                    attempts++;
+                    if (typeof FB !== 'undefined') {
+                        clearInterval(checkFB);
+                        console.log('FB SDK 加载完成');
+                        doFacebookLogin();
+                    } else if (attempts > 20) {
+                        clearInterval(checkFB);
+                        console.error('FB SDK 加载超时');
+                        alert('Facebook SDK 加载失败，请刷新页面重试');
+                    }
+                }, 500);
                 return;
             }
 
+            doFacebookLogin();
+        }
+
+        function doFacebookLogin() {
+            console.log('执行 FB 登录...');
+
             FB.login(function(response) {
-                if (response.authResponse) {
+                console.log('FB.login 响应:', response);
+
+                if (response.status === 'connected' && response.authResponse) {
                     // 获取用户信息
-                    FB.api('/me', {fields: 'name,email,picture.width(200)'}, function(userInfo) {
-                        console.log('Facebook登录成功:', userInfo);
+                    FB.api('/me', {fields: 'id,name,email,picture.width(200)'}, function(userInfo) {
+                        console.log('FB 用户信息:', userInfo);
+
+                        if (userInfo.error) {
+                            alert('获取用户信息失败: ' + userInfo.error.message);
+                            return;
+                        }
 
                         const loginData = {
                             type: 'facebook',
@@ -3806,24 +3924,29 @@ html {
                             avatar: userInfo.picture?.data?.url || ''
                         };
 
-                        // 直接完成登录
                         completeLogin(loginData);
-                        closeLoginModal();
 
-                        setTimeout(() => {
-                            alert('🎸 Facebook 登录成功！\n欢迎回到 ChineseRocks，' + loginData.name + '！');
-                        }, 300);
+                        // 关闭登录弹窗
+                        const modal = document.getElementById('loginModal');
+                        if (modal) modal.classList.remove('active');
+
+                        alert('🎸 Facebook 登录成功！\n欢迎回到 ChineseRocks，' + loginData.name + '！');
                     });
                 } else {
-                    console.log('Facebook登录被取消');
-                    showErrorModal('Facebook登录被取消');
+                    console.log('FB 登录失败或被取消');
+                    alert('Facebook 登录被取消或失败');
                 }
             }, {scope: 'public_profile,email'});
         }
 
         // 加载 Facebook SDK
         function loadFacebookSDK() {
+            if (document.getElementById('facebook-jssdk')) return;
+
+            console.log('加载 FB SDK...');
+
             window.fbAsyncInit = function() {
+                console.log('FB SDK 初始化');
                 FB.init({
                     appId: '1628442824765533',
                     cookie: true,
@@ -3839,6 +3962,10 @@ html {
                 js.src = "https://connect.facebook.net/en_US/sdk.js";
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
+        }
+
+        }
+
         }
 
 
