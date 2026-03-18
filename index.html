@@ -3086,7 +3086,110 @@ html {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            </style>
+            
+        /* 2x2 網格側邊欄樣式 */
+        .hero-side-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .hero-side-grid .side-card {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .hero-side-grid .side-card:hover {
+            border-color: var(--pink-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 0, 102, 0.15);
+        }
+
+        .hero-side-grid .side-thumb {
+            width: 100%;
+            height: 100px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .hero-side-grid .side-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .hero-side-grid .side-card:hover .side-thumb img {
+            transform: scale(1.05);
+        }
+
+        .hero-side-grid .side-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.75rem;
+            min-width: 0;
+        }
+
+        .hero-side-grid .side-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #0a0a0a;
+            line-height: 1.4;
+            margin-bottom: 0.4rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .hero-side-grid .side-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        .hero-side-grid .side-time {
+            color: #666;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .hero-side-grid {
+                gap: 0.75rem;
+            }
+            .hero-side-grid .side-thumb {
+                height: 80px;
+            }
+            .hero-side-grid .side-title {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-side-grid {
+                gap: 0.5rem;
+            }
+            .hero-side-grid .side-thumb {
+                height: 70px;
+            }
+            .hero-side-grid .side-title {
+                font-size: 0.75rem;
+            }
+        }
+</style>
 
     <script>
         // 滚播新闻条功能
@@ -3231,7 +3334,7 @@ html {
             <a href="./news.html" class="view-all-link">View All →</a>
         </div>
         <div class="featured-news" id="home-news-container">
-            <!-- Hero News Grid -->
+            <!-- Hero News Grid: 1大 + 4小(2x2) -->
             <div class="hero-grid" id="hero-grid">
                 <article class="hero-main" id="hero-main" onclick="handleHeroClick()">
                     <img src="" alt="" id="hero-img">
@@ -3245,7 +3348,9 @@ html {
                         </div>
                     </div>
                 </article>
-                <div class="hero-side" id="hero-side"></div>
+                <div class="hero-side-grid" id="hero-side">
+                    <!-- 4個小卡片將由JS動態生成 -->
+                </div>
             </div>
         </div>
     </section>
@@ -5525,541 +5630,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     </script>
 
-<!-- 首頁新聞加載腳本 -->
-<script>
-
-// 模擬數據（用於測試樣式）
-function getMockNewsData() {
-    return [
-        {
-            id: 'mock-1',
-            properties: {
-                '標題': { title: [{ plain_text: '重塑雕像的權利新專輯首發深度解析' }] },
-                '類型': { select: { name: '獨家' } },
-                '內容': { rich_text: [{ plain_text: '時隔三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型...' }] },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800' } }] },
-                '發布時間': { date: { start: '2026-03-17' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 1 }
-            }
-        },
-        {
-            id: 'mock-2',
-            properties: {
-                '標題': { title: [{ plain_text: 'Radiohead 宣佈2026年亞洲巡演' }] },
-                '類型': { select: { name: '國際' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-17T10:00:00' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 2 }
-            }
-        },
-        {
-            id: 'mock-3',
-            properties: {
-                '標題': { title: [{ plain_text: '迷笛音樂節2026陣容公佈' }] },
-                '類型': { select: { name: '現場' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-16' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 3 }
-            }
-        },
-        {
-            id: 'mock-4',
-            properties: {
-                '標題': { title: [{ plain_text: '專訪：刺蝟樂隊石璐' }] },
-                '類型': { select: { name: '專題' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-16' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 4 }
-            }
-        },
-        {
-            id: 'mock-5',
-            properties: {
-                '標題': { title: [{ plain_text: '草東沒有派對新專輯發行' }] },
-                '類型': { select: { name: '音樂' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-15' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 5 }
-            }
-        }
-    ];
-}
-
-// 獲取分類對應的 CSS 類名
-function getCategoryClass(category) {
-    const categoryMap = {
-        '獨家': 'cat-exclusive',
-        'EXCLUSIVE': 'cat-exclusive',
-        '現場': 'cat-live',
-        'LIVE': 'cat-live',
-        '專題': 'cat-feature',
-        'FEATURE': 'cat-feature',
-        '國際': 'cat-international',
-        'INTERNATIONAL': 'cat-international',
-        '新發行': 'cat-releases',
-        'RELEASES': 'cat-releases',
-        '音樂': 'cat-music',
-        'MUSIC': 'cat-music',
-        '新聞': 'cat-news',
-        'NEWS': 'cat-news'
-    };
-    return categoryMap[category] || 'cat-news';
-}
-
-// 首頁新聞加載函數 - 使用 news-loader.js
-function loadHomeNews() {
-    // 檢查 news-loader.js 是否已加載
-    if (typeof loadNews === 'function') {
-        // 使用現有的 loadNews 函數，但自定義渲染
-        loadNewsForHome();
-    } else {
-        // 如果 news-loader.js 還沒加載，等待後重試
-        setTimeout(loadHomeNews, 100);
-    }
-}
-
-// 為首頁定制的加載函數
-function loadNewsForHome() {
-    const NOTION_API_URL = 'https://api.notion.com/v1/databases/df7b4a8f5d3641b280d9db46a255b3a1/query';
-    const NOTION_API_KEY = 'ntn_5P2Xn52jQG148Y5N1YtmS0tVZ0i3yM0r7kEvdXwW9T3mP';
-
-    fetch(NOTION_API_URL, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${NOTION_API_KEY}`,
-            'Content-Type': 'application/json',
-            'Notion-Version': '2022-06-28'
-        },
-        body: JSON.stringify({
-            filter: {
-                and: [
-                    {
-                        property: '狀態',
-                        status: {
-                            equals: '已發佈'
-                        }
-                    },
-                    {
-                        property: 'Home Featured',
-                        checkbox: {
-                            equals: true
-                        }
-                    }
-                ]
-            },
-            sorts: [
-                {
-                    property: 'Display Order',
-                    direction: 'ascending'
-                }
-            ],
-            page_size: 5
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.results && data.results.length > 0) {
-            renderHomeNews(data.results);
-        } else {
-            showHomeNewsError('暫無新聞');
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching news:', error);
-        showHomeNewsError('加載失敗，請檢查網絡連接');
-    });
-}
-
-// 渲染首頁新聞（前5個：1個主新聞 + 4個側邊欄）
-function renderHomeNews(articles) {
-    // 調試輸出
-    debugNewsData(articles);
-
-    // 如果沒有數據，使用模擬數據（僅用於測試樣式）
-    if (!articles || articles.length === 0) {
-        console.warn('No articles loaded, using mock data');
-        articles = getMockNewsData();
-    }
-
-    // 主新聞（第一個）
-    const mainArticle = articles[0];
-    const mainProps = mainArticle.properties;
-
-    // 設置主新聞圖片
-    const heroImg = document.getElementById('hero-img');
-    const coverUrl = mainProps['封面圖']?.files?.[0]?.external?.url || 
-                     mainProps['封面圖']?.files?.[0]?.file?.url || 
-                     'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800';
-    heroImg.src = coverUrl;
-    heroImg.alt = mainProps['標題']?.title?.[0]?.plain_text || '新聞圖片';
-
-    // 設置主新聞標題
-    document.getElementById('hero-title').textContent = mainProps['標題']?.title?.[0]?.plain_text || '無標題';
-
-    // 設置主新聞摘要
-    const excerpt = mainProps['內容']?.rich_text?.[0]?.plain_text || '';
-    document.getElementById('hero-excerpt').textContent = excerpt.substring(0, 100) + (excerpt.length > 100 ? '...' : '');
-
-    // 設置主新聞分類標籤
-    const category = mainProps['類型']?.select?.name || '新聞';
-    document.getElementById('hero-tag').textContent = translateCategory(category);
-
-    // 設置主新聞日期
-    const dateStr = mainProps['發布時間']?.date?.start || mainArticle.created_time;
-    const date = new Date(dateStr);
-    document.getElementById('hero-date').textContent = date.toLocaleDateString('zh-TW');
-
-    // 設置主新聞是否會員專享
-    const isPremium = mainProps['是否會員專享']?.checkbox || false;
-    document.getElementById('hero-premium').textContent = isPremium ? '★ 會員專享' : '';
-
-    // 存儲主新聞數據用於點擊
-    document.getElementById('hero-main').dataset.articleId = mainArticle.id;
-    document.getElementById('hero-main').dataset.isPremium = isPremium;
-
-    // 渲染側邊欄新聞（第2-5個）
-    const sideContainer = document.getElementById('hero-side');
-    sideContainer.innerHTML = '';
-
-    for (let i = 1; i < Math.min(articles.length, 5); i++) {
-        const article = articles[i];
-        const props = article.properties;
-
-        const sideCard = document.createElement('article');
-        sideCard.className = 'side-card';
-        sideCard.onclick = () => handleSideClick(article.id, props['是否會員專享']?.checkbox || false);
-
-        const sideCoverUrl = props['封面圖']?.files?.[0]?.external?.url || 
-                             props['封面圖']?.files?.[0]?.file?.url || 
-                             'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400';
-
-        const sideCategory = props['類型']?.select?.name || '新聞';
-        const sideTitle = props['標題']?.title?.[0]?.plain_text || '無標題';
-
-        // 計算相對時間
-        const sideDateStr = props['發布時間']?.date?.start || article.created_time;
-        const sideDate = new Date(sideDateStr);
-        const now = new Date();
-        const diffHours = Math.floor((now - sideDate) / (1000 * 60 * 60));
-        let timeText;
-        if (diffHours < 1) {
-            timeText = '剛剛';
-        } else if (diffHours < 24) {
-            timeText = diffHours + '小時前';
-        } else {
-            const diffDays = Math.floor(diffHours / 24);
-            if (diffDays === 1) {
-                timeText = '昨天';
-            } else if (diffDays < 7) {
-                timeText = diffDays + '天前';
-            } else {
-                timeText = sideDate.toLocaleDateString('zh-TW', {month: 'short', day: 'numeric'});
-            }
-        }
-
-        sideCard.innerHTML = `
-            <div class="side-thumb">
-                <img src="${sideCoverUrl}" alt="${sideTitle}">
-            </div>
-            <div class="side-content">
-                <h3 class="side-title">${sideTitle}</h3>
-                <div class="side-meta">
-                    <span class="side-category ${getCategoryClass(sideCategory)}">${translateCategory(sideCategory)}</span>
-                    <span class="side-time">${timeText}</span>
-                </div>
-            </div>
-        `;
-
-        sideContainer.appendChild(sideCard);
-    }
-}
-
-// 顯示錯誤信息
-function showHomeNewsError(msg) {
-    document.getElementById('hero-title').textContent = msg;
-    document.getElementById('hero-excerpt').textContent = '請稍後再試，或點擊 View All 查看全部新聞';
-    console.error('News loading error:', msg);
-}
-
-// 調試：檢查數據結構
-function debugNewsData(articles) {
-    console.log('Loaded articles:', articles.length);
-    articles.forEach((article, i) => {
-        const props = article.properties;
-        console.log(`Article ${i}:`, {
-            title: props['標題']?.title?.[0]?.plain_text,
-            category: props['類型']?.select?.name,
-            featured: props['Home Featured']?.checkbox,
-            order: props['Display Order']?.number
-        });
-    });
-}
-
-// 處理主新聞點擊
-function handleHeroClick() {
-    const heroMain = document.getElementById('hero-main');
-    const articleId = heroMain.dataset.articleId;
-    const isPremium = heroMain.dataset.isPremium === 'true';
-
-    if (isPremium && !window.CRMemberSystem?.isMember()) {
-        showMobilePaywall();
-        return;
-    }
-
-    // 記錄閱讀
-    if (window.CRMemberSystem) {
-        window.CRMemberSystem.recordRead();
-        updateQuotaDisplay();
-    }
-
-    // 跳轉到新聞詳情頁
-    window.location.href = `./article.html?id=${articleId}`;
-}
-
-// 處理側邊欄新聞點擊
-function handleSideClick(articleId, isPremium) {
-    if (isPremium && !window.CRMemberSystem?.isMember()) {
-        showMobilePaywall();
-        return;
-    }
-
-    // 記錄閱讀
-    if (window.CRMemberSystem) {
-        window.CRMemberSystem.recordRead();
-        updateQuotaDisplay();
-    }
-
-    // 跳轉到新聞詳情頁
-    window.location.href = `./article.html?id=${articleId}`;
-}
-
-// 顯示移動端付費牆
-function showMobilePaywall() {
-    const modal = document.getElementById('mobilePaywallModal');
-    if (modal) {
-        modal.classList.add('active');
-    }
-}
-
-// 頁面加載完成後執行
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadHomeNews);
-} else {
-    loadHomeNews();
-}
-</script>
-</body>
-</html>
-res">
-                    <li>✓ 无限新闻阅读</li>
-                    <li>✓ 高权重投票</li>
-                    <li>✓ 1080P LIVE TV</li>
-                    <li>✓ 演出优先购票</li>
-                </ul>
-            </div>
-
-            <!-- 已登录状态 -->
-            <div id="sidebarLoggedIn" class="sidebar-section" style="display: none;">
-                <div class="user-info-header">
-                    <img id="sidebarAvatar" src="" alt="头像" class="user-avatar">
-                    <div class="user-meta">
-                        <h3 id="sidebarNickname" class="user-name">摇滚用户</h3>
-                        <span id="sidebarMemberBadge" class="member-badge">体验会员</span>
-                    </div>
-                </div>
-
-                <div class="user-stats">
-                    <div class="stat-item">
-                        <span id="statVotes" class="stat-num">0</span>
-                        <span class="stat-label">投票</span>
-                    </div>
-                    <div class="stat-item">
-                        <span id="statReads" class="stat-num">0</span>
-                        <span class="stat-label">阅读</span>
-                    </div>
-                    <div class="stat-item">
-                        <span id="statFavs" class="stat-num">0</span>
-                        <span class="stat-label">收藏</span>
-                    </div>
-                </div>
-
-                <div class="sidebar-menu">
-                    <div class="menu-group">
-                        <div class="menu-title">我的活动</div>
-                        <a href="#" class="menu-item" onclick="showMyVotes(); return false;">
-                            <span class="menu-icon">🗳️</span>
-                            <span class="menu-text">我的投票</span>
-                            <span id="menuVoteCount" class="menu-badge">0</span>
-                        </a>
-                        <a href="#" class="menu-item" onclick="showMyReads(); return false;">
-                            <span class="menu-icon">📰</span>
-                            <span class="menu-text">阅读历史</span>
-                            <span id="menuReadCount" class="menu-badge">0</span>
-                        </a>
-                        <a href="#" class="menu-item" onclick="showMyFavs(); return false;">
-                            <span class="menu-icon">⭐</span>
-                            <span class="menu-text">我的收藏</span>
-                            <span id="menuFavCount" class="menu-badge">0</span>
-                        </a>
-                    </div>
-
-                    <div class="menu-group">
-                        <div class="menu-title">会员服务</div>
-                        <a href="#pricing" class="menu-item" onclick="closeUserSidebar(); return true;">
-                            <span class="menu-icon">👑</span>
-                            <span class="menu-text">升级会员</span>
-                        </a>
-                        <a href="#" class="menu-item" onclick="showInvite(); return false;">
-                            <span class="menu-icon">🎁</span>
-                            <span class="menu-text">邀请返利</span>
-                        </a>
-                    </div>
-
-                    <div class="menu-group">
-                        <div class="menu-title">账号设置</div>
-                        <a href="#" class="menu-item" onclick="showAccountSettings(); return false;">
-                            <span class="menu-icon">⚙️</span>
-                            <span class="menu-text">账号管理</span>
-                        </a>
-                        <a href="#" class="menu-item" onclick="showSyncStatus(); return false;">
-                            <span class="menu-icon">☁️</span>
-                            <span class="menu-text">同步状态</span>
-                            <span id="syncStatusBadge" class="sync-badge">已同步</span>
-                        </a>
-                    </div>
-                </div>
-
-                <button class="sidebar-btn-logout" onclick="logout()">退出登录</button>
-            </div>
-
-            <!-- 子页面：我的投票 -->
-            <div id="sidebarPageVotes" class="sidebar-page" style="display: none;">
-                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
-                <h3 class="sidebar-page-title">我的投票</h3>
-                <div id="votesList" class="activity-list">
-                    <div class="empty-state">暂无投票记录</div>
-                </div>
-            </div>
-
-            <!-- 子页面：阅读历史 -->
-            <div id="sidebarPageReads" class="sidebar-page" style="display: none;">
-                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
-                <h3 class="sidebar-page-title">阅读历史</h3>
-                <div id="readsList" class="activity-list">
-                    <div class="empty-state">暂无阅读记录</div>
-                </div>
-            </div>
-
-            <!-- 子页面：我的收藏 -->
-            <div id="sidebarPageFavs" class="sidebar-page" style="display: none;">
-                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
-                <h3 class="sidebar-page-title">我的收藏</h3>
-                <div id="favsList" class="activity-list">
-                    <div class="empty-state">暂无收藏</div>
-                </div>
-            </div>
-
-            <!-- 子页面：账号设置 -->
-            <div id="sidebarPageSettings" class="sidebar-page" style="display: none;">
-                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
-                <h3 class="sidebar-page-title">账号管理</h3>
-                <div class="settings-form">
-                    <div class="form-group">
-                        <label>昵称</label>
-                        <input type="text" id="settingNickname" class="form-input">
-                    </div>
-                    <div class="form-group">
-                        <label>绑定手机</label>
-                        <div class="setting-item">
-                            <span id="settingPhone">未绑定</span>
-                            <button class="setting-btn" onclick="bindPhone()">绑定</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>绑定邮箱</label>
-                        <div class="setting-item">
-                            <span id="settingEmail">未绑定</span>
-                            <button class="setting-btn" onclick="bindEmail()">绑定</button>
-                        </div>
-                    </div>
-                    <button class="sidebar-btn-primary" onclick="saveSettings()">保存修改</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-<script>
-// ===== 分類標籤雙語轉換 =====
-const categoryBilingualMap = {
-    '獨家': '獨家 EXCLUSIVE',
-    '現場': '現場 LIVE',
-    '專題': '專題 FEATURE',
-    '國際': '國際 INTERNATIONAL',
-    '新發行': '新發行 RELEASES',
-    '新聞': '新聞 NEWS',
-    '音樂': '音樂 MUSIC',
-    'ALL': '全部 ALL',
-    'EXCLUSIVE': '獨家 EXCLUSIVE',
-    'LIVE': '現場 LIVE',
-    'FEATURE': '專題 FEATURE',
-    'INTERNATIONAL': '國際 INTERNATIONAL',
-    'RELEASES': '新發行 RELEASES'
-};
-
-function translateCategory(category) {
-    if (!category) return '新聞 NEWS';
-    // 如果已經是雙語格式，直接返回
-    if (category.includes(' ') && /[a-zA-Z]/.test(category)) {
-        return category;
-    }
-    // 查找映射
-    return categoryBilingualMap[category] || category + ' NEWS';
-}
-
-// 自動轉換頁面中所有分類標籤
-function convertAllCategoryTags() {
-    // 轉換 featured-tag
-    document.querySelectorAll('.featured-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 hero-tag
-    document.querySelectorAll('.hero-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 side-tag
-    document.querySelectorAll('.side-tag').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-    // 轉換 news-category
-    document.querySelectorAll('.news-category').forEach(el => {
-        el.textContent = translateCategory(el.textContent.trim());
-    });
-}
-
-// 頁面加載完成後執行轉換
-document.addEventListener('DOMContentLoaded', function() {
-    // 延遲執行，確保動態內容已加載
-    setTimeout(convertAllCategoryTags, 100);
-    setTimeout(convertAllCategoryTags, 500);
-    setTimeout(convertAllCategoryTags, 1000);
-});
-</script></script>
-    
 <!-- 首頁新聞加載腳本 -->
 <script>
 
