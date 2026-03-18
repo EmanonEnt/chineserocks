@@ -221,13 +221,13 @@ function translateCategory(category) {
 
         var heroMain = document.getElementById('hero-main');
         if (heroMain) {
-            heroMain.innerHTML = '<img src="' + (main.image || getDefaultImage()) + \'" alt="' + main.title + \'" onerror="this.src=\'' + getDefaultImage() + '\'">' +
-                '<div class="hero-overlay"><span class="hero-tag">' + translateCategory(main.category) + '</span>' +
+            var imgUrl = main.image || getDefaultImage();
+            var defaultImg = getDefaultImage();
+            var catTag = translateCategory(main.category);
+            heroMain.innerHTML = '<img src="' + imgUrl + '" alt="' + main.title + '" onerror="this.src=\'' + defaultImg + '\'">' +
+                '<div class="hero-overlay"><span class="hero-tag">' + catTag + '</span>' +
                 '<h2 class="hero-title">' + main.title + '</h2>' +
                 '<p class="hero-excerpt">' + (main.excerpt || '') + '</p></div>';
-            heroMain.onclick = function() { openArticle(main); };
-        }
-
         // 侧边 Hero
         var heroSide = document.getElementById('hero-side');
         if (heroSide && news.length > 1) {
