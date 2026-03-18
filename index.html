@@ -5580,8 +5580,20 @@ function getCategoryClass(category) {
     return categoryMap[category] || 'cat-news';
 }
 
-// 首頁新聞加載函數
+// 首頁新聞加載函數 - 使用 news-loader.js
 function loadHomeNews() {
+    // 檢查 news-loader.js 是否已加載
+    if (typeof loadNews === 'function') {
+        // 使用現有的 loadNews 函數，但自定義渲染
+        loadNewsForHome();
+    } else {
+        // 如果 news-loader.js 還沒加載，等待後重試
+        setTimeout(loadHomeNews, 100);
+    }
+}
+
+// 為首頁定制的加載函數
+function loadNewsForHome() {
     const NOTION_API_URL = 'https://api.notion.com/v1/databases/df7b4a8f5d3641b280d9db46a255b3a1/query';
     const NOTION_API_KEY = 'ntn_5P2Xn52jQG148Y5N1YtmS0tVZ0i3yM0r7kEvdXwW9T3mP';
 
@@ -5633,12 +5645,15 @@ function loadHomeNews() {
     })
     .catch(error => {
         console.error('Error fetching news:', error);
-        showHomeNewsError('加載失敗');
+        showHomeNewsError('加載失敗，請檢查網絡連接');
     });
 }
 
 // 渲染首頁新聞（前5個：1個主新聞 + 4個側邊欄）
 function renderHomeNews(articles) {
+    // 調試輸出
+    debugNewsData(articles);
+
     // 主新聞（第一個）
     const mainArticle = articles[0];
     const mainProps = mainArticle.properties;
@@ -5735,7 +5750,22 @@ function renderHomeNews(articles) {
 // 顯示錯誤信息
 function showHomeNewsError(msg) {
     document.getElementById('hero-title').textContent = msg;
-    document.getElementById('hero-excerpt').textContent = '請稍後再試';
+    document.getElementById('hero-excerpt').textContent = '請稍後再試，或點擊 View All 查看全部新聞';
+    console.error('News loading error:', msg);
+}
+
+// 調試：檢查數據結構
+function debugNewsData(articles) {
+    console.log('Loaded articles:', articles.length);
+    articles.forEach((article, i) => {
+        const props = article.properties;
+        console.log(`Article ${i}:`, {
+            title: props['標題']?.title?.[0]?.plain_text,
+            category: props['類型']?.select?.name,
+            featured: props['Home Featured']?.checkbox,
+            order: props['Display Order']?.number
+        });
+    });
 }
 
 // 處理主新聞點擊
@@ -6011,8 +6041,20 @@ function getCategoryClass(category) {
     return categoryMap[category] || 'cat-news';
 }
 
-// 首頁新聞加載函數
+// 首頁新聞加載函數 - 使用 news-loader.js
 function loadHomeNews() {
+    // 檢查 news-loader.js 是否已加載
+    if (typeof loadNews === 'function') {
+        // 使用現有的 loadNews 函數，但自定義渲染
+        loadNewsForHome();
+    } else {
+        // 如果 news-loader.js 還沒加載，等待後重試
+        setTimeout(loadHomeNews, 100);
+    }
+}
+
+// 為首頁定制的加載函數
+function loadNewsForHome() {
     const NOTION_API_URL = 'https://api.notion.com/v1/databases/df7b4a8f5d3641b280d9db46a255b3a1/query';
     const NOTION_API_KEY = 'ntn_5P2Xn52jQG148Y5N1YtmS0tVZ0i3yM0r7kEvdXwW9T3mP';
 
@@ -6064,12 +6106,15 @@ function loadHomeNews() {
     })
     .catch(error => {
         console.error('Error fetching news:', error);
-        showHomeNewsError('加載失敗');
+        showHomeNewsError('加載失敗，請檢查網絡連接');
     });
 }
 
 // 渲染首頁新聞（前5個：1個主新聞 + 4個側邊欄）
 function renderHomeNews(articles) {
+    // 調試輸出
+    debugNewsData(articles);
+
     // 主新聞（第一個）
     const mainArticle = articles[0];
     const mainProps = mainArticle.properties;
@@ -6166,7 +6211,22 @@ function renderHomeNews(articles) {
 // 顯示錯誤信息
 function showHomeNewsError(msg) {
     document.getElementById('hero-title').textContent = msg;
-    document.getElementById('hero-excerpt').textContent = '請稍後再試';
+    document.getElementById('hero-excerpt').textContent = '請稍後再試，或點擊 View All 查看全部新聞';
+    console.error('News loading error:', msg);
+}
+
+// 調試：檢查數據結構
+function debugNewsData(articles) {
+    console.log('Loaded articles:', articles.length);
+    articles.forEach((article, i) => {
+        const props = article.properties;
+        console.log(`Article ${i}:`, {
+            title: props['標題']?.title?.[0]?.plain_text,
+            category: props['類型']?.select?.name,
+            featured: props['Home Featured']?.checkbox,
+            order: props['Display Order']?.number
+        });
+    });
 }
 
 // 處理主新聞點擊
