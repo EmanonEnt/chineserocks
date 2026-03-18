@@ -3,3 +3,6 @@ requests
 beautifulsoup4
 lxml
 python-dotenv
+python-dateutil  # ← 确保是这个名称
+feedparser
+notion-client
