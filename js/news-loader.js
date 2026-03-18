@@ -115,8 +115,6 @@ function convertAllCategoryTags() {
                 databaseId: '3229f94580b78029ba1bf49e33e7e46c',
                 sorts: [{ property: 'Display Order', direction: 'ascending' }]
             })
-            cache: 'no-store',
-            headers: { 'Accept': 'application/json' }
         })
         .then(function(res) { 
             if (!res.ok) throw new Error('HTTP ' + res.status);
