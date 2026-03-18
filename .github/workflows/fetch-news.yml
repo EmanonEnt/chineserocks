@@ -47,7 +47,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install feedparser requests notion-client beautifulsoup4 python-dateutil
+        pip install -r requirements.txt
 
     - name: Fetch News
       env:
