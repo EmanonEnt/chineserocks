@@ -5043,7 +5043,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(convertAllCategoryTags, 1000);
 });
 </script>    <script>
-// ===== 内嵌 news-loader.js =====
 /**
  * ChineseRocks 新聞加載器 - 統一修復版 v4
  * 修復：
@@ -5667,27 +5666,12 @@ window.loadMoreNews = function() {
     }
 };
 
-})();  // 闭合 IIFE
-
 </script>
     <script>
-        // 首页新闻初始化 - 延迟确保 news-loader.js 已加载
+        // 首页新闻初始化
         window.addEventListener('load', function() {
-            console.log('🎸 ChineseRocks: 页面加载完成，准备加载新闻...');
-
             if (typeof loadNews === 'function') {
-                console.log('✓ loadNews 函数已定义，开始加载新闻');
                 loadNews('home');
-            } else {
-                console.error('✗ loadNews 函数未定义，news-loader.js 可能加载失败');
-                // 在页面上显示错误信息
-                var newsContainer = document.getElementById('home-news-container');
-                if (newsContainer) {
-                    newsContainer.innerHTML = '<div style="padding:40px;text-align:center;color:#ff0066;">' +
-                        '<p>⚠️ 新闻加载器初始化失败</p>' +
-                        '<p style="font-size:0.9rem;color:#666;">请检查浏览器控制台获取详细信息</p>' +
-                        '</div>';
-                }
             }
         });
     </script>
