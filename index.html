@@ -5080,14 +5080,6 @@ const NOTION_CONFIG = {
     apiKey: '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'
 };
 
-// CORS 代理配置（解决跨域问题）
-// CORS_PROXY 备用: 'https://corsproxy.io/?'
-
-
-`;
-    return CORS_PROXY + encodeURIComponent(notionUrl);
-}
-
 // 從 Notion 加載首頁新聞
 async function loadHomeNewsFromNotion() {
     const container = document.getElementById('home-news-container');
@@ -5103,20 +5095,26 @@ async function loadHomeNewsFromNotion() {
 
         // 使用 Notion API 查詢數據庫
         // 篩選條件：Home Featured = true，按 Display Order 排序
-        // 调用 Notion API
-        const response = await fetch(`https://api.notion.com/v1/databases/${NOTION_CONFIG.databaseId}/query`, {
+        // 使用本地代理避免 CORS 問題
+        const response = await fetch('/api/notion', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${NOTION_CONFIG.apiKey}`,
-                'Notion-Version': '2022-06-28',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                databaseId: NOTION_CONFIG.databaseId,
                 filter: {
                     property: 'Home Featured',
-                    checkbox: { equals: true }
+                    checkbox: {
+                        equals: true
+                    }
                 },
-                sorts: [{ property: 'Display Order', direction: 'ascending' }]
+                sorts: [
+                    {
+                        property: 'Display Order',
+                        direction: 'ascending'
+                    }
+                ]
             })
         });
 
@@ -5159,7 +5157,7 @@ async function loadHomeNewsFromNotion() {
 
     } catch (error) {
         console.error('❌ 加載新聞失敗:', error);
-        console.log('⚠️ 顯示示例新聞作為備份');
+        console.log('⚠️ 顯示默認新聞作為備份');
         showDefaultNews();
     }
 }
@@ -5268,71 +5266,15 @@ function showDefaultNews() {
     const mainExcerpt = document.getElementById('featured-main-excerpt');
     const sidebar = document.getElementById('featured-sidebar');
 
-    // 示例數據（當 Notion API 無法連接時顯示）
-    const sampleNews = [
-        {
-            title: 'ChineseRocks 官方榜單正式上線',
-            excerpt: '連接樂隊與樂迷，打造中國搖滾第一平台。始於2025，搖滾萬歲！',
-            category: '獨家 EXCLUSIVE',
-            image: './image/banner/bannerall.webp',
-            date: '2026.03.19'
-        },
-        {
-            title: '2026年草莓音樂節陣容公佈',
-            excerpt: '崔健、腦濁、The Noname 等重磅加盟',
-            category: '現場 LIVE',
-            image: './image/banner/bannerpunk.webp',
-            date: '2026.03.18'
-        },
-        {
-            title: '新褲子樂隊新專輯發佈',
-            excerpt: '時隔三年，全新力作震撼來襲',
-            category: '新發行 RELEASES',
-            image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop',
-            date: '2026.03.17'
-        },
-        {
-            title: '地下嬰兒重組巡演啟動',
-            excerpt: '北京、上海、廣州三站已定檔',
-            category: '現場 LIVE',
-            image: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop',
-            date: '2026.03.16'
-        },
-        {
-            title: '萬能青年旅店專訪',
-            excerpt: '談新專輯創作歷程與未來計劃',
-            category: '專題 FEATURE',
-            image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop',
-            date: '2026.03.15'
-        }
-    ];
+    // 顯示空狀態提示，而不是假新聞
+    mainImg.style.display = 'none';
+    mainTag.textContent = '暫無數據';
+    mainTitle.textContent = '正在連接新聞數據庫...';
+    mainExcerpt.textContent = '請稍後刷新，或檢查 Notion 數據庫連接設置。';
 
-    // 設置主圖新聞
-    mainImg.style.display = 'block';
-    mainImg.src = sampleNews[0].image;
-    mainImg.alt = sampleNews[0].title;
-    mainTag.textContent = sampleNews[0].category;
-    mainTitle.textContent = sampleNews[0].title;
-    mainExcerpt.textContent = sampleNews[0].excerpt;
+    sidebar.innerHTML = '<div style="padding: 2rem; text-align: center; color: #888;">暫無編輯精選內容<br>請在 Notion 中勾選 Home Featured</div>';
 
-    // 設置側邊欄（4條）
-    sidebar.innerHTML = '';
-    for (let i = 1; i < 5; i++) {
-        const news = sampleNews[i];
-        const div = document.createElement('div');
-        div.className = 'sidebar-item';
-        div.innerHTML = `
-            <img src="${news.image}" alt="${news.title}" class="sidebar-thumb">
-            <div class="sidebar-content">
-                <span class="side-tag">${news.category}</span>
-                <h4>${news.title}</h4>
-                <p class="meta">${news.date}</p>
-            </div>
-        `;
-        sidebar.appendChild(div);
-    }
-
-    console.log('⚠️ 顯示示例數據（Notion API 連接失敗）');
+    console.log('⚠️ 顯示空狀態（無假新聞）');
 }
 
 // 處理新聞點擊
