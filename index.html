@@ -5179,7 +5179,16 @@ function convertAllCategoryTags() {
         })
         .catch(function(e) {
             console.error('✗ 加載失敗:', e);
-            showError('新聞加載失敗，請檢查網絡連接');
+            showError('新聞加載失敗: ' + e.message + '<br><small>請檢查 data/news.json 是否存在</small>');
+            // 在容器上显示错误
+            var container = document.getElementById('home-news-container');
+            if (container) {
+                container.innerHTML = '<div style="padding:40px;text-align:center;color:#ff0066;">' +
+                    '<p>⚠️ 無法載入新聞</p>' +
+                    '<p style="font-size:0.9rem;color:#666;">' + e.message + '</p>' +
+                    '<p style="font-size:0.8rem;color:#999;">請檢查 data/news.json 是否存在</p>' +
+                    '</div>';
+            }
         });
     }
 
