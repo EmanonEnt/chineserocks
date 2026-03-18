@@ -221,7 +221,7 @@ function translateCategory(category) {
 
         var heroMain = document.getElementById('hero-main');
         if (heroMain) {
-            heroMain.innerHTML = '<img src="' + (main.image || getDefaultImage()) + '" alt="' + main.title + '" onerror="this.src='' + getDefaultImage() + ''">' +
+            heroMain.innerHTML = '<img src="' + (main.image || getDefaultImage()) + \'" alt="' + main.title + \'" onerror="this.src=\'' + getDefaultImage() + '\'">' +
                 '<div class="hero-overlay"><span class="hero-tag">' + translateCategory(main.category) + '</span>' +
                 '<h2 class="hero-title">' + main.title + '</h2>' +
                 '<p class="hero-excerpt">' + (main.excerpt || '') + '</p></div>';
@@ -236,7 +236,7 @@ function translateCategory(category) {
                 var n = news[i];
                 var div = document.createElement('article');
                 div.className = 'side-card';
-                div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''">' +
+                div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + \'" onerror="this.src=\'' + getDefaultImage() + '\'">' +
                     '<div class="side-overlay"><span class="side-tag">' + translateCategory(n.category) + '</span>' +
                     '<h3 class="side-title">' + n.title + '</h3></div>';
                 div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
@@ -260,7 +260,7 @@ function translateCategory(category) {
             var n = list[i];
             var div = document.createElement('article');
             div.className = 'news-card' + (n.isPremium ? ' premium' : '');
-            div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''"></div>' +
+            div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + \'" onerror="this.src=\'' + getDefaultImage() + '\'"></div>' +
                 '<div class="news-content"><span class="news-category">' + translateCategory(n.category) + '</span>' +
                 '<h3 class="news-title">' + n.title + '</h3>' +
                 '<p class="news-excerpt">' + (n.excerpt || '') + '</p></div>';
@@ -305,7 +305,7 @@ function translateCategory(category) {
 
         container.innerHTML = picks.map(function(n) {
             return '<div class="pick-item" onclick="openArticleById('' + n.id + '')">' +
-                '<img src="' + (n.image || getDefaultImage()) + '" class="pick-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
+                '<img src="' + (n.image || getDefaultImage()) + \'" class="pick-thumb" onerror="this.src=\'' + getDefaultImage() + '\'">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
         }).join('');
     }
@@ -353,7 +353,7 @@ function translateCategory(category) {
     };
 
     function getDefaultImage() {
-        return './image/default-news.jpg';
+        return 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
     }
 
     function showError(msg) {
