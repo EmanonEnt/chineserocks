@@ -1,72 +1,68 @@
-export default async function handler(req, res) {
-    // 设置 CORS 头
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+const { Client } = require('@notionhq/client');
 
-    // 处理预检请求
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
+module.exports = async (req, res) => {
+  // 设置 CORS 头
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // 处理预检请求
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // 只接受 POST 请求
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const { databaseId, filter, sorts } = req.body;
+
+    if (!databaseId) {
+      return res.status(400).json({ error: 'Database ID is required' });
     }
 
-    // 只允许 POST 请求
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
+    // 初始化 Notion 客户端
+    const notion = new Client({ 
+      auth: process.env.NOTION_TOKEN 
+    });
+
+    console.log('Querying database:', databaseId);
+    console.log('Filter:', JSON.stringify(filter));
+    console.log('Sorts:', JSON.stringify(sorts));
+
+    // 构建查询参数
+    const queryParams = {
+      database_id: databaseId,
+    };
+
+    if (filter) {
+      queryParams.filter = filter;
     }
 
-    try {
-        const { databaseId, filter, sorts } = req.body;
-
-        // 从环境变量读取 API Key（安全！）
-        const apiKey = process.env.NOTION_TOKEN;
-
-        if (!apiKey) {
-            console.error('❌ NOTION_API_KEY 未设置');
-            return res.status(500).json({ error: 'Server configuration error: NOTION_API_KEY not set' });
-        }
-
-        if (!databaseId) {
-            return res.status(400).json({ error: 'databaseId is required' });
-        }
-
-        console.log('📡 代理请求到 Notion API:', databaseId);
-
-        // 调用 Notion API
-        const notionUrl = `https://api.notion.com/v1/databases/${databaseId}/query`;
-
-        const response = await fetch(notionUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Notion-Version': '2022-06-28',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                filter: filter || undefined,
-                sorts: sorts || undefined
-            })
-        });
-
-        const data = await response.json();
-
-        console.log('📡 Notion API 响应状态:', response.status);
-
-        if (!response.ok) {
-            console.error('❌ Notion API 错误:', data);
-            return res.status(response.status).json(data);
-        }
-
-        console.log('✅ 成功获取数据，条目数:', data.results?.length || 0);
-
-        // 返回数据给前端
-        res.status(200).json(data);
-
-    } catch (error) {
-        console.error('❌ 代理错误:', error);
-        res.status(500).json({ 
-            error: 'Internal server error',
-            message: error.message 
-        });
+    if (sorts) {
+      queryParams.sorts = sorts;
     }
-}
 
+    // 查询数据库
+    const response = await notion.databases.query(queryParams);
+
+    console.log('Notion response:', response.results.length, 'results');
+
+    return res.status(200).json({
+      results: response.results,
+      has_more: response.has_more,
+      next_cursor: response.next_cursor
+    });
+
+  } catch (error) {
+    console.error('Notion API Error:', error);
+
+    return res.status(500).json({
+      error: 'Failed to query Notion database',
+      message: error.message,
+      code: error.code
+    });
+  }
+};
