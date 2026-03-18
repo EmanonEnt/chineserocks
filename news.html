@@ -1583,7 +1583,7 @@ const DB_CONFIG = {
 };
 
 // 初始化
-async async function initNews() {
+async function initNews() {
     console.log('=== 初始化 NEWS ===');
     console.log('页面URL:', window.location.href);
     await loadNewsFromAPI();
@@ -1643,7 +1643,6 @@ async function loadNewsFromAPI() {
         }
     } catch (error) {
         console.error('加载新闻失败:', error);
-        console.error('错误堆栈:', error.stack);
         showError('加载失败: ' + error.message);
     }
 }
@@ -1755,9 +1754,7 @@ function parseNotionData(results) {
 
 // 渲染新闻
 function renderNews() {
-    console.log('renderNews 被调用，allNews 数量:', allNews.length);
     if (allNews.length === 0) {
-        console.log('allNews 为空，显示空状态');
         showEmptyState();
         return;
     }
@@ -1830,12 +1827,8 @@ function renderHero(heroNews) {
 
 // 渲染新闻列表
 function renderNewsList(newsList) {
-    console.log('renderNewsList 被调用，新闻数量:', newsList.length);
     const container = document.getElementById('news-list');
-    if (!container) {
-        console.error('找不到 news-list 容器！');
-        return;
-    }
+    if (!container) return;
 
     // 保留 Load More 按钮
     const loadMoreContainer = document.getElementById('loadMoreContainer');
