@@ -1572,8 +1572,8 @@
 // 全局状态
 let allNews = [];
 let displayedCount = 0;
-const INITIAL_DISPLAY = 8;
-const LOAD_MORE_COUNT = 8;
+const INITIAL_DISPLAY = 12;
+const LOAD_MORE_COUNT = 6;
 let currentCategory = 'all';
 let currentTag = null;
 
@@ -1840,8 +1840,8 @@ function renderNewsList(newsList) {
         container.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">📰</div>
-                <h3>暂无更多新闻</h3>
-                <p>该分类下暂时没有更多内容</p>
+                <h3>暫無新聞</h3>
+                <p>該分類下暫時沒有更多內容</p>
             </div>
         `;
         return;
@@ -1879,20 +1879,15 @@ function renderNewsList(newsList) {
         container.appendChild(loadMoreContainer);
     }
 
-    // 计算实际显示的卡片数
-    const visibleCards = container.querySelectorAll('.news-card.visible');
-    displayedCount = visibleCards.length;
+    // 重置 displayedCount 为初始显示数量（不超过新闻总数）
+    displayedCount = Math.min(INITIAL_DISPLAY, newsList.length);
 
     console.log('RenderNewsList:', {
         newsListLength: newsList.length,
-        visibleCards: displayedCount,
-        initialDisplay: INITIAL_DISPLAY
+        displayedCount: displayedCount,
+        initialDisplay: INITIAL_DISPLAY,
+        hasMore: newsList.length > INITIAL_DISPLAY
     });
-
-    // 初始设置按钮状态（后续 updateLoadMoreButton 会再次更新）
-    if (loadMoreContainer) {
-        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
-    }
 }
 
 // 渲染侧边栏
@@ -1943,6 +1938,7 @@ function renderSidebar(newsList) {
 function filterNews(category, btn) {
     currentCategory = category;
     currentTag = null;
+    displayedCount = 0; // 重置显示计数
 
     // 更新按钮状态
     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
@@ -1959,6 +1955,7 @@ function filterNews(category, btn) {
 function filterByTag(tag) {
     currentTag = tag;
     currentCategory = 'all';
+    displayedCount = 0; // 重置显示计数
 
     // 更新分类按钮
     document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
@@ -1977,6 +1974,8 @@ function loadMoreNews() {
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
     const toShow = Math.min(LOAD_MORE_COUNT, hiddenCards.length);
 
+    console.log('LoadMore:', { hidden: hiddenCards.length, toShow: toShow, loadMoreCount: LOAD_MORE_COUNT });
+
     for (let i = 0; i < toShow; i++) {
         hiddenCards[i].classList.remove('hidden');
         hiddenCards[i].classList.add('visible');
@@ -1990,19 +1989,15 @@ function loadMoreNews() {
 function updateLoadMoreButton() {
     const container = document.getElementById('loadMoreContainer');
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
-    const visibleCards = document.querySelectorAll('.news-card.visible');
-    const totalCards = hiddenCards.length + visibleCards.length;
 
     console.log('Load More Check:', {
         hidden: hiddenCards.length,
-        visible: visibleCards.length,
-        total: totalCards,
         displayedCount: displayedCount
     });
 
     if (container) {
-        // 如果有隐藏卡片，或者总卡片数超过初始显示数，显示按钮
-        const shouldShow = hiddenCards.length > 0 || (totalCards > INITIAL_DISPLAY && displayedCount < totalCards);
+        // 只要有隐藏的卡片，就显示 LOAD MORE 按钮
+        const shouldShow = hiddenCards.length > 0;
         container.style.display = shouldShow ? 'block' : 'none';
         console.log('Load More button display:', shouldShow ? 'block' : 'none');
     }
