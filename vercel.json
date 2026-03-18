@@ -1,18 +1,8 @@
 {
   "version": 2,
-  "name": "chineserocks",
   "functions": {
     "api/notion.js": {
       "maxDuration": 10
     }
-  },
-  "routes": [
-    {
-      "src": "/api/notion",
-      "dest": "/api/notion.js"
-    }
-  ],
-  "env": {
-    "NOTION_API_KEY": "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"
   }
 }
