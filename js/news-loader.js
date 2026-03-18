@@ -105,21 +105,45 @@ function convertAllCategoryTags() {
     });
 
     function loadNewsData() {
-        fetch('data/news.json?t=' + Date.now(), {
-            cache: 'no-store',
-            headers: { 'Accept': 'application/json' }
+        fetch('/api/notion', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                databaseId: '3229f94580b78029ba1bf49e33e7e46c',
+                filter: {},
+                sorts: [{ property: 'Display Order', direction: 'ascending' }]
+            })
         })
         .then(function(res) { 
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json(); 
         })
         .then(function(data) {
-            if (Array.isArray(data)) {
+            // Notion API 返回格式处理
+            if (data.results && Array.isArray(data.results)) {
+                allNews = data.results.map(function(page) {
+                    var props = page.properties || {};
+                    return {
+                        id: page.id,
+                        title: props.Title?.title?.[0]?.plain_text || props.標題?.title?.[0]?.plain_text || '無標題',
+                        content: props.Content?.rich_text?.[0]?.plain_text || props.內容?.rich_text?.[0]?.plain_text || '',
+                        excerpt: props.Excerpt?.rich_text?.[0]?.plain_text || props.摘要?.rich_text?.[0]?.plain_text || '',
+                        category: props.Category?.select?.name || props.類型?.select?.name || props.分類?.select?.name || '新聞',
+                        tags: props.Tags?.multi_select?.map(function(t) { return t.name; }) || props.標籤?.multi_select?.map(function(t) { return t.name; }) || [],
+                        cover_image: props['Cover Image']?.files?.[0]?.file?.url || props['封面圖']?.files?.[0]?.file?.url || props.Cover?.files?.[0]?.file?.url || '',
+                        published_date: props['Published Date']?.date?.start || props['發布日期']?.date?.start || props.Date?.date?.start || page.created_time,
+                        is_premium: props['Is Premium']?.checkbox === true || props['會員專享']?.checkbox === true,
+                        source_url: props['Source URL']?.url || props['來源網址']?.url || '',
+                        featured: props['Home Featured']?.checkbox === true || props['編輯精選']?.checkbox === true
+                    };
+                });
+            } else if (Array.isArray(data)) {
                 allNews = data;
             } else if (data.data && data.data.all) {
                 allNews = data.data.all;
-            } else if (data.articles) {
-                allNews = data.articles;
             } else {
                 allNews = [];
             }
