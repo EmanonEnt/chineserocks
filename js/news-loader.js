@@ -162,8 +162,7 @@ function convertAllCategoryTags() {
                                    (props['會員專享'] && props['會員專享'].checkbox === true),
                         source_url: props['Source URL'] && props['Source URL'].url ? props['Source URL'].url : 
                                    (props['來源網址'] && props['來源網址'].url ? props['來源網址'].url : ''),
-                        featured: props['Home Featured'] && props['Home Featured'].checkbox === true || 
-                                 (props['編輯精選'] && props['編輯精選'].checkbox === true)
+                        featured: false  // 不再使用 Home Featured checkbox，只使用 Tags
                     };
                 });
             } else if (Array.isArray(data)) {
@@ -370,12 +369,12 @@ function convertAllCategoryTags() {
 
         var picks = [];
 
+        // 严格只使用"編輯精選"标签来判断，不使用 Home Featured 字段
         for (var i = 0; i < news.length; i++) {
-            var isPick = news[i].featured || 
-                         (news[i].tags && (
-                             news[i].tags.indexOf('編輯精選') !== -1 || 
-                             news[i].tags.indexOf('编辑精选') !== -1
-                         ));
+            var isPick = news[i].tags && (
+                news[i].tags.indexOf('編輯精選') !== -1 || 
+                news[i].tags.indexOf('编辑精选') !== -1
+            );
             if (isPick) {
                 picks.push(news[i]);
             }
