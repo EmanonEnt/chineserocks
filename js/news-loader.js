@@ -147,7 +147,7 @@ function convertAllCategoryTags() {
                                 if (file.external) return file.external.url;
                             }
                             return '';
-                        })(),
+                        }()),
                         published_date: props['Published Date']?.date?.start || props['發布日期']?.date?.start || props.Date?.date?.start || page.created_time,
                         is_premium: props['Is Premium']?.checkbox === true || props['會員專享']?.checkbox === true,
                         source_url: props['Source URL']?.url || props['來源網址']?.url || '',
