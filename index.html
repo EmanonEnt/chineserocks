@@ -5139,7 +5139,19 @@ async function loadHomeNewsFromNotion() {
         const mainArticle = articles[0];
         const mainProps = mainArticle.properties;
 
-        mainImg.src = getNotionImageUrl(mainArticle) || './image/news/default.jpg';
+        let mainImgUrl = getNotionImageUrl(mainArticle);
+        // 備用圖片獲取邏輯
+        if (!mainImgUrl && mainProps) {
+            const possibleFields = ['圖片', '图片', 'Image', '封面圖', 'Cover Image', 'cover'];
+            for (const field of possibleFields) {
+                if (mainProps[field] && mainProps[field].files && mainProps[field].files[0]) {
+                    const file = mainProps[field].files[0];
+                    mainImgUrl = file.external ? file.external.url : (file.file ? file.file.url : null);
+                    if (mainImgUrl) break;
+                }
+            }
+        }
+        mainImg.src = mainImgUrl || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
         mainImg.alt = getPropertyValue(mainProps, '標題', '新聞標題');
         mainTag.textContent = translateCategory(getPropertyValue(mainProps, '分類', '獨家'));
         mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
@@ -5169,7 +5181,20 @@ function createSidebarItem(article, props) {
     div.setAttribute('data-article-id', article.id);
     div.onclick = function() { handleNewsClick(this); };
 
-    const imgUrl = getNotionImageUrl(article) || './image/news/default-thumb.jpg';
+    let imgUrl = getNotionImageUrl(article);
+    // 如果沒有找到圖片，嘗試從屬性中直接提取
+    if (!imgUrl && props) {
+        // 嘗試所有可能的圖片字段
+        const possibleFields = ['圖片', '图片', 'Image', '封面圖', 'Cover Image', 'cover'];
+        for (const field of possibleFields) {
+            if (props[field] && props[field].files && props[field].files[0]) {
+                const file = props[field].files[0];
+                imgUrl = file.external ? file.external.url : (file.file ? file.file.url : null);
+                if (imgUrl) break;
+            }
+        }
+    }
+    imgUrl = imgUrl || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop';
     const title = getPropertyValue(props, '標題', '新聞標題');
     const category = translateCategory(getPropertyValue(props, '分類', '新聞'));
     const date = formatNotionDate(getPropertyValue(props, '發布日期', new Date().toISOString()));
@@ -5186,20 +5211,42 @@ function createSidebarItem(article, props) {
     return div;
 }
 
-// 獲取 Notion 圖片 URL
+// 獲取 Notion 圖片 URL - 修復版
 function getNotionImageUrl(article) {
-    // 優先從封面獲取
-    if (article.cover && article.cover.type === 'external') {
-        return article.cover.external.url;
-    } else if (article.cover && article.cover.type === 'file') {
-        return article.cover.file.url;
+    if (!article) return null;
+
+    // 優先從封面獲取 (cover 字段)
+    if (article.cover) {
+        if (article.cover.type === 'external' && article.cover.external) {
+            return article.cover.external.url;
+        } else if (article.cover.type === 'file' && article.cover.file) {
+            return article.cover.file.url;
+        }
     }
 
-    // 從屬性中獲取
-    const props = article.properties;
-    if (props['圖片'] && props['圖片'].files && props['圖片'].files.length > 0) {
-        const file = props['圖片'].files[0];
-        return file.external ? file.external.url : (file.file ? file.file.url : '');
+    // 從屬性中獲取 (支持多種字段名)
+    const props = article.properties || {};
+
+    // 嘗試不同可能的圖片字段名
+    const imageFields = ['圖片', '图片', 'Image', '封面', 'Cover Image', 'cover_image'];
+
+    for (const field of imageFields) {
+        const imgProp = props[field];
+        if (imgProp && imgProp.files && imgProp.files.length > 0) {
+            const file = imgProp.files[0];
+            if (file.external && file.external.url) {
+                return file.external.url;
+            } else if (file.file && file.file.url) {
+                return file.file.url;
+            }
+        }
+    }
+
+    // 嘗試從 page 對象的 cover 字段獲取 (有時在 properties 外)
+    if (article.icon && article.icon.type === 'external') {
+        return article.icon.external.url;
+    } else if (article.icon && article.icon.type === 'file') {
+        return article.icon.file.url;
     }
 
     return null;
