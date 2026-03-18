@@ -113,7 +113,6 @@ function convertAllCategoryTags() {
             },
             body: JSON.stringify({
                 databaseId: '3229f94580b78029ba1bf49e33e7e46c',
-                filter: {},
                 sorts: [{ property: 'Display Order', direction: 'ascending' }]
             })
         })
