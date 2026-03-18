@@ -2786,7 +2786,7 @@ html {
             <div class="featured-main" id="featured-main" onclick="handleNewsClick(this)">
                 <img src="" alt="" id="featured-main-img">
                 <div class="featured-overlay">
-                    <span class="featured-tag" id="featured-main-tag">獨家 EXCLUSIVE</span>
+                    <span class="featured-tag" id="featured-main-tag">獨家</span>
                     <h3 class="featured-title" id="featured-main-title">載入中...</h3>
                     <p class="featured-excerpt" id="featured-main-excerpt">正在從 Notion 加載最新新聞...</p>
                 </div>
@@ -5103,7 +5103,9 @@ async function loadHomeNewsFromNotion() {
         if (!mainCategory) mainCategory = getPropertyValue(mainProps, 'Type', '');
         if (!mainCategory) mainCategory = getPropertyValue(mainProps, '分類', '');
         if (!mainCategory) mainCategory = getPropertyValue(mainProps, 'Category', '獨家');
+        
         mainTag.textContent = translateCategory(mainCategory);
+        
         mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
         mainExcerpt.textContent = getPropertyValue(mainProps, '摘要', '點擊閱讀更多...');
         mainImg.parentElement.setAttribute('data-article-id', mainArticle.id);
@@ -5134,17 +5136,18 @@ function createSidebarItem(article, props) {
     div.className = 'sidebar-item';
     div.setAttribute('data-article-id', article.id);
 
-    // 獲取分類和外部鏈接（從 Notion 的"類型"欄位讀取）
+    // 獲取分類（從 Notion"類型"欄位）
     let rawCategory = getPropertyValue(props, '類型', '');
-    // 備用欄位名
     if (!rawCategory) rawCategory = getPropertyValue(props, 'Type', '');
     if (!rawCategory) rawCategory = getPropertyValue(props, '分類', '');
     if (!rawCategory) rawCategory = getPropertyValue(props, 'Category', '新聞');
 
-    const category = translateCategory(rawCategory);
+    // 轉換為雙語顯示
+    const displayCategory = translateCategory(rawCategory);
     const externalUrl = getPropertyValue(props, '來源', '') || getPropertyValue(props, 'Link', '');
 
-    div.setAttribute('data-category', rawCategory || '新聞');
+    div.setAttribute('data-category', rawCategory);
+    
     if (externalUrl) div.setAttribute('data-external-url', externalUrl);
 
     div.onclick = function() { handleNewsClick(this); };
@@ -5169,7 +5172,7 @@ function createSidebarItem(article, props) {
     div.innerHTML = `
         <img src="${imgUrl}" alt="${title}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop'">
         <div class="sidebar-content">
-            <span class="side-tag">${category}</span>
+            <span class="side-tag">${displayCategory}</span>
             <h4>${title}</h4>
             <p class="meta">${date}</p>
         </div>
@@ -5289,8 +5292,9 @@ function translateCategory(category) {
     // 轉為字符串並清理
     let cat = String(category).trim();
 
-    // 如果已經包含英文後綴（如 "獨家 EXCLUSIVE"），直接返回
+    // 如果已經是雙語格式（包含空格和大寫英文），直接返回不再處理
     if (cat.indexOf(' ') > 0 && /[A-Z]{2,}/.test(cat)) {
+        
         return cat;
     }
 
