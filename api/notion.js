@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         const { databaseId, filter, sorts } = req.body;
 
         // 从环境变量读取 API Key（安全！）
-        const apiKey = process.env.NOTION_API_KEY;
+        const apiKey = process.env.NOTION_TOKEN;
 
         if (!apiKey) {
             console.error('❌ NOTION_API_KEY 未设置');
