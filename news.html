@@ -1572,8 +1572,10 @@
 // 全局状态
 let allNews = [];
 let displayedCount = 0;
-const INITIAL_DISPLAY = 8;
-const LOAD_MORE_COUNT = 8;
+const HERO_COUNT = 3; // Hero区域显示3条
+const INITIAL_LIST_DISPLAY = 8; // 列表初始显示8条 (3+8=11)
+const LOAD_MORE_COUNT = 6; // 每次点击加载6条
+const MIN_NEWS_FOR_LOAD_MORE = 12; // 总新闻数 >= 12 才显示按钮 (11+1=12)
 let currentCategory = 'all';
 let currentTag = null;
 
@@ -1771,7 +1773,22 @@ function renderNews() {
         filtered = filtered.filter(n => n.tags.includes(currentTag));
     }
 
+    console.log('渲染新闻 - 筛选后总数:', filtered.length, '当前分类:', currentCategory, '当前标签:', currentTag);
+
     // 渲染 Hero 区域（前3条）
+    renderHero(filtered.slice(0, HERO_COUNT));
+
+    // 渲染新闻列表（从第4条开始）
+    renderNewsList(filtered.slice(HERO_COUNT));
+
+    // 渲染侧边栏
+    renderSidebar(filtered);
+
+    // 更新 Load More 按钮
+    updateLoadMoreButton();
+}
+
+// 渲染 Hero 区域（前3条）
     renderHero(filtered.slice(0, 3));
 
     // 渲染新闻列表
@@ -1781,34 +1798,42 @@ function renderNews() {
     renderSidebar(filtered);
 
     // 更新 Load More 按钮
-    updateLoadMoreButton();
-}
+function updateLoadMoreButton() {
+    const container = document.getElementById('loadMoreContainer');
+    if (!container) return;
 
-// 渲染 Hero
-function renderHero(heroNews) {
-    if (heroNews.length === 0) return;
-
-    // 主 Hero
-    const main = heroNews[0];
-    const heroMain = document.getElementById('hero-main');
-    const heroImg = document.getElementById('hero-img');
-    const heroTag = document.getElementById('hero-tag');
-    const heroTitle = document.getElementById('hero-title');
-    const heroExcerpt = document.getElementById('hero-excerpt');
-    const heroDate = document.getElementById('hero-date');
-    const heroPremium = document.getElementById('hero-premium');
-
-    if (heroImg) heroImg.src = main.image || './image/default-news.jpg';
-    if (heroImg) heroImg.alt = main.title;
-    if (heroTag) heroTag.textContent = translateCategory(main.category);
-    if (heroTitle) heroTitle.textContent = main.title;
-    if (heroExcerpt) heroExcerpt.textContent = main.excerpt;
-    if (heroDate) heroDate.textContent = formatDate(main.date);
-    if (heroPremium) heroPremium.textContent = main.isPremium ? '★ 會員專享' : '';
-
-    if (heroMain) {
-        heroMain.onclick = () => handleNewsClick(main);
+    // 获取当前筛选后的总新闻数
+    let filtered = allNews;
+    if (currentCategory !== 'all') {
+        filtered = allNews.filter(n => 
+            n.category === currentCategory || 
+            n.category.includes(currentCategory)
+        );
     }
+    if (currentTag) {
+        filtered = filtered.filter(n => n.tags.includes(currentTag));
+    }
+
+    const totalNews = filtered.length;
+    const listNewsCount = Math.max(0, totalNews - HERO_COUNT); // 列表中的新闻数（减去hero的3条）
+    const hiddenCards = document.querySelectorAll('.news-card.hidden');
+
+    console.log('Load More Check:', {
+        totalNews: totalNews,
+        listNewsCount: listNewsCount,
+        hiddenCards: hiddenCards.length,
+        displayedCount: displayedCount,
+        minRequired: MIN_NEWS_FOR_LOAD_MORE
+    });
+
+    // 显示按钮的条件：
+    // 1. 总新闻数 >= MIN_NEWS_FOR_LOAD_MORE (12条，即hero 3条 + 列表 9条以上)
+    // 2. 还有隐藏的新闻未显示
+    const shouldShow = (totalNews >= MIN_NEWS_FOR_LOAD_MORE) && (hiddenCards.length > 0);
+
+    container.style.display = shouldShow ? 'block' : 'none';
+    console.log('Load More button display:', shouldShow ? 'block' : 'none');
+}
 
     // 侧边 Hero（第2、3条）
     const heroSide = document.getElementById('hero-side');
@@ -1844,13 +1869,19 @@ function renderNewsList(newsList) {
                 <p>该分类下暂时没有更多内容</p>
             </div>
         `;
+        // 如果没有新闻，隐藏 load more 按钮
+        if (loadMoreContainer) {
+            loadMoreContainer.style.display = 'none';
+        }
         return;
     }
 
     // 创建新闻卡片
     newsList.forEach((news, index) => {
         const card = document.createElement('article');
-        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${index >= INITIAL_DISPLAY ? 'hidden' : 'visible'}`;
+        // 前 INITIAL_LIST_DISPLAY 个显示，后面的隐藏
+        const isVisible = index < INITIAL_LIST_DISPLAY;
+        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${isVisible ? 'visible' : 'hidden'}`;
         card.innerHTML = `
             <div class="news-thumb">
                 <img src="${news.image || './image/default-news.jpg'}" alt="${news.title}" loading="lazy">
@@ -1886,103 +1917,10 @@ function renderNewsList(newsList) {
     console.log('RenderNewsList:', {
         newsListLength: newsList.length,
         visibleCards: displayedCount,
-        initialDisplay: INITIAL_DISPLAY
+        initialDisplay: INITIAL_LIST_DISPLAY
     });
-
-    // 初始设置按钮状态（后续 updateLoadMoreButton 会再次更新）
-    if (loadMoreContainer) {
-        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
-    }
-}
-
-// 渲染侧边栏
-function renderSidebar(newsList) {
-    // 渲染标签云
-    const tagCloud = document.getElementById('tag-cloud');
-    if (tagCloud) {
-        const allTags = [];
-        newsList.forEach(n => {
-            if (n.tags) allTags.push(...n.tags);
-        });
-        const tagCounts = {};
-        allTags.forEach(tag => {
-            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-        });
-        const sortedTags = Object.entries(tagCounts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 15);
-
-        tagCloud.innerHTML = sortedTags.map(([tag, count]) => `
-            <button class="tag-item ${currentTag === tag ? 'active' : ''}" onclick="filterByTag('${tag}')">${tag} (${count})</button>
-        `).join('');
-    }
-
-    // 渲染编辑推荐
-    const editorsPick = document.getElementById('editors-pick');
-    if (editorsPick) {
-        // 严格只显示明确标记为"編輯精選"标签的文章
-        const picks = newsList.filter(n => n.tags && n.tags.includes('編輯精選')).slice(0, 5);
-
-        if (picks.length === 0) {
-            editorsPick.innerHTML = '<p style="color: #888; font-size: 0.9rem;">暂无编辑推荐</p>';
-        } else {
-            editorsPick.innerHTML = picks.map(news => `
-                <div class="pick-item" onclick='handleNewsClick(${JSON.stringify(news).replace(/'/g, "&#39;")})'>
-                    <img src="${news.image || './image/default-news.jpg'}" alt="" class="pick-thumb">
-                    <div class="pick-content">
-                        <h4>${news.title}</h4>
-                        <span>${translateCategory(news.category)}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-    }
-}
-
-// 分类筛选
-function filterNews(category, btn) {
-    currentCategory = category;
-    currentTag = null;
 
     // 更新按钮状态
-    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-
-    // 更新标签云状态
-    document.querySelectorAll('.tag-item').forEach(t => t.classList.remove('active'));
-
-    renderNews();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// 标签筛选
-function filterByTag(tag) {
-    currentTag = tag;
-    currentCategory = 'all';
-
-    // 更新分类按钮
-    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.category-btn')?.classList.add('active');
-
-    // 更新标签状态
-    document.querySelectorAll('.tag-item').forEach(t => {
-        t.classList.toggle('active', t.textContent.includes(tag));
-    });
-
-    renderNews();
-}
-
-// 加载更多
-function loadMoreNews() {
-    const hiddenCards = document.querySelectorAll('.news-card.hidden');
-    const toShow = Math.min(LOAD_MORE_COUNT, hiddenCards.length);
-
-    for (let i = 0; i < toShow; i++) {
-        hiddenCards[i].classList.remove('hidden');
-        hiddenCards[i].classList.add('visible');
-    }
-
-    displayedCount += toShow;
     updateLoadMoreButton();
 }
 
@@ -2037,7 +1975,19 @@ function handleNewsClick(news) {
 
 // 处理 Hero 点击
 function handleHeroClick() {
-    const mainHero = allNews[0];
+    // 获取当前筛选后的第一条新闻
+    let filtered = allNews;
+    if (currentCategory !== 'all') {
+        filtered = allNews.filter(n => 
+            n.category === currentCategory || 
+            n.category.includes(currentCategory)
+        );
+    }
+    if (currentTag) {
+        filtered = filtered.filter(n => n.tags.includes(currentTag));
+    }
+
+    const mainHero = filtered[0];
     if (mainHero) {
         handleNewsClick(mainHero);
     }
