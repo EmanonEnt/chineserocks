@@ -1438,6 +1438,7 @@ html {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 2rem;
+            min-height: 400px;
         }
 
         .hero-main {
@@ -1511,21 +1512,21 @@ html {
         .hero-side {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
             height: 100%;
+            justify-content: space-between;
         }
 
         .side-card {
             display: flex;
             gap: 1rem;
-            height: calc(25% - 0.75rem);
-            min-height: 80px;
+            flex: 1;
+            min-height: 90px;
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            flex: 0 0 auto;
             overflow: hidden;
             transition: all 0.3s;
         }
@@ -2916,6 +2917,7 @@ html {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 2rem;
+            min-height: 400px;
         }
 
         .hero-main {
@@ -2989,21 +2991,21 @@ html {
         .hero-side {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
             height: 100%;
+            justify-content: space-between;
         }
 
         .side-card {
             display: flex;
             gap: 1rem;
-            height: calc(25% - 0.75rem);
-            min-height: 80px;
+            flex: 1;
+            min-height: 90px;
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            flex: 0 0 auto;
             overflow: hidden;
             transition: all 0.3s;
         }
@@ -5525,6 +5527,74 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- 首頁新聞加載腳本 -->
 <script>
+
+// 模擬數據（用於測試樣式）
+function getMockNewsData() {
+    return [
+        {
+            id: 'mock-1',
+            properties: {
+                '標題': { title: [{ plain_text: '重塑雕像的權利新專輯首發深度解析' }] },
+                '類型': { select: { name: '獨家' } },
+                '內容': { rich_text: [{ plain_text: '時隔三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型...' }] },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800' } }] },
+                '發布時間': { date: { start: '2026-03-17' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 1 }
+            }
+        },
+        {
+            id: 'mock-2',
+            properties: {
+                '標題': { title: [{ plain_text: 'Radiohead 宣佈2026年亞洲巡演' }] },
+                '類型': { select: { name: '國際' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-17T10:00:00' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 2 }
+            }
+        },
+        {
+            id: 'mock-3',
+            properties: {
+                '標題': { title: [{ plain_text: '迷笛音樂節2026陣容公佈' }] },
+                '類型': { select: { name: '現場' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-16' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 3 }
+            }
+        },
+        {
+            id: 'mock-4',
+            properties: {
+                '標題': { title: [{ plain_text: '專訪：刺蝟樂隊石璐' }] },
+                '類型': { select: { name: '專題' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-16' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 4 }
+            }
+        },
+        {
+            id: 'mock-5',
+            properties: {
+                '標題': { title: [{ plain_text: '草東沒有派對新專輯發行' }] },
+                '類型': { select: { name: '音樂' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-15' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 5 }
+            }
+        }
+    ];
+}
+
 // 獲取分類對應的 CSS 類名
 function getCategoryClass(category) {
     const categoryMap = {
@@ -5619,6 +5689,12 @@ function loadNewsForHome() {
 function renderHomeNews(articles) {
     // 調試輸出
     debugNewsData(articles);
+
+    // 如果沒有數據，使用模擬數據（僅用於測試樣式）
+    if (!articles || articles.length === 0) {
+        console.warn('No articles loaded, using mock data');
+        articles = getMockNewsData();
+    }
 
     // 主新聞（第一個）
     const mainArticle = articles[0];
@@ -5986,6 +6062,74 @@ document.addEventListener('DOMContentLoaded', function() {
     
 <!-- 首頁新聞加載腳本 -->
 <script>
+
+// 模擬數據（用於測試樣式）
+function getMockNewsData() {
+    return [
+        {
+            id: 'mock-1',
+            properties: {
+                '標題': { title: [{ plain_text: '重塑雕像的權利新專輯首發深度解析' }] },
+                '類型': { select: { name: '獨家' } },
+                '內容': { rich_text: [{ plain_text: '時隔三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型...' }] },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800' } }] },
+                '發布時間': { date: { start: '2026-03-17' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 1 }
+            }
+        },
+        {
+            id: 'mock-2',
+            properties: {
+                '標題': { title: [{ plain_text: 'Radiohead 宣佈2026年亞洲巡演' }] },
+                '類型': { select: { name: '國際' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-17T10:00:00' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 2 }
+            }
+        },
+        {
+            id: 'mock-3',
+            properties: {
+                '標題': { title: [{ plain_text: '迷笛音樂節2026陣容公佈' }] },
+                '類型': { select: { name: '現場' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-16' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 3 }
+            }
+        },
+        {
+            id: 'mock-4',
+            properties: {
+                '標題': { title: [{ plain_text: '專訪：刺蝟樂隊石璐' }] },
+                '類型': { select: { name: '專題' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-16' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 4 }
+            }
+        },
+        {
+            id: 'mock-5',
+            properties: {
+                '標題': { title: [{ plain_text: '草東沒有派對新專輯發行' }] },
+                '類型': { select: { name: '音樂' } },
+                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=400' } }] },
+                '發布時間': { date: { start: '2026-03-15' } },
+                '是否會員專享': { checkbox: false },
+                'Home Featured': { checkbox: true },
+                'Display Order': { number: 5 }
+            }
+        }
+    ];
+}
+
 // 獲取分類對應的 CSS 類名
 function getCategoryClass(category) {
     const categoryMap = {
@@ -6080,6 +6224,12 @@ function loadNewsForHome() {
 function renderHomeNews(articles) {
     // 調試輸出
     debugNewsData(articles);
+
+    // 如果沒有數據，使用模擬數據（僅用於測試樣式）
+    if (!articles || articles.length === 0) {
+        console.warn('No articles loaded, using mock data');
+        articles = getMockNewsData();
+    }
 
     // 主新聞（第一個）
     const mainArticle = articles[0];
