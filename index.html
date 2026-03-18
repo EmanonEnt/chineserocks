@@ -420,21 +420,7 @@ html {
 
         .section-title { font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#c0c0c0;}
 
-        .view-all-link {
-            color: var(--pink-primary);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .view-all-link:hover {
-            color: #CC0052;
-            transform: translateX(5px);
-        }
+        .view-all-link { color:var(--pink-primary);text-decoration:none;font-weight:700;font-size:0.85rem;}
 
         .featured-news { display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:4rem;}
 
@@ -475,6 +461,15 @@ html {
 
         .sidebar-item {
             display:flex;gap:1rem;cursor:pointer;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);transition:all 0.3s;}
+
+        .side-tag {
+            display:inline-block;background:var(--pink-primary);padding:0.2rem 0.6rem;font-size:0.65rem;font-weight:800;text-transform:uppercase;margin-bottom:0.5rem;color:white;}
+
+        .sidebar-content h4 {
+            color:#0a0a0a;font-size:0.9rem;font-weight:700;margin-bottom:0.3rem;line-height:1.3;}
+
+        .sidebar-content .meta {
+            color:#666;font-size:0.75rem;}
 
         .sidebar-item:hover { background:rgba(255,255,255,0.05);}
 
@@ -1432,216 +1427,7 @@ html {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        
-        /* 首頁新聞 Hero Grid 樣式 */
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            min-height: 400px;
-        }
-
-        .hero-main {
-            position: relative;
-            aspect-ratio: 16/10;
-            overflow: hidden;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .hero-main img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .hero-main:hover img {
-            transform: scale(1.03);
-        }
-
-        .hero-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 3rem 2rem 2rem;
-            background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, transparent 100%);
-        }
-
-        .hero-tag {
-            display: inline-block;
-            background: var(--pink-primary);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-            border-radius: 4px;
-        }
-
-        .hero-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: white;
-            line-height: 1.2;
-            margin-bottom: 0.75rem;
-        }
-
-        .hero-excerpt {
-            color: var(--silver-text);
-            font-size: 1rem;
-            line-height: 1.5;
-            opacity: 0.9;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .hero-meta {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .hero-side {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            height: 100%;
-            justify-content: space-between;
-        }
-
-        .side-card {
-            display: flex;
-            gap: 1rem;
-            flex: 1;
-            min-height: 90px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .side-card:hover {
-            border-color: var(--pink-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 0, 102, 0.15);
-        }
-
-        .side-thumb {
-            width: 100px;
-            height: 100%;
-            flex-shrink: 0;
-            overflow: hidden;
-        }
-
-        .side-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-
-        .side-card:hover .side-thumb img {
-            transform: scale(1.05);
-        }
-
-        .side-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0.75rem 0.75rem 0.75rem 0;
-            min-width: 0;
-        }
-
-        .side-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: #0a0a0a;
-            line-height: 1.4;
-            margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .side-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-        }
-
-        .side-category {
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .side-time {
-            color: #666;
-        }
-
-        /* 分類顏色 */
-        .cat-exclusive { color: #FF0066; }
-        .cat-live { color: #FF6600; }
-        .cat-feature { color: #9900FF; }
-        .cat-international { color: #0066FF; }
-        .cat-releases { color: #00AA66; }
-        .cat-music { color: #CC9900; }
-        .cat-news { color: #666; }
-
-        @media (max-width: 768px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            .hero-side {
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-                height: auto;
-            }
-            .side-card {
-                height: 90px;
-            }
-            .side-thumb {
-                width: 120px;
-            }
-            .hero-title {
-                font-size: 1.4rem;
-            }
-            .hero-excerpt {
-                -webkit-line-clamp: 2;
-            }
-            .side-title {
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .side-card {
-                height: 80px;
-            }
-            .side-thumb {
-                width: 100px;
-            }
-            .side-title {
-                font-size: 0.9rem;
-            }
-        }
-</style>
+        </style>
     <!-- Google Sign-In SDK -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -1664,71 +1450,122 @@ html {
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
     </script>
-<!-- 统一会员系统 -->
-<script>
-(function() {
-    if (window.CRMemberSystem) return;
 
-    const MemberSystem = {
-        DAILY_QUOTA: 3,
-
-        getTodayReads: function() {
-            const today = new Date().toDateString();
-            const stored = localStorage.getItem('cr_readHistory');
-            if (stored) {
-                const data = JSON.parse(stored);
-                if (data.date === today) return data.count || 0;
-            }
-            return 0;
-        },
-
-        recordRead: function() {
-            if (this.isMember()) return true;
-            const today = new Date().toDateString();
-            const current = this.getTodayReads();
-            localStorage.setItem('cr_readHistory', JSON.stringify({
-                date: today,
-                count: current + 1
-            }));
-            return current + 1;
-        },
-
-        isMember: function() {
-            return localStorage.getItem('userLoggedIn') === 'true' || 
-                   localStorage.getItem('cr_member') === 'true';
-        },
-
-        getRemaining: function() {
-            if (this.isMember()) return Infinity;
-            return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
-        },
-
-        canRead: function(isPremium) {
-            if (this.isMember()) return true;
-            if (isPremium) return false;
-            return this.getRemaining() > 0;
-        }
-    };
-
-    window.CRMemberSystem = MemberSystem;
-    window.MemberSystem = MemberSystem;
-
-    // 更新额度显示
-    window.updateQuotaDisplay = function() {
-        const remaining = MemberSystem.getRemaining();
-        const el = document.getElementById('remainingReads');
-        if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
-    };
-
-    // 页面加载时更新
-    document.addEventListener('DOMContentLoaded', updateQuotaDisplay);
-})();
-</script>
     <!-- 统一会员系统 -->
     <script>
     (function() {
         if (window.CRMemberSystem) return;
 
+        const MemberSystem = {
+            DAILY_QUOTA: 3,
+
+            getTodayReads: function() {
+                const today = new Date().toDateString();
+                const stored = localStorage.getItem('cr_readHistory');
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data.date === today) return data.count || 0;
+                }
+                return 0;
+            },
+
+            recordRead: function() {
+                if (this.isMember()) return true;
+                const today = new Date().toDateString();
+                const current = this.getTodayReads();
+                localStorage.setItem('cr_readHistory', JSON.stringify({
+                    date: today,
+                    count: current + 1
+                }));
+                return current + 1;
+            },
+
+            isMember: function() {
+                return localStorage.getItem('userLoggedIn') === 'true' || 
+                       localStorage.getItem('cr_member') === 'true';
+            },
+
+            getRemaining: function() {
+                if (this.isMember()) return Infinity;
+                return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
+            },
+
+            canRead: function(isPremium) {
+                if (this.isMember()) return true;
+                if (isPremium) return false;
+                return this.getRemaining() > 0;
+            }
+        };
+
+        window.CRMemberSystem = MemberSystem;
+        window.MemberSystem = MemberSystem;
+
+        // 更新额度显示
+        window.updateQuotaDisplay = function() {
+            const remaining = MemberSystem.getRemaining();
+            const el = document.getElementById('remainingReads');
+            if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
+        };
+
+        // 页面加载时更新
+        document.addEventListener('DOMContentLoaded', window.updateQuotaDisplay);
+    })();
+    </script>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
+            </a>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="./news.html">NEWS</a>
+                <span class="nav-separator">★</span>
+                <a href="./charts.html">CHARTS</a>
+                <span class="nav-separator">★</span>
+                <a href="./magazine.html">MAGAZINE</a>
+                <span class="nav-separator">★</span>
+                <a href="#shows-section">SHOWS</a>
+                <span class="nav-separator">★</span>
+                <a href="#livetv" class="live-tv-link" onclick="showLiveTVComingSoon(); return false;">LIVE TV</a>
+                <a href="#" class="login-btn" id="userMenuBtn" onclick="handleUserMenuClick(); return false;">LOGIN</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero轮播区 -->
+    <section class="hero-section">
+        <div class="hero-slider">
+        <!-- 1. 全部 ALL -->
+        <div class="hero-slide active" data-genre="all">
+            <div class="hero-image-overlay"></div>
+            <div class="hero-content">
+                <div class="hero-text-content">
+                    <div class="hero-genre-tag">ALL</div>
+                    <div class="hero-main-title">CHINESE ROCKS</div>
+                    <div class="hero-sub-title">中國搖滾</div>
+                    <div class="hero-description">中國搖滾官方榜單 · 連接樂隊與樂迷</div>
+                    <div class="hero-sub-description">始於2025 · 搖滾萬歲</div>
+                </div>
+                <div class="hero-vote-card">
+                    <div class="hero-vote-header"><span>🔥</span> 本周最热对决</div>
+                    <div class="vote-titles">
+                        <div class="vote-title-group active" data-index="0">
+                            <div class="hero-vote-title">谁将是本月最佳艺人？</div>
+                            <div class="hero-vote-subtitle">2026年3月ARTISTS榜单投票进行中</div>
+                        </div>
+                        <div class="vote-title-group" data-index="1" style="display:none">
+                            <div class="hero-vote-title">哪首将成为本月最佳单曲？</div>
+                            <div class="hero-vote-subtitle">2026年3月SONGS榜单投票进行中</div>
+                        </div>
+                        <div class="vote-title-group" data-index="2" style="display:none">
+                            <div class="hero-vote-title">哪张将成为本月最佳专辑？</div>
+                            <div class="hero-vote-subtitle">2026年3月ALBUMS榜单投票进行中</div>
+                        </div>
+                    </div>
                     <div class="vote-options-container">
                         <!-- 艺人选项 - 统一两行显示 -->
                         <div class="vote-options-group active" data-index="0">
@@ -2801,7 +2638,7 @@ html {
         
 
         
-        
+        </style>
 
     <script>
         // 滚播新闻条功能
@@ -2946,21 +2783,16 @@ html {
             <a href="./news.html" class="view-all-link">View All →</a>
         </div>
         <div class="featured-news" id="home-news-container">
-            <!-- Hero News Grid -->
-            <div class="hero-grid" id="hero-grid">
-                <article class="hero-main" id="hero-main" onclick="handleHeroClick()">
-                    <img src="" alt="" id="hero-img">
-                    <div class="hero-overlay">
-                        <span class="hero-tag" id="hero-tag">新聞</span>
-                        <h2 class="hero-title" id="hero-title">加載中...</h2>
-                        <p class="hero-excerpt" id="hero-excerpt"></p>
-                        <div class="hero-meta">
-                            <span id="hero-date"></span>
-                            <span id="hero-premium"></span>
-                        </div>
-                    </div>
-                </article>
-                <div class="hero-side" id="hero-side"></div>
+            <div class="featured-main" id="featured-main" onclick="handleNewsClick(this)">
+                <img src="" alt="" id="featured-main-img">
+                <div class="featured-overlay">
+                    <span class="featured-tag" id="featured-main-tag">獨家 EXCLUSIVE</span>
+                    <h3 class="featured-title" id="featured-main-title">載入中...</h3>
+                    <p class="featured-excerpt" id="featured-main-excerpt">正在從 Notion 加載最新新聞...</p>
+                </div>
+            </div>
+            <div class="featured-sidebar" id="featured-sidebar">
+                <!-- 4個編輯精選小卡片將由 JS 動態生成 -->
             </div>
         </div>
     </section>
@@ -5240,343 +5072,234 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     </script>
 
-<!-- 首頁新聞加載腳本 -->
+<!-- Notion 新聞加載系統 -->
 <script>
+// Notion API 配置
+const NOTION_CONFIG = {
+    databaseId: '1b8b86b653a980d3930af3a0e5c189d9', // 請替換為實際的 Database ID
+    apiKey: 'ntn_...' // 請替換為實際的 API Key
+};
 
-// 模擬數據（用於測試樣式）
-function getMockNewsData() {
-    return [
-        {
-            id: 'mock-1',
-            properties: {
-                '標題': { title: [{ plain_text: '重塑雕像的權利新專輯首發深度解析' }] },
-                '類型': { select: { name: '獨家' } },
-                '內容': { rich_text: [{ plain_text: '時隔三年的專輯標誌著樂隊從後龐克向電子實驗的重大轉型...' }] },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800' } }] },
-                '發布時間': { date: { start: '2026-03-17' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 1 }
-            }
-        },
-        {
-            id: 'mock-2',
-            properties: {
-                '標題': { title: [{ plain_text: 'Radiohead 宣佈2026年亞洲巡演' }] },
-                '類型': { select: { name: '國際' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-17T10:00:00' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 2 }
-            }
-        },
-        {
-            id: 'mock-3',
-            properties: {
-                '標題': { title: [{ plain_text: '迷笛音樂節2026陣容公佈' }] },
-                '類型': { select: { name: '現場' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-16' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 3 }
-            }
-        },
-        {
-            id: 'mock-4',
-            properties: {
-                '標題': { title: [{ plain_text: '專訪：刺蝟樂隊石璐' }] },
-                '類型': { select: { name: '專題' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-16' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 4 }
-            }
-        },
-        {
-            id: 'mock-5',
-            properties: {
-                '標題': { title: [{ plain_text: '草東沒有派對新專輯發行' }] },
-                '類型': { select: { name: '音樂' } },
-                '封面圖': { files: [{ external: { url: 'https://images.unsplash.com/photo-1501612780327-45045538702b?w=400' } }] },
-                '發布時間': { date: { start: '2026-03-15' } },
-                '是否會員專享': { checkbox: false },
-                'Home Featured': { checkbox: true },
-                'Display Order': { number: 5 }
-            }
-        }
-    ];
-}
+// 從 Notion 加載首頁新聞
+async function loadHomeNewsFromNotion() {
+    const container = document.getElementById('home-news-container');
+    const mainImg = document.getElementById('featured-main-img');
+    const mainTag = document.getElementById('featured-main-tag');
+    const mainTitle = document.getElementById('featured-main-title');
+    const mainExcerpt = document.getElementById('featured-main-excerpt');
+    const sidebar = document.getElementById('featured-sidebar');
 
-// 獲取分類對應的 CSS 類名
-function getCategoryClass(category) {
-    const categoryMap = {
-        '獨家': 'cat-exclusive',
-        'EXCLUSIVE': 'cat-exclusive',
-        '現場': 'cat-live',
-        'LIVE': 'cat-live',
-        '專題': 'cat-feature',
-        'FEATURE': 'cat-feature',
-        '國際': 'cat-international',
-        'INTERNATIONAL': 'cat-international',
-        '新發行': 'cat-releases',
-        'RELEASES': 'cat-releases',
-        '音樂': 'cat-music',
-        'MUSIC': 'cat-music',
-        '新聞': 'cat-news',
-        'NEWS': 'cat-news'
-    };
-    return categoryMap[category] || 'cat-news';
-}
-
-// 首頁新聞加載函數 - 使用 news-loader.js
-function loadHomeNews() {
-    // 檢查 news-loader.js 是否已加載
-    if (typeof loadNews === 'function') {
-        // 使用現有的 loadNews 函數，但自定義渲染
-        loadNewsForHome();
-    } else {
-        // 如果 news-loader.js 還沒加載，等待後重試
-        setTimeout(loadHomeNews, 100);
-    }
-}
-
-// 為首頁定制的加載函數
-function loadNewsForHome() {
-    const NOTION_API_URL = 'https://api.notion.com/v1/databases/df7b4a8f5d3641b280d9db46a255b3a1/query';
-    const NOTION_API_KEY = 'ntn_5P2Xn52jQG148Y5N1YtmS0tVZ0i3yM0r7kEvdXwW9T3mP';
-
-    fetch(NOTION_API_URL, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${NOTION_API_KEY}`,
-            'Content-Type': 'application/json',
-            'Notion-Version': '2022-06-28'
-        },
-        body: JSON.stringify({
-            filter: {
-                and: [
+    try {
+        // 使用 Notion API 查詢數據庫
+        // 篩選條件：Home Featured = true，按 Display Order 排序
+        const response = await fetch(`https://api.notion.com/v1/databases/${NOTION_CONFIG.databaseId}/query`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${NOTION_CONFIG.apiKey}`,
+                'Notion-Version': '2022-06-28',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                filter: {
+                    property: 'Home Featured',
+                    checkbox: {
+                        equals: true
+                    }
+                },
+                sorts: [
                     {
-                        property: '狀態',
-                        status: {
-                            equals: '已發佈'
-                        }
-                    },
-                    {
-                        property: 'Home Featured',
-                        checkbox: {
-                            equals: true
-                        }
+                        property: 'Display Order',
+                        direction: 'ascending'
                     }
                 ]
-            },
-            sorts: [
-                {
-                    property: 'Display Order',
-                    direction: 'ascending'
-                }
-            ],
-            page_size: 5
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.results && data.results.length > 0) {
-            renderHomeNews(data.results);
-        } else {
-            showHomeNewsError('暫無新聞');
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching news:', error);
-        showHomeNewsError('加載失敗，請檢查網絡連接');
-    });
-}
-
-// 渲染首頁新聞（前5個：1個主新聞 + 4個側邊欄）
-function renderHomeNews(articles) {
-    // 調試輸出
-    debugNewsData(articles);
-
-    // 如果沒有數據，使用模擬數據（僅用於測試樣式）
-    if (!articles || articles.length === 0) {
-        console.warn('No articles loaded, using mock data');
-        articles = getMockNewsData();
-    }
-
-    // 主新聞（第一個）
-    const mainArticle = articles[0];
-    const mainProps = mainArticle.properties;
-
-    // 設置主新聞圖片
-    const heroImg = document.getElementById('hero-img');
-    const coverUrl = mainProps['封面圖']?.files?.[0]?.external?.url || 
-                     mainProps['封面圖']?.files?.[0]?.file?.url || 
-                     'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800';
-    heroImg.src = coverUrl;
-    heroImg.alt = mainProps['標題']?.title?.[0]?.plain_text || '新聞圖片';
-
-    // 設置主新聞標題
-    document.getElementById('hero-title').textContent = mainProps['標題']?.title?.[0]?.plain_text || '無標題';
-
-    // 設置主新聞摘要
-    const excerpt = mainProps['內容']?.rich_text?.[0]?.plain_text || '';
-    document.getElementById('hero-excerpt').textContent = excerpt.substring(0, 100) + (excerpt.length > 100 ? '...' : '');
-
-    // 設置主新聞分類標籤
-    const category = mainProps['類型']?.select?.name || '新聞';
-    document.getElementById('hero-tag').textContent = translateCategory(category);
-
-    // 設置主新聞日期
-    const dateStr = mainProps['發布時間']?.date?.start || mainArticle.created_time;
-    const date = new Date(dateStr);
-    document.getElementById('hero-date').textContent = date.toLocaleDateString('zh-TW');
-
-    // 設置主新聞是否會員專享
-    const isPremium = mainProps['是否會員專享']?.checkbox || false;
-    document.getElementById('hero-premium').textContent = isPremium ? '★ 會員專享' : '';
-
-    // 存儲主新聞數據用於點擊
-    document.getElementById('hero-main').dataset.articleId = mainArticle.id;
-    document.getElementById('hero-main').dataset.isPremium = isPremium;
-
-    // 渲染側邊欄新聞（第2-5個）
-    const sideContainer = document.getElementById('hero-side');
-    sideContainer.innerHTML = '';
-
-    for (let i = 1; i < Math.min(articles.length, 5); i++) {
-        const article = articles[i];
-        const props = article.properties;
-
-        const sideCard = document.createElement('article');
-        sideCard.className = 'side-card';
-        sideCard.onclick = () => handleSideClick(article.id, props['是否會員專享']?.checkbox || false);
-
-        const sideCoverUrl = props['封面圖']?.files?.[0]?.external?.url || 
-                             props['封面圖']?.files?.[0]?.file?.url || 
-                             'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400';
-
-        const sideCategory = props['類型']?.select?.name || '新聞';
-        const sideTitle = props['標題']?.title?.[0]?.plain_text || '無標題';
-
-        // 計算相對時間
-        const sideDateStr = props['發布時間']?.date?.start || article.created_time;
-        const sideDate = new Date(sideDateStr);
-        const now = new Date();
-        const diffHours = Math.floor((now - sideDate) / (1000 * 60 * 60));
-        let timeText;
-        if (diffHours < 1) {
-            timeText = '剛剛';
-        } else if (diffHours < 24) {
-            timeText = diffHours + '小時前';
-        } else {
-            const diffDays = Math.floor(diffHours / 24);
-            if (diffDays === 1) {
-                timeText = '昨天';
-            } else if (diffDays < 7) {
-                timeText = diffDays + '天前';
-            } else {
-                timeText = sideDate.toLocaleDateString('zh-TW', {month: 'short', day: 'numeric'});
-            }
-        }
-
-        sideCard.innerHTML = `
-            <div class="side-thumb">
-                <img src="${sideCoverUrl}" alt="${sideTitle}">
-            </div>
-            <div class="side-content">
-                <h3 class="side-title">${sideTitle}</h3>
-                <div class="side-meta">
-                    <span class="side-category ${getCategoryClass(sideCategory)}">${translateCategory(sideCategory)}</span>
-                    <span class="side-time">${timeText}</span>
-                </div>
-            </div>
-        `;
-
-        sideContainer.appendChild(sideCard);
-    }
-}
-
-// 顯示錯誤信息
-function showHomeNewsError(msg) {
-    document.getElementById('hero-title').textContent = msg;
-    document.getElementById('hero-excerpt').textContent = '請稍後再試，或點擊 View All 查看全部新聞';
-    console.error('News loading error:', msg);
-}
-
-// 調試：檢查數據結構
-function debugNewsData(articles) {
-    console.log('Loaded articles:', articles.length);
-    articles.forEach((article, i) => {
-        const props = article.properties;
-        console.log(`Article ${i}:`, {
-            title: props['標題']?.title?.[0]?.plain_text,
-            category: props['類型']?.select?.name,
-            featured: props['Home Featured']?.checkbox,
-            order: props['Display Order']?.number
+            })
         });
-    });
-}
 
-// 處理主新聞點擊
-function handleHeroClick() {
-    const heroMain = document.getElementById('hero-main');
-    const articleId = heroMain.dataset.articleId;
-    const isPremium = heroMain.dataset.isPremium === 'true';
+        if (!response.ok) {
+            throw new Error('Notion API 請求失敗');
+        }
 
-    if (isPremium && !window.CRMemberSystem?.isMember()) {
-        showMobilePaywall();
-        return;
-    }
+        const data = await response.json();
+        const articles = data.results || [];
 
-    // 記錄閱讀
-    if (window.CRMemberSystem) {
-        window.CRMemberSystem.recordRead();
-        updateQuotaDisplay();
-    }
+        if (articles.length === 0) {
+            // 如果沒有數據，顯示默認內容
+            showDefaultNews();
+            return;
+        }
 
-    // 跳轉到新聞詳情頁
-    window.location.href = `./article.html?id=${articleId}`;
-}
+        // 第一個是老闆大（主圖）
+        const mainArticle = articles[0];
+        const mainProps = mainArticle.properties;
 
-// 處理側邊欄新聞點擊
-function handleSideClick(articleId, isPremium) {
-    if (isPremium && !window.CRMemberSystem?.isMember()) {
-        showMobilePaywall();
-        return;
-    }
+        mainImg.src = getNotionImageUrl(mainArticle) || './image/news/default.jpg';
+        mainImg.alt = getPropertyValue(mainProps, '標題', '新聞標題');
+        mainTag.textContent = translateCategory(getPropertyValue(mainProps, '分類', '獨家'));
+        mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
+        mainExcerpt.textContent = getPropertyValue(mainProps, '摘要', '點擊閱讀更多...');
+        mainImg.parentElement.setAttribute('data-article-id', mainArticle.id);
 
-    // 記錄閱讀
-    if (window.CRMemberSystem) {
-        window.CRMemberSystem.recordRead();
-        updateQuotaDisplay();
-    }
+        // 接下來4個是編輯精選（小圖）
+        sidebar.innerHTML = '';
+        for (let i = 1; i < Math.min(5, articles.length); i++) {
+            const article = articles[i];
+            const props = article.properties;
+            const sidebarItem = createSidebarItem(article, props);
+            sidebar.appendChild(sidebarItem);
+        }
 
-    // 跳轉到新聞詳情頁
-    window.location.href = `./article.html?id=${articleId}`;
-}
-
-// 顯示移動端付費牆
-function showMobilePaywall() {
-    const modal = document.getElementById('mobilePaywallModal');
-    if (modal) {
-        modal.classList.add('active');
+    } catch (error) {
+        console.error('加載新聞失敗:', error);
+        showDefaultNews();
     }
 }
 
-// 頁面加載完成後執行
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadHomeNews);
-} else {
-    loadHomeNews();
+// 創建側邊欄小卡片
+function createSidebarItem(article, props) {
+    const div = document.createElement('div');
+    div.className = 'sidebar-item';
+    div.setAttribute('data-article-id', article.id);
+    div.onclick = function() { handleNewsClick(this); };
+
+    const imgUrl = getNotionImageUrl(article) || './image/news/default-thumb.jpg';
+    const title = getPropertyValue(props, '標題', '新聞標題');
+    const category = translateCategory(getPropertyValue(props, '分類', '新聞'));
+    const date = formatNotionDate(getPropertyValue(props, '發布日期', new Date().toISOString()));
+
+    div.innerHTML = `
+        <img src="${imgUrl}" alt="${title}" class="sidebar-thumb">
+        <div class="sidebar-content">
+            <span class="side-tag">${category}</span>
+            <h4>${title}</h4>
+            <p class="meta">${date}</p>
+        </div>
+    `;
+
+    return div;
 }
+
+// 獲取 Notion 圖片 URL
+function getNotionImageUrl(article) {
+    // 優先從封面獲取
+    if (article.cover && article.cover.type === 'external') {
+        return article.cover.external.url;
+    } else if (article.cover && article.cover.type === 'file') {
+        return article.cover.file.url;
+    }
+
+    // 從屬性中獲取
+    const props = article.properties;
+    if (props['圖片'] && props['圖片'].files && props['圖片'].files.length > 0) {
+        const file = props['圖片'].files[0];
+        return file.external ? file.external.url : (file.file ? file.file.url : '');
+    }
+
+    return null;
+}
+
+// 獲取屬性值
+function getPropertyValue(props, key, defaultValue = '') {
+    const prop = props[key];
+    if (!prop) return defaultValue;
+
+    switch (prop.type) {
+        case 'title':
+            return prop.title.length > 0 ? prop.title[0].plain_text : defaultValue;
+        case 'rich_text':
+            return prop.rich_text.length > 0 ? prop.rich_text[0].plain_text : defaultValue;
+        case 'select':
+            return prop.select ? prop.select.name : defaultValue;
+        case 'date':
+            return prop.date ? prop.date.start : defaultValue;
+        case 'checkbox':
+            return prop.checkbox;
+        case 'number':
+            return prop.number;
+        default:
+            return defaultValue;
+    }
+}
+
+// 格式化日期
+function formatNotionDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (days === 0) return '今天';
+    if (days === 1) return '昨天';
+    if (days < 7) return `${days}天前`;
+    if (days < 30) return `${Math.floor(days / 7)}週前`;
+
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+}
+
+// 分類翻譯
+function translateCategory(category) {
+    const map = {
+        '獨家': '獨家 EXCLUSIVE',
+        '現場': '現場 LIVE',
+        '專題': '專題 FEATURE',
+        '國際': '國際 INTERNATIONAL',
+        '新發行': '新發行 RELEASES',
+        '新聞': '新聞 NEWS',
+        '音樂': '音樂 MUSIC'
+    };
+    return map[category] || (category + ' NEWS');
+}
+
+// 顯示默認新聞（當 API 失敗時）
+function showDefaultNews() {
+    const mainImg = document.getElementById('featured-main-img');
+    const mainTag = document.getElementById('featured-main-tag');
+    const mainTitle = document.getElementById('featured-main-title');
+    const mainExcerpt = document.getElementById('featured-main-excerpt');
+    const sidebar = document.getElementById('featured-sidebar');
+
+    mainImg.src = 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=450&fit=crop';
+    mainTag.textContent = '獨家 EXCLUSIVE';
+    mainTitle.textContent = '重塑雕像的權利新專輯首發深度解析';
+    mainExcerpt.textContent = '時隔五年，中國後朋克先驅重塑雕像的權利終於帶來全新大碟，我們獨家專訪華東...';
+
+    // 默認4個小卡片
+    const defaults = [
+        { title: 'Radiohead 宣佈2026年亞洲巡演', tag: '國際 INTERNATIONAL', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&h=150&fit=crop' },
+        { title: '迷笛音樂節2026陣容公佈', tag: '現場 LIVE', img: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=200&h=150&fit=crop' },
+        { title: '專訪：刺蝟樂隊石璐', tag: '獨家 EXCLUSIVE', img: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=200&h=150&fit=crop' },
+        { title: '草東沒有派對新專輯發行', tag: '新發行 RELEASES', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=150&fit=crop' }
+    ];
+
+    sidebar.innerHTML = defaults.map(item => `
+        <div class="sidebar-item" onclick="handleNewsClick(this)">
+            <img src="${item.img}" alt="${item.title}" class="sidebar-thumb">
+            <div class="sidebar-content">
+                <span class="side-tag">${item.tag}</span>
+                <h4>${item.title}</h4>
+                <p class="meta">2天前</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 處理新聞點擊
+function handleNewsClick(element) {
+    const articleId = element.getAttribute('data-article-id');
+    if (articleId) {
+        // 記錄閱讀
+        recordRead({ title: element.querySelector('h3, h4')?.textContent || '文章', id: articleId });
+        // 跳轉到詳情頁
+        window.location.href = `./news.html?id=${articleId}`;
+    }
+}
+
+// 頁面加載時執行
+document.addEventListener('DOMContentLoaded', function() {
+    // 加載首頁新聞
+    loadHomeNewsFromNotion();
+});
 </script>
+
 </body>
 </html>
