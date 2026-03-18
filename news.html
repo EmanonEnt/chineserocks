@@ -1588,38 +1588,57 @@ async function initNews() {
 async function loadNewsFromAPI() {
     try {
         showLoading();
+        console.log('=== 开始加载新闻 ===');
+        console.log('数据库ID:', DB_CONFIG.news);
 
         // 调用 Vercel API 代理
-        const response = await fetch('/api/notion', {
+        const apiUrl = '/api/notion';
+        console.log('请求URL:', apiUrl);
+
+        const requestBody = {
+            databaseId: DB_CONFIG.news,
+            filter: {
+                property: 'Status',
+                select: { equals: 'Published' }
+            },
+            sorts: [{ property: 'Date', direction: 'descending' }]
+        };
+        console.log('请求体:', JSON.stringify(requestBody, null, 2));
+
+        const response = await fetch(apiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                databaseId: DB_CONFIG.news,
-                filter: {
-                    property: 'Status',
-                    select: { equals: 'Published' }
-                },
-                sorts: [{ property: 'Date', direction: 'descending' }]
-            })
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
         });
 
+        console.log('响应状态:', response.status, response.statusText);
+
         if (!response.ok) {
-            throw new Error('API 请求失败: ' + response.status);
+            const errorText = await response.text();
+            console.error('API 错误响应:', errorText);
+            throw new Error('API 请求失败: ' + response.status + ' - ' + errorText);
         }
 
         const data = await response.json();
         console.log('API 返回数据:', data);
+
+        if (data.error) {
+            throw new Error(data.message || data.error);
+        }
 
         if (data.results && data.results.length > 0) {
             allNews = parseNotionData(data.results);
             console.log('解析后新闻数量:', allNews.length);
             renderNews();
         } else {
+            console.log('API 返回空数据');
             showEmptyState();
         }
     } catch (error) {
         console.error('加载新闻失败:', error);
-        showError('加载失败，请稍后重试');
+        showError('加载失败: ' + error.message + '。请检查浏览器控制台获取详细信息，或联系管理员检查 Vercel API 配置。');
     }
 }
 
