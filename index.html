@@ -1453,63 +1453,121 @@ html {
 
     <!-- 统一会员系统 -->
     <script>
-    (function() {
-        if (window.CRMemberSystem) return;
+    // 额度管理系统（改进版）
+        (function() {
+            if (window.CRMemberSystem) return;
 
-        const MemberSystem = {
-            DAILY_QUOTA: 3,
+            const MemberSystem = {
+                DAILY_QUOTA: 3,
 
-            getTodayReads: function() {
-                const today = new Date().toDateString();
-                const stored = localStorage.getItem('cr_readHistory');
-                if (stored) {
-                    const data = JSON.parse(stored);
-                    if (data.date === today) return data.count || 0;
+                getTodayReads: function() {
+                    const today = new Date().toDateString();
+                    const stored = localStorage.getItem('cr_readHistory');
+                    if (stored) {
+                        try {
+                            const data = JSON.parse(stored);
+                            if (data.date === today) return data.count || 0;
+                        } catch(e) {
+                            return 0;
+                        }
+                    }
+                    return 0;
+                },
+
+                // 记录阅读 - 只有会员专享内容才记录
+                recordRead: function(isMembersOnly) {
+                    // 如果不是会员专享，不记录也不限制
+                    if (!isMembersOnly) return true;
+
+                    // 如果是会员，不限制
+                    if (this.isMember()) return true;
+
+                    const today = new Date().toDateString();
+                    const current = this.getTodayReads();
+
+                    // 检查是否还有额度
+                    if (current >= this.DAILY_QUOTA) {
+                        return false; // 额度已用完
+                    }
+
+                    localStorage.setItem('cr_readHistory', JSON.stringify({
+                        date: today,
+                        count: current + 1
+                    }));
+                    return true;
+                },
+
+                isMember: function() {
+                    return localStorage.getItem('userLoggedIn') === 'true' || 
+                           localStorage.getItem('cr_member') === 'true';
+                },
+
+                getRemaining: function() {
+                    if (this.isMember()) return Infinity;
+                    return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
+                },
+
+                // 检查是否可以阅读
+                canRead: function(isMembersOnly) {
+                    if (this.isMember()) return true;
+                    if (!isMembersOnly) return true; // 非会员专享内容始终可阅读
+                    return this.getRemaining() > 0;
                 }
-                return 0;
-            },
+            };
 
-            recordRead: function() {
-                if (this.isMember()) return true;
-                const today = new Date().toDateString();
-                const current = this.getTodayReads();
-                localStorage.setItem('cr_readHistory', JSON.stringify({
-                    date: today,
-                    count: current + 1
-                }));
-                return current + 1;
-            },
+            window.CRMemberSystem = MemberSystem;
+            window.MemberSystem = MemberSystem;
 
-            isMember: function() {
-                return localStorage.getItem('userLoggedIn') === 'true' || 
-                       localStorage.getItem('cr_member') === 'true';
-            },
+            // 更新额度显示
+            window.updateQuotaDisplay = function() {
+                const remaining = MemberSystem.getRemaining();
+                const el = document.getElementById('remainingReads');
+                if (el) {
+                    el.textContent = remaining === Infinity ? '無限' : remaining;
+                }
+            };
 
-            getRemaining: function() {
-                if (this.isMember()) return Infinity;
-                return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
-            },
+            // 页面加载时更新
+            document.addEventListener('DOMContentLoaded', window.updateQuotaDisplay);
+        })();
 
-            canRead: function(isPremium) {
-                if (this.isMember()) return true;
-                if (isPremium) return false;
-                return this.getRemaining() > 0;
+        // 初始化额度系统
+        function initQuotaSystem() {
+            const today = new Date().toDateString();
+            const lastResetDate = localStorage.getItem('lastResetDate');
+
+            if (lastResetDate !== today) {
+                localStorage.setItem('remainingReads', '3');
+                localStorage.setItem('lastResetDate', today);
+                localStorage.removeItem('cr_readHistory');
             }
-        };
+            updateQuotaDisplay();
+        }
 
-        window.CRMemberSystem = MemberSystem;
-        window.MemberSystem = MemberSystem;
+        // 处理文章点击 - 统一的入口
+        function handleArticleClick(element, isMembersOnly) {
+            // 检查额度（只有会员专享才检查）
+            if (isMembersOnly && !window.CRMemberSystem.canRead(true)) {
+                // 显示付费墙
+                if (window.innerWidth <= 768) {
+                    const modal = document.getElementById('mobilePaywallModal');
+                    if (modal) modal.classList.add('active');
+                } else {
+                    alert('⭐ 今日免費閱讀額度已用完\n\n升級會員解鎖無限暢讀');
+                    location.href = '#pricing';
+                }
+                return false;
+            }
 
-        // 更新额度显示
-        window.updateQuotaDisplay = function() {
-            const remaining = MemberSystem.getRemaining();
-            const el = document.getElementById('remainingReads');
-            if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
-        };
+            // 记录阅读（只有会员专享才记录）
+            if (isMembersOnly) {
+                window.CRMemberSystem.recordRead(true);
+                updateQuotaDisplay();
+            }
 
-        // 页面加载时更新
-        document.addEventListener('DOMContentLoaded', window.updateQuotaDisplay);
-    })();
+            return true;
+        }
+
     </script>
 </head>
 <body>
@@ -3489,6 +3547,7 @@ html {
         }
 
         // 社交登录
+        // 微信登录
         function loginWithWechat() {
             // 检查是否在微信内
             const isWechat = /MicroMessenger/i.test(navigator.userAgent);
@@ -3499,18 +3558,16 @@ html {
                 return;
             }
 
-            // 在微信内，使用静默登录模式（snsapi_base），只获取OpenID
+            // 在微信内，使用静默登录模式
             const appId = 'wx019d141a63482cd8';
             const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
-            const scope = 'snsapi_base'; // 静默登录，只获取OpenID
+            const scope = 'snsapi_userinfo'; // 获取用户信息
             const state = generateRandomState();
 
-            // 保存state用于验证
             sessionStorage.setItem('wechat_state', state);
 
             const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
 
-            // 在微信内置浏览器中打开
             window.location.href = authUrl;
         }
 
@@ -3603,6 +3660,7 @@ html {
             return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
 
+
         function showWechatQRCode() {
             // 非微信环境，提示用户使用微信扫码
             const qrModal = document.createElement('div');
@@ -3653,17 +3711,30 @@ html {
             });
         }
 
+        // Google 登录
         function loginWithGoogle() {
-            const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
-            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app');
-            const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
-            const state = Math.random().toString(36).substring(2);
+            // 使用 Google Identity Services
+            if (typeof google !== 'undefined' && google.accounts) {
+                google.accounts.oauth2.initTokenClient({
+                    client_id: '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+                    callback: handleGoogleResponse
+                }).requestAccessToken();
+            } else {
+                // 备用方案：使用 OAuth 2.0 授权码流程
+                const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
+                const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+                const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+                const state = Math.random().toString(36).substring(2);
 
-            sessionStorage.setItem('google_state', state);
+                sessionStorage.setItem('google_state', state);
 
-            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
+                const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
+                window.location.href = authUrl;
+            }
         }
 
+        // 处理 Google 登录响应
         function handleGoogleResponse(tokenResponse) {
             if (tokenResponse.error) {
                 console.error('Google授权错误:', tokenResponse);
@@ -3671,9 +3742,10 @@ html {
                 return;
             }
 
+            // 获取用户信息
             fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
                 headers: {
-                    'Authorization': 'Bearer ' + tokenResponse.access_token
+                    'Authorization': 'Bearer ' + (tokenResponse.access_token || tokenResponse.credential)
                 }
             })
             .then(response => {
@@ -3685,14 +3757,23 @@ html {
             .then(data => {
                 console.log('Google登录成功:', data);
 
-                // 检查是否需要绑定手机/邮箱
-                checkAndShowBindingModal({
+                // 保存登录数据并检查绑定
+                const loginData = {
                     type: 'google',
-                    id: data.sub,
+                    id: data.sub || data.id,
                     name: data.name || 'Google用户',
-                    email: data.email,
+                    email: data.email || '',
                     avatar: data.picture || ''
-                });
+                };
+
+                // 直接完成登录（不强制绑定）
+                completeLogin(loginData);
+                closeLoginModal();
+
+                // 显示成功提示
+                setTimeout(() => {
+                    alert('🎸 Google 登录成功！\n欢迎回到 ChineseRocks，' + loginData.name + '！');
+                }, 300);
             })
             .catch(error => {
                 console.error('Google登录失败:', error);
@@ -3700,19 +3781,38 @@ html {
             });
         }
 
+
+        // Facebook 登录
         function loginWithFacebook() {
+            // 检查 FB SDK 是否加载
+            if (typeof FB === 'undefined') {
+                showErrorModal('Facebook SDK 加载中，请稍后再试');
+                // 尝试重新加载 SDK
+                loadFacebookSDK();
+                return;
+            }
+
             FB.login(function(response) {
                 if (response.authResponse) {
-                    FB.api('/me', {fields: 'name,email,picture'}, function(userInfo) {
+                    // 获取用户信息
+                    FB.api('/me', {fields: 'name,email,picture.width(200)'}, function(userInfo) {
                         console.log('Facebook登录成功:', userInfo);
 
-                        checkAndShowBindingModal({
+                        const loginData = {
                             type: 'facebook',
                             id: userInfo.id,
                             name: userInfo.name || 'Facebook用户',
                             email: userInfo.email || '',
                             avatar: userInfo.picture?.data?.url || ''
-                        });
+                        };
+
+                        // 直接完成登录
+                        completeLogin(loginData);
+                        closeLoginModal();
+
+                        setTimeout(() => {
+                            alert('🎸 Facebook 登录成功！\n欢迎回到 ChineseRocks，' + loginData.name + '！');
+                        }, 300);
                     });
                 } else {
                     console.log('Facebook登录被取消');
@@ -3720,6 +3820,27 @@ html {
                 }
             }, {scope: 'public_profile,email'});
         }
+
+        // 加载 Facebook SDK
+        function loadFacebookSDK() {
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '1628442824765533',
+                    cookie: true,
+                    xfbml: true,
+                    version: 'v18.0'
+                });
+            };
+
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        }
+
 
         // 显示错误
         function showErrorModal(msg) {
@@ -4064,36 +4185,59 @@ html {
         }
 
         // 完成登录
+        // 完成登录
         function completeLogin(loginData) {
+            console.log('完成登录:', loginData);
+
+            // 保存登录状态
             localStorage.setItem('userLoggedIn', 'true');
-            localStorage.setItem('userId', loginData.id);
-            localStorage.setItem('userNickname', loginData.name);
-            localStorage.setItem('userAccountType', loginData.type);
+            localStorage.setItem('userId', loginData.id || 'user_' + Date.now());
+            localStorage.setItem('userNickname', loginData.name || '摇滚用户');
+            localStorage.setItem('userAccountType', loginData.type || 'email');
             localStorage.setItem('userAvatar', loginData.avatar || '');
 
             if (loginData.email) {
                 localStorage.setItem('userEmail', loginData.email);
             }
 
+            // 更新UI
             updateLoginUI();
+
+            // 如果侧边栏是打开的，刷新内容
+            const sidebar = document.getElementById('userSidebar');
+            if (sidebar && sidebar.classList.contains('active')) {
+                loadUserData();
+            }
         }
 
-        function showBindingError(msg) {
-            const errorEl = document.getElementById('bindingErrorMsg');
-            errorEl.textContent = msg;
-            errorEl.classList.add('show');
-            setTimeout(() => errorEl.classList.remove('show'), 3000);
-        }
+        // 更新登录按钮UI
+        
 
-        // 更新登录UI
+        // 处理用户菜单点击
         function handleUserMenuClick() {
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
             if (isLoggedIn) {
                 openUserSidebar();
             } else {
                 openLoginModal();
             }
+            return false;
         }
+
+        // 打开用户侧边栏
+        
+
+        // 关闭用户侧边栏
+        
+
+        // 从侧边栏打开登录弹窗
+        function openLoginModalFromSidebar() {
+            closeUserSidebar();
+            setTimeout(() => {
+                openLoginModal();
+            }, 300);
+        }
+
 
         // 打开用户侧边栏
         function openUserSidebar() {
@@ -5351,12 +5495,32 @@ function handleNewsClick(element) {
 
     if (!articleId) return;
 
-    // 記錄閱讀
-    recordRead({ 
-        title: element.querySelector('h3, h4')?.textContent || '文章', 
-        id: articleId,
-        category: category
-    });
+    // 檢查是否為會員專享內容
+    const isMembersOnly = category === '會員專享' || category === 'MEMBERS ONLY' || category === '会员专享';
+
+    // 只有會員專享才檢查額度和扣除次數
+    if (isMembersOnly) {
+        // 檢查是否為會員
+        const isMember = localStorage.getItem('userLoggedIn') === 'true' || localStorage.getItem('cr_member') === 'true';
+
+        if (!isMember) {
+            // 非會員點擊會員專享內容，顯示升級提示
+            if (window.innerWidth <= 768) {
+                document.getElementById('mobilePaywallModal').classList.add('active');
+            } else {
+                alert('⭐ 會員專享內容\n\n升級會員解鎖無限暢讀');
+                location.href = '#pricing';
+            }
+            return;
+        }
+
+        // 記錄閱讀（僅會員專享）
+        recordRead({ 
+            title: element.querySelector('h3, h4')?.textContent || '文章', 
+            id: articleId,
+            category: category
+        });
+    }
 
     // 如果有外部鏈接，直接打開
     if (externalUrl && externalUrl !== 'null' && externalUrl !== '' && externalUrl !== 'undefined') {
@@ -5388,6 +5552,11 @@ function handleNewsClick(element) {
         case 'RELEASES':
             window.location.href = `./news.html?cat=releases`;
             break;
+        case '會員專享':
+        case 'MEMBERS ONLY':
+        case '会员专享':
+            window.location.href = `./news.html?cat=members`;
+            break;
         case '新聞':
         case 'NEWS':
         default:
@@ -5396,7 +5565,6 @@ function handleNewsClick(element) {
             break;
     }
 }
-
 // 頁面加載時執行
 document.addEventListener('DOMContentLoaded', function() {
     // 加載首頁新聞
@@ -5464,5 +5632,7 @@ function updateVoteDisplay() {
 document.addEventListener('DOMContentLoaded', updateVoteDisplay);
 </script>
 
+
+    </script>
 </body>
 </html>
