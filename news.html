@@ -1580,7 +1580,8 @@ const DB_CONFIG = {
 
 // 初始化
 async function initNews() {
-    console.log('初始化 NEWS...');
+    console.log('=== 初始化 NEWS ===');
+    console.log('页面URL:', window.location.href);
     await loadNewsFromAPI();
 }
 
@@ -1616,9 +1617,9 @@ async function loadNewsFromAPI() {
         console.log('响应状态:', response.status, response.statusText);
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API 错误响应:', errorText);
-            throw new Error('API 请求失败: ' + response.status + ' - ' + errorText);
+            const errorData = await response.json().catch(() => ({}));
+            console.error('API 错误:', errorData);
+            throw new Error(errorData.message || 'API 请求失败: ' + response.status);
         }
 
         const data = await response.json();
@@ -1638,7 +1639,7 @@ async function loadNewsFromAPI() {
         }
     } catch (error) {
         console.error('加载新闻失败:', error);
-        showError('加载失败: ' + error.message + '。请检查浏览器控制台获取详细信息，或联系管理员检查 Vercel API 配置。');
+        showError('加载失败: ' + error.message);
     }
 }
 
