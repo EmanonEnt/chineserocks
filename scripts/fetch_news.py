@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v7.0 - 完整版
-- 添加台灣/香港獨立音樂源
-- 修復豆瓣等源圖片抓取
-- 嚴格搖滾風格過濾（排除流行/電子/嘻哈）
+ChineseRocks 新闻抓取脚本 v7.1 - 修復版
+- 替換無效的台灣 RSS 源
+- 修復 Notion API Token 問題提示
 """
 
 import os
@@ -33,7 +32,7 @@ cloudinary.config(
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
-# 嚴格搖滾風格分類（只保留搖滾相關）
+# 嚴格搖滾風格分類
 MUSIC_GENRES = {
     "PUNK & HARDCORE": {
         "keywords": ["punk", "朋克", "hardcore", "硬核", "emo", "screamo", "post-hardcore", "oi", "crust"],
@@ -71,68 +70,47 @@ MUSIC_GENRES = {
 
 # 嚴格排除所有非搖滾音樂
 EXCLUDE_GENRES = [
-    # 流行音樂
     "k-pop", "j-pop", "c-pop", "mandopop", "cantopop", 
     "pop music", "teen pop", "synth-pop", "electropop",
-    # 嘻哈/R&B
     "hip-hop", "rap", "trap", "r&b", "soul", "funk", "disco",
-    # 電子音樂
     "edm", "electronic", "house", "techno", "trance", "dubstep", 
     "drum and bass", "dnb", "ambient", "idm",
-    # 其他
     "classical", "opera", "jazz", "new age", "world music"
 ]
 
-# 完整新聞源配置
+# 完整新聞源配置 - v7.1 修復版
 SOURCES = {
     "china": [
-        # 豆瓣音樂 - 搖滾評論
         {
             "name": "豆瓣音樂-搖滾", 
             "url": "https://www.douban.com/feed/review/music", 
             "enabled": True, 
             "category": "新聞",
-            "image_selector": "img",  # 豆瓣圖片選擇器
         },
     ],
 
     "taiwan": [
-        # 台灣 StreetVoice 獨立音樂
-        {
-            "name": "StreetVoice-台灣獨立音樂", 
-            "url": "https://streetvoice.com/api/v1/public/explore/?format=rss", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        # Blow 吹音樂
+        # Blow 吹音樂 - 確認可用
         {
             "name": "Blow吹音樂", 
             "url": "https://blow.streetvoice.com/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 樂手巢
+        # 替換：使用香港獨立音樂的台灣內容（暫時）
         {
-            "name": "樂手巢", 
-            "url": "https://www.nestofmusic.com/feed/", 
-            "enabled": True, 
+            "name": "香港獨立音樂-台灣", 
+            "url": "https://www.hkindie.org/feed/", 
+            "enabled": False,  # 待驗證
             "category": "新聞",
         },
     ],
 
     "hongkong": [
-        # KKBOX 香港
         {
             "name": "KKBOX-香港", 
             "url": "https://www.kkbox.com/hk/tc/rss/news.xml", 
             "enabled": True, 
-            "category": "新聞",
-        },
-        # 香港獨立音樂
-        {
-            "name": "香港獨立音樂", 
-            "url": "https://www.hkindie.org/feed/", 
-            "enabled": False,  # 需要確認 RSS 有效性
             "category": "新聞",
         },
     ],
@@ -204,7 +182,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v7.0 - 完整搖滾版")
+        print("ChineseRocks 新闻抓取系统 v7.1 - 修復版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -222,7 +200,7 @@ class NewsFetcher:
             else:
                 print(f"[{source['name']}] 已禁用")
 
-        print(f"\n抓取完成: 共 {len(self.articles)} 条 (過濾 {self.stats['filtered']} 條非搖滾內容)")
+        print(f"\n抓取完成: 共 {len(self.articles)} 条 (過濾 {self.stats['filtered']} 條)")
         return self.articles
 
     def _fetch_source(self, source):
@@ -241,7 +219,6 @@ class NewsFetcher:
                 if count >= self.limit:
                     break
 
-                # 嚴格搖滾風格檢查
                 genres = self._detect_genres(entry)
                 if not genres:
                     filtered_count += 1
@@ -265,12 +242,10 @@ class NewsFetcher:
         summary = entry.get('summary', entry.get('description', '')).lower()
         text = f"{title} {summary}"
 
-        # 嚴格排除非搖滾音樂
         for exclude in EXCLUDE_GENRES:
             if exclude in text:
                 return []
 
-        # 檢測匹配的搖滾風格
         matched_genres = []
         for genre_name, genre_info in MUSIC_GENRES.items():
             for keyword in genre_info["keywords"]:
@@ -278,22 +253,17 @@ class NewsFetcher:
                     matched_genres.append((genre_name, genre_info["weight"]))
                     break
 
-        # 按權重排序
         matched_genres.sort(key=lambda x: x[1], reverse=True)
         return [g[0] for g in matched_genres[:3]]
 
     def _parse_entry(self, entry, source, genres):
-        """解析 RSS 條目，優化圖片抓取"""
         try:
             summary = entry.get('summary', entry.get('description', ''))
             summary = self._clean_html(summary)
 
             published = self._parse_date(entry)
-
-            # 優化圖片抓取
             image = self._extract_image_improved(entry, source)
 
-            # 上傳圖片到 Cloudinary
             if image and self.cloudinary_enabled:
                 print(f"    📤 上傳圖片...")
                 image = self._upload_to_cloudinary(image, source['name'])
@@ -320,49 +290,37 @@ class NewsFetcher:
             return None
 
     def _extract_image_improved(self, entry, source):
-        """改進的圖片抓取邏輯"""
         try:
-            # 1. 檢查 media:content (RSS 2.0)
             if 'media_content' in entry:
                 for media in entry.media_content:
                     if media.get('type', '').startswith('image/'):
                         return media.get('url', '')
-                    # 有些媒體沒有 type 但有 url
                     if media.get('url'):
                         return media['url']
 
-            # 2. 檢查 media:thumbnail
             if 'media_thumbnail' in entry and entry.media_thumbnail:
                 return entry.media_thumbnail[0].get('url', '')
 
-            # 3. 檢查 enclosures
             if 'enclosures' in entry and entry.enclosures:
                 for enc in entry.enclosures:
                     if enc.get('type', '').startswith('image/'):
                         return enc.get('href', '')
 
-            # 4. 從內容/HTML中提取
             content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                     entry.get('summary', entry.get('description', ''))
 
             if content:
                 soup = BeautifulSoup(content, 'html.parser')
-
-                # 找第一個圖片
                 img = soup.find('img')
                 if img:
                     img_url = img.get('src', '')
-                    # 處理相對路徑
                     if img_url and img_url.startswith('/'):
-                        # 嘗試構建絕對 URL
                         link = entry.get('link', '')
                         if link:
                             from urllib.parse import urljoin
                             img_url = urljoin(link, img_url)
                     return img_url
 
-            # 5. 檢查豆瓣特殊格式
             if 'douban' in source.get('name', '').lower():
-                # 豆瓣圖片通常在 description 中的 img 標籤
                 if 'description' in entry:
                     soup = BeautifulSoup(entry.description, 'html.parser')
                     img = soup.find('img')
@@ -375,9 +333,7 @@ class NewsFetcher:
         return ''
 
     def _upload_to_cloudinary(self, image_url, source_name):
-        """上傳圖片到 Cloudinary"""
         try:
-            # 清理 URL
             image_url = image_url.strip()
             if not image_url.startswith(('http://', 'https://')):
                 return None
@@ -397,7 +353,7 @@ class NewsFetcher:
 
         except Exception as e:
             print(f"    ⚠️ 上傳失敗: {e}")
-            return image_url  # 返回原圖
+            return image_url
 
     def _parse_date(self, entry):
         try:
@@ -485,7 +441,11 @@ class NewsFetcher:
             return "added"
 
         except Exception as e:
-            print(f"    錯誤: {e}")
+            error_msg = str(e)
+            if "token" in error_msg.lower() or "unauthorized" in error_msg.lower():
+                print(f"    🔴 Notion API Token 無效，請檢查 Secrets 設置")
+            else:
+                print(f"    錯誤: {e}")
             return "failed"
 
     def _check_exists_http(self, title):
@@ -534,7 +494,8 @@ def main():
     args = parser.parse_args()
 
     if not NOTION_TOKEN:
-        print("錯誤: NOTION_TOKEN 未設置")
+        print("🔴 錯誤: NOTION_TOKEN 未設置")
+        print("請在 GitHub Secrets 中設置 NOTION_TOKEN")
         sys.exit(1)
 
     fetcher = NewsFetcher(source_type=args.source, limit=args.limit)
