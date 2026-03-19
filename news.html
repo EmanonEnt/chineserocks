@@ -1572,7 +1572,7 @@
 // 全局状态
 let allNews = [];
 let displayedCount = 0;
-const INITIAL_DISPLAY = 6;
+const INITIAL_DISPLAY = 12;
 const LOAD_MORE_COUNT = 6;
 let currentCategory = 'all';
 let currentTag = null;
@@ -1989,22 +1989,23 @@ function loadMoreNews() {
 // 更新 Load More 按钮
 function updateLoadMoreButton() {
     const container = document.getElementById('loadMoreContainer');
-    if (!container) return;
-
-    // 獲取所有新聞卡片
-    const allCards = document.querySelectorAll('.news-card');
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
+    const visibleCards = document.querySelectorAll('.news-card.visible');
+    const totalCards = hiddenCards.length + visibleCards.length;
 
     console.log('Load More Check:', {
-        totalCards: allCards.length,
-        hiddenCards: hiddenCards.length,
-        INITIAL_DISPLAY: INITIAL_DISPLAY
+        hidden: hiddenCards.length,
+        visible: visibleCards.length,
+        total: totalCards,
+        displayedCount: displayedCount
     });
 
-    // 只要有隱藏的卡片就顯示按鈕
-    const shouldShow = hiddenCards.length > 0;
-    container.style.display = shouldShow ? 'block' : 'none';
-    console.log('Load More button display:', shouldShow ? 'block' : 'none');
+    if (container) {
+        // 如果有隐藏卡片，或者总卡片数超过初始显示数，显示按钮
+        const shouldShow = hiddenCards.length > 0 || (totalCards > INITIAL_DISPLAY && displayedCount < totalCards);
+        container.style.display = shouldShow ? 'block' : 'none';
+        console.log('Load More button display:', shouldShow ? 'block' : 'none');
+    }
 }
 
 // 处理新闻点击
@@ -2243,13 +2244,6 @@ function convertAllCategoryTags() {
 // 頁面加載完成後執行轉換
 document.addEventListener('DOMContentLoaded', function() {
     // 延遲執行，確保動態內容已加載
-    setTimeout(convertAllCategoryTags, 100);
-    setTimeout(convertAllCategoryTags, 500);
-    setTimeout(convertAllCategoryTags, 1000);
-});
-</script></body>
-</html>
-態內容已加載
     setTimeout(convertAllCategoryTags, 100);
     setTimeout(convertAllCategoryTags, 500);
     setTimeout(convertAllCategoryTags, 1000);
