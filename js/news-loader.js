@@ -1,8 +1,9 @@
 /**
- * ChineseRocks 新聞加載器 - 修復版
+ * ChineseRocks 新聞加載器 - 修復版 v2
  * 修復：
  * 1. 图片解析支持 Notion API 返回的嵌套结构
  * 2. 点击事件正确处理
+ * 3. 添加 LOAD MORE 分页功能（>=11条显示按钮）
  */
 (function() {
 
@@ -71,6 +72,13 @@ function translateCategory(category) {
 
     var allNews = [];
     var currentCategory = 'all';
+
+    // ===== 分页变量 =====
+    var INITIAL_DISPLAY = 8; // 初始显示8条
+    var LOAD_MORE_COUNT = 8; // 每次加载8条
+    var currentPage = 1;
+    var filteredNews = [];
+    var displayedCount = 0;
 
     document.addEventListener('DOMContentLoaded', function() {
         loadNewsData();
@@ -208,6 +216,11 @@ function translateCategory(category) {
 
     function updateDisplay(news) {
         if (!news || !news.length) return;
+
+        // 重置分页
+        currentPage = 1;
+        filteredNews = news;
+
         renderHero(news);
         renderList(news);
         renderTags(allNews);
@@ -224,10 +237,12 @@ function translateCategory(category) {
             var imgUrl = main.image || getDefaultImage();
             var defaultImg = getDefaultImage();
             var catTag = translateCategory(main.category);
-            heroMain.innerHTML = '<img src="' + imgUrl + '" alt="' + main.title + '" onerror="this.src=\'' + defaultImg + '\'">' +
+            heroMain.innerHTML = '<img src="' + imgUrl + '" alt="' + main.title + '" onerror="this.src='' + defaultImg + ''">' +
                 '<div class="hero-overlay"><span class="hero-tag">' + catTag + '</span>' +
                 '<h2 class="hero-title">' + main.title + '</h2>' +
                 '<p class="hero-excerpt">' + (main.excerpt || '') + '</p></div>';
+        }
+
         // 侧边 Hero
         var heroSide = document.getElementById('hero-side');
         if (heroSide && news.length > 1) {
@@ -236,7 +251,7 @@ function translateCategory(category) {
                 var n = news[i];
                 var div = document.createElement('article');
                 div.className = 'side-card';
-                div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + \'" onerror="this.src=\'' + getDefaultImage() + '\'">' +
+                div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''">' +
                     '<div class="side-overlay"><span class="side-tag">' + translateCategory(n.category) + '</span>' +
                     '<h3 class="side-title">' + n.title + '</h3></div>';
                 div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
@@ -249,25 +264,88 @@ function translateCategory(category) {
         var container = document.getElementById('news-list');
         if (!container) return;
 
+        // 跳过前3条（已在Hero区域显示）
         var list = news.slice(3);
         if (!list.length) {
             container.innerHTML = '<div class="empty-state"><h3>暫無更多新聞</h3></div>';
+            hideLoadMoreButton();
             return;
         }
 
+        // 保留 Load More 按钮
+        var loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        // 清空现有内容（除了 Load More）
         container.innerHTML = '';
+
+        // 创建新闻卡片
         for (var i = 0; i < list.length; i++) {
             var n = list[i];
             var div = document.createElement('article');
-            div.className = 'news-card' + (n.isPremium ? ' premium' : '');
-            div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + \'" onerror="this.src=\'' + getDefaultImage() + '\'"></div>' +
+            // 前8条可见，后面的隐藏
+            var isVisible = i < INITIAL_DISPLAY;
+            div.className = 'news-card' + (n.isPremium ? ' premium' : '') + (isVisible ? ' visible' : ' hidden');
+            div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''"></div>' +
                 '<div class="news-content"><span class="news-category">' + translateCategory(n.category) + '</span>' +
                 '<h3 class="news-title">' + n.title + '</h3>' +
                 '<p class="news-excerpt">' + (n.excerpt || '') + '</p></div>';
             div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
             container.appendChild(div);
         }
+
+        // 添加回 Load More 按钮
+        if (loadMoreContainer) {
+            container.appendChild(loadMoreContainer);
+        }
+
+        // 更新显示计数
+        displayedCount = Math.min(INITIAL_DISPLAY, list.length);
+
+        // 控制 LOAD MORE 按钮显示（总条数>=11才显示）
+        console.log('RenderList:', {
+            listLength: list.length,
+            displayedCount: displayedCount,
+            INITIAL_DISPLAY: INITIAL_DISPLAY
+        });
+
+        if (list.length >= 11) {
+            showLoadMoreButton();
+        } else {
+            hideLoadMoreButton();
+        }
     }
+
+    // ===== LOAD MORE 功能 =====
+    function showLoadMoreButton() {
+        var container = document.getElementById('loadMoreContainer');
+        if (container) {
+            container.style.display = 'block';
+        }
+    }
+
+    function hideLoadMoreButton() {
+        var container = document.getElementById('loadMoreContainer');
+        if (container) {
+            container.style.display = 'none';
+        }
+    }
+
+    window.loadMore = function() {
+        var hiddenCards = document.querySelectorAll('.news-card.hidden');
+        var toShow = Math.min(LOAD_MORE_COUNT, hiddenCards.length);
+
+        for (var i = 0; i < toShow; i++) {
+            hiddenCards[i].classList.remove('hidden');
+            hiddenCards[i].classList.add('visible');
+        }
+
+        displayedCount += toShow;
+
+        // 如果没有更多隐藏卡片，隐藏按钮
+        if (hiddenCards.length <= toShow) {
+            hideLoadMoreButton();
+        }
+    };
 
     function renderTags(news) {
         var container = document.getElementById('tag-cloud');
@@ -305,7 +383,7 @@ function translateCategory(category) {
 
         container.innerHTML = picks.map(function(n) {
             return '<div class="pick-item" onclick="openArticleById('' + n.id + '')">' +
-                '<img src="' + (n.image || getDefaultImage()) + \'" class="pick-thumb" onerror="this.src=\'' + getDefaultImage() + '\'">' +
+                '<img src="' + (n.image || getDefaultImage()) + '" class="pick-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
         }).join('');
     }
@@ -349,7 +427,13 @@ function translateCategory(category) {
         var filtered = allNews.filter(function(n) { 
             return n.tags && n.tags.indexOf(tag) !== -1; 
         });
-        updateDisplay(filtered);
+
+        // 重置分页并更新显示
+        currentPage = 1;
+        filteredNews = filtered;
+
+        // 重新渲染列表（Hero保持显示所有）
+        renderList(filtered);
     };
 
     function getDefaultImage() {
