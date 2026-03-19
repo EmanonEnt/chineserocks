@@ -369,7 +369,7 @@
         }
 
         /* 所有設備統一：初始顯示8個，之後LOAD MORE加載 */
-        .news-list .news-list .news-card {
+        .news-card {
             position: relative;
             display: flex;
             flex-direction: column;
@@ -1218,7 +1218,16 @@
         }
         
     
-/* LOAD MORE 显示控制 - 必须放在最后确保优先级 */
+
+
+
+
+.news-list 
+
+
+
+
+/* LOAD MORE 显示控制 */
 .news-list .news-card.hidden {
     display: none !important;
 }
@@ -1575,7 +1584,7 @@
 // 全局状态
 let allNews = [];
 let displayedCount = 0;
-const INITIAL_DISPLAY = 6;  // 新闻列表初始显示6条，Hero占3条，共9条可见
+const INITIAL_DISPLAY = 6;
 const LOAD_MORE_COUNT = 6;
 let currentCategory = 'all';
 let currentTag = null;
