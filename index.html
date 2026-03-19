@@ -4922,7 +4922,35 @@ html {
         }
     
 
-        </script>
+        // 處理文章點擊 - 與 NEWS 頁面保持一致
+        function initQuotaSystem() {
+    const today = new Date().toDateString();
+    const lastResetDate = localStorage.getItem('lastResetDate');
+
+    if (lastResetDate !== today) {
+        localStorage.setItem('remainingReads', '3');
+        localStorage.setItem('lastResetDate', today);
+    } else if (!localStorage.getItem('remainingReads')) {
+        localStorage.setItem('remainingReads', '3');
+    }
+
+    updateQuotaDisplay();
+}
+
+initQuotaSystem();
+        
+        updateQuotaDisplay();
+
+        // 關閉移動端付費牆
+        function closeMobilePaywall() {
+            const modal = document.getElementById('mobilePaywallModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+
+</script>
 
     <!-- 登录弹窗 -->
     <div id="loginModal" class="login-modal">
@@ -5813,15 +5841,6 @@ function updateVoteDisplay() {
 document.addEventListener('DOMContentLoaded', updateVoteDisplay);
 </script>
 
-
-    
-        // 關閉移動端付費牆
-        function closeMobilePaywall() {
-            const modal = document.getElementById('mobilePaywallModal');
-            if (modal) {
-                modal.classList.remove('active');
-            }
-        }
 
     </script>
 </body>
