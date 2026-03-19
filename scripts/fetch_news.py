@@ -408,7 +408,7 @@ class NewsFetcher:
             if self._check_exists_http(article['title']):
                 return "exists"
 
-            tags = [{"name": "新聞"}, {"name": "自動抓取"}, {"name": article['source_name']}]
+            tags = [{"name": "新聞"}, {"name": article['source_name']}]
 
             for genre in article.get('genres', []):
                 if genre != "ROCK 通用":
