@@ -67,6 +67,26 @@ function translateCategory(category) {
     if (category.indexOf(' ') !== -1 && /[a-zA-Z]/.test(category)) {
         return category;
     }
+
+// ===== 日期格式化 =====
+function formatDate(dateString) {
+    if (!dateString) return '';
+    var date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var articleDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (articleDate.getTime() === today.getTime()) return '今天';
+    var yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (articleDate.getTime() === yesterday.getTime()) return '昨天';
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    if (year === now.getFullYear()) return month + '月' + day + '日';
+    return year + '年' + month + '月' + day + '日';
+}
+
     return categoryBilingualMap[category] || category + ' NEWS';
 }
 
@@ -251,9 +271,10 @@ function translateCategory(category) {
                 var n = news[i];
                 var div = document.createElement('article');
                 div.className = 'side-card';
+                var dateStr = formatDate(n.date);
                 div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''">' +
                     '<div class="side-overlay"><span class="side-tag">' + translateCategory(n.category) + '</span>' +
-                    '<h3 class="side-title">' + n.title + '</h3></div>';
+                    '<h3 class="side-title">' + n.title + '</h3><span class="side-date">' + dateStr + '</span></div>';
                 div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
                 heroSide.appendChild(div);
             }
@@ -285,10 +306,11 @@ function translateCategory(category) {
             // 前8条可见，后面的隐藏
             var isVisible = i < INITIAL_DISPLAY;
             div.className = 'news-card' + (n.isPremium ? ' premium' : '') + (isVisible ? ' visible' : ' hidden');
-            div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''"></div>' +
+            var dateStr = formatDate(n.date);
+                div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''"></div>' +
                 '<div class="news-content"><span class="news-category">' + translateCategory(n.category) + '</span>' +
                 '<h3 class="news-title">' + n.title + '</h3>' +
-                '<p class="news-excerpt">' + (n.excerpt || '') + '</p></div>';
+                '<p class="news-excerpt">' + (n.excerpt || '') + '</p><span class="news-date">' + dateStr + '</span></div>';
             div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
             container.appendChild(div);
         }
@@ -308,7 +330,7 @@ function translateCategory(category) {
             INITIAL_DISPLAY: INITIAL_DISPLAY
         });
 
-        if (list.length >= 11) {
+        if (list.length > 8) {
             showLoadMoreButton();
         } else {
             hideLoadMoreButton();
@@ -382,9 +404,10 @@ function translateCategory(category) {
         }).slice(0, 6);
 
         container.innerHTML = picks.map(function(n) {
+            var dateStr = formatDate(n.date);
             return '<div class="pick-item" onclick="openArticleById('' + n.id + '')">' +
                 '<img src="' + (n.image || getDefaultImage()) + '" class="pick-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
-                '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span></div></div>';
+                '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span><span class="pick-date">' + dateStr + '</span></div></div>';
         }).join('');
     }
 
