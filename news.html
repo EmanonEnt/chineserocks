@@ -1584,8 +1584,8 @@
 // 全局状态
 let allNews = [];
 let displayedCount = 0;
-const INITIAL_DISPLAY = 6;
-const LOAD_MORE_COUNT = 6;
+const INITIAL_DISPLAY = 8;
+const LOAD_MORE_COUNT = 8;
 let currentCategory = 'all';
 let currentTag = null;
 
@@ -1901,9 +1901,11 @@ function renderNewsList(newsList) {
         initialDisplay: INITIAL_DISPLAY
     });
 
-    // 初始设置按钮状态（后续 updateLoadMoreButton 会再次更新）
+    // 初始设置按钮状态 - 只有 >=11 条才显示
     if (loadMoreContainer) {
-        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
+        const shouldShow = newsList.length >= 11;
+        loadMoreContainer.style.display = shouldShow ? 'block' : 'none';
+        console.log('Initial Load More display:', shouldShow ? 'block' : 'none', '(列表新闻数:', newsList.length, ')');
     }
 }
 
@@ -2005,18 +2007,23 @@ function updateLoadMoreButton() {
     const visibleCards = document.querySelectorAll('.news-card.visible');
     const totalCards = hiddenCards.length + visibleCards.length;
 
+    // 获取列表区域的新闻总数（不包括Hero的3条）
+    const listNewsCount = totalCards;
+
     console.log('Load More Check:', {
         hidden: hiddenCards.length,
         visible: visibleCards.length,
         total: totalCards,
-        displayedCount: displayedCount
+        listNewsCount: listNewsCount,
+        displayedCount: displayedCount,
+        INITIAL_DISPLAY: INITIAL_DISPLAY
     });
 
     if (container) {
-        // 如果有隐藏卡片，或者总卡片数超过初始显示数，显示按钮
-        const shouldShow = hiddenCards.length > 0 || (totalCards > INITIAL_DISPLAY && displayedCount < totalCards);
+        // 只有当列表新闻 >= 11 条且还有隐藏卡片时才显示按钮
+        const shouldShow = listNewsCount >= 11 && hiddenCards.length > 0;
         container.style.display = shouldShow ? 'block' : 'none';
-        console.log('Load More button display:', shouldShow ? 'block' : 'none');
+        console.log('Load More button display:', shouldShow ? 'block' : 'none', '(需要>=11条且还有隐藏内容)');
     }
 }
 
