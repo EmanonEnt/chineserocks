@@ -172,6 +172,7 @@
             flex-wrap: wrap;
         }
         .quota-bar strong { color: #FFD700; font-weight: 800; }
+        .quota-text { font-weight:600;font-size:0.9rem;display:flex;align-items:center;gap:0.3rem; }
         .quota-btn {
             background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #0a0a0a;
@@ -1259,15 +1260,26 @@
             return 0;
         },
 
-        recordRead: function() {
+        recordRead: function(isMembersOnly) {
+            // 如果不是会员专享，不记录也不限制
+            if (!isMembersOnly) return true;
+
+            // 如果是会员，不限制
             if (this.isMember()) return true;
+
             const today = new Date().toDateString();
             const current = this.getTodayReads();
+
+            // 检查是否还有额度
+            if (current >= this.DAILY_QUOTA) {
+                return false; // 额度已用完
+            }
+
             localStorage.setItem('cr_readHistory', JSON.stringify({
                 date: today,
                 count: current + 1
             }));
-            return current + 1;
+            return true;
         },
 
         isMember: function() {
@@ -1280,9 +1292,9 @@
             return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
         },
 
-        canRead: function(isPremium) {
+        canRead: function(isMembersOnly) {
             if (this.isMember()) return true;
-            if (isPremium) return false;
+            if (!isMembersOnly) return true; // 非会员专享内容始终可阅读
             return this.getRemaining() > 0;
         }
     };
@@ -1292,13 +1304,47 @@
 
     // 更新额度显示
     window.updateQuotaDisplay = function() {
-        const remaining = MemberSystem.getRemaining();
-        const el = document.getElementById('remainingReads');
-        if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
+        const isMember = localStorage.getItem('userLoggedIn') === 'true';
+        const memberType = localStorage.getItem('memberType') || '';
+        const isTrialMember = memberType.includes('體驗') || memberType.includes('体验');
+        const bar = document.getElementById('membersQuotaBar');
+        const barText = bar?.querySelector('.quota-text') || bar?.querySelector('#quotaText');
+
+        if (!bar) return;
+
+        if (!isMember) {
+            // 遊客：顯示升級提示
+            bar.style.display = 'flex';
+            if (barText) {
+                barText.innerHTML = '★ 會員專享文章僅限會員閱讀（體驗會員每日3篇）';
+            }
+        } else if (isTrialMember) {
+            // 體驗會員：顯示剩餘額度
+            bar.style.display = 'flex';
+            const today = new Date().toDateString();
+            const trialReads = JSON.parse(localStorage.getItem('trialReads') || '{}');
+            const todayReads = trialReads[today] || 0;
+            const remaining = Math.max(0, 3 - todayReads);
+
+            if (barText) {
+                barText.innerHTML = `★ 今日會員專享阅读额度:仅剩<strong>${remaining}</strong>篇(升級會員暢讀無限）`;
+            }
+        } else {
+            // 正式會員：隱藏提示
+            bar.style.display = 'none';
+        }
     };
 
     // 页面加载时更新
-    document.addEventListener('DOMContentLoaded', updateQuotaDisplay);
+    // 每日重置额度
+        const today = new Date().toDateString();
+        const lastResetDate = localStorage.getItem('lastResetDate');
+        if (lastResetDate !== today) {
+            localStorage.setItem('lastResetDate', today);
+            localStorage.removeItem('cr_readHistory');
+        }
+
+        document.addEventListener('DOMContentLoaded', updateQuotaDisplay);
 })();
 </script>
 </head>
@@ -1343,9 +1389,11 @@
         </div>
     </div>
 
-    <div class="quota-bar" id="quotaBar">
-        <span>★ 今日免費閱讀額度: 僅剩 <strong id="remainingReads">3</strong> 篇</span>
-        <a href="#pricing" class="quota-btn">升級月卡會員 ¥66/月</a>
+    <div class="quota-bar" id="membersQuotaBar">
+        <div class="quota-text" id="quotaText">
+            ★ 會員專享文章僅限會員閱讀（體驗會員每日3篇）
+        </div>
+        <a href="#pricing" class="quota-btn">升级会员 ¥0起</a>
     </div>
 
     <section class="hero-news" id="hero-section">
@@ -2073,15 +2121,17 @@ function handleNewsClick(news) {
         return;
     }
 
-    // 检查免费额度
+    // 检查免费额度（只有会员专享才检查）
     if (!window.CRMemberSystem?.canRead(news.isPremium)) {
         showMobilePaywall();
         return;
     }
 
-    // 记录阅读
-    window.CRMemberSystem?.recordRead();
-    window.updateQuotaDisplay?.();
+    // 记录阅读（只有会员专享才记录）
+    if (news.isPremium) {
+        window.CRMemberSystem?.recordRead(true);
+        window.updateQuotaDisplay?.();
+    }
 
     // 跳转
     if (news.link) {
@@ -2237,10 +2287,31 @@ document.addEventListener('DOMContentLoaded', initNews);
         // 额度显示更新函数
         function updateQuotaDisplay() {
             if (window.CRMemberSystem) {
-                const remaining = window.CRMemberSystem.getRemaining();
-                const quotaElement = document.getElementById('remainingReads');
-                if (quotaElement) {
-                    quotaElement.textContent = remaining === Infinity ? '無限' : remaining;
+                const isMember = localStorage.getItem('userLoggedIn') === 'true';
+                const memberType = localStorage.getItem('memberType') || '';
+                const isTrialMember = memberType.includes('體驗') || memberType.includes('体验');
+                const bar = document.getElementById('membersQuotaBar');
+                const barText = bar?.querySelector('.quota-text') || bar?.querySelector('#quotaText');
+
+                if (!bar) return;
+
+                if (!isMember) {
+                    bar.style.display = 'flex';
+                    if (barText) {
+                        barText.innerHTML = '★ 會員專享文章僅限會員閱讀（體驗會員每日3篇）';
+                    }
+                } else if (isTrialMember) {
+                    bar.style.display = 'flex';
+                    const today = new Date().toDateString();
+                    const trialReads = JSON.parse(localStorage.getItem('trialReads') || '{}');
+                    const todayReads = trialReads[today] || 0;
+                    const remaining = Math.max(0, 3 - todayReads);
+
+                    if (barText) {
+                        barText.innerHTML = `★ 今日會員專享阅读额度:仅剩<strong>${remaining}</strong>篇(升級會員暢讀無限）`;
+                    }
+                } else {
+                    bar.style.display = 'none';
                 }
             }
         }
