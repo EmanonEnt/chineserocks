@@ -1901,9 +1901,9 @@ function renderNewsList(newsList) {
         initialDisplay: INITIAL_DISPLAY
     });
 
-    // 初始设置按钮状态 - 只有 >=11 条才显示
+    // 初始设置按钮状态 - 只有 >=9 条才显示
     if (loadMoreContainer) {
-        const shouldShow = newsList.length >= 11;
+        const shouldShow = newsList.length > 8;
         loadMoreContainer.style.display = shouldShow ? 'block' : 'none';
         console.log('Initial Load More display:', shouldShow ? 'block' : 'none', '(列表新闻数:', newsList.length, ')');
     }
@@ -2020,8 +2020,8 @@ function updateLoadMoreButton() {
     });
 
     if (container) {
-        // 只有当列表新闻 >= 11 条且还有隐藏卡片时才显示按钮
-        const shouldShow = listNewsCount >= 11 && hiddenCards.length > 0;
+        // 只有当列表新闻 >= 9 条且还有隐藏卡片时才显示按钮
+        const shouldShow = listNewsCount > 8 && hiddenCards.length > 0;
         container.style.display = shouldShow ? 'block' : 'none';
         console.log('Load More button display:', shouldShow ? 'block' : 'none', '(需要>=11条且还有隐藏内容)');
     }
