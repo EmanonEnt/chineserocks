@@ -2,11 +2,11 @@ name: Fetch News
 
 on:
   schedule:
-    # 中国新闻：周一到周四 21:00 (UTC 13:00)
+    # 中国新闻：周一到周四 21:00 (UTC 13:00) - 每源5條
     - cron: '0 13 * * 1,2,3,4'
-    # 中国新闻：周五到周日 12:00、18:00、22:00 (UTC 4:00、10:00、14:00)
+    # 中国新闻：周五到周日 12:00、18:00、22:00 (UTC 4:00、10:00、14:00) - 每源5條
     - cron: '0 4,10,14 * * 5,6,0'
-    # 国际新闻：每周三和周六 12:00 (UTC 4:00) - 每源1條
+    # 国际新闻：每周三、六 12:00 (UTC 4:00) - 每源1條
     - cron: '0 4 * * 3,6'
     # 港台新闻：每周二、五 12:00 (UTC 4:00) - 每源2條
     - cron: '0 4 * * 2,5'
@@ -20,8 +20,9 @@ on:
         type: choice
         options:
           - china          # 中國搖滾新聞 (每源5條)
+          - taiwan         # 台灣獨立音樂 (每源2條)
+          - hongkong       # 香港搖滾新聞 (每源2條)
           - international  # 國際搖滾新聞 (每源1條)
-          - hongkong_taiwan # 港台搖滾新聞 (每源2條)
           - test           # 測試模式 (3條)
 
 jobs:
@@ -49,28 +50,30 @@ jobs:
       run: |
         MODE="${{ github.event.inputs.mode }}"
 
-        # 如果沒有手動輸入，則為定時任務自動判斷
+        # 定時任務自動判斷
         if [ -z "$MODE" ]; then
           echo "=========================================="
           echo "🎸 ChineseRocks 搖滾新聞抓取 (定時任務)"
           echo "=========================================="
 
           HOUR=$(date -u +%H)
-          DOW=$(date -u +%u)  # 1=周一, 2=周二, ..., 6=周六, 7=周日
+          DOW=$(date -u +%u)
 
           echo "當前 UTC 時間: $HOUR:00, 星期$DOW"
 
-          # 國際新聞：每週三、六 12:00 (UTC 4:00) -> 每源1條
+          # 國際新聞：每週三、六 12:00 (UTC 4:00)
           if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
             echo "🌍 國際搖滾新聞 (每源1條)"
             python scripts/fetch_news.py --source international --limit 1
 
-          # 港台新聞：每週二、五 12:00 (UTC 4:00) -> 每源2條
+          # 港台新聞：每週二、五 12:00 (UTC 4:00)
           elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
             echo "🇭🇰 港台搖滾新聞 (每源2條)"
-            python scripts/fetch_news.py --source hongkong_taiwan --limit 2
+            # 輪流抓取台灣和香港
+            python scripts/fetch_news.py --source taiwan --limit 2
+            python scripts/fetch_news.py --source hongkong --limit 2
 
-          # 中國新聞：其他時間 -> 每源5條
+          # 中國新聞：其他時間
           else
             echo "🇨🇳 中國搖滾新聞 (每源5條)"
             python scripts/fetch_news.py --source china --limit 5
@@ -83,19 +86,28 @@ jobs:
           echo "模式: $MODE"
           echo "=========================================="
 
-          if [ "$MODE" == "china" ]; then
-            echo "🇨🇳 中國搖滾新聞 (每源5條)"
-            python scripts/fetch_news.py --source china --limit 5
-          elif [ "$MODE" == "international" ]; then
-            echo "🌍 國際搖滾新聞 (每源1條)"
-            python scripts/fetch_news.py --source international --limit 1
-          elif [ "$MODE" == "hongkong_taiwan" ]; then
-            echo "🇭🇰 港台搖滾新聞 (每源2條)"
-            python scripts/fetch_news.py --source hongkong_taiwan --limit 2
-          elif [ "$MODE" == "test" ]; then
-            echo "🧪 測試模式 (3條)"
-            python scripts/fetch_news.py --source test --limit 3
-          fi
+          case "$MODE" in
+            china)
+              echo "🇨🇳 中國搖滾新聞 (每源5條)"
+              python scripts/fetch_news.py --source china --limit 5
+              ;;
+            taiwan)
+              echo "🇹🇼 台灣獨立音樂 (每源2條)"
+              python scripts/fetch_news.py --source taiwan --limit 2
+              ;;
+            hongkong)
+              echo "🇭🇰 香港搖滾新聞 (每源2條)"
+              python scripts/fetch_news.py --source hongkong --limit 2
+              ;;
+            international)
+              echo "🌍 國際搖滾新聞 (每源1條)"
+              python scripts/fetch_news.py --source international --limit 1
+              ;;
+            test)
+              echo "🧪 測試模式 (3條)"
+              python scripts/fetch_news.py --source test --limit 3
+              ;;
+          esac
         fi
 
         echo "=========================================="
