@@ -1227,12 +1227,16 @@
 
 
 
-/* LOAD MORE 显示控制 */
+/* LOAD MORE 显示控制 - 优先级最高 */
 .news-list .news-card.hidden {
     display: none !important;
 }
 .news-list .news-card.visible {
     display: flex !important;
+}
+/* 确保 hidden 优先级高于其他样式 */
+.news-card.hidden {
+    display: none !important;
 }
 
 </style>
@@ -1786,14 +1790,11 @@ function renderNews() {
     // 渲染 Hero 区域（前3条）
     renderHero(filtered.slice(0, 3));
 
-    // 渲染新闻列表
+    // 渲染新闻列表（内部已处理 Load More 按钮）
     renderNewsList(filtered.slice(3));
 
     // 渲染侧边栏
     renderSidebar(filtered);
-
-    // 更新 Load More 按钮
-    updateLoadMoreButton();
 }
 
 // 渲染 Hero
@@ -1840,12 +1841,15 @@ function renderHero(heroNews) {
 // 渲染新闻列表
 function renderNewsList(newsList) {
     const container = document.getElementById('news-list');
-    if (!container) return;
+    if (!container) {
+        console.error('news-list container not found');
+        return;
+    }
 
     // 保留 Load More 按钮
     const loadMoreContainer = document.getElementById('loadMoreContainer');
 
-    // 清空现有内容（除了 Load More）
+    // 清空现有内容
     container.innerHTML = '';
 
     if (newsList.length === 0) {
@@ -1859,10 +1863,28 @@ function renderNewsList(newsList) {
         return;
     }
 
-    // 创建新闻卡片
+    console.log('=== renderNewsList ===');
+    console.log('新闻数量:', newsList.length, 'INITIAL_DISPLAY:', INITIAL_DISPLAY);
+
+    // 创建新闻卡片 - 前8条显示，后面的隐藏
     newsList.forEach((news, index) => {
         const card = document.createElement('article');
-        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${index >= INITIAL_DISPLAY ? 'hidden' : 'visible'}`;
+
+        // 确定是否隐藏
+        let className = 'news-card';
+        if (news.isPremium) className += ' premium';
+
+        // 关键逻辑：前 INITIAL_DISPLAY 条可见，后面的隐藏
+        if (index < INITIAL_DISPLAY) {
+            className += ' visible';
+        } else {
+            className += ' hidden';
+        }
+
+        card.className = className;
+
+        console.log(`卡片 ${index}: class="${className}"`);
+
         card.innerHTML = `
             <div class="news-thumb">
                 <img src="${news.image || './image/default-news.jpg'}" alt="${news.title}" loading="lazy">
@@ -1886,26 +1908,23 @@ function renderNewsList(newsList) {
         container.appendChild(card);
     });
 
-    // 添加 Load More 按钮
+    // 添加回 Load More 按钮
     if (loadMoreContainer) {
         container.appendChild(loadMoreContainer);
     }
 
-    // 计算实际显示的卡片数
+    // 统计
     const visibleCards = container.querySelectorAll('.news-card.visible');
+    const hiddenCards = container.querySelectorAll('.news-card.hidden');
     displayedCount = visibleCards.length;
 
-    console.log('RenderNewsList:', {
-        newsListLength: newsList.length,
-        visibleCards: displayedCount,
-        initialDisplay: INITIAL_DISPLAY
-    });
+    console.log('统计 - 可见:', visibleCards.length, '隐藏:', hiddenCards.length);
 
-    // 初始设置按钮状态 - 只有 >=9 条才显示
+    // 控制按钮显示：超过8条就显示
     if (loadMoreContainer) {
         const shouldShow = newsList.length > 8;
         loadMoreContainer.style.display = shouldShow ? 'block' : 'none';
-        console.log('Initial Load More display:', shouldShow ? 'block' : 'none', '(列表新闻数:', newsList.length, ')');
+        console.log('Load More 按钮:', shouldShow ? '显示' : '隐藏');
     }
 }
 
@@ -1988,8 +2007,13 @@ function filterByTag(tag) {
 
 // 加载更多
 function loadMoreNews() {
+    console.log('=== Load More 被点击 ===');
+
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
+    console.log('当前隐藏卡片数:', hiddenCards.length);
+
     const toShow = Math.min(LOAD_MORE_COUNT, hiddenCards.length);
+    console.log('将要显示:', toShow, '条');
 
     for (let i = 0; i < toShow; i++) {
         hiddenCards[i].classList.remove('hidden');
@@ -1997,33 +2021,24 @@ function loadMoreNews() {
     }
 
     displayedCount += toShow;
+
+    // 更新按钮状态
     updateLoadMoreButton();
 }
 
-// 更新 Load More 按钮
+// 更新 Load More 按钮（仅在点击 Load More 后调用）
 function updateLoadMoreButton() {
     const container = document.getElementById('loadMoreContainer');
+    if (!container) return;
+
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
-    const visibleCards = document.querySelectorAll('.news-card.visible');
-    const totalCards = hiddenCards.length + visibleCards.length;
 
-    // 获取列表区域的新闻总数（不包括Hero的3条）
-    const listNewsCount = totalCards;
+    console.log('updateLoadMoreButton - 剩余隐藏卡片:', hiddenCards.length);
 
-    console.log('Load More Check:', {
-        hidden: hiddenCards.length,
-        visible: visibleCards.length,
-        total: totalCards,
-        listNewsCount: listNewsCount,
-        displayedCount: displayedCount,
-        INITIAL_DISPLAY: INITIAL_DISPLAY
-    });
-
-    if (container) {
-        // 只有当列表新闻 >= 9 条且还有隐藏卡片时才显示按钮
-        const shouldShow = listNewsCount > 8 && hiddenCards.length > 0;
-        container.style.display = shouldShow ? 'block' : 'none';
-        console.log('Load More button display:', shouldShow ? 'block' : 'none', '(需要>=11条且还有隐藏内容)');
+    // 如果没有隐藏卡片了，隐藏按钮
+    if (hiddenCards.length === 0) {
+        container.style.display = 'none';
+        console.log('Load More 按钮已隐藏（无更多内容）');
     }
 }
 
