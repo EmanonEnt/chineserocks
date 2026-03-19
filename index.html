@@ -1469,15 +1469,26 @@ html {
                 return 0;
             },
 
-            recordRead: function() {
+            recordRead: function(isMembersOnly) {
+                // 如果不是会员专享，不记录也不限制
+                if (!isMembersOnly) return true;
+
+                // 如果是会员，不限制
                 if (this.isMember()) return true;
+
                 const today = new Date().toDateString();
                 const current = this.getTodayReads();
+
+                // 检查是否还有额度
+                if (current >= this.DAILY_QUOTA) {
+                    return false; // 额度已用完
+                }
+
                 localStorage.setItem('cr_readHistory', JSON.stringify({
                     date: today,
                     count: current + 1
                 }));
-                return current + 1;
+                return true;
             },
 
             isMember: function() {
@@ -1490,9 +1501,9 @@ html {
                 return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
             },
 
-            canRead: function(isPremium) {
+            canRead: function(isMembersOnly) {
                 if (this.isMember()) return true;
-                if (isPremium) return false;
+                if (!isMembersOnly) return true; // 非会员专享内容始终可阅读
                 return this.getRemaining() > 0;
             }
         };
@@ -1504,7 +1515,16 @@ html {
         window.updateQuotaDisplay = function() {
             const remaining = MemberSystem.getRemaining();
             const el = document.getElementById('remainingReads');
+            const quotaBar = document.querySelector('.free-quota-bar');
+
             if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
+
+            // 會員登入後隱藏額度提示欄
+            if (MemberSystem.isMember() && quotaBar) {
+                quotaBar.style.display = 'none';
+            } else if (quotaBar) {
+                quotaBar.style.display = 'flex';
+            }
         };
 
         // 页面加载时更新
@@ -2760,7 +2780,7 @@ html {
     <!-- 免费额度提示 -->
     <div class="free-quota-bar">
         <div class="free-quota-text">
-            ★ 今日免费阅读额度:仅剩<strong id="remainingReads">2</strong>篇(升级会员更多畅读及权益）
+            ★ 今日會員專享阅读额度:仅剩<strong id="remainingReads">3</strong>篇(升級會員暢讀無限）
         </div>
         <a href="#pricing" class="free-quota-btn">升级月卡会员 ￥66/月</a>
     </div>
@@ -4076,6 +4096,7 @@ html {
             }
 
             updateLoginUI();
+            updateQuotaDisplay(); // 更新额度显示（会员隐藏额度栏）
         }
 
         function showBindingError(msg) {
@@ -4087,7 +4108,7 @@ html {
 
         // 更新登录UI
         function handleUserMenuClick() {
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
             if (isLoggedIn) {
                 openUserSidebar();
             } else {
@@ -4457,7 +4478,7 @@ html {
 
         // 更新登录按钮UI
         function updateLoginUI() {
-            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
             const nickname = localStorage.getItem('userNickname');
             const loginBtn = document.getElementById('userMenuBtn');
 
@@ -5348,15 +5369,28 @@ function handleNewsClick(element) {
     const articleId = element.getAttribute('data-article-id');
     const category = element.getAttribute('data-category') || '';
     const externalUrl = element.getAttribute('data-external-url');
+    const isMembersOnly = element.getAttribute('data-members-only') === 'true' || 
+                          element.classList.contains('premium') ||
+                          category === '會員專享' || 
+                          category === 'MEMBERS_ONLY';
 
     if (!articleId) return;
 
-    // 記錄閱讀
-    recordRead({ 
-        title: element.querySelector('h3, h4')?.textContent || '文章', 
-        id: articleId,
-        category: category
-    });
+    // 檢查權限：只有會員專享才需要檢查
+    if (isMembersOnly && !MemberSystem.canRead(true)) {
+        // 顯示付費牆
+        const modal = document.getElementById('mobilePaywallModal');
+        if (modal) {
+            modal.classList.add('active');
+        }
+        return;
+    }
+
+    // 記錄閱讀（只有會員專享才記錄）
+    if (isMembersOnly) {
+        MemberSystem.recordRead(true);
+        updateQuotaDisplay();
+    }
 
     // 如果有外部鏈接，直接打開
     if (externalUrl && externalUrl !== 'null' && externalUrl !== '' && externalUrl !== 'undefined') {
