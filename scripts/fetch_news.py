@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v7.1 - 修復版
-- 替換無效的台灣 RSS 源
-- 修復 Notion API Token 問題提示
+ChineseRocks 新闻抓取脚本 v8.8.7 - 最終修復版
+- 修復週五 04:00 雙重觸發問題
+- 更新台灣 RSS 源，添加更多可用源
+- 優化圖片抓取邏輯
+- 添加深晨 DOPM 和播客源
 """
 
 import os
@@ -78,7 +80,7 @@ EXCLUDE_GENRES = [
     "classical", "opera", "jazz", "new age", "world music"
 ]
 
-# 完整新聞源配置 - v7.1 修復版
+# 完整新聞源配置 - v8.8.7 最終版
 SOURCES = {
     "china": [
         {
@@ -90,18 +92,43 @@ SOURCES = {
     ],
 
     "taiwan": [
-        # Blow 吹音樂 - 確認可用
+        # Blow 吹音樂系列 (已驗證可用，有圖片)
         {
             "name": "Blow吹音樂", 
             "url": "https://blow.streetvoice.com/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 替換：使用香港獨立音樂的台灣內容（暫時）
         {
-            "name": "香港獨立音樂-台灣", 
-            "url": "https://www.hkindie.org/feed/", 
-            "enabled": False,  # 待驗證
+            "name": "Blow吹音樂-人物", 
+            "url": "https://blow.streetvoice.com/c/people/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        {
+            "name": "Blow吹音樂-議題", 
+            "url": "https://blow.streetvoice.com/c/issue/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        {
+            "name": "Blow吹音樂-新聞", 
+            "url": "https://blow.streetvoice.com/c/news/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 深晨 DOPM (台灣獨立音樂網站)
+        {
+            "name": "深晨DOPM", 
+            "url": "https://deepperfectmorning.com/blog?format=rss", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 小明拆台 (獨立音樂播客)
+        {
+            "name": "小明拆台MingStrike", 
+            "url": "https://mingstrike.com/feed/audio.xml", 
+            "enabled": True, 
             "category": "新聞",
         },
     ],
@@ -156,8 +183,8 @@ SOURCES = {
 
     "test": [
         {
-            "name": "豆瓣音樂", 
-            "url": "https://www.douban.com/feed/review/music", 
+            "name": "Blow吹音樂", 
+            "url": "https://blow.streetvoice.com/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
@@ -182,7 +209,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v7.1 - 修復版")
+        print("ChineseRocks 新闻抓取系统 v8.8.7 - 最終修復版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -290,7 +317,9 @@ class NewsFetcher:
             return None
 
     def _extract_image_improved(self, entry, source):
+        """優化圖片提取邏輯，支持更多格式"""
         try:
+            # 1. 檢查 media_content (RSS 2.0 media 模組)
             if 'media_content' in entry:
                 for media in entry.media_content:
                     if media.get('type', '').startswith('image/'):
@@ -298,21 +327,25 @@ class NewsFetcher:
                     if media.get('url'):
                         return media['url']
 
+            # 2. 檢查 media_thumbnail
             if 'media_thumbnail' in entry and entry.media_thumbnail:
                 return entry.media_thumbnail[0].get('url', '')
 
+            # 3. 檢查 enclosures
             if 'enclosures' in entry and entry.enclosures:
                 for enc in entry.enclosures:
                     if enc.get('type', '').startswith('image/'):
                         return enc.get('href', '')
 
-            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                     entry.get('summary', entry.get('description', ''))
+            # 4. 從 content 中提取圖片
+            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                      entry.get('summary', entry.get('description', ''))
 
             if content:
                 soup = BeautifulSoup(content, 'html.parser')
                 img = soup.find('img')
                 if img:
                     img_url = img.get('src', '')
+                    # 處理相對路徑
                     if img_url and img_url.startswith('/'):
                         link = entry.get('link', '')
                         if link:
@@ -320,12 +353,29 @@ class NewsFetcher:
                             img_url = urljoin(link, img_url)
                     return img_url
 
-            if 'douban' in source.get('name', '').lower():
+            # 5. 針對特定源的特殊處理
+            source_name = source.get('name', '').lower()
+            if 'blow' in source_name:
                 if 'description' in entry:
                     soup = BeautifulSoup(entry.description, 'html.parser')
                     img = soup.find('img')
                     if img and img.get('src'):
                         return img['src']
+
+            # 深晨 DOPM 特殊處理
+            if 'dopm' in source_name or '深晨' in source_name:
+                # 深晨使用 Squarespace，圖片可能在 description 中
+                if 'description' in entry:
+                    soup = BeautifulSoup(entry.description, 'html.parser')
+                    img = soup.find('img')
+                    if img and img.get('src'):
+                        return img['src']
+
+            # 6. 檢查 feed 級別的圖片 (某些 RSS 在 channel 層級)
+            if hasattr(entry, 'source'):
+                feed_data = entry.get('source', {})
+                if hasattr(feed_data, 'image') and feed_data.image:
+                    return feed_data.image.get('url', '')
 
         except Exception as e:
             print(f"    圖片提取失敗: {e}")
