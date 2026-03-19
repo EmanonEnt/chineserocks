@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v6.1 - 完整搖滾風格版
-包含所有搖滾子類型：SKA & REGGAE, HEAVY & METAL, POP ROCK, 
-ART & EXPERIMENTAL, INDIE & ALTERNATIVE, FOLK & ROOTS ROCK, PUNK & HARDCORE
+ChineseRocks 新闻抓取脚本 v7.0 - 完整版
+- 添加台灣/香港獨立音樂源
+- 修復豆瓣等源圖片抓取
+- 嚴格搖滾風格過濾（排除流行/電子/嘻哈）
 """
 
 import os
@@ -32,30 +33,30 @@ cloudinary.config(
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
-# 完整音樂風格分類
+# 嚴格搖滾風格分類（只保留搖滾相關）
 MUSIC_GENRES = {
     "PUNK & HARDCORE": {
-        "keywords": ["punk", "朋克", "hardcore", "硬核", "emo", "screamo", "post-hardcore"],
+        "keywords": ["punk", "朋克", "hardcore", "硬核", "emo", "screamo", "post-hardcore", "oi", "crust"],
         "weight": 10
     },
     "HEAVY & METAL": {
-        "keywords": ["metal", "金屬", "heavy", "thrash", "death metal", "black metal", "doom", "sludge"],
+        "keywords": ["metal", "金屬", "heavy", "thrash", "death metal", "black metal", "doom", "sludge", "stoner", "grindcore"],
         "weight": 10
     },
     "INDIE & ALTERNATIVE": {
-        "keywords": ["indie", "獨立", "alternative", "另類", "lo-fi", "shoegaze", "dream pop"],
+        "keywords": ["indie", "獨立", "alternative", "另類", "lo-fi", "shoegaze", "dream pop", "britpop", "grunge"],
         "weight": 9
     },
     "SKA & REGGAE": {
-        "keywords": ["ska", "reggae", "雷鬼", "dub", "rocksteady"],
+        "keywords": ["ska", "reggae", "雷鬼", "dub", "rocksteady", "ska-punk"],
         "weight": 8
     },
-    "POP ROCK": {
-        "keywords": ["pop rock", "power pop", "indie pop", "synth-pop", "garage rock"],
+    "GARAGE & PSYCHEDELIC": {
+        "keywords": ["garage", "車庫", "psychedelic", "迷幻", "space rock", "krautrock"],
         "weight": 7
     },
     "FOLK & ROOTS ROCK": {
-        "keywords": ["folk", "民謠", "roots", "country rock", "americana", "bluegrass", "blues rock"],
+        "keywords": ["folk", "民謠", "roots", "country rock", "americana", "bluegrass", "blues rock", "southern rock"],
         "weight": 7
     },
     "ART & EXPERIMENTAL": {
@@ -63,31 +64,125 @@ MUSIC_GENRES = {
         "weight": 6
     },
     "ROCK 通用": {
-        "keywords": ["rock", "搖滾", "band", "樂隊", "guitar", "吉他", "bass", "drum"],
+        "keywords": ["rock", "搖滾", "band", "樂隊", "guitar", "吉他", "bass", "drum", "live", "演出"],
         "weight": 5
     }
 }
 
-# 排除的流行音樂類型
-EXCLUDE_GENRES = ["k-pop", "hip-hop", "rap", "edm", "electronic dance", "pop music", "r&b", "soul"]
+# 嚴格排除所有非搖滾音樂
+EXCLUDE_GENRES = [
+    # 流行音樂
+    "k-pop", "j-pop", "c-pop", "mandopop", "cantopop", 
+    "pop music", "teen pop", "synth-pop", "electropop",
+    # 嘻哈/R&B
+    "hip-hop", "rap", "trap", "r&b", "soul", "funk", "disco",
+    # 電子音樂
+    "edm", "electronic", "house", "techno", "trance", "dubstep", 
+    "drum and bass", "dnb", "ambient", "idm",
+    # 其他
+    "classical", "opera", "jazz", "new age", "world music"
+]
 
+# 完整新聞源配置
 SOURCES = {
     "china": [
-        {"name": "豆瓣音樂-搖滾", "url": "https://www.douban.com/feed/review/music", "enabled": True, "category": "新聞"},
+        # 豆瓣音樂 - 搖滾評論
+        {
+            "name": "豆瓣音樂-搖滾", 
+            "url": "https://www.douban.com/feed/review/music", 
+            "enabled": True, 
+            "category": "新聞",
+            "image_selector": "img",  # 豆瓣圖片選擇器
+        },
     ],
+
+    "taiwan": [
+        # 台灣 StreetVoice 獨立音樂
+        {
+            "name": "StreetVoice-台灣獨立音樂", 
+            "url": "https://streetvoice.com/api/v1/public/explore/?format=rss", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # Blow 吹音樂
+        {
+            "name": "Blow吹音樂", 
+            "url": "https://blow.streetvoice.com/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 樂手巢
+        {
+            "name": "樂手巢", 
+            "url": "https://www.nestofmusic.com/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+    ],
+
+    "hongkong": [
+        # KKBOX 香港
+        {
+            "name": "KKBOX-香港", 
+            "url": "https://www.kkbox.com/hk/tc/rss/news.xml", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 香港獨立音樂
+        {
+            "name": "香港獨立音樂", 
+            "url": "https://www.hkindie.org/feed/", 
+            "enabled": False,  # 需要確認 RSS 有效性
+            "category": "新聞",
+        },
+    ],
+
     "international": [
-        {"name": "Pitchfork", "url": "https://pitchfork.com/rss/news", "enabled": True, "category": "國際"},
-        {"name": "Rolling Stone", "url": "https://www.rollingstone.com/music/feed/", "enabled": True, "category": "國際"},
-        {"name": "NME", "url": "https://www.nme.com/news/music/feed", "enabled": True, "category": "國際"},
-        {"name": "Kerrang", "url": "https://www.kerrang.com/feed", "enabled": True, "category": "國際"},
-        {"name": "Louder Sound", "url": "https://www.loudersound.com/feeds/all", "enabled": True, "category": "國際"},
-        {"name": "Ultimate Classic Rock", "url": "https://ultimateclassicrock.com/feed/", "enabled": True, "category": "國際"},
+        {
+            "name": "Pitchfork", 
+            "url": "https://pitchfork.com/rss/news", 
+            "enabled": True, 
+            "category": "國際",
+        },
+        {
+            "name": "Rolling Stone", 
+            "url": "https://www.rollingstone.com/music/feed/", 
+            "enabled": True, 
+            "category": "國際",
+        },
+        {
+            "name": "NME", 
+            "url": "https://www.nme.com/news/music/feed", 
+            "enabled": True, 
+            "category": "國際",
+        },
+        {
+            "name": "Kerrang", 
+            "url": "https://www.kerrang.com/feed", 
+            "enabled": True, 
+            "category": "國際",
+        },
+        {
+            "name": "Louder Sound", 
+            "url": "https://www.loudersound.com/feeds/all", 
+            "enabled": True, 
+            "category": "國際",
+        },
+        {
+            "name": "Ultimate Classic Rock", 
+            "url": "https://ultimateclassicrock.com/feed/", 
+            "enabled": True, 
+            "category": "國際",
+        },
     ],
-    "hongkong_taiwan": [
-        {"name": "KKBOX-搖滾", "url": "https://www.kkbox.com/hk/tc/rss/news.xml", "enabled": True, "category": "新聞"},
-    ],
+
     "test": [
-        {"name": "豆瓣音樂", "url": "https://www.douban.com/feed/review/music", "enabled": True, "category": "新聞"},
+        {
+            "name": "豆瓣音樂", 
+            "url": "https://www.douban.com/feed/review/music", 
+            "enabled": True, 
+            "category": "新聞",
+        },
     ]
 }
 
@@ -96,7 +191,10 @@ class NewsFetcher:
         self.notion = Client(auth=NOTION_TOKEN)
         self.source_type = source_type
         self.limit = limit
-        self.stats = {"total": 0, "added": 0, "skipped": 0, "exists": 0, "failed": 0, "image_uploaded": 0, "filtered": 0}
+        self.stats = {
+            "total": 0, "added": 0, "skipped": 0, "exists": 0, 
+            "failed": 0, "image_uploaded": 0, "filtered": 0
+        }
         self.articles = []
         self.cloudinary_enabled = all([
             os.getenv('CLOUDINARY_CLOUD_NAME'),
@@ -106,7 +204,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v6.1 - 完整搖滾風格版")
+        print("ChineseRocks 新闻抓取系统 v7.0 - 完整搖滾版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -115,7 +213,7 @@ class NewsFetcher:
 
         sources = SOURCES.get(self.source_type, [])
         enabled_sources = [s for s in sources if s["enabled"]]
-        print(f"\n抓取 {len(enabled_sources)} 个搖滾音樂源")
+        print(f"\n抓取 {len(enabled_sources)} 個搖滾音樂源")
         print("-"*50)
 
         for source in sources:
@@ -124,7 +222,7 @@ class NewsFetcher:
             else:
                 print(f"[{source['name']}] 已禁用")
 
-        print(f"\n抓取完成: 共 {len(self.articles)} 条 (已過濾非搖滾內容)")
+        print(f"\n抓取完成: 共 {len(self.articles)} 条 (過濾 {self.stats['filtered']} 條非搖滾內容)")
         return self.articles
 
     def _fetch_source(self, source):
@@ -133,7 +231,7 @@ class NewsFetcher:
             feed = feedparser.parse(source['url'])
 
             if not feed.entries:
-                print(f"  ⚠️ 無法獲取 RSS 內容")
+                print(f"  ⚠️ 無法獲取 RSS 內容或源無效")
                 return
 
             count = 0
@@ -143,7 +241,7 @@ class NewsFetcher:
                 if count >= self.limit:
                     break
 
-                # 檢查是否為搖滾內容
+                # 嚴格搖滾風格檢查
                 genres = self._detect_genres(entry)
                 if not genres:
                     filtered_count += 1
@@ -154,22 +252,25 @@ class NewsFetcher:
                     self.articles.append(article)
                     count += 1
 
-            print(f"  ✅ 成功獲取 {count} 条 (過濾 {filtered_count} 條非搖滾內容)")
+            print(f"  ✅ 成功獲取 {count} 条 (過濾 {filtered_count} 條)")
+            self.stats["filtered"] += filtered_count
 
         except Exception as e:
             print(f"  ❌ 失败: {e}")
             self.stats["failed"] += 1
 
     def _detect_genres(self, entry):
-        """檢測文章音樂風格，返回匹配的風格列表"""
-        text = f"{entry.get('title', '')} {entry.get('summary', '')} {entry.get('description', '')}".lower()
+        """嚴格檢測文章音樂風格"""
+        title = entry.get('title', '').lower()
+        summary = entry.get('summary', entry.get('description', '')).lower()
+        text = f"{title} {summary}"
 
-        # 檢查是否為排除的流行音樂
+        # 嚴格排除非搖滾音樂
         for exclude in EXCLUDE_GENRES:
             if exclude in text:
                 return []
 
-        # 檢測匹配的風格
+        # 檢測匹配的搖滾風格
         matched_genres = []
         for genre_name, genre_info in MUSIC_GENRES.items():
             for keyword in genre_info["keywords"]:
@@ -179,20 +280,22 @@ class NewsFetcher:
 
         # 按權重排序
         matched_genres.sort(key=lambda x: x[1], reverse=True)
-        return [g[0] for g in matched_genres[:3]]  # 返回前3個最匹配的風格
+        return [g[0] for g in matched_genres[:3]]
 
     def _parse_entry(self, entry, source, genres):
-        """解析 RSS 條目"""
+        """解析 RSS 條目，優化圖片抓取"""
         try:
             summary = entry.get('summary', entry.get('description', ''))
             summary = self._clean_html(summary)
 
             published = self._parse_date(entry)
-            image = self._extract_image(entry)
+
+            # 優化圖片抓取
+            image = self._extract_image_improved(entry, source)
 
             # 上傳圖片到 Cloudinary
             if image and self.cloudinary_enabled:
-                print(f"    上傳圖片到 Cloudinary...")
+                print(f"    📤 上傳圖片...")
                 image = self._upload_to_cloudinary(image, source['name'])
                 if image:
                     self.stats["image_uploaded"] += 1
@@ -210,15 +313,75 @@ class NewsFetcher:
                 "category": source.get('category', '新聞'),
                 "published": published,
                 "image": image,
-                "genres": genres  # 音樂風格標籤
+                "genres": genres
             }
         except Exception as e:
             print(f"    解析條目失敗: {e}")
             return None
 
+    def _extract_image_improved(self, entry, source):
+        """改進的圖片抓取邏輯"""
+        try:
+            # 1. 檢查 media:content (RSS 2.0)
+            if 'media_content' in entry:
+                for media in entry.media_content:
+                    if media.get('type', '').startswith('image/'):
+                        return media.get('url', '')
+                    # 有些媒體沒有 type 但有 url
+                    if media.get('url'):
+                        return media['url']
+
+            # 2. 檢查 media:thumbnail
+            if 'media_thumbnail' in entry and entry.media_thumbnail:
+                return entry.media_thumbnail[0].get('url', '')
+
+            # 3. 檢查 enclosures
+            if 'enclosures' in entry and entry.enclosures:
+                for enc in entry.enclosures:
+                    if enc.get('type', '').startswith('image/'):
+                        return enc.get('href', '')
+
+            # 4. 從內容/HTML中提取
+            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                     entry.get('summary', entry.get('description', ''))
+
+            if content:
+                soup = BeautifulSoup(content, 'html.parser')
+
+                # 找第一個圖片
+                img = soup.find('img')
+                if img:
+                    img_url = img.get('src', '')
+                    # 處理相對路徑
+                    if img_url and img_url.startswith('/'):
+                        # 嘗試構建絕對 URL
+                        link = entry.get('link', '')
+                        if link:
+                            from urllib.parse import urljoin
+                            img_url = urljoin(link, img_url)
+                    return img_url
+
+            # 5. 檢查豆瓣特殊格式
+            if 'douban' in source.get('name', '').lower():
+                # 豆瓣圖片通常在 description 中的 img 標籤
+                if 'description' in entry:
+                    soup = BeautifulSoup(entry.description, 'html.parser')
+                    img = soup.find('img')
+                    if img and img.get('src'):
+                        return img['src']
+
+        except Exception as e:
+            print(f"    圖片提取失敗: {e}")
+
+        return ''
+
     def _upload_to_cloudinary(self, image_url, source_name):
         """上傳圖片到 Cloudinary"""
         try:
+            # 清理 URL
+            image_url = image_url.strip()
+            if not image_url.startswith(('http://', 'https://')):
+                return None
+
             public_id = f"chineserocks/{source_name}_{hashlib.md5(image_url.encode()).hexdigest()[:12]}"
 
             result = cloudinary.uploader.upload(
@@ -233,8 +396,8 @@ class NewsFetcher:
             return result['secure_url']
 
         except Exception as e:
-            print(f"    ⚠️ 上傳失敗，使用原圖")
-            return image_url
+            print(f"    ⚠️ 上傳失敗: {e}")
+            return image_url  # 返回原圖
 
     def _parse_date(self, entry):
         try:
@@ -246,28 +409,6 @@ class NewsFetcher:
                 return datetime.now().strftime("%Y-%m-%d")
         except:
             return datetime.now().strftime("%Y-%m-%d")
-
-    def _extract_image(self, entry):
-        try:
-            if 'media_content' in entry:
-                for media in entry.media_content:
-                    if media.get('type', '').startswith('image/'):
-                        return media.get('url', '')
-
-            if 'enclosures' in entry and entry.enclosures:
-                for enc in entry.enclosures:
-                    if enc.get('type', '').startswith('image/'):
-                        return enc.get('href', '')
-
-            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else entry.get('summary', '')
-            if content:
-                soup = BeautifulSoup(content, 'html.parser')
-                img = soup.find('img')
-                if img and img.get('src'):
-                    return img['src']
-        except:
-            pass
-        return ''
 
     def _clean_html(self, html):
         if not html:
@@ -311,12 +452,10 @@ class NewsFetcher:
             if self._check_exists_http(article['title']):
                 return "exists"
 
-            # 構建標籤
             tags = [{"name": "新聞"}, {"name": "自動抓取"}, {"name": article['source_name']}]
 
-            # 添加音樂風格標籤
             for genre in article.get('genres', []):
-                if genre != "ROCK 通用":  # 不添加通用標籤
+                if genre != "ROCK 通用":
                     tags.append({"name": genre})
 
             if article['category'] == "國際":
@@ -375,9 +514,9 @@ class NewsFetcher:
         print(f"新增入庫: {self.stats['added']} 条")
         print(f"已存在: {self.stats['exists']} 条")
         print(f"失敗: {self.stats['failed']} 条")
+        print(f"過濾非搖滾: {self.stats['filtered']} 条")
         print("="*70)
 
-        # 風格統計
         if self.articles:
             print("\n風格分佈:")
             genre_count = {}
@@ -390,7 +529,7 @@ class NewsFetcher:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--source', default='test', 
-                       choices=['china', 'international', 'hongkong_taiwan', 'test'])
+                       choices=['china', 'taiwan', 'hongkong', 'international', 'test'])
     parser.add_argument('--limit', type=int, default=5, help='每源抓取數量')
     args = parser.parse_args()
 
