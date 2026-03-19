@@ -1846,8 +1846,11 @@ function renderNewsList(newsList) {
         return;
     }
 
-    // 保留 Load More 按钮
+    // 保留 Load More 按钮（从 DOM 中移除但保留引用）
     const loadMoreContainer = document.getElementById('loadMoreContainer');
+    if (loadMoreContainer && loadMoreContainer.parentNode) {
+        loadMoreContainer.parentNode.removeChild(loadMoreContainer);
+    }
 
     // 清空现有内容
     container.innerHTML = '';
@@ -1910,7 +1913,14 @@ function renderNewsList(newsList) {
 
     // 添加回 Load More 按钮
     if (loadMoreContainer) {
+        // 确保按钮容器可见（移除可能的 hidden 类）
+        loadMoreContainer.classList.remove('hidden');
+        loadMoreContainer.style.display = 'block';
+        loadMoreContainer.style.visibility = 'visible';
         container.appendChild(loadMoreContainer);
+        console.log('按钮已添加回 DOM');
+    } else {
+        console.error('loadMoreContainer 为 null，无法添加按钮');
     }
 
     // 统计
@@ -1924,7 +1934,10 @@ function renderNewsList(newsList) {
     if (loadMoreContainer) {
         const shouldShow = newsList.length > 8;
         loadMoreContainer.style.display = shouldShow ? 'block' : 'none';
-        console.log('Load More 按钮:', shouldShow ? '显示' : '隐藏');
+        loadMoreContainer.style.visibility = shouldShow ? 'visible' : 'hidden';
+        console.log('Load More 按钮:', shouldShow ? '显示' : '隐藏', 'display:', loadMoreContainer.style.display);
+    } else {
+        console.error('loadMoreContainer 未找到！');
     }
 }
 
