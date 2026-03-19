@@ -1774,7 +1774,7 @@ function renderNews() {
     // 渲染 Hero 区域（前3条）
     renderHero(filtered.slice(0, 3));
 
-    // 渲染新闻列表（從第4條開始）
+    // 渲染新闻列表
     renderNewsList(filtered.slice(3));
 
     // 渲染侧边栏
@@ -1847,12 +1847,10 @@ function renderNewsList(newsList) {
         return;
     }
 
-    // 創建所有新聞卡片，根據 INITIAL_DISPLAY 設置顯示/隱藏
+    // 创建新闻卡片
     newsList.forEach((news, index) => {
         const card = document.createElement('article');
-        // 關鍵修復：初始只顯示 INITIAL_DISPLAY 條，其餘隱藏
-        const shouldHide = index >= INITIAL_DISPLAY;
-        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${shouldHide ? 'hidden' : 'visible'}`;
+        card.className = `news-card ${news.isPremium ? 'premium' : ''} ${index >= INITIAL_DISPLAY ? 'hidden' : 'visible'}`;
         card.innerHTML = `
             <div class="news-thumb">
                 <img src="${news.image || './image/default-news.jpg'}" alt="${news.title}" loading="lazy">
@@ -1881,15 +1879,20 @@ function renderNewsList(newsList) {
         container.appendChild(loadMoreContainer);
     }
 
-    // 更新顯示計數
-    displayedCount = Math.min(newsList.length, INITIAL_DISPLAY);
+    // 计算实际显示的卡片数
+    const visibleCards = container.querySelectorAll('.news-card.visible');
+    displayedCount = visibleCards.length;
 
     console.log('RenderNewsList:', {
         newsListLength: newsList.length,
-        displayedCount: displayedCount,
-        initialDisplay: INITIAL_DISPLAY,
-        hiddenCount: newsList.length - displayedCount
+        visibleCards: displayedCount,
+        initialDisplay: INITIAL_DISPLAY
     });
+
+    // 初始设置按钮状态（后续 updateLoadMoreButton 会再次更新）
+    if (loadMoreContainer) {
+        loadMoreContainer.style.display = newsList.length > INITIAL_DISPLAY ? 'block' : 'none';
+    }
 }
 
 // 渲染侧边栏
@@ -1987,15 +1990,19 @@ function loadMoreNews() {
 function updateLoadMoreButton() {
     const container = document.getElementById('loadMoreContainer');
     const hiddenCards = document.querySelectorAll('.news-card.hidden');
+    const visibleCards = document.querySelectorAll('.news-card.visible');
+    const totalCards = hiddenCards.length + visibleCards.length;
 
-    console.log('UpdateLoadMoreButton:', {
-        hiddenCards: hiddenCards.length,
+    console.log('Load More Check:', {
+        hidden: hiddenCards.length,
+        visible: visibleCards.length,
+        total: totalCards,
         displayedCount: displayedCount
     });
 
     if (container) {
-        // 只要有隱藏的卡片，就顯示按鈕
-        const shouldShow = hiddenCards.length > 0;
+        // 如果有隐藏卡片，或者总卡片数超过初始显示数，显示按钮
+        const shouldShow = hiddenCards.length > 0 || (totalCards > INITIAL_DISPLAY && displayedCount < totalCards);
         container.style.display = shouldShow ? 'block' : 'none';
         console.log('Load More button display:', shouldShow ? 'block' : 'none');
     }
@@ -2024,9 +2031,7 @@ function handleNewsClick(news) {
         window.open(news.link, '_blank');
     } else {
         // 显示详情或跳转详情页
-        alert('新聞詳情頁開發中...
-
-' + news.title);
+        alert('新聞詳情頁開發中...\n\n' + news.title);
     }
 }
 
