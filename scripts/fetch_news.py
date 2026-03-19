@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v8.8.7 - 最終修復版
+ChineseRocks 新闻抓取脚本 v8.8.8 - 中國源更新版
 - 修復週五 04:00 雙重觸發問題
 - 更新台灣 RSS 源，添加更多可用源
 - 優化圖片抓取邏輯
@@ -82,11 +82,81 @@ EXCLUDE_GENRES = [
 
 # 完整新聞源配置 - v8.8.7 最終版
 SOURCES = {
-    "china": [
+        "china": [
         {
             "name": "豆瓣音樂-搖滾", 
             "url": "https://www.douban.com/feed/review/music", 
             "enabled": True, 
+            "category": "新聞",
+        },
+        # 主唱死了 - 上海地下音樂播客 (已驗證可用)
+        {
+            "name": "主唱死了-器樂搖滾播客", 
+            "url": "https://zhuchangsile.xyz/episodes/feed.xml", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # Live China Music - 中國獨立音樂現場報導 (權威源)
+        {
+            "name": "Live China Music-獨立音樂現場", 
+            "url": "https://livechinamusic.com/feed", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # China Music Radar - 中國音樂產業趨勢分析
+        {
+            "name": "China Music Radar-音樂產業", 
+            "url": "https://chinamusicradar.com/feed", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # Wooozy - 中國地下/主流音樂 (2009年創立的老牌媒體)
+        {
+            "name": "Wooozy-地下音樂", 
+            "url": "https://wooozy.cn/feed", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 摩登天空 - 網易號 RSS (通過 RSSHub)
+        {
+            "name": "摩登天空-網易號", 
+            "url": "https://rsshub.app/163/dy/T1509089140270", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # StreetVoice 街聲中國站
+        {
+            "name": "街聲-中國獨立音樂", 
+            "url": "https://streetvoice.cn/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # Blow 吹音樂 - Line Toady 標籤 (獨立音樂大小事)
+        {
+            "name": "Blow-Line Toady", 
+            "url": "https://blow.streetvoice.com/t/line-toady/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 一碗雜炊 - StreetVoice 播客
+        {
+            "name": "一碗雜炊-街聲播客", 
+            "url": "https://streetvoice.com/blowyourheart/podcast/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 滾圈海底撈 - 微博演出 RSS (通過 RSSHub)
+        {
+            "name": "滾圈海底撈-演出信息", 
+            "url": "https://rsshub.app/weibo/user/3691972875", 
+            "enabled": False,  # 需要微博 Cookie，暫時禁用
+            "category": "新聞",
+        },
+        # 巡演 RSS - 微博演出信息 (通過 RSSHub)
+        {
+            "name": "巡演RSS-演出播報", 
+            "url": "https://rsshub.app/weibo/user/3691972875", 
+            "enabled": False,  # 需要微博 Cookie，暫時禁用
             "category": "新聞",
         },
     ],
@@ -209,7 +279,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v8.8.7 - 最終修復版")
+        print("ChineseRocks 新闻抓取系统 v8.8.8 - 中國源更新版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
