@@ -6,9 +6,9 @@ on:
     - cron: '0 13 * * 1,2,3,4'
     # 中国新闻：周五到周日 12:00、18:00、22:00 (UTC 4:00、10:00、14:00)
     - cron: '0 4,10,14 * * 5,6,0'
-    # 国际新闻：每周三和周六 12:00 (UTC 4:00)
+    # 国际新闻：每周三和周六 12:00 (UTC 4:00) - 每源1條
     - cron: '0 4 * * 3,6'
-    # 港台新闻：每周二、五 12:00 (UTC 4:00)
+    # 港台新闻：每周二、五 12:00 (UTC 4:00) - 每源2條
     - cron: '0 4 * * 2,5'
 
   workflow_dispatch:
@@ -19,20 +19,10 @@ on:
         default: 'test'
         type: choice
         options:
-          - china
-          - international
-          - hongkong_taiwan
-          - test
-      limit:
-        description: '每源抓取數量'
-        required: false
-        default: '10'
-        type: choice
-        options:
-          - '5'
-          - '10'
-          - '15'
-          - '20'
+          - china          # 中國搖滾新聞 (每源5條)
+          - international  # 國際搖滾新聞 (每源1條)
+          - hongkong_taiwan # 港台搖滾新聞 (每源2條)
+          - test           # 測試模式 (3條)
 
 jobs:
   fetch-news:
@@ -47,58 +37,67 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
+        pip install feedparser requests notion-client beautifulsoup4 python-dateutil cloudinary
 
-    - name: Fetch News
+    - name: Fetch Rock News
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
+        CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+        CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
       run: |
         MODE="${{ github.event.inputs.mode }}"
-        LIMIT="${{ github.event.inputs.limit }}"
 
+        # 如果沒有手動輸入，則為定時任務自動判斷
         if [ -z "$MODE" ]; then
-          MODE="test"
-        fi
-        if [ -z "$LIMIT" ]; then
-          LIMIT="10"
-        fi
+          echo "=========================================="
+          echo "🎸 ChineseRocks 搖滾新聞抓取 (定時任務)"
+          echo "=========================================="
 
-        echo "=========================================="
-        echo "運行模式: $MODE"
-        echo "抓取數量: $LIMIT"
-        echo "=========================================="
-
-        if [ "$MODE" == "china" ]; then
-          echo "Running CHINA mode..."
-          python scripts/fetch_news.py --source china --limit $LIMIT
-        elif [ "$MODE" == "international" ]; then
-          echo "Running INTERNATIONAL mode..."
-          python scripts/fetch_news.py --source international --limit $LIMIT
-        elif [ "$MODE" == "hongkong_taiwan" ]; then
-          echo "Running HK/TW mode..."
-          python scripts/fetch_news.py --source hongkong_taiwan --limit $LIMIT
-        elif [ "$MODE" == "test" ]; then
-          echo "Running TEST mode..."
-          python scripts/fetch_news.py --source test --limit 3
-        else
           HOUR=$(date -u +%H)
-          DOW=$(date -u +%u)
+          DOW=$(date -u +%u)  # 1=周一, 2=周二, ..., 6=周六, 7=周日
 
-          echo "Auto-detecting mode... Hour: $HOUR, Day: $DOW"
+          echo "當前 UTC 時間: $HOUR:00, 星期$DOW"
 
+          # 國際新聞：每週三、六 12:00 (UTC 4:00) -> 每源1條
           if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
-            echo "Auto: INTERNATIONAL mode"
-            python scripts/fetch_news.py --source international --limit 8
+            echo "🌍 國際搖滾新聞 (每源1條)"
+            python scripts/fetch_news.py --source international --limit 1
+
+          # 港台新聞：每週二、五 12:00 (UTC 4:00) -> 每源2條
           elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
-            echo "Auto: HK/TW mode"
-            python scripts/fetch_news.py --source hongkong_taiwan --limit 8
+            echo "🇭🇰 港台搖滾新聞 (每源2條)"
+            python scripts/fetch_news.py --source hongkong_taiwan --limit 2
+
+          # 中國新聞：其他時間 -> 每源5條
           else
-            echo "Auto: CHINA mode"
-            python scripts/fetch_news.py --source china --limit 15
+            echo "🇨🇳 中國搖滾新聞 (每源5條)"
+            python scripts/fetch_news.py --source china --limit 5
+          fi
+
+        else
+          # 手動觸發
+          echo "=========================================="
+          echo "🎸 ChineseRocks 搖滾新聞抓取 (手動)"
+          echo "模式: $MODE"
+          echo "=========================================="
+
+          if [ "$MODE" == "china" ]; then
+            echo "🇨🇳 中國搖滾新聞 (每源5條)"
+            python scripts/fetch_news.py --source china --limit 5
+          elif [ "$MODE" == "international" ]; then
+            echo "🌍 國際搖滾新聞 (每源1條)"
+            python scripts/fetch_news.py --source international --limit 1
+          elif [ "$MODE" == "hongkong_taiwan" ]; then
+            echo "🇭🇰 港台搖滾新聞 (每源2條)"
+            python scripts/fetch_news.py --source hongkong_taiwan --limit 2
+          elif [ "$MODE" == "test" ]; then
+            echo "🧪 測試模式 (3條)"
+            python scripts/fetch_news.py --source test --limit 3
           fi
         fi
 
         echo "=========================================="
-        echo "抓取完成"
+        echo "🤘 搖滾新聞抓取完成"
         echo "=========================================="
