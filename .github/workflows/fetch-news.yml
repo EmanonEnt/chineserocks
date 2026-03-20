@@ -25,6 +25,11 @@ on:
           - hongkong       # 香港搖滾新聞 (每源2條)
           - international  # 國際搖滾新聞 (每源1條)
           - test           # 測試模式 (3條)
+      days_limit:
+        description: '日期限制(天) - 只抓取近N天內的新聞'
+        required: false
+        default: '15'
+        type: string
 
 jobs:
   fetch-news:
@@ -48,6 +53,7 @@ jobs:
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
         CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        DAYS_LIMIT: ${{ github.event.inputs.days_limit || '15' }}
       run: |
         MODE="${{ github.event.inputs.mode }}"
 
@@ -55,6 +61,7 @@ jobs:
         if [ -z "$MODE" ]; then
           echo "=========================================="
           echo "🎸 ChineseRocks 搖滾新聞抓取 (定時任務)"
+          echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
           HOUR=$(date -u +%H)
@@ -64,19 +71,19 @@ jobs:
 
           # 國際新聞：每週三、六 12:00 (UTC 4:00)
           if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
-            echo "🌍 國際搖滾新聞 (每源1條)"
+            echo "🌍 國際搖滾新聞 (每源1條，近${DAYS_LIMIT}天內)"
             python scripts/fetch_news.py --source international --limit 1
 
           # 港台新聞：每週二、五 12:00 (UTC 4:00)
           elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
-            echo "🇭🇰 港台搖滾新聞 (每源2條)"
+            echo "🇭🇰 港台搖滾新聞 (每源2條，近${DAYS_LIMIT}天內)"
             # 輪流抓取台灣和香港
             python scripts/fetch_news.py --source taiwan --limit 2
             python scripts/fetch_news.py --source hongkong --limit 2
 
           # 中國新聞：其他時間 (週五 04:00 已被移除)
           else
-            echo "🇨🇳 中國搖滾新聞 (每源5條)"
+            echo "🇨🇳 中國搖滾新聞 (每源5條，近${DAYS_LIMIT}天內)"
             python scripts/fetch_news.py --source china --limit 5
           fi
 
@@ -85,27 +92,28 @@ jobs:
           echo "=========================================="
           echo "🎸 ChineseRocks 搖滾新聞抓取 (手動)"
           echo "模式: $MODE"
+          echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
           case "$MODE" in
             china)
-              echo "🇨🇳 中國搖滾新聞 (每源5條)"
+              echo "🇨🇳 中國搖滾新聞 (每源5條，近${DAYS_LIMIT}天內)"
               python scripts/fetch_news.py --source china --limit 5
               ;;
             taiwan)
-              echo "🇹🇼 台灣獨立音樂 (每源2條)"
+              echo "🇹🇼 台灣獨立音樂 (每源2條，近${DAYS_LIMIT}天內)"
               python scripts/fetch_news.py --source taiwan --limit 2
               ;;
             hongkong)
-              echo "🇭🇰 香港搖滾新聞 (每源2條)"
+              echo "🇭🇰 香港搖滾新聞 (每源2條，近${DAYS_LIMIT}天內)"
               python scripts/fetch_news.py --source hongkong --limit 2
               ;;
             international)
-              echo "🌍 國際搖滾新聞 (每源1條)"
+              echo "🌍 國際搖滾新聞 (每源1條，近${DAYS_LIMIT}天內)"
               python scripts/fetch_news.py --source international --limit 1
               ;;
             test)
-              echo "🧪 測試模式 (3條)"
+              echo "🧪 測試模式 (3條，近${DAYS_LIMIT}天內)"
               python scripts/fetch_news.py --source test --limit 3
               ;;
           esac
