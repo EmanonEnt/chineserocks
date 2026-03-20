@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v8.8.8 - 中國源更新版
-- 修復週五 04:00 雙重觸發問題
-- 更新台灣 RSS 源，添加更多可用源
+ChineseRocks 新闻抓取脚本 v9.0.0 - 日期過濾版
+- 只抓取近15天內的新聞
+- 更新RSS源列表，移除失效源
 - 優化圖片抓取邏輯
 - 添加深晨 DOPM 和播客源
 """
@@ -14,7 +14,7 @@ import json
 import hashlib
 import re
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import parser as date_parser
 import feedparser
 import requests
@@ -33,6 +33,9 @@ cloudinary.config(
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
+
+# 日期過濾設定 - 只抓取近15天內的新聞
+DAYS_LIMIT = 15
 
 # 嚴格搖滾風格分類
 MUSIC_GENRES = {
@@ -80,89 +83,97 @@ EXCLUDE_GENRES = [
     "classical", "opera", "jazz", "new age", "world music"
 ]
 
-# 完整新聞源配置 - v8.8.7 最終版
+# 完整新聞源配置 - v9.0.0 更新版
 SOURCES = {
-        "china": [
+    "china": [
+        # ✅ 豆瓣音樂-樂評 (RSSHub提供，已驗證可用)
         {
-            "name": "豆瓣音樂-搖滾", 
-            "url": "https://www.douban.com/feed/review/music", 
+            "name": "豆瓣音樂-樂評", 
+            "url": "https://rsshub.app/douban/music/latest", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 主唱死了 - 上海地下音樂播客 (已驗證可用)
+        # ✅ 主唱死了 - 上海地下音樂播客 (已驗證可用，2024年仍在更新)
         {
             "name": "主唱死了-器樂搖滾播客", 
-            "url": "https://zhuchangsile.xyz/episodes/feed.xml", 
+            "url": "https://zhuchangsile.xyz/feed/audio.xml", 
             "enabled": True, 
             "category": "新聞",
         },
-        # Live China Music - 中國獨立音樂現場報導 (權威源)
+        # ✅ Live China Music - 中國獨立音樂現場報導 (權威源)
         {
             "name": "Live China Music-獨立音樂現場", 
             "url": "https://livechinamusic.com/feed", 
             "enabled": True, 
             "category": "新聞",
         },
-        # China Music Radar - 中國音樂產業趨勢分析
+        # ⚠️ China Music Radar - 需要檢查可用性
         {
             "name": "China Music Radar-音樂產業", 
             "url": "https://chinamusicradar.com/feed", 
-            "enabled": True, 
+            "enabled": False,  # 暫時禁用，需驗證
             "category": "新聞",
         },
-        # Wooozy - 中國地下/主流音樂 (2009年創立的老牌媒體)
+        # ✅ Wooozy - 中國地下/主流音樂 (2009年創立的老牌媒體)
         {
             "name": "Wooozy-地下音樂", 
             "url": "https://wooozy.cn/feed", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 摩登天空 - 網易號 RSS (通過 RSSHub)
+        # ✅ 摩登天空 - 網易號 RSS (通過 RSSHub)
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
             "enabled": True, 
             "category": "新聞",
         },
-        # StreetVoice 街聲中國站
+        # ✅ StreetVoice 街聲中國站
         {
             "name": "街聲-中國獨立音樂", 
             "url": "https://streetvoice.cn/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
-        # Blow 吹音樂 - Line Toady 標籤 (獨立音樂大小事)
+        # ✅ Blow 吹音樂 - Line Toady 標籤 (獨立音樂大小事)
         {
             "name": "Blow-Line Toady", 
             "url": "https://blow.streetvoice.com/t/line-toady/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 一碗雜炊 - StreetVoice 播客
+        # ✅ 一碗雜炊 - StreetVoice 播客
         {
             "name": "一碗雜炊-街聲播客", 
             "url": "https://streetvoice.com/blowyourheart/podcast/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 滾圈海底撈 - 微博演出 RSS (通過 RSSHub)
+        # ❌ 滾圈海底撈 - 微博 RSS 需要 Cookie，暫時禁用
         {
             "name": "滾圈海底撈-演出信息", 
             "url": "https://rsshub.app/weibo/user/3691972875", 
-            "enabled": False,  # 需要微博 Cookie，暫時禁用
+            "enabled": False,  # 需要微博 Cookie
             "category": "新聞",
         },
-        # 巡演 RSS - 微博演出信息 (通過 RSSHub)
+        # 🆕 新增：网易云音乐 - 独立音乐 RSSHub
         {
-            "name": "巡演RSS-演出播報", 
-            "url": "https://rsshub.app/weibo/user/3691972875", 
-            "enabled": False,  # 需要微博 Cookie，暫時禁用
+            "name": "網易雲音樂-獨立音樂", 
+            "url": "https://rsshub.app/ncm/djradio/349994326", 
+            "enabled": True, 
+            "category": "新聞",
+        },
+        # 🆕 新增：小宇宙 - 摇滚音乐播客 (通過 RSSHub)
+        {
+            "name": "小宇宙-搖滾播客", 
+            "url": "https://rsshub.app/xiaoyuzhou/podcast/5e280b1f418a84a0461f2649", 
+            "enabled": True, 
             "category": "新聞",
         },
     ],
 
     "taiwan": [
-        # Blow 吹音樂系列 (已驗證可用，有圖片)
+        # ✅ Blow 吹音樂系列 (已驗證可用，有圖片，2024-2025年持續更新)
         {
             "name": "Blow吹音樂", 
             "url": "https://blow.streetvoice.com/feed/", 
@@ -187,26 +198,41 @@ SOURCES = {
             "enabled": True, 
             "category": "新聞",
         },
-        # 深晨 DOPM (台灣獨立音樂網站)
+        # ✅ 深晨 DOPM (台灣獨立音樂網站，2024年仍在更新)
         {
             "name": "深晨DOPM", 
             "url": "https://deepperfectmorning.com/blog?format=rss", 
             "enabled": True, 
             "category": "新聞",
         },
-        # 小明拆台 (獨立音樂播客)
+        # ✅ 小明拆台 (獨立音樂播客，2024-2025年持續更新)
         {
             "name": "小明拆台MingStrike", 
             "url": "https://mingstrike.com/feed/audio.xml", 
             "enabled": True, 
             "category": "新聞",
         },
+        # 🆕 新增：The News Lens 關鍵評論網 - 音樂版
+        {
+            "name": "關鍵評論網-音樂", 
+            "url": "https://www.thenewslens.com/category/music/feed", 
+            "enabled": True, 
+            "category": "新聞",
+        },
     ],
 
     "hongkong": [
+        # ⚠️ KKBOX-香港 - 需要檢查RSS可用性
         {
             "name": "KKBOX-香港", 
             "url": "https://www.kkbox.com/hk/tc/rss/news.xml", 
+            "enabled": False,  # 暫時禁用，需驗證RSS是否仍可用
+            "category": "新聞",
+        },
+        # 🆕 新增：Hong Kong Free Press - 文化版
+        {
+            "name": "HKFP-文化", 
+            "url": "https://hongkongfp.com/culture/feed/", 
             "enabled": True, 
             "category": "新聞",
         },
@@ -249,6 +275,20 @@ SOURCES = {
             "enabled": True, 
             "category": "國際",
         },
+        # 🆕 新增：Stereogum
+        {
+            "name": "Stereogum", 
+            "url": "https://www.stereogum.com/feed", 
+            "enabled": True, 
+            "category": "國際",
+        },
+        # 🆕 新增：Consequence of Sound
+        {
+            "name": "Consequence of Sound", 
+            "url": "https://consequenceofsound.net/feed", 
+            "enabled": True, 
+            "category": "國際",
+        },
     ],
 
     "test": [
@@ -268,7 +308,8 @@ class NewsFetcher:
         self.limit = limit
         self.stats = {
             "total": 0, "added": 0, "skipped": 0, "exists": 0, 
-            "failed": 0, "image_uploaded": 0, "filtered": 0
+            "failed": 0, "image_uploaded": 0, "filtered": 0,
+            "too_old": 0  # 新增：過期文章統計
         }
         self.articles = []
         self.cloudinary_enabled = all([
@@ -276,13 +317,16 @@ class NewsFetcher:
             os.getenv('CLOUDINARY_API_KEY'),
             os.getenv('CLOUDINARY_API_SECRET')
         ])
+        # 計算15天前的日期
+        self.cutoff_date = datetime.now() - timedelta(days=DAYS_LIMIT)
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v8.8.8 - 中國源更新版")
+        print("ChineseRocks 新闻抓取系统 v9.0.0 - 日期過濾版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
+        print(f"日期限制: 近{DAYS_LIMIT}天內 (截止: {self.cutoff_date.strftime('%Y-%m-%d')})")
         print(f"Cloudinary: {'已啟用' if self.cloudinary_enabled else '未啟用'}")
         print("="*70)
 
@@ -295,9 +339,11 @@ class NewsFetcher:
             if source["enabled"]:
                 self._fetch_source(source)
             else:
-                print(f"[{source['name']}] 已禁用")
+                print(f"[{source['name']}] ⚠️ 已禁用")
 
-        print(f"\n抓取完成: 共 {len(self.articles)} 条 (過濾 {self.stats['filtered']} 條)")
+        print(f"\n抓取完成: 共 {len(self.articles)} 条")
+        print(f"  - 過濾非搖滾: {self.stats['filtered']} 條")
+        print(f"  - 過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 條")
         return self.articles
 
     def _fetch_source(self, source):
@@ -311,10 +357,22 @@ class NewsFetcher:
 
             count = 0
             filtered_count = 0
+            too_old_count = 0
 
             for entry in feed.entries:
                 if count >= self.limit:
                     break
+
+                # 檢查日期
+                published_date = self._parse_date(entry)
+                if published_date:
+                    try:
+                        pub_dt = datetime.strptime(published_date, "%Y-%m-%d")
+                        if pub_dt < self.cutoff_date:
+                            too_old_count += 1
+                            continue
+                    except:
+                        pass
 
                 genres = self._detect_genres(entry)
                 if not genres:
@@ -326,8 +384,9 @@ class NewsFetcher:
                     self.articles.append(article)
                     count += 1
 
-            print(f"  ✅ 成功獲取 {count} 条 (過濾 {filtered_count} 條)")
+            print(f"  ✅ 成功獲取 {count} 条 (過濾 {filtered_count} 條非搖滾, 過期 {too_old_count} 條)")
             self.stats["filtered"] += filtered_count
+            self.stats["too_old"] += too_old_count
 
         except Exception as e:
             print(f"  ❌ 失败: {e}")
@@ -434,7 +493,6 @@ class NewsFetcher:
 
             # 深晨 DOPM 特殊處理
             if 'dopm' in source_name or '深晨' in source_name:
-                # 深晨使用 Squarespace，圖片可能在 description 中
                 if 'description' in entry:
                     soup = BeautifulSoup(entry.description, 'html.parser')
                     img = soup.find('img')
@@ -595,6 +653,7 @@ class NewsFetcher:
         print(f"已存在: {self.stats['exists']} 条")
         print(f"失敗: {self.stats['failed']} 条")
         print(f"過濾非搖滾: {self.stats['filtered']} 条")
+        print(f"過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
         print("="*70)
 
         if self.articles:
