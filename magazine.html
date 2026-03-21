@@ -1,0 +1,3602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 微信 SDK：只在微信内加载 -->
+    <script>
+        if (/MicroMessenger/i.test(navigator.userAgent)) {
+            document.write('<script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"><\/script>');
+        }
+    </script>
+    <title>ChineseRocks - 中國搖滾官方榜單</title>
+    <link rel="icon" type="image/png" href="./image/tablogo.png">
+    <style>
+html {
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+                :root {
+            --pink-primary:#FF0066;--black:#0a0a0a;--silver-text:#c0c0c0;--text-secondary:#a0a0a0;--silver-bg:#f0f0f0;}
+
+        * { margin:0;padding:0;box-sizing:border-box;}
+
+        body {
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#0a0a0a;color:#c0c0c0;overflow-x:hidden;margin:0;padding:0;}
+
+        .hero-vote-card {
+            width:420px;background:rgba(10,10,10,0.9);border:1px solid rgba(255,0,102,0.3);border-radius:16px;padding:2rem;position:absolute;right:10%;top:50%;transform:translateY(-50%);z-index:10;}
+
+        .hero-vote-header {
+            display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;color:#FFD700;font-weight:700;font-size:0.85rem;}
+
+        .vote-titles {
+            width:100%;overflow:hidden;margin-bottom:1rem;position:relative;}
+
+        .vote-title-group {
+            width:100%;transition:opacity 0.3s ease;}
+
+        .vote-title-group.active {
+            display:block !important;}
+
+        .hero-vote-title {
+            font-size:1.1rem !important;font-weight:800;color:white;margin-bottom:0.4rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+        .hero-vote-subtitle {
+            font-size:0.8rem;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+        .vote-options-container {
+            min-height:140px;margin-bottom:1rem;}
+
+        .vote-options-group {
+            width:100%;}
+
+        .vote-options-group
+
+        .hero-vote-option {
+            background:rgba(255,255,255,0.05);border:2px solid transparent;border-radius:10px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;box-sizing:border-box;padding:0.6rem;margin-bottom:0.5rem;min-height:64px;height:64px;}
+
+        .hero-vote-option:hover {
+            border-color:#FF0066;background:rgba(255,0,102,0.1);}
+
+        .hero-vote-option img {
+            width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid #FF0066;flex-shrink:0;margin-right:0.75rem;}
+
+        .hero-vote-option-info {
+            flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;}
+
+        .option-line1 {
+            font-size:1rem;font-weight:700;color:white;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:0.15rem;}
+
+        .option-line2 {
+            font-size:0.9rem;font-weight:600;color:#aaa;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1.1em;}
+
+        .hero-vote-option-meta {
+            font-size:0.7rem;color:#888;line-height:1.2;margin-top:0.1rem;}
+
+        .vote-num {
+            color:#FF0066;font-weight:700;}
+
+        .hero-vote-btn {
+            width:100%;padding:0.9rem;background:#FF0066;color:white;border:none;border-radius:8px;font-weight:800;font-size:0.9rem;cursor:pointer;margin-top:1rem;transition:all 0.3s;}
+
+        .hero-vote-btn:hover {
+            background:#CC0052;transform:translateY(-2px);}
+
+        .hero-vote-weight {
+            text-align:center;margin-top:0.75rem;font-size:0.8rem;color:#888;}
+
+        .month-num,.total-num {
+            color:#FF0066;font-weight:700;}
+
+        .hero-text-content {
+            position:absolute;left:5%;top:50%;transform:translateY(-50%);z-index:3;max-width:500px;color:white;}
+
+        .hero-genre-tag {
+            display:inline-block;background:#FF0066;color:white;padding:0.5rem 1rem;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:1.5rem;}
+
+        .hero-main-title {
+            font-size:3.5rem;font-weight:900;line-height:1.1;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:2px;white-space:nowrap;}
+
+        .hero-sub-title {
+            font-size:2.5rem;font-weight:700;margin-bottom:1.5rem;white-space:nowrap;}
+
+        .hero-description {
+            font-size:1rem;line-height:1.6;color:rgba(255,255,255,0.9);margin-bottom:1rem;}
+
+        .hero-sub-description {
+            font-size:0.9rem;color:rgba(255,255,255,0.7);font-style:italic;}
+
+        .countdown-banner {
+            background:linear-gradient(90deg,#FF0066,#CC0052);padding:1rem 2rem;text-align:center;position:relative;overflow:hidden;}
+
+        .countdown-content {
+            display:flex;justify-content:center;align-items:center;gap:2rem;flex-wrap:wrap;position:relative;z-index:1;}
+
+        .countdown-text {
+            color:white;font-weight:700;}
+
+        .countdown-timer {
+            display:flex;gap:0.75rem;}
+
+        .countdown-item {
+            background:rgba(0,0,0,0.3);padding:0.4rem 0.8rem;border-radius:6px;text-align:center;}
+
+        .countdown-number {
+            font-size:1.3rem;font-weight:900;color:white;display:block;}
+
+        .countdown-label {
+            font-size:0.65rem;color:rgba(255,255,255,0.8);}
+
+        .countdown-cta {
+            background:white;color:#FF0066;padding:0.5rem 1.2rem;border-radius:20px;font-weight:800;font-size:0.85rem;text-decoration:none;}
+
+        .free-quota-bar {
+            background:linear-gradient(90deg,#FF0066,#CC0052);color:white;padding:0.875rem 1.5rem;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:1rem;text-align:center;}
+
+        .free-quota-text {
+            font-weight:600;font-size:0.9rem;display:flex;align-items:center;gap:0.3rem;}
+
+        .free-quota-text strong {
+            color:#FFD700;font-weight:800;font-size:1.1rem;}
+
+        .free-quota-btn {
+            background:white;color:#FF0066;padding:0.5rem 1.25rem;border-radius:20px;font-weight:800;font-size:0.85rem;text-decoration:none;white-space:nowrap;transition:all 0.3s;cursor:pointer;border:none;}
+
+        .free-quota-btn:hover {
+            transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+
+        @media (max-width:768px) {
+            .free-quota-bar {
+                flex-direction:column;padding:0.75rem 1rem;gap:0.6rem;}
+            
+        }
+
+        .free-quota-text {
+            font-weight:700;font-size:0.9rem;}
+
+        .free-quota-btn {
+            background:white;color:#FF0066;padding:0.4rem 1rem;border-radius:20px;font-weight:800;font-size:0.8rem;text-decoration:none;}
+
+        .paywall-card {
+            background:linear-gradient(135deg,#1a1a1a,#0a0a0a);border:2px solid #FF0066;border-radius:12px;padding:1.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;}
+        .paywall-card .paywall-icon {font-size:2rem;}
+        .paywall-card .paywall-title {font-size:1rem;font-weight:800;color:white;}
+        .paywall-card .paywall-text {color:#888;font-size:0.85rem;line-height:1.4;}
+        .paywall-card .paywall-btn {display:inline-block;background:#FF0066;color:white;padding:0.6rem 1.2rem;border-radius:6px;font-weight:800;text-decoration:none;font-size:0.85rem;}
+
+        .paywall-icon {
+            font-size:2.5rem;margin-bottom:0.75rem;}
+
+        .paywall-title {
+            font-size:1.2rem;font-weight:800;color:white;margin-bottom:0.5rem;}
+
+        .paywall-text {
+            color:#888;font-size:0.9rem;margin-bottom:1rem;}
+
+        .paywall-btn {
+            display:inline-block;background:#FF0066;color:white;padding:0.7rem 1.5rem;border-radius:6px;font-weight:800;text-decoration:none;font-size:0.9rem;}
+
+        .pricing-section {
+            padding:4rem 0;background:#0a0a0a;border-top:1px solid #222;}
+
+        .pricing-container {
+            max-width:1200px;margin:0 auto;padding:0 2rem;}
+
+        .pricing-header {
+            text-align:center;margin-bottom:2.5rem;}
+
+        .pricing-header h2 {
+            font-size:2rem;font-weight:900;color:white;margin-bottom:0.5rem;}
+
+        .pricing-header p {
+            color:#888;}
+
+        .pricing-grid {
+            display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;gap:1.5rem;}
+
+        .pricing-card {
+            background:rgba(255,255,255,0.03);border:1px solid #333;border-radius:12px;padding:1.25rem;text-align:center;position:relative;min-width:0;}
+
+        
+        @media (min-width:1025px) {
+            .pricing-grid {
+                display:flex;justify-content:center;gap:1rem;flex-wrap:nowrap;}
+            .pricing-card {
+                padding:1.5rem;width:280px;flex-shrink:0;}
+        }
+
+        .pricing-card.featured {
+            border-color:#FF0066;background:rgba(255,0,102,0.05);transform:scale(1.02);z-index:2;}
+
+        .pricing-badge {
+            position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#FF0066;color:white;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.7rem;font-weight:800;}
+
+        .pricing-name {
+            font-size:1.1rem;font-weight:800;color:white;margin-bottom:0.5rem;text-transform:uppercase;}
+
+        .pricing-price {
+            font-size:2.5rem;font-weight:900;color:white;}
+
+        .pricing-price span {
+            font-size:0.9rem;color:#888;}
+
+        .pricing-daily {
+            color:#FF0066;font-size:0.8rem;font-weight:700;margin-bottom:1rem;}
+
+        .pricing-features {
+            list-style:none;margin-bottom:1.5rem;text-align:left;font-size:0.8rem;}
+
+        .pricing-features li {
+            padding:0.3rem 0;color:#aaa;display:flex;align-items:center;gap:0.5rem;}
+
+        .pricing-features li::before {
+            content:'✓';color:#FF0066;font-weight:900;}
+
+        .pricing-btn {
+            width:100%;padding:0.75rem;background:transparent;border:2px solid #FF0066;color:#FF0066;border-radius:6px;font-weight:800;font-size:0.85rem;cursor:pointer;}
+
+        .pricing-card.featured .pricing-btn {
+            background:#FF0066;color:white;}
+
+        .invite-float {
+            position:fixed;bottom:30px;right:30px;z-index:999;pointer-events:auto;}
+
+        .invite-btn {
+            width:64px;height:64px;background:radial-gradient(circle at 30% 30%,#FFF8DC,#FFD700,#FFA500,#B8860B);border:3px solid #DAA520;color:#8B0000;font-size:0.75rem;font-weight:900;cursor:pointer;box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,215,0,0.5),0 0 60px rgba(255,165,0,0.3),inset 0 0 15px rgba(255,255,255,0.6),inset -3px -3px 10px rgba(184,134,11,0.5);transition:all 0.3s;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);animation:coinShine 1.5s ease-in-out infinite alternate, coinFloat 3s ease-in-out infinite;position:relative;overflow:hidden;pointer-events:auto;}
+
+        .invite-btn::before {
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.8) 50%,transparent 60%);animation:coinFlash 2s linear infinite;}
+
+        .invite-btn:hover {
+            transform:scale(1.15) rotate(5deg);box-shadow:0 0 30px rgba(255,215,0,1),0 0 60px rgba(255,215,0,0.7),0 0 90px rgba(255,165,0,0.4),inset 0 0 20px rgba(255,255,255,0.8);}
+
+        @keyframes rankGlow {
+            from {box-shadow:0 0 10px rgba(255,215,0,0.7),0 0 20px rgba(255,215,0,0.4),0 0 30px rgba(255,165,0,0.2),inset 0 0 10px rgba(255,255,255,0.5);}
+            to {box-shadow:0 0 20px rgba(255,215,0,1),0 0 40px rgba(255,215,0,0.6),0 0 60px rgba(255,165,0,0.4),inset 0 0 15px rgba(255,255,255,0.7);}}
+
+        @keyframes rankFloat {
+            0%,100% {transform:translateY(0);}
+            50% {transform:translateY(-3px);}}
+
+        @keyframes coinShine {
+            from {box-shadow:0 0 15px rgba(255,215,0,0.7),0 0 30px rgba(255,215,0,0.4),0 0 45px rgba(255,165,0,0.2),inset 0 0 10px rgba(255,255,255,0.5);}
+            to {box-shadow:0 0 25px rgba(255,215,0,1),0 0 50px rgba(255,215,0,0.6),0 0 75px rgba(255,165,0,0.4),inset 0 0 15px rgba(255,255,255,0.7);}}
+
+        @keyframes coinFlash {
+            0% {transform:translateX(-100%) translateY(-100%) rotate(45deg);}
+            100% {transform:translateX(100%) translateY(100%) rotate(45deg);}}
+
+        @keyframes coinFloat {
+            0%,100% {transform:translateY(0);}
+            50% {transform:translateY(-3px);}}
+
+        .btn-line1,.btn-line2{display:block;text-align:center;width:100%;}
+        .btn-line1{font-size:0.7rem;margin-bottom:1px;}
+        .btn-line2{font-size:0.65rem;}
+
+        .invite-tooltip {
+            position:absolute;bottom:65px;right:0;background:white;color:#0a0a0a;padding:0.75rem;border-radius:10px;width:280px;font-size:0.8rem;box-shadow:0 4px 15px rgba(0,0,0,0.2);opacity:0;visibility:hidden;transition:all 0.3s;pointer-events:none;}
+
+        .invite-float:hover .invite-tooltip {
+            opacity:1;visibility:visible;}
+
+        .invite-tooltip strong {
+            color:#FF0066;display:block;margin-bottom:0.25rem;}
+
+        .navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(10,10,10,0.95);
+  -webkit-border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+        .nav-container {
+            max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:center;height:70px;}
+
+        .logo {
+            position:relative;z-index:1001;display:inline-block;}
+        .logo img { height:40px;width:auto;display:block;}
+
+        .nav-links { display:flex;align-items:center;gap:1.5rem;}
+
+        .nav-links a {
+            color:var(--silver-text);text-decoration:none;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;transition:color 0.3s;padding:0.5rem 1.5rem;pointer-events:auto;cursor:pointer;}
+
+        .nav-links a:hover,.nav-links a.active { color:var(--pink-primary);}
+
+        .nav-separator { color:var(--pink-primary);font-size:0.7rem;}
+
+        .login-btn {
+            border:1.5px solid var(--pink-primary);padding:0.4rem 1rem;color:var(--pink-primary) !important;font-size:0.8rem;border-radius:4px;border-bottom:1.5px solid var(--pink-primary);transition:all 0.3s ease;cursor:pointer;background:transparent;pointer-events:auto;}
+
+        .login-btn:hover {
+            background:var(--pink-primary);color:white !important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(255,0,102,0.3);}
+
+        .mobile-menu-btn {
+            display:none;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;z-index:1002;pointer-events:auto;}
+
+        .hero-section {
+            position:relative;width:100%;aspect-ratio:1280 / 672;margin:0;overflow:hidden;background-color:#0a0a0a;z-index:1;}
+
+        .hero-slider {
+            position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;}
+
+        .hero-slide {
+            position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;z-index:0;transition:opacity 0.8s ease;display:flex;align-items:center;justify-content:flex-end;background-size:cover;background-position:center center;background-repeat:no-repeat;}
+
+        .hero-slide.active {
+            opacity:1;z-index:2;}
+
+        .hero-slide[data-genre="all"] {
+            background-image:url('./image/banner/bannerall.webp');}
+        .hero-slide[data-genre="punk"] {
+            background-image:url('./image/banner/bannerpunk.webp');}
+        .hero-slide[data-genre="indie"] {
+            background-image:url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=1280&h=672&fit=crop');}
+        .hero-slide[data-genre="folk"] {
+            background-image:url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1280&h=672&fit=crop');}
+        .hero-slide[data-genre="art"] {
+            background-image:url('https://images.unsplash.com/photo-1501612780327-45045538702b?w=1280&h=672&fit=crop');}
+        .hero-slide[data-genre="pop"] {
+            background-image:url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1280&h=672&fit=crop');}
+        .hero-slide[data-genre="metal"] {
+            background-image:url('./image/banner/bannermetal.webp');}
+        .hero-slide[data-genre="ska"] {
+            background-image:url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1280&h=672&fit=crop');}
+
+        .hero-image-overlay {
+            position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(10,10,10,0.4);z-index:1;}
+
+        .hero-content {
+            position:relative;z-index:2;width:100%;max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;justify-content:flex-end;align-items:center;height:100%;}
+
+        
+
+        
+
+        
+
+        .news-grid-section {
+            padding:4rem 0;background:#c0c0c0;}
+
+        .news-grid-section .section-header,.news-grid-section .featured-news {
+            max-width:1400px;margin:0 auto;padding:0 2rem;}
+
+        .news-grid-section .section-title,.news-grid-section .view-all-link {
+            color:#0a0a0a;}
+
+        .news-grid-section .section-header {
+            border-bottom-color:#FF0066;}
+
+        .news-grid-section .sidebar-content h4 {
+            color:#0a0a0a;}
+
+        .news-grid-section .sidebar-content .meta {
+            color:#555;}
+
+        /* 桌面端 sidebar 垂直布局 */
+        .news-grid-section .featured-sidebar {
+            display:flex;flex-direction:column;gap:1.2rem;}
+
+        .section-header {
+            display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:none;padding-bottom:2rem;}
+
+        /* 移动端弹窗 */
+        .mobile-paywall-modal {
+            display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:1rem;}
+        .mobile-paywall-modal.active {display:flex;}
+        .mobile-paywall-content {
+            background:linear-gradient(135deg,#1a1a1a,#0a0a0a);border:2px solid #FF0066;border-radius:16px;padding:2rem;text-align:center;max-width:340px;width:90%;position:relative;box-sizing:border-box;}
+        .mobile-paywall-close {position:absolute;top:10px;right:15px;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;}
+        .mobile-paywall-icon {font-size:3rem;margin-bottom:1rem;}
+        .mobile-paywall-title {font-size:1.3rem;font-weight:800;color:white;margin-bottom:0.5rem;}
+        .mobile-paywall-text {color:#888;font-size:0.9rem;margin-bottom:1.5rem;line-height:1.5;}
+        .mobile-paywall-btn {display:inline-block;background:#FF0066;color:white;padding:0.875rem 1.5rem;border-radius:8px;font-weight:800;text-decoration:none;font-size:0.95rem;width:100%;}
+        .mobile-paywall-skip {color:#666;font-size:0.8rem;margin-top:1rem;cursor:pointer;text-decoration:underline;}
+
+        .section-title { font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#c0c0c0;}
+
+        .view-all-link { color:var(--pink-primary);text-decoration:none;font-weight:700;font-size:0.85rem;}
+
+        .featured-news { display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:4rem;}
+
+        /* 移动端新闻网格 */
+        
+
+        /* 平板/竖屏适配 */
+        @media (min-width:769px) and (max-width:1024px) {
+            .news-grid-section .featured-news {
+                grid-template-columns:1.2fr 1fr !important;gap:1.5rem !important;}
+            .news-grid-section .paywall-card {
+                grid-column:span 1 !important;}
+        }
+
+        .featured-main { position:relative;aspect-ratio:16/9;overflow:hidden;cursor:pointer;background:#000;}
+        .featured-main img { width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+        .featured-main:hover img { transform:scale(1.02);}
+        .featured-overlay {
+            position:absolute;bottom:0;left:0;right:0;padding:3rem 2rem 2rem;background:linear-gradient(to top,rgba(10,10,10,0.95) 0%,transparent 100%);color:white;}
+        .featured-tag {
+            display:inline-block;background:var(--pink-primary);padding:0.3rem 0.8rem;font-size:0.7rem;font-weight:800;text-transform:uppercase;margin-bottom:1rem;}
+        .featured-title { font-size:1.6rem;font-weight:900;margin-bottom:0.5rem;line-height:1.2;}
+        .featured-excerpt { color:var(--silver-text);font-size:0.9rem;line-height:1.5;}
+
+        
+
+        .featured-main:hover img { transform:scale(1.02);z-index:2;}
+
+        
+
+        
+
+        
+
+        
+
+        .featured-sidebar { display:flex;flex-direction:column;gap:1.2rem;}
+
+        .sidebar-item {
+            display:flex;gap:1rem;cursor:pointer;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);transition:all 0.3s;}
+
+        .side-tag {
+            display:inline-block;background:var(--pink-primary);padding:0.2rem 0.6rem;font-size:0.65rem;font-weight:800;text-transform:uppercase;margin-bottom:0.5rem;color:white;}
+
+        .sidebar-content h4 {
+            color:#0a0a0a;font-size:0.9rem;font-weight:700;margin-bottom:0.3rem;line-height:1.3;}
+
+        .sidebar-content .meta {
+            color:#666;font-size:0.75rem;}
+
+        .sidebar-item:hover { background:rgba(255,255,255,0.05);}
+
+        .sidebar-item:last-child { border-bottom:none;}
+
+        .sidebar-thumb { width:100px;height:75px;object-fit:cover;flex-shrink:0;border-radius:4px;}
+
+        .sidebar-content { flex:1;min-width:0;}
+        
+        
+
+        
+
+        
+
+        .charts-section {
+            background:#c0c0c0;color:#0a0a0a;padding:4rem 0;}
+
+        .charts-section .charts-container {
+            max-width:1400px;margin:0 auto;padding:0 2rem;}
+
+        .charts-section .charts-title,.charts-section .top5-name,.charts-section .view-full-chart a {
+            color:#0a0a0a;}
+        .charts-section .charts-quarter {
+            color: #FF0066;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+            letter-spacing: 0.5px;
+        }
+
+        .charts-section .top5-meta {
+            color:#333;}
+
+        .charts-section .chart-tabs {
+            background:rgba(0,0,0,0.1);}
+
+        .charts-section .chart-tab {
+            color:#333;}
+
+        .charts-section .chart-tab:hover {
+            color:#0a0a0a;background:rgba(0,0,0,0.15);}
+
+        .charts-section .view-full-chart a {
+            border-color:#FF0066;}
+
+        .charts-section .view-full-chart a:hover {
+            background:#FF0066;color:white;}
+
+        .charts-header {
+            display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+
+        .charts-title { font-size:1.3rem;font-weight:900;text-transform:uppercase;letter-spacing:2px;}
+
+        .chart-tabs {
+            display:flex;gap:0.5rem;background:rgba(255,255,255,0.05);padding:0.3rem;border-radius:8px;}
+
+        .chart-tab {
+            background:transparent;border:none;color:var(--silver-text);font-weight:600;cursor:pointer;padding:0.5rem 1.2rem;font-size:0.8rem;text-transform:uppercase;border-radius:6px;transition:all 0.3s ease;letter-spacing:0.5px;}
+
+        .chart-tab:hover {
+            color:white;background:rgba(255,255,255,0.1);}
+
+        .chart-tab.active { background:#FF0066 !important;color:white !important;}
+
+        .chart-content { display:none;}
+
+        .chart-content.active { display:block;}
+
+        .top5-list { display:grid;grid-template-columns:repeat(5,1fr);gap:1.5rem;}
+
+        .top5-item { text-align:center;cursor:pointer;transition:transform 0.3s;}
+
+        .top5-item:hover { transform:translateY(-5px);}
+
+        .top5-rank {
+            font-size:1.2rem;
+            font-weight:900;
+            color:#FFD700;
+            margin-bottom:0.5rem;
+            text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);
+            animation:rankGlow 2s ease-in-out infinite alternate,rankFloat 3s ease-in-out infinite;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:64px;
+            height:64px;
+            background:radial-gradient(circle at 30% 30%,#FFF8DC,#FFD700,#FFA500,#B8860B);
+            border:3px solid #DAA520;
+            box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,215,0,0.5),0 0 60px rgba(255,165,0,0.3),inset 0 0 15px rgba(255,255,255,0.6),inset -3px -3px 10px rgba(184,134,11,0.5);
+            clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+            position:relative;
+            overflow:hidden;}
+
+        .top5-rank::before {
+            content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.8) 50%,transparent 60%);animation:coinFlash 2s linear infinite;}
+
+        .top5-image {
+            width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid var(--pink-primary);margin-bottom:1rem;}
+
+        .top5-name { font-weight:800;font-size:0.9rem;margin-bottom:0.3rem;}
+
+        .top5-meta { color:var(--silver-text);font-size:0.75rem;}
+
+        .view-full-chart { text-align:center;margin-top:2rem;}
+
+        .view-full-chart a {
+            display:inline-block;border:2px solid var(--pink-primary);color:var(--pink-primary);padding:0.8rem 2rem;text-decoration:none;font-weight:800;text-transform:uppercase;transition:all 0.3s;}
+
+        .view-full-chart a:hover { background:var(--pink-primary);color:white;}
+
+        .shows-section {
+            padding:4rem 0;background:#c0c0c0;}
+
+        .shows-section .section-header,.shows-section .view-full-chart {
+            max-width:1400px;margin:0 auto;padding:0 2rem;}
+
+        .shows-section .shows-grid {
+            margin:2rem 0 0;padding:0 2rem;}
+
+        .shows-section .section-title,.shows-section .shows-source,.shows-section .view-full-chart a {
+            color:#0a0a0a;}
+
+        .shows-section .shows-source strong {
+            color:#FF0066;}
+
+        .shows-section .view-full-chart a {
+            border-color:#FF0066;}
+
+        .shows-section .view-full-chart a:hover {
+            background:#FF0066;color:white;}
+
+        .shows-source { color:var(--text-secondary);font-size:0.8rem;}
+
+        .shows-source strong { color:var(--pink-primary);}
+
+        .shows-grid {
+            display:grid;grid-template-columns:repeat(6,1fr);gap:1.5rem;}
+
+        .show-card { position:relative;aspect-ratio:2/3;overflow:hidden;cursor:pointer;}
+
+        .show-card img { width:100%;height:100%;object-fit:cover;transition:transform 0.5s;}
+
+        .show-card:hover img { transform:scale(1.02);z-index:2;}
+
+        .show-overlay {
+            position:absolute;bottom:0;left:0;right:0;padding:2rem 1rem 1rem;background:linear-gradient(to top,rgba(10,10,10,0.98) 0%,transparent 100%);color:white;}
+
+        .show-date { color:var(--pink-primary);font-weight:800;font-size:0.8rem;margin-bottom:0.3rem;}
+
+        .show-title { font-weight:800;font-size:1rem;margin-bottom:0.3rem;line-height:1.2;}
+
+        .show-venue { color:var(--silver-text);font-size:0.8rem;}
+
+        .show-price {
+            position:absolute;top:1rem;right:1rem;background:var(--pink-primary);color:white;padding:0.3rem 0.8rem;font-weight:800;font-size:0.8rem;}
+
+        .livetv-section {
+            background:#c0c0c0;padding:4rem 0;text-align:center;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a;cursor:pointer;transition:all 0.3s;}
+        
+        .livetv-section:hover {
+            background:#d0d0d0;}
+
+        .livetv-section .livetv-title,.livetv-section .livetv-subtitle {
+            color:#0a0a0a;}
+
+        .livetv-section p {
+            color:#333;}
+
+        .livetv-badge { display:inline-block;background:var(--pink-primary);color:white;padding:0.5rem 1.5rem;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin-bottom:1.5rem;}
+
+        .livetv-title { font-size:2.5rem;font-weight:900;color:white;margin-bottom:1rem;letter-spacing:3px;}
+
+        .livetv-subtitle { color:var(--silver-text);margin-bottom:2rem;}
+
+        .social-section {
+            background:#c0c0c0;border-top:1px solid #0a0a0a;padding:2.5rem 2rem;text-align:center;}
+
+        .social-section .social-title {
+            color:#0a0a0a;}
+
+        .social-section .social-link {
+            color:#333;}
+
+        .social-section .social-link:hover {
+            color:#FF0066;}
+
+        .social-section .social-icon {
+            fill:#333;}
+
+        .social-section .social-link:hover .social-icon {
+            fill:#FF0066;}
+
+        .social-title { color:#c0c0c0;font-size:0.85rem;text-transform:uppercase;letter-spacing:3px;margin-bottom:1.5rem;font-weight:700;}
+
+        .social-links { display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;}
+
+        .social-link {
+            color:#c0c0c0;text-decoration:none;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;gap:0.4rem;}
+
+        .social-link:hover { color:var(--pink-primary);transform:translateY(-3px);}
+
+        .social-icon { width:36px;height:36px;fill:#c0c0c0;transition:fill 0.3s;}
+
+        .social-link:hover .social-icon { fill:var(--pink-primary);}
+
+        .social-link span { font-size:0.7rem;font-weight:600;letter-spacing:0.5px;}
+
+        .footer { background:#000000;padding:0;}
+
+        .footer-content { max-width:1400px;margin:0 auto;padding:4rem 2rem 2rem;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;}
+
+        .footer-desc { color:var(--silver-text);font-size:0.9rem;line-height:1.6;}
+
+        .footer-title { color:white;font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.2rem;}
+
+        .footer-links { list-style:none;}
+
+        .footer-links li { margin-bottom:0.6rem;}
+
+        .footer-links a { color:var(--silver-text);text-decoration:none;font-size:0.85rem;transition:color 0.3s;}
+
+        .footer-links a:hover { color:var(--pink-primary);}
+
+        .footer-bottom { text-align:center;padding:1rem 0;border-top:1px solid #333;color:#888;font-size:0.8rem;}
+
+        @media (max-width:1024px) {
+            .shows-grid {
+                grid-template-columns:repeat(3,1fr);gap:1rem;}
+
+            .hero-vote-card {
+                position:relative;right:0;top:auto;transform:none;width:75%;max-width:320px;margin:2rem auto 0 auto;}
+
+            .hero-content {
+                position:relative;z-index:2;width:100%;max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;flex-direction:row;justify-content:flex-end;align-items:center;height:100%;}
+
+            .pricing-grid {
+                grid-template-columns:repeat(3,1fr);gap:1rem;}
+
+            .pricing-card {
+                padding:1rem;}
+
+            .pricing-card.featured {
+                transform:scale(1.02);}
+
+            .pricing-price {
+                font-size:2rem;}
+
+            .paywall-card {
+                grid-column:span 1;}
+
+            .nav-links {
+                display:none;z-index:999;position:absolute;top:70px;left:0;right:0;background:rgba(10,10,10,0.95);flex-direction:column;padding:0.5rem 0 1rem;gap:0;border-bottom:none;overflow:visible;max-height:calc(100vh - 70px);}
+
+            .nav-links.active { display:flex;}
+
+            .nav-links a {
+                color:var(--silver-text);padding:1rem 2rem;border-bottom:1px solid rgba(255,255,255,0.1);display:block;width:100%;text-align:center;pointer-events:auto;}
+
+            .nav-links a:hover,.nav-links a.active {
+                color:var(--pink-primary);background:rgba(255,0,102,0.1);}
+
+            .nav-links .login-btn {
+                display:inline-block;margin:0.5rem auto 1rem;width:120px;text-align:center;box-sizing:content-box;border:2px solid #FF0066;padding:0.6rem 1rem;border-radius:4px;font-size:0.85rem;line-height:1;height:auto;border-bottom:2px solid #FF0066 !important;}
+
+            .mobile-menu-btn {
+                display:block;}
+
+            .nav-links a:last-child {
+                border-bottom:none;margin-top:0.5rem;}
+
+            .mobile-menu-btn:hover {
+                background:rgba(255,255,255,0.1);}
+            .invite-float {
+                bottom:20px;
+                right:15px;
+                z-index:999;
+            }
+            .invite-btn {
+                width:52px;
+                height:52px;
+                font-size:0.65rem;
+                border-width:2px;
+            }
+            .btn-line1 {
+                font-size:0.6rem;
+            }
+            .btn-line2 {
+                font-size:0.55rem;
+            }
+            .invite-tooltip {
+                width:240px;
+                font-size:0.75rem;
+                bottom:60px;
+                right:0;
+            }
+            .top5-rank {
+                font-size:1.1rem;
+                width:56px;
+                height:56px;
+                color:#FFD700;
+                text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);
+            }
+            }
+
+        @media (max-aspect-ratio:4/3) and (min-width:769px) and (max-width:1024px) {
+            .hero-section {
+                aspect-ratio:1280/672 !important;min-height:auto !important;height:auto !important;}
+
+            .hero-content {
+                flex-direction:row !important;justify-content:flex-end !important;align-items:center !important;padding:0 2rem !important;gap:2rem !important;position:relative;}
+
+            .hero-text-content {
+                position:absolute;left:5%;top:50%;transform:translateY(-50%);max-width:50%;text-align:left;}
+
+            .hero-genre-tag {
+                font-size:clamp(0.85rem,1.5vw,1.1rem) !important;padding:0.5rem 1rem !important;margin-bottom:1.25rem !important;}
+
+            .hero-main-title {
+                font-size:clamp(2.2rem,5vw,3.5rem) !important;margin-bottom:0.5rem !important;line-height:1.1 !important;}
+
+            .hero-sub-title {
+                font-size:clamp(1.6rem,3.5vw,2.8rem) !important;margin-bottom:1.25rem !important;}
+
+            .hero-description {
+                font-size:clamp(1rem,1.8vw,1.3rem) !important;margin-bottom:0.75rem !important;line-height:1.6 !important;}
+
+            .hero-sub-description {
+                font-size:clamp(0.9rem,1.4vw,1.15rem) !important;}
+
+            .hero-vote-card {
+                width:320px !important;max-width:42% !important;padding:1.5rem !important;margin:80px 0 0 0 !important;position:relative;right:0;transform:scale(0.85);transform-origin:center center;}
+
+            .hero-vote-header {
+                font-size:0.8rem !important;margin-bottom:0.6rem !important;}
+
+            .hero-vote-title {
+                font-size:1.15rem !important;margin-bottom:0.35rem !important;}
+
+            .hero-vote-subtitle {
+                font-size:0.8rem !important;margin-bottom:1rem !important;}
+
+            .hero-vote-option {
+                padding:0.75rem !important;margin-bottom:0.5rem !important;}
+
+            .hero-vote-option img {
+                width:38px !important;height:38px !important;margin-right:0.75rem !important;}
+
+            .option-line1 {
+                font-size:0.95rem !important;}
+
+            .option-line2 {
+                font-size:0.75rem !important;}
+
+            .hero-vote-option-meta {
+                font-size:0.75rem !important;}
+
+            .hero-vote-btn {
+                padding:0.8rem !important;font-size:0.9rem !important;margin-top:0.75rem !important;}
+
+            .hero-vote-weight {
+                font-size:0.75rem !important;margin-top:0.5rem !important;}
+        }
+
+                @media (max-width:768px) {
+            .hero-section {
+                aspect-ratio:auto !important;min-height:100vh !important;height:auto !important;padding:80px 0 40px !important;}
+            .hero-content {
+                flex-direction:column !important;justify-content:flex-start !important;align-items:center !important;padding:1rem !important;gap:1.5rem !important;height:auto !important;width:100% !important;position:relative !important;}
+            .hero-text-content {
+                position:relative !important;left:auto !important;top:auto !important;transform:none !important;max-width:100% !important;text-align:center !important;padding:0 1rem !important;order:1 !important;}
+            .hero-genre-tag {
+                font-size:0.75rem !important;padding:0.35rem 0.7rem !important;margin-bottom:0.75rem !important;}
+            .hero-main-title {
+                font-size:clamp(2rem,8vw,2.8rem) !important;margin-bottom:0.3rem !important;white-space:normal !important;line-height:1.1 !important;}
+            .hero-sub-title {
+                font-size:clamp(1.5rem,6vw,2rem) !important;margin-bottom:0.75rem !important;white-space:normal !important;}
+            .hero-description {
+                font-size:0.95rem !important;margin-bottom:0.4rem !important;line-height:1.5 !important;}
+            .hero-sub-description {
+                font-size:0.85rem !important;}
+            .hero-vote-card {
+                position:relative !important;right:auto !important;top:auto !important;left:auto !important;transform:none !important;width:92% !important;max-width:400px !important;margin-left:auto !important;margin-right:auto !important;padding:1.25rem !important;order:2 !important;display:block !important;}
+
+            .hero-vote-title {
+                font-size:1.1rem !important;margin-bottom:0.4rem !important;}
+            .hero-vote-subtitle {
+                font-size:0.85rem !important;margin-bottom:1rem !important;}
+            .hero-vote-option {
+                padding:0.75rem !important;margin-bottom:0.5rem !important;min-height:56px;height:56px;}
+            .hero-vote-option img {
+                width:40px !important;height:40px !important;margin-right:0.6rem !important;}
+            .option-line1 {
+                font-size:0.9rem !important;}
+            .option-line2 {
+                font-size:0.8rem !important;}
+            .hero-vote-btn {
+                padding:0.8rem !important;font-size:0.95rem !important;margin-top:0.6rem !important;}
+            .hero-vote-weight {
+                font-size:0.8rem !important;margin-top:0.6rem !important;}
+            .pricing-grid {
+                grid-template-columns:repeat(6,1fr);gap:0.75rem;max-width:100%;margin:0 auto;}
+            .pricing-card {
+                padding:0.875rem;grid-column:span 2;}
+            .pricing-card:nth-child(1) {
+                grid-column:1 / 3;}
+            .pricing-card:nth-child(2) {
+                grid-column:3 / 5;}
+            .pricing-card:nth-child(3) {
+                grid-column:5 / 7;}
+            .pricing-card:nth-child(4) {
+                grid-column:2 / 4;}
+            .pricing-card:nth-child(5) {
+                grid-column:4 / 6;}
+            .pricing-name {
+                font-size:0.9rem;}
+            .pricing-price {
+                font-size:1.5rem;}
+            .pricing-price span {
+                font-size:0.75rem;}
+            .pricing-daily {
+                font-size:0.7rem;}
+            .pricing-features {
+                font-size:0.7rem;}
+            .pricing-features li {
+                padding:0.2rem 0;}
+            .pricing-btn {
+                padding:0.6rem;font-size:0.75rem;}
+
+            .shows-grid {
+                grid-template-columns:repeat(2,1fr);gap:1rem;}
+            .countdown-content {
+                flex-direction:column;gap:0.75rem;}
+            .free-quota-bar {
+                flex-direction:column;text-align:center;}
+            .top5-list {
+                grid-template-columns:repeat(2,1fr) !important;gap:1rem !important;}
+            .top5-image {
+                width:80% !important;margin:0 auto !important;}
+            .login-modal.active {
+                display:flex !important;align-items:center !important;justify-content:center !important;}
+            .login-modal-content {
+                position:relative !important;margin:0 auto !important;left:0 !important;right:0 !important;top:0 !important;bottom:0 !important;transform:none !important;width:92% !important;max-width:400px !important;padding:1.5rem !important;max-height:85vh !important;}
+            .invite-float {
+                bottom:15px;
+                right:10px;
+            }
+            .invite-btn {
+                width:48px;
+                height:48px;
+                font-size:0.6rem;
+            }
+            .btn-line1 {
+                font-size:0.55rem;
+            }
+            .btn-line2 {
+                font-size:0.5rem;
+            }
+            .invite-tooltip {
+                width:220px;
+                font-size:0.7rem;
+                right:0;
+            }
+            .top5-rank {
+                font-size:1rem;
+                width:52px;
+                height:52px;
+                color:#FFD700;
+                text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);
+            }
+            }
+
+                @media (max-width:480px) {
+            .nav-container {
+                padding:0 0.8rem;}
+            .hero-section {
+                padding:70px 0 30px !important;}
+            .hero-main-title {
+                font-size:clamp(1.5rem,6vw,2rem) !important;margin-bottom:0.3rem !important;}
+            .hero-sub-title {
+                font-size:clamp(1.1rem,4.5vw,1.5rem) !important;margin-bottom:0.75rem !important;}
+            .hero-vote-card {
+                width:92% !important;max-width:340px !important;margin-left:auto !important;margin-right:auto !important;margin-bottom:1rem !important;padding:1.25rem !important;box-sizing:border-box !important;}
+            .hero-vote-option {
+                padding:0.85rem !important;margin-bottom:0.6rem !important;min-height:58px;height:58px;}
+            .hero-vote-option img {
+                width:42px !important;height:42px !important;}
+            .shows-grid {
+                grid-template-columns:repeat(2,1fr);gap:0.75rem;max-width:100%;padding:0 0.8rem;}
+            .show-card {
+                aspect-ratio:2/2.5;}
+            .pricing-grid {
+                grid-template-columns:repeat(2,1fr);gap:0.6rem;}
+            .pricing-card {
+                grid-column:span 1 !important;}
+            .pricing-card:nth-child(5) {
+                grid-column:1 / 3 !important;max-width:50%;margin:0 auto;}
+            
+            .hero-description {
+                font-size:0.9rem !important;margin-bottom:0.4rem !important;}
+
+            .hero-vote-title {
+                font-size:1.15rem !important;margin-bottom:0.4rem !important;}
+
+            .option-line1 {
+                font-size:0.85rem !important;}
+
+            
+            
+            
+            
+            .login-modal-content {
+                padding:1.5rem !important;width:95% !important;max-width:95% !important;}
+            .login-logo-main {
+                font-size:1.4rem !important;}
+            .login-logo-sub {
+                font-size:0.55rem !important;}
+            .login-subtitle {
+                font-size:0.8rem !important;margin-bottom:1rem !important;}
+            .social-login {
+                margin-bottom:1rem !important;}
+            .social-btn {
+                padding:0.6rem !important;font-size:0.75rem !important;}
+            .form-group {
+                margin-bottom:0.75rem !important;}
+            .form-input {
+                padding:0.7rem !important;font-size:0.9rem !important;}
+            .login-btn-submit {
+                padding:0.75rem !important;font-size:0.9rem !important;}
+            .login-footer {
+                margin-top:1rem !important;padding-top:1rem !important;}
+            .login-modal-header {
+                margin-bottom:0.5rem !important;}
+            .user-sidebar {
+                width:100%;right:-100%;}
+            .user-sidebar-content {
+                padding:1.5rem;}
+            .invite-float {
+                bottom:10px;
+                right:8px;
+            }
+            .invite-btn {
+                width:44px;
+                height:44px;
+                font-size:0.55rem;
+            }
+            .btn-line1 {
+                font-size:0.5rem;
+            }
+            .btn-line2 {
+                font-size:0.45rem;
+            }
+            .invite-tooltip {
+                width:200px;
+                font-size:0.65rem;
+                right:0;
+            }
+            .top5-rank {
+                font-size:0.85rem;
+                width:44px;
+                height:44px;
+                border-width:2px;
+                color:#FFD700;
+                text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);
+            }
+            
+            /* 480px Footer 布局 */
+            .footer-content {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.5rem 1rem !important;
+                padding: 1.5rem 1rem !important;
+            }
+            .footer-content > div:first-child {
+                grid-column: 1 / -1;
+            }
+            .footer-title {
+                font-size: 0.75rem !important;
+            }
+            .footer-links a {
+                font-size: 0.75rem !important;
+            }
+}
+
+        @media (max-width:380px) {
+            .hero-section {
+                padding:60px 0 20px !important;}
+
+            .hero-main-title {
+                font-size:1.6rem !important;}
+
+            .hero-sub-title {
+                font-size:1.2rem !important;}
+
+            .hero-vote-card {
+                padding:0.875rem !important;}
+
+            .hero-vote-option {
+                min-height:48px;height:48px;padding:0.5rem !important;}
+
+            .hero-vote-option img {
+                width:34px !important;height:34px !important;}
+
+        
+            /* 380px Footer 布局 */
+            .footer-content {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+                padding: 1rem !important;
+            }
+            .footer-title {
+                font-size: 0.7rem !important;
+            }
+            .footer-links a {
+                font-size: 0.7rem !important;
+            }
+            .footer-bottom {
+                font-size: 0.7rem !important;
+            }
+}
+
+        .login-modal {
+            display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;align-items:center;justify-content:center;}
+
+        .login-modal.active {
+            display:flex;}
+
+        .login-modal-overlay {
+            position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);}
+
+        .login-modal-content {
+            position:relative;background:rgba(10,10,10,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:2.5rem;width:90%;max-width:420px;max-height:90vh;overflow-y:auto;z-index:1;box-shadow:0 25px 50px rgba(0,0,0,0.5);}
+
+        .login-modal-close {
+            position:absolute;top:1rem;right:1rem;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all 0.3s;}
+
+        .login-modal-close:hover {
+            background:rgba(255,255,255,0.1);color:white;}
+
+        .login-modal-header {
+            text-align:center;margin-bottom:0.5rem;}
+
+        .login-logo-main {
+            font-size:1.8rem;font-weight:900;color:#FF0066;letter-spacing:2px;text-transform:uppercase;line-height:1;}
+
+        .login-logo-sub {
+            font-size:0.6rem;color:#c0c0c0;letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;}
+
+        .login-logo-highlight {
+            color:#FF0066;}
+
+        .login-subtitle {
+            text-align:center;color:#888;font-size:0.9rem;margin-bottom:1.5rem;}
+
+        .form-group {
+            margin-bottom:1rem;}
+
+        .form-label {
+            display:block;margin-bottom:0.4rem;font-size:0.85rem;font-weight:600;color:#c0c0c0;}
+
+        .form-input {
+            width:100%;padding:0.875rem 1rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-size:0.95rem;transition:all 0.3s;}
+
+        .form-input:focus {
+            outline:none;border-color:#FF0066;background:rgba(255,255,255,0.08);}
+
+        .form-input::placeholder {
+            color:#666;}
+
+        .phone-input-group {
+            display:flex;gap:0.5rem;}
+
+        .country-code {
+            width:85px;padding:0.875rem 0.5rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:white;font-size:0.95rem;cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FF0066' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;text-align:center;}
+
+        .country-code option {
+            background:#1a1a1a;color:white;padding:10px;}
+
+        .country-code:focus {
+            outline:none;border-color:#FF0066;}
+
+        .verify-btn {
+            padding:0 1rem;background:#FF0066;border:none;border-radius:8px;color:white;font-weight:700;font-size:0.8rem;cursor:pointer;white-space:nowrap;transition:all 0.3s;}
+
+        .verify-btn:hover {
+            background:#CC0052;}
+
+        .verify-btn:disabled {
+            background:#666;cursor:not-allowed;}
+
+        .social-login {
+            display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;}
+
+        .social-btn {
+            display:flex;align-items:center;justify-content:center;gap:0.4rem;padding:0.75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:white;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none;}
+
+        .social-btn:hover {
+            background:rgba(255,255,255,0.1);transform:translateY(-1px);}
+
+        .social-btn.full-width {
+            grid-column:span 2;}
+
+        .social-btn.wechat {
+            background:#07C160;border-color:#07C160;}
+
+        .social-btn.wechat:hover {
+            background:#06AD56;}
+
+        .social-btn.google {
+            background:white;color:#333;}
+
+        .social-btn.google:hover {
+            background:#f5f5f5;}
+
+        .social-btn.facebook {
+            background:#1877F2;border-color:#1877F2;}
+
+        .social-btn.facebook:hover {
+            background:#166fe5;}
+
+        .divider {
+            display:flex;align-items:center;margin:1.25rem 0;color:#666;font-size:0.8rem;}
+
+        .divider::before,.divider::after {
+            content:'';flex:1;height:1px;background:rgba(255,255,255,0.1);}
+
+        .divider span {
+            padding:0 0.75rem;}
+
+        .login-tabs {
+            display:flex;gap:0.25rem;margin-bottom:1.25rem;background:rgba(255,255,255,0.05);padding:0.25rem;border-radius:8px;}
+
+        .login-tab {
+            flex:1;padding:0.6rem;background:transparent;border:none;border-radius:6px;color:#888;font-weight:600;font-size:0.85rem;cursor:pointer;transition:all 0.3s;}
+
+        .login-tab.active {
+            background:rgba(255,255,255,0.1);color:white;}
+
+        .login-btn-submit {
+            width:100%;padding:0.875rem;background:#FF0066;border:none;border-radius:8px;color:white;font-size:0.95rem;font-weight:800;cursor:pointer;transition:all 0.3s;margin-top:0.5rem;}
+
+        .login-btn-submit:hover {
+            background:#CC0052;transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,0,102,0.3);}
+
+        .login-footer {
+            text-align:center;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid rgba(255,255,255,0.1);}
+
+        .login-footer a {
+            color:#FF0066;text-decoration:none;font-weight:600;font-size:0.85rem;}
+
+        .login-footer a:hover {
+            text-decoration:underline;}
+
+        .login-footer p {
+            margin-top:0.5rem;font-size:0.8rem;color:#888;}
+
+        .error-message {
+            background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.3);color:#ff6666;padding:0.6rem 0.875rem;border-radius:6px;margin-bottom:1rem;font-size:0.85rem;display:none;}
+
+        .error-message.show {
+            display:block;}
+
+        #backToLogin {
+            display:none;margin-bottom:1rem;color:#888;cursor:pointer;font-size:0.85rem;}
+
+        #backToLogin:hover {
+            color:#FF0066;}
+
+        .user-sidebar {
+            position:fixed;top:0;right:-100%;width:100%;max-width:400px;height:100vh;z-index:10001;transition:right 0.3s ease;transform:translateZ(0);}
+
+        .user-sidebar.active {
+            right:0;}
+
+        .user-sidebar-overlay {
+            position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);opacity:0;visibility:hidden;transition:all 0.3s ease;z-index:-1;pointer-events:none;}
+
+        .user-sidebar.active .user-sidebar-overlay {
+            opacity:1;visibility:visible;z-index:9998;pointer-events:auto;}
+
+        .user-sidebar-content {
+            position:relative;top:0;right:0;width:100%;height:100%;background:#0a0a0a;border-left:1px solid rgba(255,255,255,0.1);overflow-y:auto;padding:2rem;box-shadow:-10px 0 30px rgba(0,0,0,0.5);z-index:9999;pointer-events:auto;}
+
+        .user-sidebar-close {
+            position:absolute;top:1rem;right:1rem;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all 0.3s;}
+
+        .user-sidebar-close:hover {
+            background:rgba(255,255,255,0.1);color:white;}
+
+        .sidebar-section {
+            margin-top:1rem;}
+
+        .sidebar-avatar-placeholder {
+            width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#FF0066,#CC0052);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem;}
+
+        .sidebar-title {
+            text-align:center;color:white;font-size:1.3rem;font-weight:800;margin-bottom:0.5rem;}
+
+        .sidebar-subtitle {
+            text-align:center;color:#888;font-size:0.9rem;margin-bottom:1.5rem;}
+
+        .sidebar-btn-primary {
+            width:100%;padding:0.875rem;background:#FF0066;border:none;border-radius:8px;color:white;font-size:0.95rem;font-weight:800;cursor:pointer;transition:all 0.3s;margin-bottom:1.5rem;}
+
+        .sidebar-btn-primary:hover {
+            background:#CC0052;transform:translateY(-1px);}
+
+        .sidebar-divider {
+            display:flex;align-items:center;margin:1.5rem 0;color:#666;font-size:0.8rem;}
+
+        .sidebar-divider::before,.sidebar-divider::after {
+            content:'';flex:1;height:1px;background:rgba(255,255,255,0.1);}
+
+        .sidebar-divider span {
+            padding:0 0.75rem;}
+
+        .sidebar-features {
+            list-style:none;color:#aaa;font-size:0.85rem;line-height:2;}
+
+        .sidebar-features li {
+            display:flex;align-items:center;gap:0.5rem;}
+
+        .user-info-header {
+            display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+
+        .user-avatar {
+            width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid #FF0066;}
+
+        .user-meta {
+            flex:1;}
+
+        .user-name {
+            color:white;font-size:1.1rem;font-weight:800;margin-bottom:0.25rem;}
+
+        .member-badge {
+            display:inline-block;background:rgba(255,0,102,0.2);color:#FF0066;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:700;text-transform:uppercase;}
+
+        .user-stats {
+            display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;padding:1rem;background:rgba(255,255,255,0.03);border-radius:12px;}
+
+        .stat-item {
+            text-align:center;}
+
+        .stat-num {
+            display:block;font-size:1.5rem;font-weight:900;color:#FF0066;line-height:1;}
+
+        .stat-label {
+            font-size:0.75rem;color:#888;margin-top:0.25rem;}
+
+        .sidebar-menu {
+            margin-bottom:1.5rem;}
+
+        .menu-group {
+            margin-bottom:1.5rem;}
+
+        .menu-title {
+            font-size:0.75rem;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;padding-left:0.5rem;}
+
+        .menu-item {
+            display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0.5rem;color:#c0c0c0;text-decoration:none;border-radius:8px;transition:all 0.3s;cursor:pointer;}
+
+        .menu-item:hover {
+            background:rgba(255,255,255,0.05);color:white;}
+
+        .menu-icon {
+            font-size:1.2rem;width:24px;text-align:center;}
+
+        .menu-text {
+            flex:1;font-size:0.9rem;font-weight:600;}
+
+        .menu-badge {
+            background:#FF0066;color:white;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.7rem;font-weight:700;}
+
+        .sync-badge {
+            background:rgba(0,255,0,0.2);color:#00ff00;padding:0.15rem 0.5rem;border-radius:10px;font-size:0.7rem;font-weight:700;}
+
+        .sync-badge.pending {
+            background:rgba(255,165,0,0.2);color:#ffa500;}
+
+        .sidebar-btn-logout {
+            width:100%;padding:0.75rem;background:transparent;border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#888;font-size:0.85rem;cursor:pointer;transition:all 0.3s;}
+
+        .sidebar-btn-logout:hover {
+            border-color:#ff4444;color:#ff4444;}
+
+        .sidebar-page {
+            animation:slideIn 0.3s ease;}
+
+        @keyframes slideIn {
+            from { opacity:0;transform:translateX(20px);}
+            to { opacity:1;transform:translateX(0);}
+        }
+
+        .sidebar-back {
+            background:none;border:none;color:#FF0066;font-size:0.9rem;cursor:pointer;margin-bottom:1rem;padding:0;display:flex;align-items:center;gap:0.5rem;}
+
+        .sidebar-page-title {
+            color:white;font-size:1.2rem;font-weight:800;margin-bottom:1rem;}
+
+        .activity-list {
+            display:flex;flex-direction:column;gap:0.75rem;}
+
+        .activity-item {
+            background:rgba(255,255,255,0.03);border-radius:8px;padding:1rem;border:1px solid rgba(255,255,255,0.05);}
+
+        .activity-type {
+            font-size:0.7rem;color:#FF0066;text-transform:uppercase;font-weight:700;margin-bottom:0.25rem;}
+
+        .activity-title {
+            color:white;font-size:0.9rem;font-weight:600;margin-bottom:0.25rem;}
+
+        .activity-meta {
+            color:#666;font-size:0.75rem;}
+
+        .empty-state {
+            text-align:center;color:#666;padding:2rem;font-size:0.9rem;}
+
+        .settings-form {
+            display:flex;flex-direction:column;gap:1rem;}
+
+        .setting-item {
+            display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;}
+
+        .setting-btn {
+            background:transparent;border:1px solid #FF0066;color:#FF0066;padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;cursor:pointer;transition:all 0.3s;}
+
+        .setting-btn:hover {
+            background:#FF0066;color:white;}
+
+
+        /* 移动端新闻网格 - 强制覆盖 */
+        
+        
+        /* 全局溢出保护 */
+        img, video, canvas, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 确保固定定位元素不会导致滚动 */
+        .invite-float, .invite-btn {
+            transform: translateZ(0);
+        }
+        
+        /* 模态框溢出保护 */
+        .login-modal, .mobile-paywall-modal {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .login-modal-content, .mobile-paywall-content {
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* LIVE TV 弹窗样式 */
+        .livetv-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+        .livetv-modal.active {
+            display: flex;
+        }
+        .livetv-modal-content {
+            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+            border: 2px solid #FF0066;
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+        .livetv-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .livetv-modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+        .livetv-modal-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .livetv-modal-text {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .livetv-modal-features {
+            text-align: left;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+        }
+        .livetv-modal-features li {
+            margin-bottom: 0.5rem;
+        }
+        .livetv-modal-btn {
+            background: #FF0066;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .livetv-modal-btn:hover {
+            background: #CC0052;
+            transform: translateY(-2px);
+        }
+        </style>
+
+    <!-- Google Sign-In SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Facebook SDK -->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1628442824765533',
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v18.0'
+            });
+        };
+
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="./image/chineserockslogo.png" alt="ChineseRocks">
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="./news.html">NEWS</a>
+                <span class="nav-separator">★</span>
+                <a href="./charts.html">CHARTS</a>
+                <span class="nav-separator">★</span>
+                <a href="./magazine.html" class="active">MAGAZINE</a>
+                <span class="nav-separator">★</span>
+                <a href="#shows-section">SHOWS</a>
+                <span class="nav-separator">★</span>
+                <a href="#livetv" class="live-tv-link" id="liveTvLink">LIVE TV</a>
+                <button class="login-btn" id="userMenuBtn">LOGIN</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero轮播区 -->
+    <!-- 杂志满屏区域 -->
+<section class="hero-section magazine-fullscreen">
+    <div class="magazine-bg-wrapper">
+        <img src="./image/magazine/bg.webp" alt="Magazine Background" class="magazine-bg-img">
+    </div>
+
+    <div class="magazine-display-wrapper">
+        <!-- 左翻页按钮 -->
+        <button class="page-btn prev" id="prevBtn"></button>
+
+        <!-- 杂志容器 -->
+        <div class="book-container" id="bookContainer">
+            <!-- 页面将由 JavaScript 动态生成 -->
+        </div>
+
+        <!-- 右翻页按钮 -->
+        <button class="page-btn next" id="nextBtn"></button>
+
+        <!-- 页码指示器 -->
+        <div class="page-indicator" id="pageIndicator">封面</div>
+    </div>
+</section>
+
+<!-- 期数选择器（原风格导航位置） -->
+<div class="issue-nav">
+    <div class="issue-container" id="issueSelector"></div>
+</div>
+
+<style>
+/* 杂志满屏区域样式 */
+.magazine-fullscreen {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1280 / 672;
+    margin: 0;
+    overflow: hidden;
+    background-color: #0a0a0a;
+}
+
+.magazine-bg-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.magazine-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.magazine-display-wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 100px 80px;
+    box-sizing: border-box;
+}
+
+/* 翻页按钮 */
+.page-btn {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: url('./image/magazine/lr.png') center/contain no-repeat;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.8;
+    pointer-events: auto;
+}
+
+.page-btn:hover {
+    transform: scale(1.1);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 102, 0.8));
+}
+
+.page-btn.prev {
+    left: 60px;
+    transform: rotate(180deg);
+}
+
+.page-btn.prev:hover {
+    transform: rotate(180deg) scale(1.1);
+}
+
+.page-btn.next {
+    right: 60px;
+}
+
+.page-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* 书本容器 - 修复显示问题 */
+.book-container {
+    position: relative;
+    width: 900px;
+    height: 600px;
+    perspective: 2000px;
+}
+
+/* 页面通用 */
+.page {
+    position: absolute;
+    top: 0;
+    height: 600px;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 单页 */
+.page.single {
+    width: 450px;
+}
+
+.page.single.right {
+    right: 0;
+    left: auto;
+    transform-origin: left center;
+}
+
+.page.single.left {
+    left: 0;
+    right: auto;
+    transform-origin: right center;
+}
+
+/* 双页 */
+.page.spread {
+    width: 900px;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.spread-half {
+    width: 50%;
+    height: 100%;
+    flex-shrink: 0;
+    flex-grow: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.spread-half.right {
+    transform-origin: left center;
+}
+
+/* 页面内容 - 修复底部截取问题 */
+.page-content {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    line-height: 0;
+    font-size: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    border: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* 左右翻页效果 */
+.page.flipped-left {
+    transform: rotateY(-180deg);
+}
+
+.spread-half.flipped-left {
+    transform: rotateY(-180deg);
+}
+
+/* 页码指示器 */
+.page-indicator {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,1);
+    z-index: 100;
+    letter-spacing: 2px;
+    background: rgba(0,0,0,0.7);
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid #333;
+}
+
+/* 期数选择器导航 */
+.issue-nav {
+    background: #0a0a0a;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    width: 100%;
+    z-index: 20;
+    position: relative;
+}
+
+.issue-container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.issue-btn {
+    flex: 1;
+    min-width: 60px;
+    max-width: 100px;
+    background: transparent;
+    border: none;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    color: #c0c0c0;
+    padding: 1.2rem 0.5rem;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    line-height: 1.3;
+    pointer-events: auto;
+}
+
+.issue-btn:last-child {
+    border-right: none;
+}
+
+.issue-btn:hover,
+.issue-btn.active {
+    background: #FF0066;
+    color: white;
+}
+
+/* 会员升级弹窗 */
+.member-upgrade-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+.member-upgrade-modal.active {
+    display: flex;
+}
+.member-upgrade-content {
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    border: 2px solid #FF0066;
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+}
+.member-upgrade-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 2rem;
+    cursor: pointer;
+}
+.member-upgrade-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+.member-upgrade-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+.member-upgrade-text {
+    color: #888;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+.member-upgrade-current {
+    background: rgba(255,0,102,0.1);
+    border: 1px solid rgba(255,0,102,0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+.member-upgrade-current-title {
+    color: #FF0066;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.member-upgrade-current-text {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+.member-upgrade-btn {
+    display: inline-block;
+    background: #FF0066;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+.member-upgrade-btn:hover {
+    background: #CC0052;
+    transform: translateY(-2px);
+}
+.member-upgrade-skip {
+    color: #666;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+}
+
+/* 响应式适配 - 电脑端 */
+@media (max-width: 1320px) {
+    .magazine-fullscreen {
+        aspect-ratio: 1280/800;
+    }
+    .magazine-display-wrapper {
+        padding: 50px 90px 70px;
+    }
+    .page-btn { width: 65px; height: 65px; }
+    .page-btn.prev { left: 50px; }
+    .page-btn.next { right: 50px; }
+    .book-container { width: 80%; height: 85%; }
+    .page { height: 100%; }
+    .page.single, .spread-half { width: 50%; }
+    .page.spread { width: 100%; }
+}
+
+@media (max-width: 1024px) {
+    .magazine-fullscreen {
+        aspect-ratio: 1280/672 !important;
+        min-height: auto !important;
+        height: auto !important;
+    }
+    .magazine-display-wrapper {
+        padding: 40px 80px 60px;
+    }
+    .page-btn { width: 55px; height: 55px; }
+    .page-btn.prev { left: 40px; }
+    .page-btn.next { right: 40px; }
+    .page-indicator { 
+        font-size: 12px; 
+        padding: 6px 15px;
+        bottom: 15px;
+    }
+    .book-container {
+        width: 80%;
+        height: 80%;
+    }
+    .issue-btn { 
+        padding: 1rem 0.3rem;
+        font-size: 0.7rem;
+    }
+}
+
+/* 移动端适配 - 修复显示问题 */
+@media (max-width: 768px) {
+    .magazine-fullscreen {
+        aspect-ratio: auto !important;
+        min-height: 500px !important;
+        height: 500px !important;
+    }
+    .magazine-display-wrapper {
+        padding: 80px 50px 50px;
+    }
+    .page-btn { 
+        width: 45px; 
+        height: 45px; 
+        opacity: 0.7;
+        z-index: 100;
+    }
+    .page-btn.prev { left: 10px; }
+    .page-btn.next { right: 10px; }
+    .page-indicator { 
+        font-size: 11px; 
+        padding: 5px 12px;
+        bottom: 12px;
+    }
+    .book-container {
+        width: 85%;
+        height: 380px;
+        min-height: 380px;
+    }
+    .page { height: 100%; }
+    .page.single, .spread-half { width: 50%; }
+    .page.spread { width: 100%; }
+    .page-content img {
+        object-fit: contain;
+        object-position: center center;
+    }
+    .issue-btn { 
+        flex: 0 0 calc(20% - 1px);
+        min-width: 50px;
+        padding: 0.8rem 0.2rem;
+        font-size: 0.65rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .issue-btn:nth-child(5n) {
+        border-right: none;
+    }
+    .issue-btn:nth-child(n+6) {
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .magazine-fullscreen {
+        min-height: 450px !important;
+        height: 450px !important;
+    }
+    .magazine-display-wrapper {
+        padding: 70px 40px 40px;
+    }
+    .page-btn { 
+        width: 40px; 
+        height: 40px; 
+        z-index: 100;
+    }
+    .page-btn.prev { left: 8px; }
+    .page-btn.next { right: 8px; }
+    .page-indicator { 
+        font-size: 10px; 
+        padding: 4px 10px;
+        bottom: 10px;
+    }
+    .book-container {
+        width: 90%;
+        height: 340px;
+        min-height: 340px;
+    }
+    .issue-btn { 
+        flex: 0 0 calc(25% - 1px) !important;
+        font-size: 0.6rem !important;
+        padding: 0.6rem 0.1rem !important;
+        min-height: 44px;
+        border-right: 1px solid rgba(255,255,255,0.1) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .issue-btn:nth-child(5n) {
+        border-right: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .issue-btn:nth-child(4n) {
+        border-right: none !important;
+    }
+    .issue-btn:nth-child(n+6) {
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .issue-btn:nth-child(n+9) {
+        border-bottom: none !important;
+    }
+    .invite-float {
+        bottom: 15px;
+        right: 10px;
+        z-index: 999;
+    }
+}
+
+@media (max-width: 380px) {
+    .magazine-fullscreen {
+        min-height: 400px !important;
+        height: 400px !important;
+    }
+    .magazine-display-wrapper {
+        padding: 65px 35px 35px;
+    }
+    .page-btn { 
+        width: 35px; 
+        height: 35px; 
+        z-index: 100;
+    }
+    .page-btn.prev { left: 5px; }
+    .page-btn.next { right: 5px; }
+    .book-container {
+        width: 92%;
+        height: 300px;
+        min-height: 300px;
+    }
+}
+</style>
+
+
+<script>
+// ==================== 统一会员系统 ====================
+const MemberSystem = {
+    // 会员等级定义
+    TIERS: {
+        GUEST: { level: 0, name: '游客', maxIssue: 2, canReadPages: false },
+        TRIAL: { level: 1, name: '体验卡', maxIssue: 2, canReadPages: true },
+        WEEKLY: { level: 2, name: '周卡', maxIssue: 3, canReadPages: true },
+        MONTHLY: { level: 3, name: '月卡', maxIssue: 4, canReadPages: true },
+        QUARTERLY: { level: 4, name: '季卡', maxIssue: 6, canReadPages: true },
+        YEARLY: { level: 5, name: '年卡', maxIssue: 999, canReadPages: true }
+    },
+
+    // 获取当前会员等级
+    getCurrentTier() {
+        const memberType = localStorage.getItem('memberType');
+        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+        
+        if (!isLoggedIn) return this.TIERS.GUEST;
+        
+        switch(memberType) {
+            case '体验卡':
+            case 'trial':
+                return this.TIERS.TRIAL;
+            case '周卡':
+            case 'weekly':
+                return this.TIERS.WEEKLY;
+            case '月卡':
+            case 'monthly':
+                return this.TIERS.MONTHLY;
+            case '季卡':
+            case 'quarterly':
+                return this.TIERS.QUARTERLY;
+            case '年卡':
+            case 'yearly':
+                return this.TIERS.YEARLY;
+            default:
+                // 已登录但没有会员类型，默认为体验卡
+                return this.TIERS.TRIAL;
+        }
+    },
+
+    // 检查是否可以查看某期杂志
+    canViewIssue(issueNum) {
+        const tier = this.getCurrentTier();
+        return issueNum <= tier.maxIssue;
+    },
+
+    // 检查是否可以翻页阅读
+    canReadPages(issueNum) {
+        const tier = this.getCurrentTier();
+        // 游客只能看封面
+        if (tier.level === 0) return false;
+        // 体验卡及以上可以看完整内容
+        return tier.canReadPages && issueNum <= tier.maxIssue;
+    },
+
+    // 获取需要升级到的等级
+    getRequiredTier(issueNum) {
+        if (issueNum <= 2) return null;
+        if (issueNum <= 4) return this.TIERS.MONTHLY;
+        if (issueNum <= 6) return this.TIERS.QUARTERLY;
+        return this.TIERS.YEARLY;
+    },
+
+    // 设置会员类型
+    setMemberType(type) {
+        localStorage.setItem('memberType', type);
+        localStorage.setItem('cr_member', 'true');
+    },
+
+    // 清除会员
+    clearMember() {
+        localStorage.removeItem('memberType');
+        localStorage.removeItem('cr_member');
+    }
+};
+
+// ==================== 杂志数据管理 ====================
+const magazineData = {
+    currentIssue: 1,
+    currentPage: 0,
+    totalIssues: 13,
+
+    getImagePath(issueNum, pageNum) {
+        return `./image/magazine/%23${issueNum}/${pageNum}.webp`;
+    },
+
+    pageExists(issueNum, pageNum) {
+        // 所有期数都有封面
+        if (pageNum === 0) return true;
+        // 根据期数返回不同的页数
+        // #1, #2: 完整页面 (P1-P15)
+        // #3开始: 大于P14
+        if (issueNum <= 2) {
+            return pageNum <= 15;
+        }
+        // #3及以上有更多页面
+        return pageNum <= 20;
+    },
+
+    getPages(issueNum) {
+        const pages = [];
+
+        pages.push({
+            type: 'cover',
+            right: { num: 0, src: this.getImagePath(issueNum, 0), name: '封面' }
+        });
+
+        // 根据会员等级决定是否添加内页
+        const canRead = MemberSystem.canReadPages(issueNum);
+        
+        if (canRead) {
+            const maxPage = issueNum <= 2 ? 15 : 20;
+            for (let i = 1; i <= maxPage - 2; i += 2) {
+                pages.push({
+                    type: 'spread',
+                    left: { 
+                        num: i, 
+                        src: this.getImagePath(issueNum, i), 
+                        name: `P${i}`
+                    },
+                    right: { 
+                        num: i + 1, 
+                        src: this.getImagePath(issueNum, i + 1), 
+                        name: `P${i + 1}`
+                    }
+                });
+            }
+        }
+
+        // 封底
+        const backPageNum = issueNum <= 2 ? 15 : 20;
+        pages.push({
+            type: 'backcover',
+            left: { 
+                num: backPageNum, 
+                src: this.getImagePath(issueNum, backPageNum), 
+                name: '封底'
+            }
+        });
+
+        return pages;
+    }
+};
+
+// ==================== 杂志功能 ====================
+function initMagazine() {
+    renderIssueButtons();
+    renderBook();
+    updateIndicator();
+    updateButtons();
+}
+
+function renderIssueButtons() {
+    const container = document.getElementById('issueSelector');
+    let html = '';
+    for (let i = magazineData.totalIssues; i >= 1; i--) {
+        const isActive = i === magazineData.currentIssue ? 'active' : '';
+        html += `<button class="issue-btn ${isActive}" data-issue="${i}">#${i}</button>`;
+    }
+    container.innerHTML = html;
+    
+    // 绑定事件
+    container.querySelectorAll('.issue-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const issueNum = parseInt(this.dataset.issue);
+            switchIssue(issueNum);
+        });
+    });
+}
+
+function renderBook() {
+    const container = document.getElementById('bookContainer');
+    const pages = magazineData.getPages(magazineData.currentIssue);
+    let html = '';
+
+    pages.forEach((page, index) => {
+        const isActive = index === magazineData.currentPage;
+        const zIndex = pages.length - index;
+
+        if (page.type === 'cover') {
+            html += `
+                <div class="page single right ${isActive ? 'active' : ''}" 
+                     data-index="${index}"
+                     style="z-index: ${zIndex}; opacity: ${isActive ? 1 : 0};">
+                    <div class="page-content">
+                        <img src="${page.right.src}" alt="封面" 
+                             onerror="this.src='${page.right.src.replace('%23', '#')}'">
+                    </div>
+                </div>
+            `;
+        } else if (page.type === 'backcover') {
+            html += `
+                <div class="page single left ${isActive ? 'active' : ''}" 
+                     data-index="${index}"
+                     style="z-index: ${zIndex}; opacity: ${isActive ? 1 : 0};">
+                    <div class="page-content">
+                        <img src="${page.left.src}" alt="封底" 
+                             onerror="this.src='${page.left.src.replace('%23', '#')}'">
+                    </div>
+                </div>
+            `;
+        } else {
+            html += `
+                <div class="page spread ${isActive ? 'active' : ''}" 
+                     data-index="${index}"
+                     style="z-index: ${zIndex}; opacity: ${isActive ? 1 : 0};">
+                    <div class="spread-half left">
+                        <div class="page-content">
+                            <img src="${page.left.src}" alt="P${page.left.num}" 
+                                 onerror="this.src='${page.left.src.replace('%23', '#')}'">
+                        </div>
+                    </div>
+                    <div class="spread-half right">
+                        <div class="page-content">
+                            <img src="${page.right.src}" alt="P${page.right.num}" 
+                                 onerror="this.src='${page.right.src.replace('%23', '#')}'">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    });
+
+    container.innerHTML = html;
+}
+
+function updateButtons() {
+    const pages = magazineData.getPages(magazineData.currentIssue);
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    if (pages.length <= 1) {
+        prevBtn.classList.add('disabled');
+        nextBtn.classList.add('disabled');
+    } else {
+        prevBtn.classList.remove('disabled');
+        nextBtn.classList.remove('disabled');
+
+        if (magazineData.currentPage === 0) {
+            prevBtn.classList.add('disabled');
+        }
+        if (magazineData.currentPage === pages.length - 1) {
+            nextBtn.classList.add('disabled');
+        }
+    }
+}
+
+function nextPage() {
+    // 检查是否有权限翻页
+    const canRead = MemberSystem.canReadPages(magazineData.currentIssue);
+    if (!canRead && magazineData.currentPage === 0) {
+        // 游客或无权阅读，显示升级弹窗
+        showMemberUpgradeModal(magazineData.currentIssue);
+        return;
+    }
+
+    const pages = magazineData.getPages(magazineData.currentIssue);
+    if (magazineData.currentPage < pages.length - 1) {
+        const currentPageEl = document.querySelector(`[data-index="${magazineData.currentPage}"]`);
+
+        if (currentPageEl.classList.contains('spread')) {
+            const rightHalf = currentPageEl.querySelector('.spread-half.right');
+            rightHalf.classList.add('flipped-left');
+        } else if (currentPageEl.classList.contains('right')) {
+            currentPageEl.classList.add('flipped-left');
+        }
+
+        setTimeout(() => {
+            currentPageEl.style.opacity = '0';
+            magazineData.currentPage++;
+            const nextPageEl = document.querySelector(`[data-index="${magazineData.currentPage}"]`);
+            nextPageEl.style.opacity = '1';
+
+            if (currentPageEl.classList.contains('spread')) {
+                currentPageEl.querySelector('.spread-half.right').classList.remove('flipped-left');
+            } else if (currentPageEl.classList.contains('right')) {
+                currentPageEl.classList.remove('flipped-left');
+            }
+
+            updateIndicator();
+            updateButtons();
+        }, 600);
+    }
+}
+
+function prevPage() {
+    if (magazineData.currentPage > 0) {
+        const currentPageEl = document.querySelector(`[data-index="${magazineData.currentPage}"]`);
+        const prevPageEl = document.querySelector(`[data-index="${magazineData.currentPage - 1}"]`);
+
+        currentPageEl.style.opacity = '0';
+        prevPageEl.style.opacity = '1';
+
+        magazineData.currentPage--;
+        updateIndicator();
+        updateButtons();
+    }
+}
+
+function switchIssue(issueNum) {
+    // 检查是否有权限查看该期
+    if (!MemberSystem.canViewIssue(issueNum)) {
+        showMemberUpgradeModal(issueNum);
+        return;
+    }
+
+    magazineData.currentIssue = issueNum;
+    magazineData.currentPage = 0;
+
+    document.querySelectorAll('.issue-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (parseInt(btn.dataset.issue) === issueNum) btn.classList.add('active');
+    });
+
+    renderBook();
+    updateIndicator();
+    updateButtons();
+}
+
+function updateIndicator() {
+    const pages = magazineData.getPages(magazineData.currentIssue);
+    const current = pages[magazineData.currentPage];
+    let text = '';
+
+    if (current.type === 'cover') {
+        text = '封面';
+    } else if (current.type === 'backcover') {
+        text = '封底';
+    } else {
+        text = `${current.left.name} / ${current.right.name}`;
+    }
+
+    document.getElementById('pageIndicator').textContent = text;
+}
+
+// ==================== 会员升级弹窗 ====================
+function showMemberUpgradeModal(issueNum) {
+    const tier = MemberSystem.getCurrentTier();
+    const requiredTier = MemberSystem.getRequiredTier(issueNum);
+    
+    // 创建弹窗
+    let modal = document.getElementById('memberUpgradeModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'memberUpgradeModal';
+        modal.className = 'member-upgrade-modal';
+        document.body.appendChild(modal);
+    }
+    
+    const tierName = requiredTier ? requiredTier.name : '月卡';
+    
+    modal.innerHTML = `
+        <div class="member-upgrade-content">
+            <button class="member-upgrade-close" onclick="closeMemberUpgradeModal()">×</button>
+            <div class="member-upgrade-icon">🔒</div>
+            <h3 class="member-upgrade-title">需要升级会员</h3>
+            <p class="member-upgrade-text">
+                您当前是 <strong style="color: #FF0066;">${tier.name}</strong><br>
+                查看 #${issueNum} 需要 <strong style="color: #FFD700;">${tierName}</strong> 或更高级别
+            </p>
+            <div class="member-upgrade-current">
+                <div class="member-upgrade-current-title">当前权限</div>
+                <div class="member-upgrade-current-text">
+                    ${tier.name === '游客' ? '只能浏览 #1、#2 封面' : 
+                      tier.name === '体验卡' ? '可浏览 #1、#2 完整内容' :
+                      tier.name === '月卡' ? '可浏览 #1-#4 完整内容' :
+                      tier.name === '季卡' ? '可浏览 #1-#6 完整内容' : 
+                      '可浏览所有杂志内容'}
+                </div>
+            </div>
+            <button class="member-upgrade-btn" onclick="location.href='#pricing'">升级会员</button>
+            <button class="member-upgrade-skip" onclick="closeMemberUpgradeModal()">暂不升级</button>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+}
+
+function closeMemberUpgradeModal() {
+    const modal = document.getElementById('memberUpgradeModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// ==================== LIVE TV 弹窗 ====================
+function showLiveTVModal() {
+    let modal = document.getElementById('liveTvModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'liveTvModal';
+        modal.className = 'livetv-modal';
+        document.body.appendChild(modal);
+    }
+    
+    modal.innerHTML = `
+        <div class="livetv-modal-content">
+            <button class="livetv-modal-close" onclick="closeLiveTVModal()">×</button>
+            <div class="livetv-modal-icon">📺</div>
+            <h3 class="livetv-modal-title">LIVE TV</h3>
+            <p class="livetv-modal-text">
+                24小時搖滾音樂直播 · 現場演出 · 獨家訪談 · 經典回放<br><br>
+                <strong style="color: #FF0066;">即將上線，敬請期待</strong>
+            </p>
+            <ul class="livetv-modal-features">
+                <li>🎸 24小时不间断摇滚音乐直播</li>
+                <li>🎤 独家乐队访谈节目</li>
+                <li>🎵 经典演出现场回放</li>
+                <li>⭐ 会员专享高清画质</li>
+            </ul>
+            <button class="livetv-modal-btn" onclick="closeLiveTVModal()">我知道了</button>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+}
+
+function closeLiveTVModal() {
+    const modal = document.getElementById('liveTvModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+// ==================== 导航功能 ====================
+function toggleMobileMenu() {
+    document.getElementById('navLinks').classList.toggle('active');
+}
+
+// ==================== 登录弹窗功能 ====================
+function openLoginModal() {
+    document.getElementById('loginModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ==================== 用户侧边栏功能 ====================
+function openUserSidebar() {
+    const sidebar = document.getElementById('userSidebar');
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+
+    if (isLoggedIn) {
+        document.getElementById('sidebarNotLoggedIn').style.display = 'none';
+        document.getElementById('sidebarLoggedIn').style.display = 'block';
+        loadUserData();
+    } else {
+        document.getElementById('sidebarNotLoggedIn').style.display = 'block';
+        document.getElementById('sidebarLoggedIn').style.display = 'none';
+    }
+
+    sidebar.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeUserSidebar() {
+    const sidebar = document.getElementById('userSidebar');
+    sidebar.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function loadUserData() {
+    const nickname = localStorage.getItem('userNickname') || '摇滚用户';
+    const avatar = localStorage.getItem('userAvatar') || '';
+    const phone = localStorage.getItem('userPhone') || '';
+    const email = localStorage.getItem('userEmail') || '';
+
+    document.getElementById('sidebarNickname').textContent = nickname;
+
+    if (avatar) {
+        document.getElementById('sidebarAvatar').src = avatar;
+    } else {
+        document.getElementById('sidebarAvatar').src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23FF0066"/><text x="50" y="65" font-size="40" fill="white" text-anchor="middle">🎸</text></svg>';
+    }
+
+    // 更新会员徽章
+    const tier = MemberSystem.getCurrentTier();
+    document.getElementById('sidebarMemberBadge').textContent = tier.name;
+}
+
+// ==================== 邀请功能 ====================
+function scrollToTopAndInvite() {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    // 显示邀请提示
+    alert('🎁 邀请好友赚现金\n\n复制专属邀请链接分享给好友，好友付费后你得30%现金返利！');
+}
+
+// ==================== 事件绑定 ====================
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化杂志
+    initMagazine();
+    
+    // 绑定导航事件
+    document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+    document.getElementById('userMenuBtn').addEventListener('click', function() {
+        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+        if (isLoggedIn) {
+            openUserSidebar();
+        } else {
+            openLoginModal();
+        }
+    });
+    
+    // 绑定LIVE TV事件
+    document.getElementById('liveTvLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        showLiveTVModal();
+    });
+    
+    // 绑定翻页按钮事件
+    document.getElementById('prevBtn').addEventListener('click', prevPage);
+    document.getElementById('nextBtn').addEventListener('click', nextPage);
+    
+    // 键盘导航
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevPage();
+        if (e.key === 'ArrowRight') nextPage();
+        if (e.key === 'Escape') {
+            closeLoginModal();
+            closeUserSidebar();
+            closeLiveTVModal();
+            closeMemberUpgradeModal();
+        }
+    });
+    
+    // 点击空白处关闭导航
+    document.addEventListener('click', function(e) {
+        const navLinks = document.getElementById('navLinks');
+        const menuBtn = document.getElementById('mobileMenuBtn');
+
+        if (navLinks.classList.contains('active')) {
+            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        }
+    });
+    
+    // 更新登录UI
+    updateLoginUI();
+});
+
+// ==================== 登录相关功能 ====================
+function updateLoginUI() {
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    const nickname = localStorage.getItem('userNickname');
+    const loginBtn = document.getElementById('userMenuBtn');
+
+    if (isLoggedIn && loginBtn) {
+        loginBtn.textContent = nickname || '我的账号';
+    } else if (loginBtn) {
+        loginBtn.textContent = 'LOGIN';
+    }
+}
+
+function handleUserMenuClick() {
+    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+    if (isLoggedIn) {
+        openUserSidebar();
+    } else {
+        openLoginModal();
+    }
+}
+
+function openLoginModalFromSidebar() {
+    closeUserSidebar();
+    setTimeout(() => {
+        openLoginModal();
+    }, 300);
+}
+
+function logout() {
+    if (confirm('确定要退出登录吗？')) {
+        localStorage.removeItem('userLoggedIn');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userNickname');
+        localStorage.removeItem('userAvatar');
+        localStorage.removeItem('userPhone');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userAccountType');
+        localStorage.removeItem('memberType');
+        localStorage.removeItem('cr_member');
+
+        updateLoginUI();
+        closeUserSidebar();
+
+        alert('已安全退出登录');
+    }
+}
+
+// ==================== 社交登录功能 ====================
+function loginWithWechat() {
+    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+
+    if (!isWechat) {
+        showWechatGuide();
+        return;
+    }
+
+    const appId = 'wx019d141a63482cd8';
+    const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
+    const scope = 'snsapi_base';
+    const state = Math.random().toString(36).substring(2, 15);
+
+    sessionStorage.setItem('wechat_state', state);
+
+    const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+    window.location.href = authUrl;
+}
+
+function showWechatGuide() {
+    alert('请在微信APP内使用扫一扫访问本站，或使用其他登录方式');
+}
+
+function loginWithGoogle() {
+    const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
+    const redirectUri = encodeURIComponent('https://chineserocks.vercel.app');
+    const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+    const state = Math.random().toString(36).substring(2);
+
+    sessionStorage.setItem('google_state', state);
+
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
+}
+
+function loginWithFacebook() {
+    FB.login(function(response) {
+        if (response.authResponse) {
+            FB.api('/me', {fields: 'name,email,picture'}, function(userInfo) {
+                completeLogin({
+                    type: 'facebook',
+                    id: userInfo.id,
+                    name: userInfo.name || 'Facebook用户',
+                    email: userInfo.email || '',
+                    avatar: userInfo.picture?.data?.url || ''
+                });
+            });
+        } else {
+            alert('Facebook登录被取消');
+        }
+    }, {scope: 'public_profile,email'});
+}
+
+function completeLogin(loginData) {
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userId', loginData.id);
+    localStorage.setItem('userNickname', loginData.name);
+    localStorage.setItem('userAccountType', loginData.type);
+    localStorage.setItem('userAvatar', loginData.avatar || '');
+    
+    // 默认设置为体验卡会员
+    if (!localStorage.getItem('memberType')) {
+        localStorage.setItem('memberType', 'trial');
+    }
+
+    if (loginData.email) {
+        localStorage.setItem('userEmail', loginData.email);
+    }
+
+    updateLoginUI();
+    closeLoginModal();
+    
+    // 重新渲染杂志以应用会员权限
+    renderBook();
+    updateButtons();
+}
+
+// ==================== 手机/邮箱登录 ====================
+function switchLoginTab(tab) {
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (tab === 'phone') {
+        document.getElementById('phoneFormModal').style.display = 'block';
+        document.getElementById('emailFormModal').style.display = 'none';
+    } else {
+        document.getElementById('phoneFormModal').style.display = 'none';
+        document.getElementById('emailFormModal').style.display = 'block';
+    }
+}
+
+let countdownModal = 0;
+function sendCodeModal() {
+    if (countdownModal > 0) return;
+
+    const phone = document.getElementById('phoneInputModal').value;
+    if (!phone || phone.length !== 11) {
+        showErrorModal('请输入正确的11位手机号');
+        return;
+    }
+
+    const btn = document.getElementById('verifyBtnModal');
+    countdownModal = 60;
+    btn.disabled = true;
+    btn.textContent = countdownModal + 's';
+
+    const timer = setInterval(() => {
+        countdownModal--;
+        if (countdownModal <= 0) {
+            clearInterval(timer);
+            btn.disabled = false;
+            btn.textContent = '获取验证码';
+        } else {
+            btn.textContent = countdownModal + 's';
+        }
+    }, 1000);
+
+    alert('验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
+}
+
+function loginWithPhoneModal(e) {
+    e.preventDefault();
+    const phone = document.getElementById('phoneInputModal').value;
+    const code = document.getElementById('codeInputModal').value;
+
+    if (!phone || !code) {
+        showErrorModal('请填写手机号和验证码');
+        return false;
+    }
+
+    if (code === '123456') {
+        completeLogin({
+            type: 'phone',
+            id: 'phone_' + phone,
+            name: '手机用户',
+            email: '',
+            avatar: ''
+        });
+        localStorage.setItem('userPhone', phone);
+        alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
+    } else {
+        showErrorModal('验证码错误，演示模式请输入 123456');
+    }
+    return false;
+}
+
+function loginWithEmailModal(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailInputModal').value;
+    const password = document.getElementById('passwordInputModal').value;
+
+    if (!email || !password) {
+        showErrorModal('请填写邮箱和密码');
+        return false;
+    }
+
+    completeLogin({
+        type: 'email',
+        id: 'email_' + email,
+        name: email.split('@')[0],
+        email: email,
+        avatar: ''
+    });
+    localStorage.setItem('userEmail', email);
+    alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
+    return false;
+}
+
+function showErrorModal(msg) {
+    const errorEl = document.getElementById('errorMsg');
+    errorEl.textContent = msg;
+    errorEl.classList.add('show');
+    setTimeout(() => errorEl.classList.remove('show'), 3000);
+}
+
+function switchToRegister() {
+    document.getElementById('phoneFormModal').style.display = 'none';
+    document.getElementById('emailFormModal').style.display = 'none';
+    document.getElementById('registerFormModal').style.display = 'block';
+    document.querySelector('.login-tabs').style.display = 'none';
+    document.querySelector('.divider').style.display = 'none';
+    document.querySelector('.social-login').style.display = 'none';
+    document.querySelector('.login-footer').innerHTML = '<p id="backToLogin" style="cursor:pointer;color:#FF0066;" onclick="switchToLogin()">← 返回登录</p>';
+    document.querySelector('.login-subtitle').textContent = '创建你的摇滚身份';
+}
+
+function switchToLogin() {
+    document.getElementById('phoneFormModal').style.display = 'block';
+    document.getElementById('emailFormModal').style.display = 'none';
+    document.getElementById('registerFormModal').style.display = 'none';
+    document.querySelector('.login-tabs').style.display = 'flex';
+    document.querySelector('.divider').style.display = 'flex';
+    document.querySelector('.social-login').style.display = 'grid';
+    document.querySelector('.login-footer').innerHTML = '<a href="#" onclick="showForgotPassword();return false;">忘记密码？</a><p>还没有账号？<a href="#" onclick="switchToRegister();return false;">立即注册</a></p>';
+    document.querySelector('.login-subtitle').textContent = '登录以解锁完整摇滚体验';
+    document.querySelectorAll('.login-tab')[0].classList.add('active');
+    document.querySelectorAll('.login-tab')[1].classList.remove('active');
+}
+
+function showForgotPassword() {
+    alert('密码重置功能\n请输入注册邮箱，我们将发送重置链接');
+}
+
+function showMyVotes() {
+    alert('我的投票功能即将上线');
+}
+
+function showMyReads() {
+    alert('阅读历史功能即将上线');
+}
+
+function showMyFavs() {
+    alert('我的收藏功能即将上线');
+}
+
+function showAccountSettings() {
+    alert('账号设置功能即将上线');
+}
+
+function showSyncStatus() {
+    alert('同步状态：已同步');
+}
+
+function showInvite() {
+    alert('🎁 邀请好友赚现金\n\n复制专属邀请链接分享给好友，好友付费后你得30%现金返利！');
+}
+
+function bindPhone() {
+    alert('绑定手机功能即将上线');
+}
+
+function bindEmail() {
+    alert('绑定邮箱功能即将上线');
+}
+
+function saveSettings() {
+    alert('设置已保存');
+}
+</script>
+
+
+    <!-- 免费额度提示 -->
+    <div class="free-quota-bar">
+        <div class="free-quota-text">
+            ★ 今日會員專享阅读额度:仅剩<strong id="remainingReads">3</strong>篇(升級會員暢讀無限）
+        </div>
+        <button class="free-quota-btn" onclick="location.href='#pricing'">升级月卡会员 ￥66/月</button>
+    </div>
+
+    <!-- LIVE TV -->
+    <section id="livetv" class="livetv-section">
+        <div class="livetv-badge">COMING SOON</div>
+        <h2 class="livetv-title">LIVE TV</h2>
+        <p class="livetv-subtitle">24小時搖滾音樂直播 · 現場演出 · 獨家訪談 · 經典回放</p>
+        <p style="color: #a0a0a0; font-size: 0.9rem;">即將上線，敬請期待</p>
+    </section>
+
+    <!-- 社交媒体 -->
+    <div class="social-section">
+        <p class="social-title">Follow Us 關注我們</p>
+        <div class="social-links">
+            <a href="https://instagram.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                <span>Instagram</span>
+            </a>
+            <a href="https://facebook.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385h-3.047v-3.47h3.047v-2.642c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953h-1.513c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385c5.737-.9 10.126-5.864 10.126-11.854z"/>
+                </svg>
+                <span>Facebook</span>
+            </a>
+            <a href="https://x.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                <span>X / Twitter</span>
+            </a>
+            <a href="https://weibo.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.194.573zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.401-.649.386-1.02.425-1.899.003-2.525-.789-1.168-2.947-1.108-5.388-.031 0 0-.772.338-.575-.274.381-1.204.324-2.212-.27-2.796-1.346-1.327-4.928.047-8.001 3.067C1.189 10.875 0 13.021 0 14.89c0 3.579 4.591 5.758 9.085 5.758 5.892 0 9.813-3.423 9.813-6.143 0-1.643-1.385-2.573-2.839-2.856z"/>
+                </svg>
+                <span>微博 Weibo</span>
+            </a>
+            <a href="https://weixin.qq.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01-.023-.156.49.49 0 01.201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 110 1.936.968.968 0 010-1.936zm4.048 0a.968.968 0 110 1.936.968.968 0 010-1.936z"/>
+                </svg>
+                <span>微信 WeChat</span>
+            </a>
+            <a href="https://xiaohongshu.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm-1-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm5 7h-2v-3c0-.55-.45-1-1-1s-1 .45-1 1v3h-2v-6h2v.5c.5-.5 1.17-.83 1.9-.83 1.38 0 2.6 1.12 2.6 2.5v3.83z"/>
+                </svg>
+                <span>小紅書 RED</span>
+            </a>
+            <a href="https://bilibili.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 01-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 01.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/>
+                </svg>
+                <span>Bilibili</span>
+            </a>
+            <a href="https://douyin.com/chineserocks" target="_blank" class="social-link">
+                <svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                </svg>
+                <span>抖音 Douyin</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- 会员定价区域 -->
+    <section class="pricing-section" id="pricing">
+        <div class="pricing-container">
+            <div class="pricing-header">
+                <h2>選擇你的搖滾身份</h2>
+                <p>加入ChineseRocks會員，解鎖完整搖滾體驗</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- 体验卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">體驗卡</div>
+                    <div class="pricing-price">免費<span>/3天</span></div>
+                    <div class="pricing-daily">限時體驗</div>
+                    <ul class="pricing-features">
+                        <li>3天體驗會員權益</li>
+                        <li>可浏览 #1、#2 完整内容</li>
+                        <li>投票權重 ×0.5</li>
+                        <li>每日3次新聞閱讀</li>
+                        <li>480P LIVE TV</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="alert('關注公眾號領取體驗卡')">免費領取體驗卡</button>
+                </div>
+
+                <!-- 周卡 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">周卡</div>
+                    <div class="pricing-price">¥19.9<span>/週</span></div>
+                    <div class="pricing-daily">¥2.84/天</div>
+                    <ul class="pricing-features">
+                        <li>7天完整會員權益</li>
+                        <li>可浏览 #1-#3 完整内容</li>
+                        <li>投票權重 ×1.0</li>
+                        <li>每天7次新聞閱讀</li>
+                        <li>720P LIVE TV</li>
+                        <li>演出優先購票</li>
+                        <li>獨家雜誌內容預覽</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('weekly'); alert('已升级周卡会员！'); updateLoginUI();">升級周卡會員</button>
+                </div>
+
+                <!-- 月卡 - 主推 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最熱門</div>
+                    <div class="pricing-name">月卡</div>
+                    <div class="pricing-price">¥66<span>/月</span></div>
+                    <div class="pricing-daily">¥2.20/天 · 省¥13</div>
+                    <ul class="pricing-features">
+                        <li>30天完整會員權益</li>
+                        <li>可浏览 #1-#4 完整内容</li>
+                        <li>投票權重 ×2.0</li>
+                        <li>每天30次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及95折優惠</li>
+                        <li>獨家雜誌內容</li>
+                        <li>廣告彈窗優化</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('monthly'); alert('已升级月卡会员！'); updateLoginUI();">升級月卡會員</button>
+                </div>
+
+                <!-- 季卡 - 新增 -->
+                <div class="pricing-card">
+                    <div class="pricing-name">季卡</div>
+                    <div class="pricing-price">¥158<span>/季</span></div>
+                    <div class="pricing-daily">¥1.76/天 · 省¥40</div>
+                    <ul class="pricing-features">
+                        <li>90天完整會員權益</li>
+                        <li>可浏览 #1-#6 完整内容</li>
+                        <li>投票權重 ×3.0</li>
+                        <li>每天100次新聞閱讀</li>
+                        <li>1080P LIVE TV</li>
+                        <li>演出優先購票及85折優惠</li>
+                        <li>獨家雜誌內容+實體年刊預購資格</li>
+                        <li>無廣告體驗</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('quarterly'); alert('已升级季卡会员！'); updateLoginUI();">升級季卡會員</button>
+                </div>
+
+                <!-- 年卡 - 最大受益 -->
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">最佳價值</div>
+                    <div class="pricing-name">年卡</div>
+                    <div class="pricing-price">¥365<span>/年</span></div>
+                    <div class="pricing-daily">¥1.00/天 · 省¥427</div>
+                    <ul class="pricing-features">
+                        <li>365天完整會員權益</li>
+                        <li>可浏览所有杂志内容</li>
+                        <li>投票權重 ×5.0 [最高]</li>
+                        <li>無限新聞閱讀</li>
+                        <li>2K+ LIVE TV [獨享]</li>
+                        <li>演出提前48小時購票 [獨享]</li>
+                        <li>獨家雜誌內容+實體年刊禮品</li>
+                        <li>無廣告體驗</li>
+                    </ul>
+                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('yearly'); alert('已升级年卡会员！'); updateLoginUI();">升級年卡會員</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div style="margin-bottom: 1rem;">
+                    <div style="font-size: 1.5rem; font-weight: 900; color: var(--pink-primary); letter-spacing: 2px; text-transform: uppercase; line-height: 1;">CHINESE ROCKS</div>
+                    <div style="font-size: 0.6rem; color: var(--silver-text); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px;">NEWS ★ CHARTS ★ MAGAZINE <span style="color: var(--pink-primary);">搖滾萬歲</span></div>
+                </div>
+                <p class="footer-desc">中國搖滾官方榜單<br>連接樂隊與樂迷<br>始於2025</p>
+            </div>
+            <div>
+                <h4 class="footer-title">榜單 CHARTS</h4>
+                <ul class="footer-links">
+                    <li><a href="./charts.html">藝人榜 ARTISTS</a></li>
+                    <li><a href="./charts.html">歌曲榜 SONGS</a></li>
+                    <li><a href="./charts.html">專輯榜 ALBUMS</a></li>
+                    <li><a href="./charts.html">音樂節 FESTIVALS</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">內容 CONTENT</h4>
+                <ul class="footer-links">
+                    <li><a href="./news.html">新聞 NEWS</a></li>
+                    <li><a href="https://wxaurl.cn/HMcAK6R7fou">演出 SHOWS</a></li>
+                    <li><a href="./magazine.html">雜誌 MAGAZINE</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="footer-title">服務 SERVICE</h4>
+                <ul class="footer-links">
+                    <li><a href="member.html">會員服務 MEMBERSHIP</a></li>
+                    <li><a href="#">發佈演出 SUBMIT SHOW</a></li>
+                    <li><a href="#">廣告投放 ADVERTISING</a></li>
+                    <li><a href="#">聯繫我們 CONTACT</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ChineseRocks. All rights reserved. 搖滾萬歲 ★ Emanon Ent.</p>
+        </div>
+    </footer>
+
+    <!-- 邀请返利悬浮按钮 -->
+    <div class="invite-float">
+        <div class="invite-tooltip">
+            <strong>★ 邀請好友賺現金 ★</strong>
+            複製專屬邀請鏈接分享給好友：<br>
+            1. 好友通過鏈接註冊並首次付費<br>
+            2. 好友享首月85折優惠<br>
+            3. 你得30%現金返利（可提現或轉會員時長1.5倍增值）<br><br>
+            <em>示例：好友購買年卡¥365，你得¥109.5現金或季卡會員！</em>
+        </div>
+        <button class="invite-btn" id="inviteBtn">
+            <span class="btn-line1">邀請</span>
+            <span class="btn-line2">賺現金</span>
+        </button>
+    </div>
+
+    <script>
+        // 绑定邀请按钮事件
+        document.getElementById('inviteBtn').addEventListener('click', scrollToTopAndInvite);
+    </script>
+
+
+    <!-- 登录弹窗 -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-modal-overlay" onclick="closeLoginModal()"></div>
+        <div class="login-modal-content">
+            <button class="login-modal-close" onclick="closeLoginModal()">×</button>
+
+            <div class="login-modal-header">
+                <div class="login-logo-main">CHINESE ROCKS</div>
+                <div class="login-logo-sub">NEWS ★ CHARTS ★ MAGAZINE <span class="login-logo-highlight">搖滾萬歲</span></div>
+            </div>
+
+            <p class="login-subtitle">登录以解锁完整摇滚体验</p>
+
+            <div class="error-message" id="errorMsg"></div>
+
+            <div class="social-login">
+                <button class="social-btn wechat full-width" onclick="loginWithWechat()">
+                    <svg class="social-icon" viewBox="0 0 24 24" fill="white">
+                        <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zm-2.036 2.87a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936zm4.048 0a.968.968 0 1 1 0 1.936.968.968 0 0 1 0-1.936z"/>
+                    </svg>
+                    微信一键登录
+                </button>
+
+                <button class="social-btn google" onclick="loginWithGoogle()">
+                    <svg class="social-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Google
+                </button>
+
+                <button class="social-btn facebook" onclick="loginWithFacebook()">
+                    <svg class="social-icon" viewBox="0 0 24 24" fill="white">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Facebook
+                </button>
+            </div>
+
+            <div class="divider"><span>或使用邮箱/手机</span></div>
+
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchLoginTab('phone')">手机号</button>
+                <button class="login-tab" onclick="switchLoginTab('email')">邮箱</button>
+            </div>
+
+            <form id="phoneFormModal" onsubmit="return loginWithPhoneModal(event)">
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <div class="phone-input-group">
+                        <select class="country-code" id="countryCodeModal">
+                            <option value="+86">+86</option>
+                            <option value="+852">+852</option>
+                            <option value="+853">+853</option>
+                            <option value="+886">+886</option>
+                        </select>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="phoneInputModal" style="flex: 1;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="codeInputModal" maxlength="6">
+                        <button type="button" class="verify-btn" id="verifyBtnModal" onclick="sendCodeModal()">获取验证码</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn-submit">登录 / 注册</button>
+            </form>
+
+            <form id="emailFormModal" style="display: none;" onsubmit="return loginWithEmailModal(event)">
+                <div class="form-group">
+                    <label class="form-label">邮箱</label>
+                    <input type="email" class="form-input" placeholder="your@email.com" id="emailInputModal">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-input" placeholder="请输入密码" id="passwordInputModal">
+                </div>
+
+                <button type="submit" class="login-btn-submit">登录</button>
+            </form>
+
+            <form id="registerFormModal" style="display: none;" onsubmit="return registerUser(event)">
+                <div class="login-tabs" style="margin-bottom: 1.5rem;" id="regTabs">
+                    <button type="button" class="login-tab active" onclick="switchRegTab('phone')" id="regTabPhone">手机号注册</button>
+                    <button type="button" class="login-tab" onclick="switchRegTab('email')" id="regTabEmail">邮箱注册</button>
+                </div>
+
+                <div id="regPhoneSection">
+                    <div class="form-group">
+                        <label class="form-label">手机号</label>
+                        <div class="phone-input-group">
+                            <select class="country-code" id="regCountryCode">
+                                <option value="+86">+86</option>
+                                <option value="+852">+852</option>
+                                <option value="+853">+853</option>
+                                <option value="+886">+886</option>
+                            </select>
+                            <input type="tel" class="form-input" placeholder="请输入手机号" id="regPhone" style="flex: 1;">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">验证码</label>
+                        <div class="phone-input-group">
+                            <input type="text" class="form-input" placeholder="6位验证码" id="regCode" maxlength="6">
+                            <button type="button" class="verify-btn" id="regVerifyBtn" onclick="sendRegCode()">获取验证码</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="regEmailSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">邮箱</label>
+                        <input type="email" class="form-input" placeholder="your@email.com" id="regEmail">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">验证码</label>
+                        <div class="phone-input-group">
+                            <input type="text" class="form-input" placeholder="6位验证码" id="regEmailCode" maxlength="6">
+                            <button type="button" class="verify-btn" id="regEmailVerifyBtn" onclick="sendRegEmailCode()">获取验证码</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">设置密码</label>
+                    <input type="password" class="form-input" placeholder="6-20位密码" id="regPassword" minlength="6" maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">确认密码</label>
+                    <input type="password" class="form-input" placeholder="再次输入密码" id="regPassword2" minlength="6" maxlength="20">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">昵称</label>
+                    <input type="text" class="form-input" placeholder="你的摇滚昵称" id="regNickname" maxlength="20">
+                </div>
+
+                <button type="submit" class="login-btn-submit">立即注册</button>
+            </form>
+
+            <div class="login-footer">
+                <a href="#" onclick="showForgotPassword();return false;">忘记密码？</a>
+                <p>还没有账号？<a href="#" onclick="switchToRegister();return false;">立即注册</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 个人中心侧边栏 -->
+    <div id="userSidebar" class="user-sidebar">
+        <div class="user-sidebar-overlay" onclick="closeUserSidebar()"></div>
+        <div class="user-sidebar-content">
+            <button class="user-sidebar-close" onclick="closeUserSidebar()">×</button>
+
+            <!-- 未登录状态 -->
+            <div id="sidebarNotLoggedIn" class="sidebar-section">
+                <div class="sidebar-avatar-placeholder">🎸</div>
+                <h3 class="sidebar-title">加入 ChineseRocks</h3>
+                <p class="sidebar-subtitle">登录以解锁完整摇滚体验</p>
+                <button class="sidebar-btn-primary" onclick="openLoginModalFromSidebar()">立即登录</button>
+                <div class="sidebar-divider"><span>会员特权</span></div>
+                <ul class="sidebar-features">
+                    <li>✓ 无限新闻阅读</li>
+                    <li>✓ 高权重投票</li>
+                    <li>✓ 1080P LIVE TV</li>
+                    <li>✓ 演出优先购票</li>
+                </ul>
+            </div>
+
+            <!-- 已登录状态 -->
+            <div id="sidebarLoggedIn" class="sidebar-section" style="display: none;">
+                <div class="user-info-header">
+                    <img id="sidebarAvatar" src="" alt="头像" class="user-avatar">
+                    <div class="user-meta">
+                        <h3 id="sidebarNickname" class="user-name">摇滚用户</h3>
+                        <span id="sidebarMemberBadge" class="member-badge">体验会员</span>
+                    </div>
+                </div>
+
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <span id="statVotes" class="stat-num">0</span>
+                        <span class="stat-label">投票</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="statReads" class="stat-num">0</span>
+                        <span class="stat-label">阅读</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="statFavs" class="stat-num">0</span>
+                        <span class="stat-label">收藏</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-menu">
+                    <div class="menu-group">
+                        <div class="menu-title">我的活动</div>
+                        <a href="#" class="menu-item" onclick="showMyVotes(); return false;">
+                            <span class="menu-icon">🗳️</span>
+                            <span class="menu-text">我的投票</span>
+                            <span id="menuVoteCount" class="menu-badge">0</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showMyReads(); return false;">
+                            <span class="menu-icon">📰</span>
+                            <span class="menu-text">阅读历史</span>
+                            <span id="menuReadCount" class="menu-badge">0</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showMyFavs(); return false;">
+                            <span class="menu-icon">⭐</span>
+                            <span class="menu-text">我的收藏</span>
+                            <span id="menuFavCount" class="menu-badge">0</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-group">
+                        <div class="menu-title">会员服务</div>
+                        <a href="#pricing" class="menu-item" onclick="closeUserSidebar(); return true;">
+                            <span class="menu-icon">👑</span>
+                            <span class="menu-text">升级会员</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showInvite(); return false;">
+                            <span class="menu-icon">🎁</span>
+                            <span class="menu-text">邀请返利</span>
+                        </a>
+                    </div>
+
+                    <div class="menu-group">
+                        <div class="menu-title">账号设置</div>
+                        <a href="#" class="menu-item" onclick="showAccountSettings(); return false;">
+                            <span class="menu-icon">⚙️</span>
+                            <span class="menu-text">账号管理</span>
+                        </a>
+                        <a href="#" class="menu-item" onclick="showSyncStatus(); return false;">
+                            <span class="menu-icon">☁️</span>
+                            <span class="menu-text">同步状态</span>
+                            <span id="syncStatusBadge" class="sync-badge">已同步</span>
+                        </a>
+                    </div>
+                </div>
+
+                <button class="sidebar-btn-logout" onclick="logout()">退出登录</button>
+            </div>
+
+            <!-- 子页面：我的投票 -->
+            <div id="sidebarPageVotes" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">我的投票</h3>
+                <div id="votesList" class="activity-list">
+                    <div class="empty-state">暂无投票记录</div>
+                </div>
+            </div>
+
+            <!-- 子页面：阅读历史 -->
+            <div id="sidebarPageReads" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">阅读历史</h3>
+                <div id="readsList" class="activity-list">
+                    <div class="empty-state">暂无阅读记录</div>
+                </div>
+            </div>
+
+            <!-- 子页面：我的收藏 -->
+            <div id="sidebarPageFavs" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">我的收藏</h3>
+                <div id="favsList" class="activity-list">
+                    <div class="empty-state">暂无收藏</div>
+                </div>
+            </div>
+
+            <!-- 子页面：账号设置 -->
+            <div id="sidebarPageSettings" class="sidebar-page" style="display: none;">
+                <button class="sidebar-back" onclick="backToMainSidebar()">← 返回</button>
+                <h3 class="sidebar-page-title">账号管理</h3>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="settingNickname" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>绑定手机</label>
+                        <div class="setting-item">
+                            <span id="settingPhone">未绑定</span>
+                            <button class="setting-btn" onclick="bindPhone()">绑定</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>绑定邮箱</label>
+                        <div class="setting-item">
+                            <span id="settingEmail">未绑定</span>
+                            <button class="setting-btn" onclick="bindEmail()">绑定</button>
+                        </div>
+                    </div>
+                    <button class="sidebar-btn-primary" onclick="saveSettings()">保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册相关函数 -->
+    <script>
+    let currentRegTab = 'phone';
+    function switchRegTab(tab) {
+        currentRegTab = tab;
+        document.getElementById('regTabPhone').classList.toggle('active', tab === 'phone');
+        document.getElementById('regTabEmail').classList.toggle('active', tab === 'email');
+        document.getElementById('regPhoneSection').style.display = tab === 'phone' ? 'block' : 'none';
+        document.getElementById('regEmailSection').style.display = tab === 'email' ? 'block' : 'none';
+    }
+
+    let regCountdown = 0;
+    function sendRegCode() {
+        if (regCountdown > 0) return;
+
+        const phone = document.getElementById('regPhone').value;
+        if (!phone || phone.length !== 11) {
+            showErrorModal('请输入正确的11位手机号');
+            return;
+        }
+
+        const btn = document.getElementById('regVerifyBtn');
+        regCountdown = 60;
+        btn.disabled = true;
+        btn.textContent = regCountdown + 's';
+
+        const timer = setInterval(() => {
+            regCountdown--;
+            if (regCountdown <= 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.textContent = '获取验证码';
+            } else {
+                btn.textContent = regCountdown + 's';
+            }
+        }, 1000);
+
+        alert('注册验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
+    }
+
+    let regEmailCountdown = 0;
+    function sendRegEmailCode() {
+        if (regEmailCountdown > 0) return;
+
+        const email = document.getElementById('regEmail').value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            showErrorModal('请输入正确的邮箱地址');
+            return;
+        }
+
+        const btn = document.getElementById('regEmailVerifyBtn');
+        regEmailCountdown = 60;
+        btn.disabled = true;
+        btn.textContent = regEmailCountdown + 's';
+
+        const timer = setInterval(() => {
+            regEmailCountdown--;
+            if (regEmailCountdown <= 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.textContent = '获取验证码';
+            } else {
+                btn.textContent = regEmailCountdown + 's';
+            }
+        }, 1000);
+
+        alert('注册验证码已发送至 ' + email + '\n（演示模式：验证码是 123456）');
+    }
+
+    function registerUser(e) {
+        e.preventDefault();
+
+        const isPhoneReg = currentRegTab === 'phone';
+        let account, code;
+
+        if (isPhoneReg) {
+            account = document.getElementById('regPhone').value;
+            code = document.getElementById('regCode').value;
+            if (!account || account.length !== 11) {
+                showErrorModal('请输入正确的11位手机号');
+                return false;
+            }
+        } else {
+            account = document.getElementById('regEmail').value;
+            code = document.getElementById('regEmailCode').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!account || !emailRegex.test(account)) {
+                showErrorModal('请输入正确的邮箱地址');
+                return false;
+            }
+        }
+
+        const password = document.getElementById('regPassword').value;
+        const password2 = document.getElementById('regPassword2').value;
+        const nickname = document.getElementById('regNickname').value;
+
+        if (!code || code.length !== 6) {
+            showErrorModal('请输入6位验证码');
+            return false;
+        }
+
+        if (!password || password.length < 6) {
+            showErrorModal('密码至少6位');
+            return false;
+        }
+
+        if (password !== password2) {
+            showErrorModal('两次密码输入不一致');
+            return false;
+        }
+
+        if (!nickname) {
+            showErrorModal('请输入昵称');
+            return false;
+        }
+
+        if (code !== '123456') {
+            showErrorModal('验证码错误，演示模式请输入 123456');
+            return false;
+        }
+
+        const accountLabel = isPhoneReg ? '手机号' : '邮箱';
+        alert('🎸 注册成功！\n\n欢迎加入 ChineseRocks，' + nickname + '！\n\n' + accountLabel + ': ' + account + '\n\n您已获得：\n✓ 3天会员体验\n✓ 投票权重 ×1.0\n✓ 无限新闻阅读');
+        closeLoginModal();
+
+        localStorage.setItem('userLoggedIn', 'true');
+        localStorage.setItem('userNickname', nickname);
+        localStorage.setItem('userAccount', account);
+        localStorage.setItem('userAccountType', isPhoneReg ? 'phone' : 'email');
+        localStorage.setItem('memberType', 'trial');
+
+        completeLogin({
+            type: isPhoneReg ? 'phone' : 'email',
+            id: (isPhoneReg ? 'phone_' : 'email_') + account,
+            name: nickname,
+            email: isPhoneReg ? '' : account,
+            avatar: ''
+        });
+
+        return false;
+    }
+
+    function backToMainSidebar() {
+        document.querySelectorAll('.sidebar-page').forEach(page => {
+            page.style.display = 'none';
+        });
+
+        const isLoggedIn = localStorage.getItem('userLoggedIn');
+        if (isLoggedIn) {
+            document.getElementById('sidebarLoggedIn').style.display = 'block';
+        } else {
+            document.getElementById('sidebarNotLoggedIn').style.display = 'block';
+        }
+    }
+    </script>
+
+</body>
+</html>
