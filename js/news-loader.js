@@ -257,7 +257,7 @@ function formatDate(dateString) {
             var imgUrl = main.image || getDefaultImage();
             var defaultImg = getDefaultImage();
             var catTag = translateCategory(main.category);
-            heroMain.innerHTML = '<img src="' + imgUrl + '" alt="' + main.title + '" onerror="this.src='' + defaultImg + ''">' +
+            heroMain.innerHTML = '<img src="' + imgUrl + '" alt="' + main.title + '" onerror="this.src=\'\' + defaultImg + \'\'">' +
                 '<div class="hero-overlay"><span class="hero-tag">' + catTag + '</span>' +
                 '<h2 class="hero-title">' + main.title + '</h2>' +
                 '<p class="hero-excerpt">' + (main.excerpt || '') + '</p></div>';
@@ -272,7 +272,7 @@ function formatDate(dateString) {
                 var div = document.createElement('article');
                 div.className = 'side-card';
                 var dateStr = formatDate(n.date);
-                div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''">' +
+                div.innerHTML = '<img src="' + (n.image || getDefaultImage()) + '" onerror="this.src=\'\' + getDefaultImage() + \'\'">' +
                     '<div class="side-overlay"><span class="side-tag">' + translateCategory(n.category) + '</span>' +
                     '<h3 class="side-title">' + n.title + '</h3><span class="side-date">' + dateStr + '</span></div>';
                 div.onclick = (function(article) { return function() { openArticle(article); }; })(n);
@@ -307,7 +307,7 @@ function formatDate(dateString) {
             var isVisible = i < INITIAL_DISPLAY;
             div.className = 'news-card' + (n.isPremium ? ' premium' : '') + (isVisible ? ' visible' : ' hidden');
             var dateStr = formatDate(n.date);
-                div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + '" onerror="this.src='' + getDefaultImage() + ''"></div>' +
+                div.innerHTML = '<div class="news-thumb"><img src="' + (n.image || getDefaultImage()) + '" onerror="this.src=\'\' + getDefaultImage() + \'\'"></div>' +
                 '<div class="news-content"><span class="news-category">' + translateCategory(n.category) + '</span>' +
                 '<h3 class="news-title">' + n.title + '</h3>' +
                 '<p class="news-excerpt">' + (n.excerpt || '') + '</p><span class="news-date">' + dateStr + '</span></div>';
@@ -406,7 +406,7 @@ function formatDate(dateString) {
         container.innerHTML = picks.map(function(n) {
             var dateStr = formatDate(n.date);
             return '<div class="pick-item" onclick="openArticleById('' + n.id + '')">' +
-                '<img src="' + (n.image || getDefaultImage()) + '" class="pick-thumb" onerror="this.src='' + getDefaultImage() + ''">' +
+                '<img src="' + (n.image || getDefaultImage()) + '" class="pick-thumb" onerror="this.src=\'\' + getDefaultImage() + \'\'">' +
                 '<div class="pick-content"><h4>' + n.title + '</h4><span>' + translateCategory(n.category) + '</span><span class="pick-date">' + dateStr + '</span></div></div>';
         }).join('');
     }
