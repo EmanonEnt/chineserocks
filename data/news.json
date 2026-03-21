@@ -1,28 +1,135 @@
 {
-  "last_updated": "2026-03-21T05:09:30.415216",
-  "total_count": 12,
+  "last_updated": "2026-03-21T06:54:50.176734",
+  "total_count": 15,
   "data": {
     "all": [
       {
-        "id": "3289f945-80b7-81a0-81cc-f2bbda860a5c",
-        "title": "《青春電幻物語》25週年！Salyu攜「莉莉周」來台重溫電影歌曲",
-        "content": "睽違近 10 年，日本空靈療癒系歌手 Salyu 將於 5 月 17 日在台北 Legacy 舉辦「Salyu × Lily Chou-Chou Tour 2026 -星影交差-in Taipei」。 Salyu 表示，這 10 年間，無論閱讀全文 \"《青春電幻物語》25週年！Salyu攜「莉莉周」來台重溫電影歌曲\" The post 《青春電幻物語》25週年！Salyu攜「莉莉周」來台重溫電影歌曲 appeared first on Blow 吹音樂.",
-        "category": "新聞",
+        "id": "32a9f945-80b7-8148-9b2a-f2b2d0a8a0fc",
+        "title": "\"I started shooting up heroin when I was 13. I didn't want to be left out of all the fun.\" How a damaged teenage drug dealer channelled black days int",
+        "content": "我知道如何失敗，卻不知道如何獲勝。",
+        "category": "國際",
         "tags": [
           "新聞",
-          "Blow吹音樂",
+          "Louder Sound",
           "PUNK & HARDCORE",
-          "樂評"
+          "國際"
         ],
-        "cover_image": "https://blow.streetvoice.com/wp-content/uploads/2026/03/01-23.jpg",
-        "source_url": "https://blow.streetvoice.com/86687/",
-        "published_date": "2026-03-19",
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/oiqQHXunpGdRz5VuEHUQHh-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/how-art-alexakis-channelled-black-days-into-platinum-records-with-everclear",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8182-b9a6-d9ce04c037a9",
+        "title": "\"If you ask me what it's like to be a woman in rock, I'll scream.\" Slipknot, snow fights and sexism: the summer that changed everything for Italy's bi",
+        "content": "繼2002年的《Comalies》之後，Lacuna Coil 正式讓義大利金屬樂在世界樂壇上佔有了一席之地。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "PUNK & HARDCORE",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/HFki8HRgxZipSJ5etwdzMN-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/music/albums/lacuna-coil-story-behind-karmacode-2006-interview",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8119-a14d-d467136fd907",
+        "title": "AC/DC Guitarist Stevie Young Hospitalized in Buenos Aires",
+        "content": "這位吉他手目前正「接受全方位的檢查」。 AC/DC 樂團吉他手 Stevie Young 在布宜諾斯艾利斯入院治療 —— Spencer Kaufman",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Consequence of Sound",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://consequence.net/wp-content/uploads/2026/03/Stevie-Young.jpg?quality=80",
+        "source_url": "https://consequence.net/2026/03/ac-dc-stevie-young-hospitalized-buenos-aires/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:25:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8176-b477-e22b49ebd32f",
+        "title": "CY Fest Canceled After 20 Bands Drop Off",
+        "content": "那場不可避免的取消終於發生了。洛杉磯龐克/金屬/硬蕊音樂節 CY Fest 現已正式宣告停辦，此前至少有20支樂團因主辦單位涉嫌性行為不端而退出了演出陣容。文章《因20支樂團退出，CY Fest 宣告取消》首發於 Stereogum",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Stereogum",
+          "PUNK & HARDCORE",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://lede-admin.stereogum.com/wp-content/uploads/sites/64/2026/03/CY-Fest.jpeg?w=564",
+        "source_url": "https://stereogum.com/2493105/cy-fest-canceled-after-20-bands-drop-off/news/",
+        "published_date": "2026-03-20",
         "is_premium": false,
         "featured": false,
         "homeFeatured": true,
         "displayOrder": 1,
-        "created_time": "2026-03-19T08:43:00.000Z",
-        "last_edited_time": "2026-03-19T09:07:00.000Z"
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81eb-8cd8-f0a252e62a6e",
+        "title": "The 12 best new metal songs you need to hear this week",
+        "content": "Alissa White-Gluz 分享她的新樂隊，Neurosis 震撼回歸，Ice Nine Kills 變身 Steel Panther——這就是《Metal Hammer》本週精選曲目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/uZ2g3YosgJSy5a6VaHJoJ5-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/live-performances/best-new-metal-songs-ice-nine-kills-blue-medusa-neurosis",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 3,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:28:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-812d-bdd2-d2acd84c456b",
+        "title": "\"It's probably the heaviest thing I've written in terms of lyrics.\" Ex-Arch Enemy singer Alissa White-Gluz’s new band Blue Medusa release debut single",
+        "content": "這位死亡金屬主唱開啟了全新的篇章，並透露這首厚重的新歌，竟是她新樂團目前正在創作的作品中「最輕盈」的一首。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/cmAq39mDtGcn6xxfQA6ftF-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/news/alissa-white-gluz-arch0enemy-blue-medusa-new-single-checkmate-2026",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:28:00.000Z"
       },
       {
         "id": "3269f945-80b7-80b4-8757-c6e414aeac17",
@@ -89,49 +196,6 @@
         "last_edited_time": "2026-03-19T08:45:00.000Z"
       },
       {
-        "id": "3269f945-80b7-819a-83df-e8db22204207",
-        "title": "Cillian Murphy shares his “ultimate ‘Peaky Blinders’ setlist” – featuring Thom Yorke, David Bowie, Sinéad O’Connor and more",
-        "content": "基里安墨菲分享了他心目中的「終極《浴血黑幫》歌單」——其中包括湯姆約克、大衛鮑伊、希妮德奧康納等眾多明星的歌曲。",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "NME",
-          "國際",
-          "HEAVY & METAL"
-        ],
-        "cover_image": "https://www.nme.com/wp-content/uploads/2025/10/cillian-murphy-in-Peaky-Blinders.jpg",
-        "source_url": "https://www.nme.com/news/film/cillian-murphy-shares-his-ultimate-peaky-blinders-setlist-featuring-thom-yorke-david-bowie-sinead-oconnor-and-more-3935012?utm_source=rss&utm_medium=rss&utm_campaign=cillian-murphy-shares-his-ultimate-peaky-blinders-setlist-featuring-thom-yorke-david-bowie-sinead-oconnor-and-more",
-        "published_date": "2026-03-17",
-        "is_premium": true,
-        "featured": false,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-17T11:44:00.000Z",
-        "last_edited_time": "2026-03-19T08:45:00.000Z"
-      },
-      {
-        "id": "3269f945-80b7-81e5-953f-ded6452bdd20",
-        "title": "The Wildhearts’ icon Ginger shares cancer diagnosis: “Strength and positivity will prevail and the show will go on”",
-        "content": "Wildhearts樂隊的標誌性人物Ginger公開了她的癌症診斷結果：“堅強和積極的態度終將戰勝一切，演出也將繼續。”",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "NME",
-          "國際",
-          "INDIE & ALTERNATIVE",
-          "編輯精選"
-        ],
-        "cover_image": "https://www.nme.com/wp-content/uploads/2026/03/GingerTheWildhearts-statement-news.jpg",
-        "source_url": "https://www.nme.com/news/music/the-wildhearts-icon-ginger-shares-cancer-diagnosis-strength-and-positivity-will-prevail-and-the-show-will-go-on-3935010?utm_source=rss&utm_medium=rss&utm_campaign=the-wildhearts-icon-ginger-shares-cancer-diagnosis-strength-and-positivity-will-prevail-and-the-show-will-go-on",
-        "published_date": "2026-03-17",
-        "is_premium": false,
-        "featured": true,
-        "homeFeatured": true,
-        "displayOrder": 3,
-        "created_time": "2026-03-17T11:44:00.000Z",
-        "last_edited_time": "2026-03-19T09:15:00.000Z"
-      },
-      {
         "id": "3269f945-80b7-809e-ad56-d575d8188ce9",
         "title": "年后是否都没卡在那了？？",
         "content": "你还是反对阿萨的？",
@@ -142,7 +206,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665ITJRF3A%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T050930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQD94f1J6fEtx3TNw107X0tugiHl0pUXyHI%2FRaM11%2Fk9MAIhAM%2FnUC87ITfzDPJtgdv5hAtt1CMdARSH%2BuH4KLFSWD57Kv8DCEYQABoMNjM3NDIzMTgzODA1IgxyiZvGhguZaQy9RPIq3AM3N0JUNFJzm3tXQ9hS1m4bJdY%2BD8QL4u6MYGpgvN7T54%2B0cyXfYuXRHTQUWybteKQ8ksxcEGpoKRTCrdTbaJcJm7DnxKq6bJWgVhSiB1gBjYylTnyZ%2FiBoP9lSB5Jf%2FuMRdHSsb7P5m1A5QRabN4NNWxHXSjTuIfBY7qIIjfcN638HQxAVF0p5zxxdU%2BHTTEcUzJ1Anz%2B4EoQjgjDIMSyDeE%2FanRsJzH851BtWPmsOkJHVud0f9qIBqbE%2BstJIL6t4uEcBJbiV%2Bhz1S6HUw6g3wUr7hyPBsDraqT1NaAVpub7RZjps%2F1bP8T7rKcaNWJ%2BJwmELft8lvlCl2OQ5rUNPuS2rRSH22mp4sy0ew4XBgKpTNxaoGG1zhDm3rzHylXH%2FII6KiMI20g2pq0ASbkJ5j1LhKpja%2FSBC2J0cyy97zLgm5qRLZUf0AHRDPt8ZVT5cG48VTI5DecCzCS%2BO67TbUheLvD0BERNGAFFVJ0o1rpnoYYiGLMm4t1Q3ZghRjesemc9spbb3YUKgWTHgg4woG3TwKvLNxiqlPStnSHBoBNimxvUve9498f1c55hh9xJgMpuqoa%2Bhy94E4cP8GeZHlmxC0dmiwG9dt%2F6d4X21aArkJKPaky7%2B%2FUuc3jC4u%2FjNBjqkAd%2F77oo59ceFPsBJUA245ZRBGgbeoEEj9VxySR87Qg0Q7WBuNLJRq45wYBjbVjzty4YNiey7Zu6uP3EIBcqeaREAlKOgaYcE%2FpuIuIsfM9E2WGqMsul3%2FMzb6eNr94LozPvW2KiaknKf4tGOw1yzYlKhfYmjX9Byugn5fPKpdRGtF48PEfddUxlGf96qXEwHSmCB%2FF3DQwST0cziqPEhOhx692C7&X-Amz-Signature=59c3d91b989ddc53e18deb5580412239c515e072a3296ad25cfb16b121e185d6&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466XBTTAM23%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T065450Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQCJTv3rLMnpsq0V3142dGJnp8W44q5TiPPrdCDYYjF7awIgW%2F3TX4R7TYSVFMpsCwoXF%2BVQwQPeP1OL%2BrkQIqi%2FVUEq%2FwMIRxAAGgw2Mzc0MjMxODM4MDUiDEfMPEBbR93aOugujircAxDbMzsHWNBa%2FcFWMIIR5bBDl7i%2BNpwmr3pfjdMpH8d%2BAb8QXG11LHLBq96ObPktYZdf%2BeaZ2PND%2BPQS%2B2%2Fdf0fV4ETIIH2xPe1e1rHjKZ%2FMdZ20k6UwZ7cBsOIyDOMH%2F6tGJcXM6xEDW7wxUXEu%2Bi1SFYNpqOdcem7Ukc15%2B4RDaDafCbo%2F%2FDptHYo2AOgPsUhmvm9hXSBfyaC%2FV66ZxeF%2B9DGd7fKVYyuxc8HhUp22U8HcpL2CgtSVWLYh3E7VPrdWFWFuMjDlaJq%2BWDLwpWbuiGD0F70IQBCZHfn%2BjN%2Bnp8hAcbOVSeCYgUIEbB8Wr5gZvqI4xxTcbbiY6wkPRs1eBjFlJh85bL%2BL7cezhcw%2B4tm9UkUy14ezo7NFI91BDfr1nH1p7KP8aqaRJI%2BR%2BbFZKk0GIx35wSagJdwGRaC3ZG1sm1%2FfOHuAiCr1I5lJWUcafEyV4wLwcp34yWQB1BbjFM%2F%2BF%2Bd3cOnUikgs9ohQRQ5MqPRUPkNREvu%2FZ1vEXPhl9s2fnYH3wICjVIBKc%2BRpBeRFU%2FIvjyQd2%2Bdou4IdQ%2B9HCkeRAjXvzxGbsFgIE11Xc2cBssDf3WGrB7%2B6A%2FNNkw%2B84eNaGDf21IbAnsvCkyqE6CcGrzkrgtibML7m%2BM0GOqUBkDpSHdyClOn9Bur5PauVweGi9saY%2B4R11onSgXsOEDbATkkpHOqPqYXi780KROQX2VKmJYEMh4DUYGL0J4Pyj2w3efwj4RqePVpa0b9THTf7N6%2FuyMPM7KwVc50RywhstGe51Oqheml9APsR%2FWa%2BNzSxRIj0eAqoX60KGmxensdAz6UstHTm1weEQCcV3yocWIy3ARdL4r8H3o0ZakrAGrlcO15Z&X-Amz-Signature=95859ecf54332540f09cdb67d38353f22049c4f617f5c289b508249906275d37&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -209,7 +273,7 @@
           "編輯精選",
           "INDIE & ALTERNATIVE"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665ITJRF3A%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T050930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQD94f1J6fEtx3TNw107X0tugiHl0pUXyHI%2FRaM11%2Fk9MAIhAM%2FnUC87ITfzDPJtgdv5hAtt1CMdARSH%2BuH4KLFSWD57Kv8DCEYQABoMNjM3NDIzMTgzODA1IgxyiZvGhguZaQy9RPIq3AM3N0JUNFJzm3tXQ9hS1m4bJdY%2BD8QL4u6MYGpgvN7T54%2B0cyXfYuXRHTQUWybteKQ8ksxcEGpoKRTCrdTbaJcJm7DnxKq6bJWgVhSiB1gBjYylTnyZ%2FiBoP9lSB5Jf%2FuMRdHSsb7P5m1A5QRabN4NNWxHXSjTuIfBY7qIIjfcN638HQxAVF0p5zxxdU%2BHTTEcUzJ1Anz%2B4EoQjgjDIMSyDeE%2FanRsJzH851BtWPmsOkJHVud0f9qIBqbE%2BstJIL6t4uEcBJbiV%2Bhz1S6HUw6g3wUr7hyPBsDraqT1NaAVpub7RZjps%2F1bP8T7rKcaNWJ%2BJwmELft8lvlCl2OQ5rUNPuS2rRSH22mp4sy0ew4XBgKpTNxaoGG1zhDm3rzHylXH%2FII6KiMI20g2pq0ASbkJ5j1LhKpja%2FSBC2J0cyy97zLgm5qRLZUf0AHRDPt8ZVT5cG48VTI5DecCzCS%2BO67TbUheLvD0BERNGAFFVJ0o1rpnoYYiGLMm4t1Q3ZghRjesemc9spbb3YUKgWTHgg4woG3TwKvLNxiqlPStnSHBoBNimxvUve9498f1c55hh9xJgMpuqoa%2Bhy94E4cP8GeZHlmxC0dmiwG9dt%2F6d4X21aArkJKPaky7%2B%2FUuc3jC4u%2FjNBjqkAd%2F77oo59ceFPsBJUA245ZRBGgbeoEEj9VxySR87Qg0Q7WBuNLJRq45wYBjbVjzty4YNiey7Zu6uP3EIBcqeaREAlKOgaYcE%2FpuIuIsfM9E2WGqMsul3%2FMzb6eNr94LozPvW2KiaknKf4tGOw1yzYlKhfYmjX9Byugn5fPKpdRGtF48PEfddUxlGf96qXEwHSmCB%2FF3DQwST0cziqPEhOhx692C7&X-Amz-Signature=02925a26aeee202d6fb0ffbf503f8f3c9cbd6e60c887dafe9580a1c5dd440ebf&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466XBTTAM23%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T065450Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQCJTv3rLMnpsq0V3142dGJnp8W44q5TiPPrdCDYYjF7awIgW%2F3TX4R7TYSVFMpsCwoXF%2BVQwQPeP1OL%2BrkQIqi%2FVUEq%2FwMIRxAAGgw2Mzc0MjMxODM4MDUiDEfMPEBbR93aOugujircAxDbMzsHWNBa%2FcFWMIIR5bBDl7i%2BNpwmr3pfjdMpH8d%2BAb8QXG11LHLBq96ObPktYZdf%2BeaZ2PND%2BPQS%2B2%2Fdf0fV4ETIIH2xPe1e1rHjKZ%2FMdZ20k6UwZ7cBsOIyDOMH%2F6tGJcXM6xEDW7wxUXEu%2Bi1SFYNpqOdcem7Ukc15%2B4RDaDafCbo%2F%2FDptHYo2AOgPsUhmvm9hXSBfyaC%2FV66ZxeF%2B9DGd7fKVYyuxc8HhUp22U8HcpL2CgtSVWLYh3E7VPrdWFWFuMjDlaJq%2BWDLwpWbuiGD0F70IQBCZHfn%2BjN%2Bnp8hAcbOVSeCYgUIEbB8Wr5gZvqI4xxTcbbiY6wkPRs1eBjFlJh85bL%2BL7cezhcw%2B4tm9UkUy14ezo7NFI91BDfr1nH1p7KP8aqaRJI%2BR%2BbFZKk0GIx35wSagJdwGRaC3ZG1sm1%2FfOHuAiCr1I5lJWUcafEyV4wLwcp34yWQB1BbjFM%2F%2BF%2Bd3cOnUikgs9ohQRQ5MqPRUPkNREvu%2FZ1vEXPhl9s2fnYH3wICjVIBKc%2BRpBeRFU%2FIvjyQd2%2Bdou4IdQ%2B9HCkeRAjXvzxGbsFgIE11Xc2cBssDf3WGrB7%2B6A%2FNNkw%2B84eNaGDf21IbAnsvCkyqE6CcGrzkrgtibML7m%2BM0GOqUBkDpSHdyClOn9Bur5PauVweGi9saY%2B4R11onSgXsOEDbATkkpHOqPqYXi780KROQX2VKmJYEMh4DUYGL0J4Pyj2w3efwj4RqePVpa0b9THTf7N6%2FuyMPM7KwVc50RywhstGe51Oqheml9APsR%2FWa%2BNzSxRIj0eAqoX60KGmxensdAz6UstHTm1weEQCcV3yocWIy3ARdL4r8H3o0ZakrAGrlcO15Z&X-Amz-Signature=9a8fe93f4c9dc7b7d13b702930df7429b8fd1f0ecea1f85a74e6b98e5de028df&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "https://music.douban.com/review/17506038/",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -251,7 +315,7 @@
           "PUNK & HARDCORE",
           "樂評"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665ITJRF3A%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T050930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQD94f1J6fEtx3TNw107X0tugiHl0pUXyHI%2FRaM11%2Fk9MAIhAM%2FnUC87ITfzDPJtgdv5hAtt1CMdARSH%2BuH4KLFSWD57Kv8DCEYQABoMNjM3NDIzMTgzODA1IgxyiZvGhguZaQy9RPIq3AM3N0JUNFJzm3tXQ9hS1m4bJdY%2BD8QL4u6MYGpgvN7T54%2B0cyXfYuXRHTQUWybteKQ8ksxcEGpoKRTCrdTbaJcJm7DnxKq6bJWgVhSiB1gBjYylTnyZ%2FiBoP9lSB5Jf%2FuMRdHSsb7P5m1A5QRabN4NNWxHXSjTuIfBY7qIIjfcN638HQxAVF0p5zxxdU%2BHTTEcUzJ1Anz%2B4EoQjgjDIMSyDeE%2FanRsJzH851BtWPmsOkJHVud0f9qIBqbE%2BstJIL6t4uEcBJbiV%2Bhz1S6HUw6g3wUr7hyPBsDraqT1NaAVpub7RZjps%2F1bP8T7rKcaNWJ%2BJwmELft8lvlCl2OQ5rUNPuS2rRSH22mp4sy0ew4XBgKpTNxaoGG1zhDm3rzHylXH%2FII6KiMI20g2pq0ASbkJ5j1LhKpja%2FSBC2J0cyy97zLgm5qRLZUf0AHRDPt8ZVT5cG48VTI5DecCzCS%2BO67TbUheLvD0BERNGAFFVJ0o1rpnoYYiGLMm4t1Q3ZghRjesemc9spbb3YUKgWTHgg4woG3TwKvLNxiqlPStnSHBoBNimxvUve9498f1c55hh9xJgMpuqoa%2Bhy94E4cP8GeZHlmxC0dmiwG9dt%2F6d4X21aArkJKPaky7%2B%2FUuc3jC4u%2FjNBjqkAd%2F77oo59ceFPsBJUA245ZRBGgbeoEEj9VxySR87Qg0Q7WBuNLJRq45wYBjbVjzty4YNiey7Zu6uP3EIBcqeaREAlKOgaYcE%2FpuIuIsfM9E2WGqMsul3%2FMzb6eNr94LozPvW2KiaknKf4tGOw1yzYlKhfYmjX9Byugn5fPKpdRGtF48PEfddUxlGf96qXEwHSmCB%2FF3DQwST0cziqPEhOhx692C7&X-Amz-Signature=dc80baf1b9a23bb23ec09317c29d6c8ae6ee6d464a26adc8d7c43174816bf303&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466XBTTAM23%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T065450Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQCJTv3rLMnpsq0V3142dGJnp8W44q5TiPPrdCDYYjF7awIgW%2F3TX4R7TYSVFMpsCwoXF%2BVQwQPeP1OL%2BrkQIqi%2FVUEq%2FwMIRxAAGgw2Mzc0MjMxODM4MDUiDEfMPEBbR93aOugujircAxDbMzsHWNBa%2FcFWMIIR5bBDl7i%2BNpwmr3pfjdMpH8d%2BAb8QXG11LHLBq96ObPktYZdf%2BeaZ2PND%2BPQS%2B2%2Fdf0fV4ETIIH2xPe1e1rHjKZ%2FMdZ20k6UwZ7cBsOIyDOMH%2F6tGJcXM6xEDW7wxUXEu%2Bi1SFYNpqOdcem7Ukc15%2B4RDaDafCbo%2F%2FDptHYo2AOgPsUhmvm9hXSBfyaC%2FV66ZxeF%2B9DGd7fKVYyuxc8HhUp22U8HcpL2CgtSVWLYh3E7VPrdWFWFuMjDlaJq%2BWDLwpWbuiGD0F70IQBCZHfn%2BjN%2Bnp8hAcbOVSeCYgUIEbB8Wr5gZvqI4xxTcbbiY6wkPRs1eBjFlJh85bL%2BL7cezhcw%2B4tm9UkUy14ezo7NFI91BDfr1nH1p7KP8aqaRJI%2BR%2BbFZKk0GIx35wSagJdwGRaC3ZG1sm1%2FfOHuAiCr1I5lJWUcafEyV4wLwcp34yWQB1BbjFM%2F%2BF%2Bd3cOnUikgs9ohQRQ5MqPRUPkNREvu%2FZ1vEXPhl9s2fnYH3wICjVIBKc%2BRpBeRFU%2FIvjyQd2%2Bdou4IdQ%2B9HCkeRAjXvzxGbsFgIE11Xc2cBssDf3WGrB7%2B6A%2FNNkw%2B84eNaGDf21IbAnsvCkyqE6CcGrzkrgtibML7m%2BM0GOqUBkDpSHdyClOn9Bur5PauVweGi9saY%2B4R11onSgXsOEDbATkkpHOqPqYXi780KROQX2VKmJYEMh4DUYGL0J4Pyj2w3efwj4RqePVpa0b9THTf7N6%2FuyMPM7KwVc50RywhstGe51Oqheml9APsR%2FWa%2BNzSxRIj0eAqoX60KGmxensdAz6UstHTm1weEQCcV3yocWIy3ARdL4r8H3o0ZakrAGrlcO15Z&X-Amz-Signature=c5bb3f2e1dc229e2ee2e3d02edec0172bbba08dfc1a06c300a0d65be0adf039d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -264,25 +328,132 @@
     ],
     "latest": [
       {
-        "id": "3289f945-80b7-81a0-81cc-f2bbda860a5c",
-        "title": "《青春電幻物語》25週年！Salyu攜「莉莉周」來台重溫電影歌曲",
-        "content": "睽違近 10 年，日本空靈療癒系歌手 Salyu 將於 5 月 17 日在台北 Legacy 舉辦「Salyu × Lily Chou-Chou Tour 2026 -星影交差-in Taipei」。 Salyu 表示，這 10 年間，無論閱讀全文 \"《青春電幻物語》25週年！Salyu攜「莉莉周」來台重溫電影歌曲\" The post 《青春電幻物語》25週年！Salyu攜「莉莉周」來台重溫電影歌曲 appeared first on Blow 吹音樂.",
-        "category": "新聞",
+        "id": "32a9f945-80b7-8148-9b2a-f2b2d0a8a0fc",
+        "title": "\"I started shooting up heroin when I was 13. I didn't want to be left out of all the fun.\" How a damaged teenage drug dealer channelled black days int",
+        "content": "我知道如何失敗，卻不知道如何獲勝。",
+        "category": "國際",
         "tags": [
           "新聞",
-          "Blow吹音樂",
+          "Louder Sound",
           "PUNK & HARDCORE",
-          "樂評"
+          "國際"
         ],
-        "cover_image": "https://blow.streetvoice.com/wp-content/uploads/2026/03/01-23.jpg",
-        "source_url": "https://blow.streetvoice.com/86687/",
-        "published_date": "2026-03-19",
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/oiqQHXunpGdRz5VuEHUQHh-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/how-art-alexakis-channelled-black-days-into-platinum-records-with-everclear",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8182-b9a6-d9ce04c037a9",
+        "title": "\"If you ask me what it's like to be a woman in rock, I'll scream.\" Slipknot, snow fights and sexism: the summer that changed everything for Italy's bi",
+        "content": "繼2002年的《Comalies》之後，Lacuna Coil 正式讓義大利金屬樂在世界樂壇上佔有了一席之地。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "PUNK & HARDCORE",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/HFki8HRgxZipSJ5etwdzMN-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/music/albums/lacuna-coil-story-behind-karmacode-2006-interview",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8119-a14d-d467136fd907",
+        "title": "AC/DC Guitarist Stevie Young Hospitalized in Buenos Aires",
+        "content": "這位吉他手目前正「接受全方位的檢查」。 AC/DC 樂團吉他手 Stevie Young 在布宜諾斯艾利斯入院治療 —— Spencer Kaufman",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Consequence of Sound",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://consequence.net/wp-content/uploads/2026/03/Stevie-Young.jpg?quality=80",
+        "source_url": "https://consequence.net/2026/03/ac-dc-stevie-young-hospitalized-buenos-aires/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:25:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8176-b477-e22b49ebd32f",
+        "title": "CY Fest Canceled After 20 Bands Drop Off",
+        "content": "那場不可避免的取消終於發生了。洛杉磯龐克/金屬/硬蕊音樂節 CY Fest 現已正式宣告停辦，此前至少有20支樂團因主辦單位涉嫌性行為不端而退出了演出陣容。文章《因20支樂團退出，CY Fest 宣告取消》首發於 Stereogum",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Stereogum",
+          "PUNK & HARDCORE",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://lede-admin.stereogum.com/wp-content/uploads/sites/64/2026/03/CY-Fest.jpeg?w=564",
+        "source_url": "https://stereogum.com/2493105/cy-fest-canceled-after-20-bands-drop-off/news/",
+        "published_date": "2026-03-20",
         "is_premium": false,
         "featured": false,
         "homeFeatured": true,
         "displayOrder": 1,
-        "created_time": "2026-03-19T08:43:00.000Z",
-        "last_edited_time": "2026-03-19T09:07:00.000Z"
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81eb-8cd8-f0a252e62a6e",
+        "title": "The 12 best new metal songs you need to hear this week",
+        "content": "Alissa White-Gluz 分享她的新樂隊，Neurosis 震撼回歸，Ice Nine Kills 變身 Steel Panther——這就是《Metal Hammer》本週精選曲目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/uZ2g3YosgJSy5a6VaHJoJ5-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/live-performances/best-new-metal-songs-ice-nine-kills-blue-medusa-neurosis",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 3,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:28:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-812d-bdd2-d2acd84c456b",
+        "title": "\"It's probably the heaviest thing I've written in terms of lyrics.\" Ex-Arch Enemy singer Alissa White-Gluz’s new band Blue Medusa release debut single",
+        "content": "這位死亡金屬主唱開啟了全新的篇章，並透露這首厚重的新歌，竟是她新樂團目前正在創作的作品中「最輕盈」的一首。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/cmAq39mDtGcn6xxfQA6ftF-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/news/alissa-white-gluz-arch0enemy-blue-medusa-new-single-checkmate-2026",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:28:00.000Z"
       },
       {
         "id": "3269f945-80b7-80b4-8757-c6e414aeac17",
@@ -349,49 +520,6 @@
         "last_edited_time": "2026-03-19T08:45:00.000Z"
       },
       {
-        "id": "3269f945-80b7-819a-83df-e8db22204207",
-        "title": "Cillian Murphy shares his “ultimate ‘Peaky Blinders’ setlist” – featuring Thom Yorke, David Bowie, Sinéad O’Connor and more",
-        "content": "基里安墨菲分享了他心目中的「終極《浴血黑幫》歌單」——其中包括湯姆約克、大衛鮑伊、希妮德奧康納等眾多明星的歌曲。",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "NME",
-          "國際",
-          "HEAVY & METAL"
-        ],
-        "cover_image": "https://www.nme.com/wp-content/uploads/2025/10/cillian-murphy-in-Peaky-Blinders.jpg",
-        "source_url": "https://www.nme.com/news/film/cillian-murphy-shares-his-ultimate-peaky-blinders-setlist-featuring-thom-yorke-david-bowie-sinead-oconnor-and-more-3935012?utm_source=rss&utm_medium=rss&utm_campaign=cillian-murphy-shares-his-ultimate-peaky-blinders-setlist-featuring-thom-yorke-david-bowie-sinead-oconnor-and-more",
-        "published_date": "2026-03-17",
-        "is_premium": true,
-        "featured": false,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-17T11:44:00.000Z",
-        "last_edited_time": "2026-03-19T08:45:00.000Z"
-      },
-      {
-        "id": "3269f945-80b7-81e5-953f-ded6452bdd20",
-        "title": "The Wildhearts’ icon Ginger shares cancer diagnosis: “Strength and positivity will prevail and the show will go on”",
-        "content": "Wildhearts樂隊的標誌性人物Ginger公開了她的癌症診斷結果：“堅強和積極的態度終將戰勝一切，演出也將繼續。”",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "NME",
-          "國際",
-          "INDIE & ALTERNATIVE",
-          "編輯精選"
-        ],
-        "cover_image": "https://www.nme.com/wp-content/uploads/2026/03/GingerTheWildhearts-statement-news.jpg",
-        "source_url": "https://www.nme.com/news/music/the-wildhearts-icon-ginger-shares-cancer-diagnosis-strength-and-positivity-will-prevail-and-the-show-will-go-on-3935010?utm_source=rss&utm_medium=rss&utm_campaign=the-wildhearts-icon-ginger-shares-cancer-diagnosis-strength-and-positivity-will-prevail-and-the-show-will-go-on",
-        "published_date": "2026-03-17",
-        "is_premium": false,
-        "featured": true,
-        "homeFeatured": true,
-        "displayOrder": 3,
-        "created_time": "2026-03-17T11:44:00.000Z",
-        "last_edited_time": "2026-03-19T09:15:00.000Z"
-      },
-      {
         "id": "3269f945-80b7-809e-ad56-d575d8188ce9",
         "title": "年后是否都没卡在那了？？",
         "content": "你还是反对阿萨的？",
@@ -402,7 +530,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665ITJRF3A%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T050930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQD94f1J6fEtx3TNw107X0tugiHl0pUXyHI%2FRaM11%2Fk9MAIhAM%2FnUC87ITfzDPJtgdv5hAtt1CMdARSH%2BuH4KLFSWD57Kv8DCEYQABoMNjM3NDIzMTgzODA1IgxyiZvGhguZaQy9RPIq3AM3N0JUNFJzm3tXQ9hS1m4bJdY%2BD8QL4u6MYGpgvN7T54%2B0cyXfYuXRHTQUWybteKQ8ksxcEGpoKRTCrdTbaJcJm7DnxKq6bJWgVhSiB1gBjYylTnyZ%2FiBoP9lSB5Jf%2FuMRdHSsb7P5m1A5QRabN4NNWxHXSjTuIfBY7qIIjfcN638HQxAVF0p5zxxdU%2BHTTEcUzJ1Anz%2B4EoQjgjDIMSyDeE%2FanRsJzH851BtWPmsOkJHVud0f9qIBqbE%2BstJIL6t4uEcBJbiV%2Bhz1S6HUw6g3wUr7hyPBsDraqT1NaAVpub7RZjps%2F1bP8T7rKcaNWJ%2BJwmELft8lvlCl2OQ5rUNPuS2rRSH22mp4sy0ew4XBgKpTNxaoGG1zhDm3rzHylXH%2FII6KiMI20g2pq0ASbkJ5j1LhKpja%2FSBC2J0cyy97zLgm5qRLZUf0AHRDPt8ZVT5cG48VTI5DecCzCS%2BO67TbUheLvD0BERNGAFFVJ0o1rpnoYYiGLMm4t1Q3ZghRjesemc9spbb3YUKgWTHgg4woG3TwKvLNxiqlPStnSHBoBNimxvUve9498f1c55hh9xJgMpuqoa%2Bhy94E4cP8GeZHlmxC0dmiwG9dt%2F6d4X21aArkJKPaky7%2B%2FUuc3jC4u%2FjNBjqkAd%2F77oo59ceFPsBJUA245ZRBGgbeoEEj9VxySR87Qg0Q7WBuNLJRq45wYBjbVjzty4YNiey7Zu6uP3EIBcqeaREAlKOgaYcE%2FpuIuIsfM9E2WGqMsul3%2FMzb6eNr94LozPvW2KiaknKf4tGOw1yzYlKhfYmjX9Byugn5fPKpdRGtF48PEfddUxlGf96qXEwHSmCB%2FF3DQwST0cziqPEhOhx692C7&X-Amz-Signature=59c3d91b989ddc53e18deb5580412239c515e072a3296ad25cfb16b121e185d6&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466XBTTAM23%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T065450Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH4aCXVzLXdlc3QtMiJHMEUCIQCJTv3rLMnpsq0V3142dGJnp8W44q5TiPPrdCDYYjF7awIgW%2F3TX4R7TYSVFMpsCwoXF%2BVQwQPeP1OL%2BrkQIqi%2FVUEq%2FwMIRxAAGgw2Mzc0MjMxODM4MDUiDEfMPEBbR93aOugujircAxDbMzsHWNBa%2FcFWMIIR5bBDl7i%2BNpwmr3pfjdMpH8d%2BAb8QXG11LHLBq96ObPktYZdf%2BeaZ2PND%2BPQS%2B2%2Fdf0fV4ETIIH2xPe1e1rHjKZ%2FMdZ20k6UwZ7cBsOIyDOMH%2F6tGJcXM6xEDW7wxUXEu%2Bi1SFYNpqOdcem7Ukc15%2B4RDaDafCbo%2F%2FDptHYo2AOgPsUhmvm9hXSBfyaC%2FV66ZxeF%2B9DGd7fKVYyuxc8HhUp22U8HcpL2CgtSVWLYh3E7VPrdWFWFuMjDlaJq%2BWDLwpWbuiGD0F70IQBCZHfn%2BjN%2Bnp8hAcbOVSeCYgUIEbB8Wr5gZvqI4xxTcbbiY6wkPRs1eBjFlJh85bL%2BL7cezhcw%2B4tm9UkUy14ezo7NFI91BDfr1nH1p7KP8aqaRJI%2BR%2BbFZKk0GIx35wSagJdwGRaC3ZG1sm1%2FfOHuAiCr1I5lJWUcafEyV4wLwcp34yWQB1BbjFM%2F%2BF%2Bd3cOnUikgs9ohQRQ5MqPRUPkNREvu%2FZ1vEXPhl9s2fnYH3wICjVIBKc%2BRpBeRFU%2FIvjyQd2%2Bdou4IdQ%2B9HCkeRAjXvzxGbsFgIE11Xc2cBssDf3WGrB7%2B6A%2FNNkw%2B84eNaGDf21IbAnsvCkyqE6CcGrzkrgtibML7m%2BM0GOqUBkDpSHdyClOn9Bur5PauVweGi9saY%2B4R11onSgXsOEDbATkkpHOqPqYXi780KROQX2VKmJYEMh4DUYGL0J4Pyj2w3efwj4RqePVpa0b9THTf7N6%2FuyMPM7KwVc50RywhstGe51Oqheml9APsR%2FWa%2BNzSxRIj0eAqoX60KGmxensdAz6UstHTm1weEQCcV3yocWIy3ARdL4r8H3o0ZakrAGrlcO15Z&X-Amz-Signature=95859ecf54332540f09cdb67d38353f22049c4f617f5c289b508249906275d37&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -411,73 +539,6 @@
         "displayOrder": 999,
         "created_time": "2026-03-17T10:12:00.000Z",
         "last_edited_time": "2026-03-19T08:58:00.000Z"
-      },
-      {
-        "id": "3269f945-80b7-8018-b14b-d9afa2a1b8af",
-        "title": "THE NONAME無名樂隊2026最新動態",
-        "content": "www.nonamepunks.com",
-        "category": "獨家",
-        "tags": [
-          "PUNK & HARDCORE",
-          "編輯精選",
-          "演出",
-          "樂評",
-          "獨家",
-          "TheNoname"
-        ],
-        "cover_image": "https://nonamepunks.com/image/hero1.webp",
-        "source_url": "https://nonamepunks.com",
-        "published_date": "2026-03-17",
-        "is_premium": true,
-        "featured": true,
-        "homeFeatured": true,
-        "displayOrder": 5,
-        "created_time": "2026-03-17T10:05:00.000Z",
-        "last_edited_time": "2026-03-17T21:26:00.000Z"
-      },
-      {
-        "id": "3269f945-80b7-805b-9501-f6e20c2eca09",
-        "title": "CHINESEROCKS搖滾萬歲",
-        "content": "内測中……",
-        "category": "國際",
-        "tags": [
-          "PUNK & HARDCORE",
-          "新聞",
-          "國際",
-          "搖滾萬歲",
-          "會員專享",
-          "ViveLeRock"
-        ],
-        "cover_image": "https://www.chineserocks.net/image/banner/bannerall.webp",
-        "source_url": "",
-        "published_date": "2026-03-17",
-        "is_premium": true,
-        "featured": false,
-        "homeFeatured": true,
-        "displayOrder": 4,
-        "created_time": "2026-03-17T10:05:00.000Z",
-        "last_edited_time": "2026-03-17T21:26:00.000Z"
-      },
-      {
-        "id": "3259f945-80b7-81d7-ae83-f6e5fb10f3af",
-        "title": "让我们的爱爱爱带动世界 ",
-        "content": "montage_kiki评论: 爱爱爱 评价: 力荐 ",
-        "category": "專題",
-        "tags": [
-          "新聞",
-          "專題",
-          "編輯精選",
-          "INDIE & ALTERNATIVE"
-        ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4665ITJRF3A%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T050930Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEH0aCXVzLXdlc3QtMiJIMEYCIQD94f1J6fEtx3TNw107X0tugiHl0pUXyHI%2FRaM11%2Fk9MAIhAM%2FnUC87ITfzDPJtgdv5hAtt1CMdARSH%2BuH4KLFSWD57Kv8DCEYQABoMNjM3NDIzMTgzODA1IgxyiZvGhguZaQy9RPIq3AM3N0JUNFJzm3tXQ9hS1m4bJdY%2BD8QL4u6MYGpgvN7T54%2B0cyXfYuXRHTQUWybteKQ8ksxcEGpoKRTCrdTbaJcJm7DnxKq6bJWgVhSiB1gBjYylTnyZ%2FiBoP9lSB5Jf%2FuMRdHSsb7P5m1A5QRabN4NNWxHXSjTuIfBY7qIIjfcN638HQxAVF0p5zxxdU%2BHTTEcUzJ1Anz%2B4EoQjgjDIMSyDeE%2FanRsJzH851BtWPmsOkJHVud0f9qIBqbE%2BstJIL6t4uEcBJbiV%2Bhz1S6HUw6g3wUr7hyPBsDraqT1NaAVpub7RZjps%2F1bP8T7rKcaNWJ%2BJwmELft8lvlCl2OQ5rUNPuS2rRSH22mp4sy0ew4XBgKpTNxaoGG1zhDm3rzHylXH%2FII6KiMI20g2pq0ASbkJ5j1LhKpja%2FSBC2J0cyy97zLgm5qRLZUf0AHRDPt8ZVT5cG48VTI5DecCzCS%2BO67TbUheLvD0BERNGAFFVJ0o1rpnoYYiGLMm4t1Q3ZghRjesemc9spbb3YUKgWTHgg4woG3TwKvLNxiqlPStnSHBoBNimxvUve9498f1c55hh9xJgMpuqoa%2Bhy94E4cP8GeZHlmxC0dmiwG9dt%2F6d4X21aArkJKPaky7%2B%2FUuc3jC4u%2FjNBjqkAd%2F77oo59ceFPsBJUA245ZRBGgbeoEEj9VxySR87Qg0Q7WBuNLJRq45wYBjbVjzty4YNiey7Zu6uP3EIBcqeaREAlKOgaYcE%2FpuIuIsfM9E2WGqMsul3%2FMzb6eNr94LozPvW2KiaknKf4tGOw1yzYlKhfYmjX9Byugn5fPKpdRGtF48PEfddUxlGf96qXEwHSmCB%2FF3DQwST0cziqPEhOhx692C7&X-Amz-Signature=02925a26aeee202d6fb0ffbf503f8f3c9cbd6e60c887dafe9580a1c5dd440ebf&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
-        "source_url": "https://music.douban.com/review/17506038/",
-        "published_date": "2026-03-17",
-        "is_premium": false,
-        "featured": true,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-16T20:59:00.000Z",
-        "last_edited_time": "2026-03-18T19:58:00.000Z"
       }
     ]
   }
