@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-21T18:45:51.230081",
+  "last_updated": "2026-03-21T20:34:48.889695",
   "total_count": 16,
   "data": {
     "all": [
@@ -22,6 +22,26 @@
         "displayOrder": 999,
         "created_time": "2026-03-21T11:22:00.000Z",
         "last_edited_time": "2026-03-21T15:59:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
+        "title": "Failure Unveil Grungy Gothic New Single “A Way Down”: Stream",
+        "content": "選自樂團即將發行的新專輯《Location Lost》的最新單曲。 Failure 樂團揭曉充滿 Grunge 與哥德色彩的新單曲《A Way Down》：試聽（Langdon Hickman 撰文）",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "Consequence of Sound",
+          "國際"
+        ],
+        "cover_image": "https://consequence.net/wp-content/uploads/2026/02/Failure.jpg?quality=80",
+        "source_url": "https://consequence.net/2026/03/failure-new-single-a-way-down/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 3,
+        "created_time": "2026-03-21T16:29:00.000Z",
+        "last_edited_time": "2026-03-21T19:08:00.000Z"
       },
       {
         "id": "32a9f945-80b7-8148-9b2a-f2b2d0a8a0fc",
@@ -67,28 +87,6 @@
         "last_edited_time": "2026-03-21T06:26:00.000Z"
       },
       {
-        "id": "32a9f945-80b7-8176-b477-e22b49ebd32f",
-        "title": "CY Fest Canceled After 20 Bands Drop Off",
-        "content": "那場不可避免的取消終於發生了。洛杉磯龐克/金屬/硬蕊音樂節 CY Fest 現已正式宣告停辦，此前至少有20支樂團因主辦單位涉嫌性行為不端而退出了演出陣容。文章《因20支樂團退出，CY Fest 宣告取消》首發於 Stereogum",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "Stereogum",
-          "PUNK & HARDCORE",
-          "HEAVY & METAL",
-          "國際"
-        ],
-        "cover_image": "https://lede-admin.stereogum.com/wp-content/uploads/sites/64/2026/03/CY-Fest.jpeg?w=564",
-        "source_url": "https://stereogum.com/2493105/cy-fest-canceled-after-20-bands-drop-off/news/",
-        "published_date": "2026-03-20",
-        "is_premium": false,
-        "featured": false,
-        "homeFeatured": true,
-        "displayOrder": 1,
-        "created_time": "2026-03-21T04:20:00.000Z",
-        "last_edited_time": "2026-03-21T06:26:00.000Z"
-      },
-      {
         "id": "32a9f945-80b7-81eb-8cd8-f0a252e62a6e",
         "title": "The 12 best new metal songs you need to hear this week",
         "content": "Alissa White-Gluz 分享她的新樂隊，Neurosis 震撼回歸，Ice Nine Kills 變身 Steel Panther——這就是《Metal Hammer》本週精選曲目。",
@@ -105,9 +103,9 @@
         "is_premium": false,
         "featured": false,
         "homeFeatured": true,
-        "displayOrder": 3,
+        "displayOrder": 1,
         "created_time": "2026-03-21T04:20:00.000Z",
-        "last_edited_time": "2026-03-21T06:28:00.000Z"
+        "last_edited_time": "2026-03-21T19:08:00.000Z"
       },
       {
         "id": "32a9f945-80b7-812d-bdd2-d2acd84c456b",
@@ -228,7 +226,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466S5EKFCW5%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T184551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCRYvdxk5QOTaNapS%2FzcErxCH8fN8OD78kRN5R7Ao8%2FEgIgSY%2BaLmFl%2BsPpYSrc3NC414M8SyBeKS3tCCxy%2B7mLgpwq%2FwMIUxAAGgw2Mzc0MjMxODM4MDUiDE2VnABZuGuuwB3NCSrcA9kX%2FWur2ZHEGJ3dmOCjUyRc212s%2BBp%2F6QmLfMc0oWfy4Qk8hUMwwrKQz4REK6M8iRneO%2FgPjUEmfmzROe38QUrDFGWlwfCVxCH%2F%2FXTMVnGv85c1ZrIybYaw8uE0S4u24N931Dhdy%2FtXOCbYR8%2BqaoegP9JBneO5G1DhY%2BhB2%2FS7eC1R05QpoENQZ30NVagOop03RXQ6R%2BRQlBHeJ2y7O8iXg%2BUKgSiOZ1s40uNLqXNXd%2BtZMeIdxklMdX5mGc1V4yf23p%2FqPDSBeo3hNppyOa9vJzM5YsTeE1HRLG7JOLuxSY%2F8QowzGhvbIRJ9Aw2NejHOOwcb4RN9uyXk8lE6VXBBnd7cQcqbIya2bBrC0e7NAd9ODCkAr%2FfOVjVWNyubkZhsavyLo8SzFCKTvZsg2UUjb4X5aKiaAH6d%2BdaTMxQ8rZJBH6SIm3v5QdMNX29WrHUJOsysj36j%2FT%2FdG4bR7ntXESGr7E3Sh%2FIRFQMvu4U7ZjawWqP%2BpnjIXrNu0V7eMRNBNCMmZ8Eo0nRmbcgdHj%2FwxpKc7SEwtCNc10x4bWstaL0VCUO8R%2Fe9blQrL%2F%2FKRe056U1z%2BaWMSEkErWtPadPTI1H4ZEtTaHsQj172m0zEL9BTrHvvwxTDRT0tMM2%2B%2B80GOqUBBy%2FZoIcLOv66NHacmfBJjsmbzc4lmYNmwHLoFiVd0yixOr4to5JgWVGkLHXiJsM1buO7llWucErEKwx%2BXwbohZqjpDyWpQ0zOZjHy8NvxPIFVyy5wjQg6ADOSUNxFyxDyDPxo0kNzeDKYPYlSxj4oT6bkRgmmUZw0HM5TbG39Na4D7JNSb%2F0g%2FF7O82Jkp0aHGBqncwmyvjor0R7n8M7GrwkLcdf&X-Amz-Signature=8c57991611d01b5b7ad0944d0a629b6348642541f802af2a191658a03c62d5c3&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466TEYF75V6%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T203448Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQD9O9D5IiNLLKv252NhMBPgMgxvQ5ikilVXvByAjuPDSAIgZNMzZsyq4u7vQTmstGEP4DxYtRM0cNi2HQFJPuQcGy4q%2FwMIVRAAGgw2Mzc0MjMxODM4MDUiDFmLEj%2B%2F%2FoIMzK4PLSrcA8q58Zp5GKSAJljvEfY0zpygeF0Tb%2FaDDTQqqGt%2FR20w2EwlCfG%2BSNzekWq1GkCsvq3LRRa7WOV8IjhqL%2B1LmCEJ5emAMs9rQXSH09j13BOienjjg90tZXNvHm8kpCX%2BsQZhC0KBLbjUOO9RuOhz%2FKP9KgWd4li2krZbaEC1o15pv0lBHBignwfRgP%2F2HbfGWVp0FTe0PAAPTx34gAUKX1IpUq9pI9sp41bWaU54lHZd8yDoZunEWR789BaBS7HdTsUy0E%2Fln6pWiB%2B79TaEnCho5C65xJsC0SkyqM1cY3dve6bXkcMFfLbLxQzE7%2Fp2txH949oMTGmrEBZVcU8Rtfvlvd5qEtxFBkzetb3FAym7l5M5heMcUefWjNFuf7rmUi6Gc8wiVDVcimKPAd8nPRuVU93OsKIpPbBjopXeT6rEfdTEhmN2V8JJ%2BMfEHz4uTmuVO3S6rKqx%2B96wBvkpQz5D2DtErMFD7qu1LKe0hOBygK13Lm0uekGPAOhNQrjgBJmnOPqf43pxcWuV2n6%2FDlsnVTHMIfTDy9GOaTjF9mKhZ3NfeU6JWZdgphlYJv165zM71fmdgrAdwirXv%2BPkkNw6u1lHOiOzqqBytK3AtftGORGMxqYxWXVGRUppMPDj%2B80GOqUB6vEzBaQILBzdZypLL6hQBR4lgWfMdh0zbvPnc9ZVVZ%2BkmwBmHlVcMH2qztwlcDENHXro%2FsNnSkHtDJgnII5Or9V9nUHLuDKG0T%2FDy5abr4f3REurdVyhPUbVUIQ4KMEfjB1H7%2B7I9H4tL%2F6CyXVbROSZ4WQQziy6gL4R6xJU9kYqHv0aA5G9u0bmAkubWMG7EgMlsHyYDKW9V10FHfQUqta3NXmH&X-Amz-Signature=242e93ed62b824c4cd2c55687210334d938cb65c3442d71a089899e820161a35&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -295,7 +293,7 @@
           "編輯精選",
           "INDIE & ALTERNATIVE"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466S5EKFCW5%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T184551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCRYvdxk5QOTaNapS%2FzcErxCH8fN8OD78kRN5R7Ao8%2FEgIgSY%2BaLmFl%2BsPpYSrc3NC414M8SyBeKS3tCCxy%2B7mLgpwq%2FwMIUxAAGgw2Mzc0MjMxODM4MDUiDE2VnABZuGuuwB3NCSrcA9kX%2FWur2ZHEGJ3dmOCjUyRc212s%2BBp%2F6QmLfMc0oWfy4Qk8hUMwwrKQz4REK6M8iRneO%2FgPjUEmfmzROe38QUrDFGWlwfCVxCH%2F%2FXTMVnGv85c1ZrIybYaw8uE0S4u24N931Dhdy%2FtXOCbYR8%2BqaoegP9JBneO5G1DhY%2BhB2%2FS7eC1R05QpoENQZ30NVagOop03RXQ6R%2BRQlBHeJ2y7O8iXg%2BUKgSiOZ1s40uNLqXNXd%2BtZMeIdxklMdX5mGc1V4yf23p%2FqPDSBeo3hNppyOa9vJzM5YsTeE1HRLG7JOLuxSY%2F8QowzGhvbIRJ9Aw2NejHOOwcb4RN9uyXk8lE6VXBBnd7cQcqbIya2bBrC0e7NAd9ODCkAr%2FfOVjVWNyubkZhsavyLo8SzFCKTvZsg2UUjb4X5aKiaAH6d%2BdaTMxQ8rZJBH6SIm3v5QdMNX29WrHUJOsysj36j%2FT%2FdG4bR7ntXESGr7E3Sh%2FIRFQMvu4U7ZjawWqP%2BpnjIXrNu0V7eMRNBNCMmZ8Eo0nRmbcgdHj%2FwxpKc7SEwtCNc10x4bWstaL0VCUO8R%2Fe9blQrL%2F%2FKRe056U1z%2BaWMSEkErWtPadPTI1H4ZEtTaHsQj172m0zEL9BTrHvvwxTDRT0tMM2%2B%2B80GOqUBBy%2FZoIcLOv66NHacmfBJjsmbzc4lmYNmwHLoFiVd0yixOr4to5JgWVGkLHXiJsM1buO7llWucErEKwx%2BXwbohZqjpDyWpQ0zOZjHy8NvxPIFVyy5wjQg6ADOSUNxFyxDyDPxo0kNzeDKYPYlSxj4oT6bkRgmmUZw0HM5TbG39Na4D7JNSb%2F0g%2FF7O82Jkp0aHGBqncwmyvjor0R7n8M7GrwkLcdf&X-Amz-Signature=d35eecd19cfda07f39ecd05fbebbafc3ee1f5e105c3fa738ad5e639421741cd0&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466TEYF75V6%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T203448Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQD9O9D5IiNLLKv252NhMBPgMgxvQ5ikilVXvByAjuPDSAIgZNMzZsyq4u7vQTmstGEP4DxYtRM0cNi2HQFJPuQcGy4q%2FwMIVRAAGgw2Mzc0MjMxODM4MDUiDFmLEj%2B%2F%2FoIMzK4PLSrcA8q58Zp5GKSAJljvEfY0zpygeF0Tb%2FaDDTQqqGt%2FR20w2EwlCfG%2BSNzekWq1GkCsvq3LRRa7WOV8IjhqL%2B1LmCEJ5emAMs9rQXSH09j13BOienjjg90tZXNvHm8kpCX%2BsQZhC0KBLbjUOO9RuOhz%2FKP9KgWd4li2krZbaEC1o15pv0lBHBignwfRgP%2F2HbfGWVp0FTe0PAAPTx34gAUKX1IpUq9pI9sp41bWaU54lHZd8yDoZunEWR789BaBS7HdTsUy0E%2Fln6pWiB%2B79TaEnCho5C65xJsC0SkyqM1cY3dve6bXkcMFfLbLxQzE7%2Fp2txH949oMTGmrEBZVcU8Rtfvlvd5qEtxFBkzetb3FAym7l5M5heMcUefWjNFuf7rmUi6Gc8wiVDVcimKPAd8nPRuVU93OsKIpPbBjopXeT6rEfdTEhmN2V8JJ%2BMfEHz4uTmuVO3S6rKqx%2B96wBvkpQz5D2DtErMFD7qu1LKe0hOBygK13Lm0uekGPAOhNQrjgBJmnOPqf43pxcWuV2n6%2FDlsnVTHMIfTDy9GOaTjF9mKhZ3NfeU6JWZdgphlYJv165zM71fmdgrAdwirXv%2BPkkNw6u1lHOiOzqqBytK3AtftGORGMxqYxWXVGRUppMPDj%2B80GOqUB6vEzBaQILBzdZypLL6hQBR4lgWfMdh0zbvPnc9ZVVZ%2BkmwBmHlVcMH2qztwlcDENHXro%2FsNnSkHtDJgnII5Or9V9nUHLuDKG0T%2FDy5abr4f3REurdVyhPUbVUIQ4KMEfjB1H7%2B7I9H4tL%2F6CyXVbROSZ4WQQziy6gL4R6xJU9kYqHv0aA5G9u0bmAkubWMG7EgMlsHyYDKW9V10FHfQUqta3NXmH&X-Amz-Signature=ae29982f67ed86a76ce0490ada092937fc62323fe07adf66f75c37841e369568&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "https://music.douban.com/review/17506038/",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -337,7 +335,7 @@
           "PUNK & HARDCORE",
           "樂評"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466S5EKFCW5%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T184551Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCRYvdxk5QOTaNapS%2FzcErxCH8fN8OD78kRN5R7Ao8%2FEgIgSY%2BaLmFl%2BsPpYSrc3NC414M8SyBeKS3tCCxy%2B7mLgpwq%2FwMIUxAAGgw2Mzc0MjMxODM4MDUiDE2VnABZuGuuwB3NCSrcA9kX%2FWur2ZHEGJ3dmOCjUyRc212s%2BBp%2F6QmLfMc0oWfy4Qk8hUMwwrKQz4REK6M8iRneO%2FgPjUEmfmzROe38QUrDFGWlwfCVxCH%2F%2FXTMVnGv85c1ZrIybYaw8uE0S4u24N931Dhdy%2FtXOCbYR8%2BqaoegP9JBneO5G1DhY%2BhB2%2FS7eC1R05QpoENQZ30NVagOop03RXQ6R%2BRQlBHeJ2y7O8iXg%2BUKgSiOZ1s40uNLqXNXd%2BtZMeIdxklMdX5mGc1V4yf23p%2FqPDSBeo3hNppyOa9vJzM5YsTeE1HRLG7JOLuxSY%2F8QowzGhvbIRJ9Aw2NejHOOwcb4RN9uyXk8lE6VXBBnd7cQcqbIya2bBrC0e7NAd9ODCkAr%2FfOVjVWNyubkZhsavyLo8SzFCKTvZsg2UUjb4X5aKiaAH6d%2BdaTMxQ8rZJBH6SIm3v5QdMNX29WrHUJOsysj36j%2FT%2FdG4bR7ntXESGr7E3Sh%2FIRFQMvu4U7ZjawWqP%2BpnjIXrNu0V7eMRNBNCMmZ8Eo0nRmbcgdHj%2FwxpKc7SEwtCNc10x4bWstaL0VCUO8R%2Fe9blQrL%2F%2FKRe056U1z%2BaWMSEkErWtPadPTI1H4ZEtTaHsQj172m0zEL9BTrHvvwxTDRT0tMM2%2B%2B80GOqUBBy%2FZoIcLOv66NHacmfBJjsmbzc4lmYNmwHLoFiVd0yixOr4to5JgWVGkLHXiJsM1buO7llWucErEKwx%2BXwbohZqjpDyWpQ0zOZjHy8NvxPIFVyy5wjQg6ADOSUNxFyxDyDPxo0kNzeDKYPYlSxj4oT6bkRgmmUZw0HM5TbG39Na4D7JNSb%2F0g%2FF7O82Jkp0aHGBqncwmyvjor0R7n8M7GrwkLcdf&X-Amz-Signature=4a9839d9e3cc5e9aeb6ee2e0c84630d221fc2a7318ea7aaf23a464fd1dc14b18&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466TEYF75V6%2F20260321%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260321T203448Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEIz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQD9O9D5IiNLLKv252NhMBPgMgxvQ5ikilVXvByAjuPDSAIgZNMzZsyq4u7vQTmstGEP4DxYtRM0cNi2HQFJPuQcGy4q%2FwMIVRAAGgw2Mzc0MjMxODM4MDUiDFmLEj%2B%2F%2FoIMzK4PLSrcA8q58Zp5GKSAJljvEfY0zpygeF0Tb%2FaDDTQqqGt%2FR20w2EwlCfG%2BSNzekWq1GkCsvq3LRRa7WOV8IjhqL%2B1LmCEJ5emAMs9rQXSH09j13BOienjjg90tZXNvHm8kpCX%2BsQZhC0KBLbjUOO9RuOhz%2FKP9KgWd4li2krZbaEC1o15pv0lBHBignwfRgP%2F2HbfGWVp0FTe0PAAPTx34gAUKX1IpUq9pI9sp41bWaU54lHZd8yDoZunEWR789BaBS7HdTsUy0E%2Fln6pWiB%2B79TaEnCho5C65xJsC0SkyqM1cY3dve6bXkcMFfLbLxQzE7%2Fp2txH949oMTGmrEBZVcU8Rtfvlvd5qEtxFBkzetb3FAym7l5M5heMcUefWjNFuf7rmUi6Gc8wiVDVcimKPAd8nPRuVU93OsKIpPbBjopXeT6rEfdTEhmN2V8JJ%2BMfEHz4uTmuVO3S6rKqx%2B96wBvkpQz5D2DtErMFD7qu1LKe0hOBygK13Lm0uekGPAOhNQrjgBJmnOPqf43pxcWuV2n6%2FDlsnVTHMIfTDy9GOaTjF9mKhZ3NfeU6JWZdgphlYJv165zM71fmdgrAdwirXv%2BPkkNw6u1lHOiOzqqBytK3AtftGORGMxqYxWXVGRUppMPDj%2B80GOqUB6vEzBaQILBzdZypLL6hQBR4lgWfMdh0zbvPnc9ZVVZ%2BkmwBmHlVcMH2qztwlcDENHXro%2FsNnSkHtDJgnII5Or9V9nUHLuDKG0T%2FDy5abr4f3REurdVyhPUbVUIQ4KMEfjB1H7%2B7I9H4tL%2F6CyXVbROSZ4WQQziy6gL4R6xJU9kYqHv0aA5G9u0bmAkubWMG7EgMlsHyYDKW9V10FHfQUqta3NXmH&X-Amz-Signature=e3fb1c926d53f29292b9cd7027bd40c8f4df2cf57c29f788289d6cc562f7720f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -368,6 +366,26 @@
         "displayOrder": 999,
         "created_time": "2026-03-21T11:22:00.000Z",
         "last_edited_time": "2026-03-21T15:59:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
+        "title": "Failure Unveil Grungy Gothic New Single “A Way Down”: Stream",
+        "content": "選自樂團即將發行的新專輯《Location Lost》的最新單曲。 Failure 樂團揭曉充滿 Grunge 與哥德色彩的新單曲《A Way Down》：試聽（Langdon Hickman 撰文）",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "Consequence of Sound",
+          "國際"
+        ],
+        "cover_image": "https://consequence.net/wp-content/uploads/2026/02/Failure.jpg?quality=80",
+        "source_url": "https://consequence.net/2026/03/failure-new-single-a-way-down/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 3,
+        "created_time": "2026-03-21T16:29:00.000Z",
+        "last_edited_time": "2026-03-21T19:08:00.000Z"
       },
       {
         "id": "32a9f945-80b7-8148-9b2a-f2b2d0a8a0fc",
@@ -413,28 +431,6 @@
         "last_edited_time": "2026-03-21T06:26:00.000Z"
       },
       {
-        "id": "32a9f945-80b7-8176-b477-e22b49ebd32f",
-        "title": "CY Fest Canceled After 20 Bands Drop Off",
-        "content": "那場不可避免的取消終於發生了。洛杉磯龐克/金屬/硬蕊音樂節 CY Fest 現已正式宣告停辦，此前至少有20支樂團因主辦單位涉嫌性行為不端而退出了演出陣容。文章《因20支樂團退出，CY Fest 宣告取消》首發於 Stereogum",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "Stereogum",
-          "PUNK & HARDCORE",
-          "HEAVY & METAL",
-          "國際"
-        ],
-        "cover_image": "https://lede-admin.stereogum.com/wp-content/uploads/sites/64/2026/03/CY-Fest.jpeg?w=564",
-        "source_url": "https://stereogum.com/2493105/cy-fest-canceled-after-20-bands-drop-off/news/",
-        "published_date": "2026-03-20",
-        "is_premium": false,
-        "featured": false,
-        "homeFeatured": true,
-        "displayOrder": 1,
-        "created_time": "2026-03-21T04:20:00.000Z",
-        "last_edited_time": "2026-03-21T06:26:00.000Z"
-      },
-      {
         "id": "32a9f945-80b7-81eb-8cd8-f0a252e62a6e",
         "title": "The 12 best new metal songs you need to hear this week",
         "content": "Alissa White-Gluz 分享她的新樂隊，Neurosis 震撼回歸，Ice Nine Kills 變身 Steel Panther——這就是《Metal Hammer》本週精選曲目。",
@@ -451,9 +447,9 @@
         "is_premium": false,
         "featured": false,
         "homeFeatured": true,
-        "displayOrder": 3,
+        "displayOrder": 1,
         "created_time": "2026-03-21T04:20:00.000Z",
-        "last_edited_time": "2026-03-21T06:28:00.000Z"
+        "last_edited_time": "2026-03-21T19:08:00.000Z"
       },
       {
         "id": "32a9f945-80b7-812d-bdd2-d2acd84c456b",
