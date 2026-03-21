@@ -1,4 +1,4 @@
-name: Sync News to Site
+name: Fetch News to Notion
 
 on:
   schedule:
@@ -6,24 +6,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  sync:
+  fetch:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install notion-client
-      - name: Sync news from Notion
+      
+      - name: Install dependencies
+        run: |
+          pip install notion-client feedparser beautifulsoup4 python-dateutil requests cloudinary
+      
+      - name: Fetch news from RSS to Notion
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
-        run: python scripts/sync_notion.py
-      - name: Commit and push
+          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add data/news.json
-          git diff --staged --quiet || (git commit -m "🔄 同步新闻: $(date +'%Y-%m-%d %H:%M')" && git push)
+          python scripts/fetch_news.py --source china --limit 10
+          python scripts/fetch_news.py --source taiwan --limit 5
+          python scripts/fetch_news.py --source international --limit 5
