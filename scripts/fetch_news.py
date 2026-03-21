@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v9.0.0 - 日期過濾版
+ChineseRocks 新闻抓取脚本 v9.1.0 - 去重版
+- 移除重複新聞源
+- 優化源配置結構
 - 只抓取近15天內的新聞
 - 更新RSS源列表，移除失效源
 - 優化圖片抓取邏輯
@@ -83,7 +85,11 @@ EXCLUDE_GENRES = [
     "classical", "opera", "jazz", "new age", "world music"
 ]
 
-# 完整新聞源配置 - v9.0.0 更新版
+# 完整新聞源配置 - v9.1.0 去重版
+# 修復內容：
+# 1. 【國際】移除 Louder Sound（與 Kerrang 同屬 Future plc，內容重疊）
+# 2. 【台灣】移除 Blow 主 feed，只保留子分類（避免主 feed 包含子分類內容導致重複）
+# 3. 【中國】移除 Blow-Line Toady（與台灣區 Blow 內容重疊）
 SOURCES = {
     "china": [
         # ✅ 豆瓣音樂-樂評 (RSSHub提供，已驗證可用)
@@ -135,13 +141,13 @@ SOURCES = {
             "enabled": True, 
             "category": "新聞",
         },
-        # ✅ Blow 吹音樂 - Line Toady 標籤 (獨立音樂大小事)
-        {
-            "name": "Blow-Line Toady", 
-            "url": "https://blow.streetvoice.com/t/line-toady/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
+        # ❌ 已移除：Blow-Line Toady（與台灣區 Blow 內容重疊）
+        # {
+        #     "name": "Blow-Line Toady", 
+        #     "url": "https://blow.streetvoice.com/t/line-toady/feed/", 
+        #     "enabled": False, 
+        #     "category": "新聞",
+        # },
         # ✅ 一碗雜炊 - StreetVoice 播客
         {
             "name": "一碗雜炊-街聲播客", 
@@ -173,13 +179,13 @@ SOURCES = {
     ],
 
     "taiwan": [
-        # ✅ Blow 吹音樂系列 (已驗證可用，有圖片，2024-2025年持續更新)
-        {
-            "name": "Blow吹音樂", 
-            "url": "https://blow.streetvoice.com/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
+        # ✅ Blow 吹音樂系列 - 只保留子分類，移除主 feed 避免重複
+        # {
+        #     "name": "Blow吹音樂", 
+        #     "url": "https://blow.streetvoice.com/feed/", 
+        #     "enabled": False,  # 主 feed 包含子分類內容，已禁用
+        #     "category": "新聞",
+        # },
         {
             "name": "Blow吹音樂-人物", 
             "url": "https://blow.streetvoice.com/c/people/feed/", 
@@ -263,12 +269,13 @@ SOURCES = {
             "enabled": True, 
             "category": "國際",
         },
-        {
-            "name": "Louder Sound", 
-            "url": "https://www.loudersound.com/feeds/all", 
-            "enabled": True, 
-            "category": "國際",
-        },
+        # ❌ 已移除：Louder Sound（與 Kerrang 同屬 Future plc，內容高度重疊）
+        # {
+        #     "name": "Louder Sound", 
+        #     "url": "https://www.loudersound.com/feeds/all", 
+        #     "enabled": False, 
+        #     "category": "國際",
+        # },
         {
             "name": "Ultimate Classic Rock", 
             "url": "https://ultimateclassicrock.com/feed/", 
@@ -292,9 +299,10 @@ SOURCES = {
     ],
 
     "test": [
+        # 測試模式使用獨立源，避免與生產環境重複
         {
-            "name": "Blow吹音樂", 
-            "url": "https://blow.streetvoice.com/feed/", 
+            "name": "深晨DOPM-測試", 
+            "url": "https://deepperfectmorning.com/blog?format=rss", 
             "enabled": True, 
             "category": "新聞",
         },
@@ -322,7 +330,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v9.0.0 - 日期過濾版")
+        print("ChineseRocks 新闻抓取系统 v9.1.0 - 去重版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
