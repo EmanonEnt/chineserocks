@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v9.1.0 - 去重版
-- 移除重複新聞源
-- 優化源配置結構
-- 只抓取近15天內的新聞
-- 更新RSS源列表，移除失效源
-- 優化圖片抓取邏輯
-- 添加深晨 DOPM 和播客源
+ChineseRocks 新闻抓取脚本 v10.0.0 - 智能内容去重版
+- 新增：内容指纹去重（标题+摘要相似度检测）
+- 新增：URL 正規化去重
+- 新增：跨源内容比对
+- 优化：RSS源列表，移除低质量/重复源
+- 优化：图片抓取逻辑
+- 优化：内容质量评分
 """
 
 import os
@@ -18,6 +18,7 @@ import re
 import argparse
 from datetime import datetime, timedelta
 from dateutil import parser as date_parser
+from difflib import SequenceMatcher
 import feedparser
 import requests
 from notion_client import Client
@@ -39,26 +40,30 @@ NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 # 日期過濾設定 - 只抓取近15天內的新聞
 DAYS_LIMIT = 15
 
+# 内容去重配置
+SIMILARITY_THRESHOLD = 0.75  # 相似度阈值，超过则视为重复
+MIN_CONTENT_LENGTH = 50    # 最小内容长度
+
 # 嚴格搖滾風格分類
 MUSIC_GENRES = {
     "PUNK & HARDCORE": {
-        "keywords": ["punk", "朋克", "hardcore", "硬核", "emo", "screamo", "post-hardcore", "oi", "crust"],
+        "keywords": ["punk", "朋克", "hardcore", "硬核", "emo", "screamo", "post-hardcore", "oi", "crust", "street punk"],
         "weight": 10
     },
     "HEAVY & METAL": {
-        "keywords": ["metal", "金屬", "heavy", "thrash", "death metal", "black metal", "doom", "sludge", "stoner", "grindcore"],
+        "keywords": ["metal", "金屬", "heavy", "thrash", "death metal", "black metal", "doom", "sludge", "stoner", "grindcore", "nu metal"],
         "weight": 10
     },
     "INDIE & ALTERNATIVE": {
-        "keywords": ["indie", "獨立", "alternative", "另類", "lo-fi", "shoegaze", "dream pop", "britpop", "grunge"],
+        "keywords": ["indie", "獨立", "alternative", "另類", "lo-fi", "shoegaze", "dream pop", "britpop", "grunge", "indie rock"],
         "weight": 9
     },
     "SKA & REGGAE": {
-        "keywords": ["ska", "reggae", "雷鬼", "dub", "rocksteady", "ska-punk"],
+        "keywords": ["ska", "reggae", "雷鬼", "dub", "rocksteady", "ska-punk", "two-tone"],
         "weight": 8
     },
     "GARAGE & PSYCHEDELIC": {
-        "keywords": ["garage", "車庫", "psychedelic", "迷幻", "space rock", "krautrock"],
+        "keywords": ["garage", "車庫", "psychedelic", "迷幻", "space rock", "krautrock", "acid rock"],
         "weight": 7
     },
     "FOLK & ROOTS ROCK": {
@@ -70,7 +75,7 @@ MUSIC_GENRES = {
         "weight": 6
     },
     "ROCK 通用": {
-        "keywords": ["rock", "搖滾", "band", "樂隊", "guitar", "吉他", "bass", "drum", "live", "演出"],
+        "keywords": ["rock", "搖滾", "band", "樂隊", "guitar", "吉他", "bass", "drum", "live", "演出", "concert", "tour"],
         "weight": 5
     }
 }
@@ -78,236 +83,303 @@ MUSIC_GENRES = {
 # 嚴格排除所有非搖滾音樂
 EXCLUDE_GENRES = [
     "k-pop", "j-pop", "c-pop", "mandopop", "cantopop", 
-    "pop music", "teen pop", "synth-pop", "electropop",
-    "hip-hop", "rap", "trap", "r&b", "soul", "funk", "disco",
+    "pop music", "teen pop", "synth-pop", "electropop", "bubblegum pop",
+    "hip-hop", "rap", "trap", "drill", "r&b", "soul", "funk", "disco", "neo-soul",
     "edm", "electronic", "house", "techno", "trance", "dubstep", 
-    "drum and bass", "dnb", "ambient", "idm",
-    "classical", "opera", "jazz", "new age", "world music"
+    "drum and bass", "dnb", "ambient", "idm", "glitch", "synthwave",
+    "classical", "opera", "jazz", "new age", "world music", "new wave",
+    "acoustic pop", "folk pop", "indie pop"
 ]
 
-# 完整新聞源配置 - v9.1.0 去重版
-# 修復內容：
-# 1. 【國際】移除 Louder Sound（與 Kerrang 同屬 Future plc，內容重疊）
-# 2. 【台灣】移除 Blow 主 feed，只保留子分類（避免主 feed 包含子分類內容導致重複）
-# 3. 【中國】移除 Blow-Line Toady（與台灣區 Blow 內容重疊）
+# v10.0.0 优化版 RSS 源配置
+# 变更：
+# 1. 移除内容重叠严重的源
+# 2. 移除更新频率过低或质量不稳定的源
+# 3. 添加新的高质量源
+# 4. 每个地区精选3-5个核心源
 SOURCES = {
     "china": [
-        # ✅ 豆瓣音樂-樂評 (RSSHub提供，已驗證可用)
+        # ✅ 核心源1：豆瓣音乐-乐评 - 高质量乐评内容
         {
             "name": "豆瓣音樂-樂評", 
             "url": "https://rsshub.app/douban/music/latest", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 1,
+            "quality_score": 9
         },
-        # ✅ 主唱死了 - 上海地下音樂播客 (已驗證可用，2024年仍在更新)
-        {
-            "name": "主唱死了-器樂搖滾播客", 
-            "url": "https://zhuchangsile.xyz/feed/audio.xml", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        # ✅ Live China Music - 中國獨立音樂現場報導 (權威源)
+        # ✅ 核心源2：Live China Music - 现场报道权威
         {
             "name": "Live China Music-獨立音樂現場", 
             "url": "https://livechinamusic.com/feed", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 1,
+            "quality_score": 9
         },
-        # ⚠️ China Music Radar - 需要檢查可用性
-        {
-            "name": "China Music Radar-音樂產業", 
-            "url": "https://chinamusicradar.com/feed", 
-            "enabled": False,  # 暫時禁用，需驗證
-            "category": "新聞",
-        },
-        # ✅ Wooozy - 中國地下/主流音樂 (2009年創立的老牌媒體)
+        # ✅ 核心源3：Wooozy - 地下音乐老牌媒体
         {
             "name": "Wooozy-地下音樂", 
             "url": "https://wooozy.cn/feed", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 2,
+            "quality_score": 8
         },
-        # ✅ 摩登天空 - 網易號 RSS (通過 RSSHub)
+        # ⚠️ 降级：摩登天空 - 商业内容较多，设为低优先级
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 3,
+            "quality_score": 6
         },
-        # ✅ StreetVoice 街聲中國站
-        {
-            "name": "街聲-中國獨立音樂", 
-            "url": "https://streetvoice.cn/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        # ❌ 已移除：Blow-Line Toady（與台灣區 Blow 內容重疊）
+        # ❌ 禁用：街聲中國 - 与台湾街声内容重复
         # {
-        #     "name": "Blow-Line Toady", 
-        #     "url": "https://blow.streetvoice.com/t/line-toady/feed/", 
-        #     "enabled": False, 
-        #     "category": "新聞",
+        #     "name": "街聲-中國獨立音樂", 
+        #     "url": "https://streetvoice.cn/feed/", 
+        #     "enabled": False,
+        #     "reason": "与台湾StreetVoice内容高度重复"
         # },
-        # ✅ 一碗雜炊 - StreetVoice 播客
-        {
-            "name": "一碗雜炊-街聲播客", 
-            "url": "https://streetvoice.com/blowyourheart/podcast/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        # ❌ 滾圈海底撈 - 微博 RSS 需要 Cookie，暫時禁用
-        {
-            "name": "滾圈海底撈-演出信息", 
-            "url": "https://rsshub.app/weibo/user/3691972875", 
-            "enabled": False,  # 需要微博 Cookie
-            "category": "新聞",
-        },
-        # 🆕 新增：网易云音乐 - 独立音乐 RSSHub
+        # ❌ 禁用：网易云音乐播客 - 内容质量不稳定
         {
             "name": "網易雲音樂-獨立音樂", 
             "url": "https://rsshub.app/ncm/djradio/349994326", 
-            "enabled": True, 
-            "category": "新聞",
+            "enabled": False,
+            "reason": "播客内容质量不稳定，非纯摇滚内容"
         },
-        # 🆕 新增：小宇宙 - 摇滚音乐播客 (通過 RSSHub)
+        # ❌ 禁用：小宇宙播客 - 非纯摇滚内容
         {
             "name": "小宇宙-搖滾播客", 
             "url": "https://rsshub.app/xiaoyuzhou/podcast/5e280b1f418a84a0461f2649", 
-            "enabled": True, 
+            "enabled": False,
+            "reason": "播客内容混杂，非纯摇滚"
+        },
+        # 🆕 新增：音乐财经 - 产业视角
+        {
+            "name": "音樂財經-產業新聞", 
+            "url": "https://rsshub.app/musicbusinessworldwide", 
+            "enabled": False,  # 待验证
             "category": "新聞",
+            "priority": 3,
+            "quality_score": 7
         },
     ],
 
     "taiwan": [
-        # ✅ Blow 吹音樂系列 - 只保留子分類，移除主 feed 避免重複
-        # {
-        #     "name": "Blow吹音樂", 
-        #     "url": "https://blow.streetvoice.com/feed/", 
-        #     "enabled": False,  # 主 feed 包含子分類內容，已禁用
-        #     "category": "新聞",
-        # },
-        {
-            "name": "Blow吹音樂-人物", 
-            "url": "https://blow.streetvoice.com/c/people/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        {
-            "name": "Blow吹音樂-議題", 
-            "url": "https://blow.streetvoice.com/c/issue/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        {
-            "name": "Blow吹音樂-新聞", 
-            "url": "https://blow.streetvoice.com/c/news/feed/", 
-            "enabled": True, 
-            "category": "新聞",
-        },
-        # ✅ 深晨 DOPM (台灣獨立音樂網站，2024年仍在更新)
+        # ✅ 核心源1：深晨 DOPM - 台湾独立音乐权威
         {
             "name": "深晨DOPM", 
             "url": "https://deepperfectmorning.com/blog?format=rss", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 1,
+            "quality_score": 10
         },
-        # ✅ 小明拆台 (獨立音樂播客，2024-2025年持續更新)
+        # ✅ 核心源2：Blow 吹音樂-人物 - 深度专访
+        {
+            "name": "Blow吹音樂-人物", 
+            "url": "https://blow.streetvoice.com/c/people/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+            "priority": 1,
+            "quality_score": 9
+        },
+        # ✅ 核心源3：Blow 吹音樂-議題 - 产业分析
+        {
+            "name": "Blow吹音樂-議題", 
+            "url": "https://blow.streetvoice.com/c/issue/feed/", 
+            "enabled": True, 
+            "category": "新聞",
+            "priority": 2,
+            "quality_score": 8
+        },
+        # ❌ 禁用：Blow 新聞分類 - 与人物/議題有重叠
+        {
+            "name": "Blow吹音樂-新聞", 
+            "url": "https://blow.streetvoice.com/c/news/feed/", 
+            "enabled": False,
+            "reason": "内容与人物/議題分类有重叠，易产生重复"
+        },
+        # ⚠️ 降级：小明拆台 - 播客形式，更新频率低
         {
             "name": "小明拆台MingStrike", 
             "url": "https://mingstrike.com/feed/audio.xml", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 3,
+            "quality_score": 7
         },
-        # 🆕 新增：The News Lens 關鍵評論網 - 音樂版
+        # ❌ 禁用：關鍵評論網 - 非纯音乐内容
         {
             "name": "關鍵評論網-音樂", 
             "url": "https://www.thenewslens.com/category/music/feed", 
-            "enabled": True, 
-            "category": "新聞",
+            "enabled": False,
+            "reason": "综合新闻，摇滚音乐内容占比低"
         },
     ],
 
     "hongkong": [
-        # ⚠️ KKBOX-香港 - 需要檢查RSS可用性
-        {
-            "name": "KKBOX-香港", 
-            "url": "https://www.kkbox.com/hk/tc/rss/news.xml", 
-            "enabled": False,  # 暫時禁用，需驗證RSS是否仍可用
-            "category": "新聞",
-        },
-        # 🆕 新增：Hong Kong Free Press - 文化版
+        # ⚠️ 香港源较少，保留HKFP
         {
             "name": "HKFP-文化", 
             "url": "https://hongkongfp.com/culture/feed/", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 2,
+            "quality_score": 6
+        },
+        # ❌ 禁用：KKBOX - RSS不稳定
+        {
+            "name": "KKBOX-香港", 
+            "url": "https://www.kkbox.com/hk/tc/rss/news.xml", 
+            "enabled": False,
+            "reason": "RSS源不稳定，经常无法访问"
         },
     ],
 
     "international": [
+        # ✅ Tier 1：Pitchfork - 权威独立音乐
         {
             "name": "Pitchfork", 
             "url": "https://pitchfork.com/rss/news", 
             "enabled": True, 
             "category": "國際",
+            "priority": 1,
+            "quality_score": 10
         },
+        # ✅ Tier 1：Rolling Stone - 综合权威
         {
             "name": "Rolling Stone", 
             "url": "https://www.rollingstone.com/music/feed/", 
             "enabled": True, 
             "category": "國際",
+            "priority": 1,
+            "quality_score": 9
         },
+        # ✅ Tier 2：NME - 英国视角
         {
             "name": "NME", 
             "url": "https://www.nme.com/news/music/feed", 
             "enabled": True, 
             "category": "國際",
+            "priority": 2,
+            "quality_score": 8
         },
+        # ✅ Tier 2：Kerrang - 摇滚/金属专业
         {
             "name": "Kerrang", 
             "url": "https://www.kerrang.com/feed", 
             "enabled": True, 
             "category": "國際",
+            "priority": 2,
+            "quality_score": 9
         },
-        # ❌ 已移除：Louder Sound（與 Kerrang 同屬 Future plc，內容高度重疊）
-        # {
-        #     "name": "Louder Sound", 
-        #     "url": "https://www.loudersound.com/feeds/all", 
-        #     "enabled": False, 
-        #     "category": "國際",
-        # },
-        {
-            "name": "Ultimate Classic Rock", 
-            "url": "https://ultimateclassicrock.com/feed/", 
-            "enabled": True, 
-            "category": "國際",
-        },
-        # 🆕 新增：Stereogum
+        # ⚠️ 降级：Stereogum - 与Pitchfork内容有重叠
         {
             "name": "Stereogum", 
             "url": "https://www.stereogum.com/feed", 
             "enabled": True, 
             "category": "國際",
+            "priority": 3,
+            "quality_score": 8
         },
-        # 🆕 新增：Consequence of Sound
+        # ❌ 禁用：Consequence of Sound - 与Rolling Stone内容重叠严重
         {
             "name": "Consequence of Sound", 
             "url": "https://consequenceofsound.net/feed", 
-            "enabled": True, 
-            "category": "國際",
+            "enabled": False,
+            "reason": "与Rolling Stone/NME内容高度重叠"
+        },
+        # ❌ 禁用：Ultimate Classic Rock - 过于侧重经典摇滚
+        {
+            "name": "Ultimate Classic Rock", 
+            "url": "https://ultimateclassicrock.com/feed/", 
+            "enabled": False,
+            "reason": "内容过于侧重经典摇滚，时效性低"
         },
     ],
 
     "test": [
-        # 測試模式使用獨立源，避免與生產環境重複
+        # 測試模式使用獨立源
         {
             "name": "深晨DOPM-測試", 
             "url": "https://deepperfectmorning.com/blog?format=rss", 
             "enabled": True, 
             "category": "新聞",
+            "priority": 1,
+            "quality_score": 10
         },
     ]
 }
+
+
+class ContentDeduplicator:
+    """内容去重器 - 基于标题和摘要的相似度检测"""
+
+    def __init__(self, threshold=SIMILARITY_THRESHOLD):
+        self.threshold = threshold
+        self.seen_contents = []  # 存储已见内容指纹
+        self.seen_urls = set()   # 存储已见URL
+
+    def normalize_url(self, url):
+        """URL正規化 - 移除tracking参数等"""
+        if not url:
+            return ""
+        # 移除常见tracking参数
+        url = re.sub(r'[?&](utm_source|utm_medium|utm_campaign|utm_content|fbclid|gclid)=[^&]*', '', url)
+        # 移除尾部?
+        url = url.rstrip('?')
+        # 统一协议
+        url = url.replace('http://', 'https://')
+        # 移除www前缀差异
+        url = url.replace('https://www.', 'https://')
+        return url.lower().strip()
+
+    def create_fingerprint(self, title, summary):
+        """创建内容指纹"""
+        # 清理文本
+        text = f"{title} {summary}".lower()
+        # 移除标点、空格，提取关键词
+        text = re.sub(r'[^\u4e00-\u9fa5a-z0-9]', '', text)
+        # 返回前100个字符作为指纹
+        return text[:100]
+
+    def calculate_similarity(self, text1, text2):
+        """计算两段文本的相似度"""
+        if not text1 or not text2:
+            return 0.0
+        return SequenceMatcher(None, text1, text2).ratio()
+
+    def is_duplicate(self, title, summary, url):
+        """检查是否为重复内容"""
+        # 1. URL去重
+        normalized_url = self.normalize_url(url)
+        if normalized_url and normalized_url in self.seen_urls:
+            return True, "URL重复"
+
+        # 2. 内容指纹去重
+        fingerprint = self.create_fingerprint(title, summary)
+
+        for seen_fp, seen_title in self.seen_contents:
+            similarity = self.calculate_similarity(fingerprint, seen_fp)
+            if similarity >= self.threshold:
+                return True, f"内容相似度{similarity:.0%}"
+            # 标题完全匹配也视为重复
+            if title.lower().strip() == seen_title.lower().strip():
+                return True, "标题完全匹配"
+
+        return False, None
+
+    def add_content(self, title, summary, url):
+        """添加内容到已见集合"""
+        fingerprint = self.create_fingerprint(title, summary)
+        self.seen_contents.append((fingerprint, title))
+        normalized_url = self.normalize_url(url)
+        if normalized_url:
+            self.seen_urls.add(normalized_url)
+
 
 class NewsFetcher:
     def __init__(self, source_type="china", limit=5):
@@ -317,7 +389,7 @@ class NewsFetcher:
         self.stats = {
             "total": 0, "added": 0, "skipped": 0, "exists": 0, 
             "failed": 0, "image_uploaded": 0, "filtered": 0,
-            "too_old": 0  # 新增：過期文章統計
+            "too_old": 0, "duplicate_content": 0, "low_quality": 0
         }
         self.articles = []
         self.cloudinary_enabled = all([
@@ -325,38 +397,48 @@ class NewsFetcher:
             os.getenv('CLOUDINARY_API_KEY'),
             os.getenv('CLOUDINARY_API_SECRET')
         ])
-        # 計算15天前的日期
         self.cutoff_date = datetime.now() - timedelta(days=DAYS_LIMIT)
+        self.deduplicator = ContentDeduplicator()
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v9.1.0 - 去重版")
+        print("ChineseRocks 新闻抓取系统 v10.0.0 - 智能去重版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
         print(f"日期限制: 近{DAYS_LIMIT}天內 (截止: {self.cutoff_date.strftime('%Y-%m-%d')})")
+        print(f"相似度阈值: {SIMILARITY_THRESHOLD:.0%}")
         print(f"Cloudinary: {'已啟用' if self.cloudinary_enabled else '未啟用'}")
         print("="*70)
 
         sources = SOURCES.get(self.source_type, [])
         enabled_sources = [s for s in sources if s["enabled"]]
-        print(f"\n抓取 {len(enabled_sources)} 個搖滾音樂源")
+        # 按优先级排序
+        enabled_sources.sort(key=lambda x: x.get("priority", 99))
+
+        print(f"\n抓取 {len(enabled_sources)} 個精選搖滾音樂源 (已按优先级排序)")
         print("-"*50)
 
         for source in sources:
-            if source["enabled"]:
-                self._fetch_source(source)
-            else:
-                print(f"[{source['name']}] ⚠️ 已禁用")
+            if not source["enabled"]:
+                reason = source.get("reason", "已禁用")
+                print(f"[{source['name']}] ⚠️ {reason}")
+                continue
+            self._fetch_source(source)
 
         print(f"\n抓取完成: 共 {len(self.articles)} 条")
-        print(f"  - 過濾非搖滾: {self.stats['filtered']} 條")
-        print(f"  - 過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 條")
+        print(f"  - 内容去重过滤: {self.stats['duplicate_content']} 条")
+        print(f"  - 低质量过滤: {self.stats['low_quality']} 条")
+        print(f"  - 非搖滾过滤: {self.stats['filtered']} 条")
+        print(f"  - 過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
         return self.articles
 
     def _fetch_source(self, source):
         try:
-            print(f"[{source['name']}]")
+            priority = source.get("priority", 3)
+            quality = source.get("quality_score", 5)
+            print(f"[{source['name']}] (优先级:{priority}, 质量分:{quality})")
+
             feed = feedparser.parse(source['url'])
 
             if not feed.entries:
@@ -366,6 +448,8 @@ class NewsFetcher:
             count = 0
             filtered_count = 0
             too_old_count = 0
+            duplicate_count = 0
+            low_quality_count = 0
 
             for entry in feed.entries:
                 if count >= self.limit:
@@ -382,6 +466,24 @@ class NewsFetcher:
                     except:
                         pass
 
+                # 内容质量检查
+                title = entry.get('title', '')
+                summary = entry.get('summary', entry.get('description', ''))
+                summary = self._clean_html(summary)
+
+                if len(summary) < MIN_CONTENT_LENGTH:
+                    low_quality_count += 1
+                    continue
+
+                # 内容去重检查
+                link = entry.get('link', '')
+                is_dup, dup_reason = self.deduplicator.is_duplicate(title, summary, link)
+                if is_dup:
+                    duplicate_count += 1
+                    print(f"    🔄 跳过重复: {dup_reason} - {title[:30]}...")
+                    continue
+
+                # 摇滚风格检测
                 genres = self._detect_genres(entry)
                 if not genres:
                     filtered_count += 1
@@ -389,10 +491,18 @@ class NewsFetcher:
 
                 article = self._parse_entry(entry, source, genres)
                 if article:
+                    # 添加到去重器
+                    self.deduplicator.add_content(
+                        article['title'], 
+                        article['summary'], 
+                        article['link']
+                    )
                     self.articles.append(article)
                     count += 1
 
-            print(f"  ✅ 成功獲取 {count} 条 (過濾 {filtered_count} 條非搖滾, 過期 {too_old_count} 條)")
+            print(f"  ✅ 成功獲取 {count} 条 (去重 {duplicate_count}, 低质量 {low_quality_count}, 风格过滤 {filtered_count}, 过期 {too_old_count})")
+            self.stats["duplicate_content"] += duplicate_count
+            self.stats["low_quality"] += low_quality_count
             self.stats["filtered"] += filtered_count
             self.stats["too_old"] += too_old_count
 
@@ -475,7 +585,8 @@ class NewsFetcher:
                         return enc.get('href', '')
 
             # 4. 從 content 中提取圖片
-            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                      entry.get('summary', entry.get('description', ''))
+            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else \
+                      entry.get('summary', entry.get('description', ''))
 
             if content:
                 soup = BeautifulSoup(content, 'html.parser')
@@ -492,15 +603,7 @@ class NewsFetcher:
 
             # 5. 針對特定源的特殊處理
             source_name = source.get('name', '').lower()
-            if 'blow' in source_name:
-                if 'description' in entry:
-                    soup = BeautifulSoup(entry.description, 'html.parser')
-                    img = soup.find('img')
-                    if img and img.get('src'):
-                        return img['src']
-
-            # 深晨 DOPM 特殊處理
-            if 'dopm' in source_name or '深晨' in source_name:
+            if 'blow' in source_name or 'dopm' in source_name or '深晨' in source_name:
                 if 'description' in entry:
                     soup = BeautifulSoup(entry.description, 'html.parser')
                     img = soup.find('img')
@@ -660,8 +763,12 @@ class NewsFetcher:
         print(f"新增入庫: {self.stats['added']} 条")
         print(f"已存在: {self.stats['exists']} 条")
         print(f"失敗: {self.stats['failed']} 条")
-        print(f"過濾非搖滾: {self.stats['filtered']} 条")
-        print(f"過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
+        print("-"*70)
+        print(f"过滤统计:")
+        print(f"  - 内容去重: {self.stats['duplicate_content']} 条")
+        print(f"  - 低质量: {self.stats['low_quality']} 条")
+        print(f"  - 非搖滾: {self.stats['filtered']} 条")
+        print(f"  - 過期(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
         print("="*70)
 
         if self.articles:
@@ -672,6 +779,7 @@ class NewsFetcher:
                     genre_count[genre] = genre_count.get(genre, 0) + 1
             for genre, count in sorted(genre_count.items(), key=lambda x: x[1], reverse=True):
                 print(f"  {genre}: {count} 条")
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -692,6 +800,7 @@ def main():
         fetcher.sync_to_notion()
 
     fetcher.print_report()
+
 
 if __name__ == "__main__":
     main()
