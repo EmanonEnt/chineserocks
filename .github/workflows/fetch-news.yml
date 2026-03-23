@@ -1,14 +1,15 @@
-name: Fetch News v10
+name: Fetch News v11 - 智能去重增强版
 
 on:
   schedule:
-    # 中国新闻：週一到週四 21:00 (UTC 13:00) - 每源5條
-    - cron: '0 13 * * 1,2,3,4'
-    # 中国新闻：週五到週日 12:00、18:00、22:00 (UTC 4:00、10:00、14:00) - 每源5條
-    - cron: '0 10,14 * * 5,6,0'
-    # 國際新聞：每週三、六 12:00 (UTC 4:00) - 每源1條
+    # 中国新闻：每天 3 次（增加频次）
+    # 北京时间 12:00, 18:00, 22:00 (UTC 4:00, 10:00, 14:00)
+    - cron: '0 4,10,14 * * *'
+
+    # 国际新闻：每週三、六 12:00 (UTC 4:00) - 每源1条
     - cron: '0 4 * * 3,6'
-    # 港台新聞：每週二、五 12:00 (UTC 4:00) - 每源2條
+
+    # 港台新聞：每週二、五 12:00 (UTC 4:00) - 每源2条
     - cron: '0 4 * * 2,5'
 
   workflow_dispatch:
@@ -19,10 +20,10 @@ on:
         default: 'test'
         type: choice
         options:
-          - china          # 中國搖滾新聞 (每源5條)
-          - taiwan         # 台灣獨立音樂 (每源2條)
-          - hongkong       # 香港搖滾新聞 (每源2條)
-          - international  # 國際搖滾新聞 (每源1條)
+          - china          # 中國搖滾新聞 (每源8条，v11增加)
+          - taiwan         # 台灣獨立音樂 (每源3条)
+          - hongkong       # 香港搖滾新聞 (每源3条)
+          - international  # 國際搖滾新聞 (每源2条，v11增加)
           - test           # 測試模式 (3條)
       days_limit:
         description: '日期限制(天) - 只抓取近N天內的新聞'
@@ -45,7 +46,7 @@ jobs:
       run: |
         pip install feedparser requests notion-client beautifulsoup4 python-dateutil cloudinary
 
-    - name: Fetch Rock News v10
+    - name: Fetch Rock News v11
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
@@ -59,7 +60,8 @@ jobs:
         # 定時任務自動判斷
         if [ -z "$MODE" ]; then
           echo "=========================================="
-          echo "🎸 ChineseRocks 搖滾新聞抓取 v10.0 (智能去重)"
+          echo "🎸 ChineseRocks 搖滾新聞抓取 v11.0 (智能去重增强版)"
+          echo "优化：88%相似度阈值 + 持久化去重 + 更多国内源"
           echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
@@ -70,53 +72,53 @@ jobs:
 
           # 國際新聞：每週三、六 12:00 (UTC 4:00)
           if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
-            echo "🌍 國際搖滾新聞 (每源1條，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v10.py --source international --limit 1
+            echo "🌍 國際搖滾新聞 (每源2条，v11增加，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news_v11.py --source international --limit 2
 
           # 港台新聞：每週二、五 12:00 (UTC 4:00)
           elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
-            echo "🇭🇰 港台搖滾新聞 (每源2條，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v10.py --source taiwan --limit 2
-            python scripts/fetch_news_v10.py --source hongkong --limit 2
+            echo "🇭🇰 港台搖滾新聞 (每源3条，v11增加，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news_v11.py --source taiwan --limit 3
+            python scripts/fetch_news_v11.py --source hongkong --limit 3
 
-          # 中國新聞：其他時間
+          # 中國新聞：每天 3 次
           else
-            echo "🇨🇳 中國搖滾新聞 (每源5條，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v10.py --source china --limit 5
+            echo "🇨🇳 中國搖滾新聞 (每源8条，v11增加，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news_v11.py --source china --limit 8
           fi
 
         else
           # 手動觸發
           echo "=========================================="
-          echo "🎸 ChineseRocks 搖滾新聞抓取 v10.0 (手動)"
+          echo "🎸 ChineseRocks 搖滾新聞抓取 v11.0 (手動)"
           echo "模式: $MODE"
           echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
           case "$MODE" in
             china)
-              echo "🇨🇳 中國搖滾新聞 (每源5條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v10.py --source china --limit 5
+              echo "🇨🇳 中國搖滾新聞 (每源8条，v11增加，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v11.py --source china --limit 8
               ;;
             taiwan)
-              echo "🇹🇼 台灣獨立音樂 (每源2條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v10.py --source taiwan --limit 2
+              echo "🇹🇼 台灣獨立音樂 (每源3条，v11增加，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v11.py --source taiwan --limit 3
               ;;
             hongkong)
-              echo "🇭🇰 香港搖滾新聞 (每源2條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v10.py --source hongkong --limit 2
+              echo "🇭🇰 香港搖滾新聞 (每源3条，v11增加，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v11.py --source hongkong --limit 3
               ;;
             international)
-              echo "🌍 國際搖滾新聞 (每源1條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v10.py --source international --limit 1
+              echo "🌍 國際搖滾新聞 (每源2条，v11增加，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v11.py --source international --limit 2
               ;;
             test)
               echo "🧪 測試模式 (3條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v10.py --source test --limit 3
+              python scripts/fetch_news_v11.py --source test --limit 3
               ;;
           esac
         fi
 
         echo "=========================================="
-        echo "🤘 搖滾新聞抓取完成 (已启用智能去重)"
+        echo "🤘 搖滾新聞抓取完成 (v11: 88%阈值去重 + 持久化去重)"
         echo "=========================================="
