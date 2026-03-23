@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v10.0.0 - 智能内容去重版
-- 新增：内容指纹去重（标题+摘要相似度检测）
-- 新增：URL 正規化去重
-- 新增：跨源内容比对
-- 优化：RSS源列表，移除低质量/重复源
-- 优化：图片抓取逻辑
-- 优化：内容质量评分
+ChineseRocks 新闻抓取脚本 v11.0.0 - 智能去重增强版
+- 优化：相似度阈值提升至88%，大幅减少国际新闻重复
+- 优化：改进内容指纹算法，提取关键词而非简单截断
+- 优化：跨运行持久化去重，查询Notion已有文章
+- 新增：恢复街声中国源，增加国内内容量
+- 新增：增加更多国内优质源
 """
 
 import os
@@ -40,9 +39,9 @@ NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 # 日期過濾設定 - 只抓取近15天內的新聞
 DAYS_LIMIT = 15
 
-# 内容去重配置
-SIMILARITY_THRESHOLD = 0.75  # 相似度阈值，超过则视为重复
-MIN_CONTENT_LENGTH = 50    # 最小内容长度
+# 内容去重配置 - v11优化：提高阈值到88%
+SIMILARITY_THRESHOLD = 0.88  # 从0.75提高到0.88
+MIN_CONTENT_LENGTH = 50
 
 # 嚴格搖滾風格分類
 MUSIC_GENRES = {
@@ -91,15 +90,14 @@ EXCLUDE_GENRES = [
     "acoustic pop", "folk pop", "indie pop"
 ]
 
-# v10.0.0 优化版 RSS 源配置
+# v11.0.0 优化版 RSS 源配置
 # 变更：
-# 1. 移除内容重叠严重的源
-# 2. 移除更新频率过低或质量不稳定的源
-# 3. 添加新的高质量源
-# 4. 每个地区精选3-5个核心源
+# 1. 恢复街声中国源（低优先级）
+# 2. 增加新的国内源
+# 3. 国际源保持精简，依赖高阈值去重
 SOURCES = {
     "china": [
-        # ✅ 核心源1：豆瓣音乐-乐评 - 高质量乐评内容
+        # ✅ 核心源1：豆瓣音乐-乐评
         {
             "name": "豆瓣音樂-樂評", 
             "url": "https://rsshub.app/douban/music/latest", 
@@ -108,7 +106,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # ✅ 核心源2：Live China Music - 现场报道权威
+        # ✅ 核心源2：Live China Music
         {
             "name": "Live China Music-獨立音樂現場", 
             "url": "https://livechinamusic.com/feed", 
@@ -117,7 +115,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # ✅ 核心源3：Wooozy - 地下音乐老牌媒体
+        # ✅ 核心源3：Wooozy
         {
             "name": "Wooozy-地下音樂", 
             "url": "https://wooozy.cn/feed", 
@@ -126,7 +124,16 @@ SOURCES = {
             "priority": 2,
             "quality_score": 8
         },
-        # ⚠️ 降级：摩登天空 - 商业内容较多，设为低优先级
+        # ✅ 恢复：街声中国（低优先级，不与台湾重复）
+        {
+            "name": "街聲-中國獨立音樂", 
+            "url": "https://streetvoice.cn/feed/", 
+            "enabled": True,
+            "category": "新聞",
+            "priority": 3,
+            "quality_score": 6
+        },
+        # ⚠️ 降级：摩登天空
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
@@ -135,32 +142,38 @@ SOURCES = {
             "priority": 3,
             "quality_score": 6
         },
-        # ❌ 禁用：街聲中國 - 与台湾街声内容重复
-        # {
-        #     "name": "街聲-中國獨立音樂", 
-        #     "url": "https://streetvoice.cn/feed/", 
-        #     "enabled": False,
-        #     "reason": "与台湾StreetVoice内容高度重复"
-        # },
-        # ❌ 禁用：网易云音乐播客 - 内容质量不稳定
+        # 🆕 新增：知乎摇滚乐话题
         {
-            "name": "網易雲音樂-獨立音樂", 
-            "url": "https://rsshub.app/ncm/djradio/349994326", 
-            "enabled": False,
-            "reason": "播客内容质量不稳定，非纯摇滚内容"
+            "name": "知乎-搖滾樂話題", 
+            "url": "https://rsshub.app/zhihu/topic/19550718", 
+            "enabled": True,
+            "category": "新聞",
+            "priority": 3,
+            "quality_score": 6
         },
-        # ❌ 禁用：小宇宙播客 - 非纯摇滚内容
+        # 🆕 新增：知乎独立音乐话题
         {
-            "name": "小宇宙-搖滾播客", 
-            "url": "https://rsshub.app/xiaoyuzhou/podcast/5e280b1f418a84a0461f2649", 
-            "enabled": False,
-            "reason": "播客内容混杂，非纯摇滚"
+            "name": "知乎-獨立音樂話題", 
+            "url": "https://rsshub.app/zhihu/topic/19550408", 
+            "enabled": True,
+            "category": "新聞",
+            "priority": 3,
+            "quality_score": 6
         },
-        # 🆕 新增：音乐财经 - 产业视角
+        # 🆕 新增： solidot 文化板块（摇滚相关内容）
+        {
+            "name": "Solidot-文化", 
+            "url": "https://rsshub.app/solidot/culture", 
+            "enabled": True,
+            "category": "新聞",
+            "priority": 4,
+            "quality_score": 5
+        },
+        # ❌ 禁用：音乐财经 - 待验证
         {
             "name": "音樂財經-產業新聞", 
             "url": "https://rsshub.app/musicbusinessworldwide", 
-            "enabled": False,  # 待验证
+            "enabled": False,
             "category": "新聞",
             "priority": 3,
             "quality_score": 7
@@ -168,7 +181,7 @@ SOURCES = {
     ],
 
     "taiwan": [
-        # ✅ 核心源1：深晨 DOPM - 台湾独立音乐权威
+        # ✅ 核心源1：深晨 DOPM
         {
             "name": "深晨DOPM", 
             "url": "https://deepperfectmorning.com/blog?format=rss", 
@@ -177,7 +190,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10
         },
-        # ✅ 核心源2：Blow 吹音樂-人物 - 深度专访
+        # ✅ 核心源2：Blow 吹音樂-人物
         {
             "name": "Blow吹音樂-人物", 
             "url": "https://blow.streetvoice.com/c/people/feed/", 
@@ -186,7 +199,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # ✅ 核心源3：Blow 吹音樂-議題 - 产业分析
+        # ✅ 核心源3：Blow 吹音樂-議題
         {
             "name": "Blow吹音樂-議題", 
             "url": "https://blow.streetvoice.com/c/issue/feed/", 
@@ -195,14 +208,7 @@ SOURCES = {
             "priority": 2,
             "quality_score": 8
         },
-        # ❌ 禁用：Blow 新聞分類 - 与人物/議題有重叠
-        {
-            "name": "Blow吹音樂-新聞", 
-            "url": "https://blow.streetvoice.com/c/news/feed/", 
-            "enabled": False,
-            "reason": "内容与人物/議題分类有重叠，易产生重复"
-        },
-        # ⚠️ 降级：小明拆台 - 播客形式，更新频率低
+        # ⚠️ 降级：小明拆台
         {
             "name": "小明拆台MingStrike", 
             "url": "https://mingstrike.com/feed/audio.xml", 
@@ -211,17 +217,10 @@ SOURCES = {
             "priority": 3,
             "quality_score": 7
         },
-        # ❌ 禁用：關鍵評論網 - 非纯音乐内容
-        {
-            "name": "關鍵評論網-音樂", 
-            "url": "https://www.thenewslens.com/category/music/feed", 
-            "enabled": False,
-            "reason": "综合新闻，摇滚音乐内容占比低"
-        },
     ],
 
     "hongkong": [
-        # ⚠️ 香港源较少，保留HKFP
+        # ⚠️ 香港源较少
         {
             "name": "HKFP-文化", 
             "url": "https://hongkongfp.com/culture/feed/", 
@@ -230,17 +229,10 @@ SOURCES = {
             "priority": 2,
             "quality_score": 6
         },
-        # ❌ 禁用：KKBOX - RSS不稳定
-        {
-            "name": "KKBOX-香港", 
-            "url": "https://www.kkbox.com/hk/tc/rss/news.xml", 
-            "enabled": False,
-            "reason": "RSS源不稳定，经常无法访问"
-        },
     ],
 
     "international": [
-        # ✅ Tier 1：Pitchfork - 权威独立音乐
+        # ✅ Tier 1：Pitchfork
         {
             "name": "Pitchfork", 
             "url": "https://pitchfork.com/rss/news", 
@@ -249,7 +241,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10
         },
-        # ✅ Tier 1：Rolling Stone - 综合权威
+        # ✅ Tier 1：Rolling Stone
         {
             "name": "Rolling Stone", 
             "url": "https://www.rollingstone.com/music/feed/", 
@@ -258,7 +250,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # ✅ Tier 2：NME - 英国视角
+        # ✅ Tier 2：NME
         {
             "name": "NME", 
             "url": "https://www.nme.com/news/music/feed", 
@@ -267,7 +259,7 @@ SOURCES = {
             "priority": 2,
             "quality_score": 8
         },
-        # ✅ Tier 2：Kerrang - 摇滚/金属专业
+        # ✅ Tier 2：Kerrang
         {
             "name": "Kerrang", 
             "url": "https://www.kerrang.com/feed", 
@@ -276,7 +268,7 @@ SOURCES = {
             "priority": 2,
             "quality_score": 9
         },
-        # ⚠️ 降级：Stereogum - 与Pitchfork内容有重叠
+        # ⚠️ 降级：Stereogum
         {
             "name": "Stereogum", 
             "url": "https://www.stereogum.com/feed", 
@@ -284,20 +276,6 @@ SOURCES = {
             "category": "國際",
             "priority": 3,
             "quality_score": 8
-        },
-        # ❌ 禁用：Consequence of Sound - 与Rolling Stone内容重叠严重
-        {
-            "name": "Consequence of Sound", 
-            "url": "https://consequenceofsound.net/feed", 
-            "enabled": False,
-            "reason": "与Rolling Stone/NME内容高度重叠"
-        },
-        # ❌ 禁用：Ultimate Classic Rock - 过于侧重经典摇滚
-        {
-            "name": "Ultimate Classic Rock", 
-            "url": "https://ultimateclassicrock.com/feed/", 
-            "enabled": False,
-            "reason": "内容过于侧重经典摇滚，时效性低"
         },
     ],
 
@@ -316,35 +294,36 @@ SOURCES = {
 
 
 class ContentDeduplicator:
-    """内容去重器 - 基于标题和摘要的相似度检测"""
+    """v11优化版内容去重器 - 88%阈值 + 关键词指纹 + 持久化去重"""
 
     def __init__(self, threshold=SIMILARITY_THRESHOLD):
         self.threshold = threshold
-        self.seen_contents = []  # 存储已见内容指纹
-        self.seen_urls = set()   # 存储已见URL
+        self.seen_contents = []
+        self.seen_urls = set()
+        self.existing_titles = set()  # 从Notion加载的已有标题
 
     def normalize_url(self, url):
-        """URL正規化 - 移除tracking参数等"""
+        """URL正規化"""
         if not url:
             return ""
-        # 移除常见tracking参数
         url = re.sub(r'[?&](utm_source|utm_medium|utm_campaign|utm_content|fbclid|gclid)=[^&]*', '', url)
-        # 移除尾部?
         url = url.rstrip('?')
-        # 统一协议
         url = url.replace('http://', 'https://')
-        # 移除www前缀差异
         url = url.replace('https://www.', 'https://')
         return url.lower().strip()
 
     def create_fingerprint(self, title, summary):
-        """创建内容指纹"""
-        # 清理文本
+        """v11优化：提取关键词而非简单截断"""
         text = f"{title} {summary}".lower()
-        # 移除标点、空格，提取关键词
-        text = re.sub(r'[^\u4e00-\u9fa5a-z0-9]', '', text)
-        # 返回前100个字符作为指纹
-        return text[:100]
+
+        # 提取中文词汇（2-6字）
+        chinese_words = re.findall(r'[\u4e00-\u9fa5]{2,6}', text)
+        # 提取英文单词（4字母以上）
+        english_words = re.findall(r'\b[a-z]{4,}\b', text)
+
+        # 组合关键词并去重，取前30个
+        keywords = list(dict.fromkeys(chinese_words + english_words))
+        return ' '.join(keywords[:30])
 
     def calculate_similarity(self, text1, text2):
         """计算两段文本的相似度"""
@@ -353,22 +332,29 @@ class ContentDeduplicator:
         return SequenceMatcher(None, text1, text2).ratio()
 
     def is_duplicate(self, title, summary, url):
-        """检查是否为重复内容"""
+        """v11优化：多层次去重检测"""
         # 1. URL去重
         normalized_url = self.normalize_url(url)
         if normalized_url and normalized_url in self.seen_urls:
             return True, "URL重复"
 
-        # 2. 内容指纹去重
+        # 2. 标题快速匹配（去除标点）
+        clean_title = re.sub(r'[^\w\u4e00-\u9fa5]', '', title.lower())
+        if clean_title in self.existing_titles:
+            return True, "Notion中已存在"
+
+        # 3. 内容指纹去重（88%阈值）
         fingerprint = self.create_fingerprint(title, summary)
 
         for seen_fp, seen_title in self.seen_contents:
+            # 标题完全匹配
+            if title.lower().strip() == seen_title.lower().strip():
+                return True, "标题完全匹配"
+
+            # 指纹相似度检测
             similarity = self.calculate_similarity(fingerprint, seen_fp)
             if similarity >= self.threshold:
                 return True, f"内容相似度{similarity:.0%}"
-            # 标题完全匹配也视为重复
-            if title.lower().strip() == seen_title.lower().strip():
-                return True, "标题完全匹配"
 
         return False, None
 
@@ -380,6 +366,34 @@ class ContentDeduplicator:
         if normalized_url:
             self.seen_urls.add(normalized_url)
 
+    def load_existing_from_notion(self, notion_client, db_id, days=7):
+        """v11新增：从Notion加载最近N天的文章标题用于去重"""
+        try:
+            from datetime import datetime, timedelta
+            seven_days_ago = (datetime.now() - timedelta(days=days)).isoformat()
+
+            response = notion_client.databases.query(
+                database_id=db_id,
+                filter={
+                    "property": "發布時間",
+                    "date": {"after": seven_days_ago}
+                }
+            )
+
+            for page in response['results']:
+                try:
+                    title = page['properties']['標題']['title'][0]['text']['content']
+                    clean_title = re.sub(r'[^\w\u4e00-\u9fa5]', '', title.lower())
+                    self.existing_titles.add(clean_title)
+                except:
+                    continue
+
+            print(f"  📚 从Notion加载了 {len(self.existing_titles)} 条已有标题用于去重")
+            return len(self.existing_titles)
+        except Exception as e:
+            print(f"  ⚠️ 加载Notion已有标题失败: {e}")
+            return 0
+
 
 class NewsFetcher:
     def __init__(self, source_type="china", limit=5):
@@ -389,7 +403,8 @@ class NewsFetcher:
         self.stats = {
             "total": 0, "added": 0, "skipped": 0, "exists": 0, 
             "failed": 0, "image_uploaded": 0, "filtered": 0,
-            "too_old": 0, "duplicate_content": 0, "low_quality": 0
+            "too_old": 0, "duplicate_content": 0, "low_quality": 0,
+            "notion_duplicate": 0  # v11新增：Notion中已存在的数量
         }
         self.articles = []
         self.cloudinary_enabled = all([
@@ -402,18 +417,21 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v10.0.0 - 智能去重版")
+        print("ChineseRocks 新闻抓取系统 v11.0.0 - 智能去重增强版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
         print(f"日期限制: 近{DAYS_LIMIT}天內 (截止: {self.cutoff_date.strftime('%Y-%m-%d')})")
-        print(f"相似度阈值: {SIMILARITY_THRESHOLD:.0%}")
+        print(f"相似度阈值: {SIMILARITY_THRESHOLD:.0%} (v11优化)")
         print(f"Cloudinary: {'已啟用' if self.cloudinary_enabled else '未啟用'}")
         print("="*70)
 
+        # v11新增：加载Notion已有标题进行跨运行去重
+        if NOTION_TOKEN:
+            self.deduplicator.load_existing_from_notion(self.notion, NEWS_DB_ID, days=7)
+
         sources = SOURCES.get(self.source_type, [])
         enabled_sources = [s for s in sources if s["enabled"]]
-        # 按优先级排序
         enabled_sources.sort(key=lambda x: x.get("priority", 99))
 
         print(f"\n抓取 {len(enabled_sources)} 個精選搖滾音樂源 (已按优先级排序)")
@@ -428,6 +446,7 @@ class NewsFetcher:
 
         print(f"\n抓取完成: 共 {len(self.articles)} 条")
         print(f"  - 内容去重过滤: {self.stats['duplicate_content']} 条")
+        print(f"  - Notion已存在: {self.stats['notion_duplicate']} 条")
         print(f"  - 低质量过滤: {self.stats['low_quality']} 条")
         print(f"  - 非搖滾过滤: {self.stats['filtered']} 条")
         print(f"  - 過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
@@ -449,6 +468,7 @@ class NewsFetcher:
             filtered_count = 0
             too_old_count = 0
             duplicate_count = 0
+            notion_dup_count = 0
             low_quality_count = 0
 
             for entry in feed.entries:
@@ -475,11 +495,14 @@ class NewsFetcher:
                     low_quality_count += 1
                     continue
 
-                # 内容去重检查
+                # v11优化：多层次去重检查
                 link = entry.get('link', '')
                 is_dup, dup_reason = self.deduplicator.is_duplicate(title, summary, link)
                 if is_dup:
-                    duplicate_count += 1
+                    if "Notion中已存在" in dup_reason:
+                        notion_dup_count += 1
+                    else:
+                        duplicate_count += 1
                     print(f"    🔄 跳过重复: {dup_reason} - {title[:30]}...")
                     continue
 
@@ -491,7 +514,6 @@ class NewsFetcher:
 
                 article = self._parse_entry(entry, source, genres)
                 if article:
-                    # 添加到去重器
                     self.deduplicator.add_content(
                         article['title'], 
                         article['summary'], 
@@ -500,8 +522,9 @@ class NewsFetcher:
                     self.articles.append(article)
                     count += 1
 
-            print(f"  ✅ 成功獲取 {count} 条 (去重 {duplicate_count}, 低质量 {low_quality_count}, 风格过滤 {filtered_count}, 过期 {too_old_count})")
+            print(f"  ✅ 成功獲取 {count} 条 (去重 {duplicate_count}, Notion已存在 {notion_dup_count}, 低质量 {low_quality_count}, 风格过滤 {filtered_count}, 过期 {too_old_count})")
             self.stats["duplicate_content"] += duplicate_count
+            self.stats["notion_duplicate"] += notion_dup_count
             self.stats["low_quality"] += low_quality_count
             self.stats["filtered"] += filtered_count
             self.stats["too_old"] += too_old_count
@@ -564,9 +587,8 @@ class NewsFetcher:
             return None
 
     def _extract_image_improved(self, entry, source):
-        """優化圖片提取邏輯，支持更多格式"""
+        """優化圖片提取邏輯"""
         try:
-            # 1. 檢查 media_content (RSS 2.0 media 模組)
             if 'media_content' in entry:
                 for media in entry.media_content:
                     if media.get('type', '').startswith('image/'):
@@ -574,26 +596,21 @@ class NewsFetcher:
                     if media.get('url'):
                         return media['url']
 
-            # 2. 檢查 media_thumbnail
             if 'media_thumbnail' in entry and entry.media_thumbnail:
                 return entry.media_thumbnail[0].get('url', '')
 
-            # 3. 檢查 enclosures
             if 'enclosures' in entry and entry.enclosures:
                 for enc in entry.enclosures:
                     if enc.get('type', '').startswith('image/'):
                         return enc.get('href', '')
 
-            # 4. 從 content 中提取圖片
-            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else \
-                      entry.get('summary', entry.get('description', ''))
+            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                       entry.get('summary', entry.get('description', ''))
 
             if content:
                 soup = BeautifulSoup(content, 'html.parser')
                 img = soup.find('img')
                 if img:
                     img_url = img.get('src', '')
-                    # 處理相對路徑
                     if img_url and img_url.startswith('/'):
                         link = entry.get('link', '')
                         if link:
@@ -601,7 +618,6 @@ class NewsFetcher:
                             img_url = urljoin(link, img_url)
                     return img_url
 
-            # 5. 針對特定源的特殊處理
             source_name = source.get('name', '').lower()
             if 'blow' in source_name or 'dopm' in source_name or '深晨' in source_name:
                 if 'description' in entry:
@@ -609,12 +625,6 @@ class NewsFetcher:
                     img = soup.find('img')
                     if img and img.get('src'):
                         return img['src']
-
-            # 6. 檢查 feed 級別的圖片 (某些 RSS 在 channel 層級)
-            if hasattr(entry, 'source'):
-                feed_data = entry.get('source', {})
-                if hasattr(feed_data, 'image') and feed_data.image:
-                    return feed_data.image.get('url', '')
 
         except Exception as e:
             print(f"    圖片提取失敗: {e}")
@@ -766,6 +776,7 @@ class NewsFetcher:
         print("-"*70)
         print(f"过滤统计:")
         print(f"  - 内容去重: {self.stats['duplicate_content']} 条")
+        print(f"  - Notion已存在: {self.stats['notion_duplicate']} 条")
         print(f"  - 低质量: {self.stats['low_quality']} 条")
         print(f"  - 非搖滾: {self.stats['filtered']} 条")
         print(f"  - 過期(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
