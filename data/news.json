@@ -1,29 +1,28 @@
 {
-  "last_updated": "2026-03-23T17:00:34.135185",
+  "last_updated": "2026-03-23T19:03:35.384278",
   "total_count": 16,
   "data": {
     "all": [
       {
-        "id": "32c9f945-80b7-81ab-ae90-e9b6f62ce851",
-        "title": "TLC, Salt-N-Pepa, and En Vogue Unite for Tour",
-        "content": "這場聲勢浩大的北美巡演將於八月拉開序幕。",
+        "id": "32c9f945-80b7-81b3-8020-c2b3a3f673d3",
+        "title": "Courtney Love shares update on her “blossoming appreciation” of Geese – and running into their “gatekeeper elder millennial troll fans”: “I’m a cool o",
+        "content": "她形容樂團主唱 Cameron Winter 的嗓音聽起來“像個600歲的老頭”，同時也是一位“功力深厚的作詞人”。這篇題為《Courtney Love 分享對 Geese 樂隊“日益萌發的喜愛”——並吐槽偶遇了該樂隊那些“把持話語權的千禧一代巨魔粉絲”：“我只是個喜歡一支樂隊的酷老太太——別再來煩我了””的文章，首發於 NME 網站。",
         "category": "國際",
         "tags": [
           "新聞",
-          "Pitchfork",
+          "NME",
           "國際",
-          "現場",
-          "演出"
+          "樂評"
         ],
-        "cover_image": "https://media.pitchfork.com/photos/69c142d1aedc70c09b0622e2/master/pass/tlc-salt-n-pepa-tour.jpeg",
-        "source_url": "https://pitchfork.com/news/tlc-salt-n-pepa-and-en-vogue-unite-for-tour/",
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/03/courtney-cameron@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans-3936217?utm_source=rss&utm_medium=rss&utm_campaign=courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans",
         "published_date": "2026-03-23",
         "is_premium": false,
         "featured": false,
         "homeFeatured": true,
         "displayOrder": 1,
-        "created_time": "2026-03-23T14:54:00.000Z",
-        "last_edited_time": "2026-03-23T15:10:00.000Z"
+        "created_time": "2026-03-23T17:06:00.000Z",
+        "last_edited_time": "2026-03-23T17:11:00.000Z"
       },
       {
         "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
@@ -228,7 +227,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46644IY3HGD%2F20260323%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260323T170034Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCiNjoYcgGzWUwmUbO4iT%2BnZgU2ZhuIH2%2Fm7gnLM9iN6AIgex7rZNjJcfvIaNeOzd0CqcPVOAOii3kvJkMDtQttrbgqiAQIgf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDAFuvZSX6Nb2kBjScCrcA6AqPalXpP0k2UBh2xScw7ivVuEjDgTugmJH0vrNkC0e8FWQyLbebIhisvbZ%2BHly7rmV87b7TO%2BM0%2BJ3wNRAYBLBXGKqIbrt4JkDDY479xnrYh4auVkCXlixC1d4YJ3Bxwysdyu%2BYJqbq7JHlS5AM0fKcun4FhdwGAC0fZ7WvCFx3LUVHRj9hI1BFIlxcG6w9MvfYEATkZ0yzaTmXXm%2BDnTv63j%2BMnhrEkXYQ%2FHiAw2IhjGw28xWVh6E9BCfujMgrGPpM6W8TUunimp8a2c81Lgm0UgRTT13J8xd8YPOn0BjJXEBHM84TqrdIejtoQ2xsEwTULaG%2Bnda4qvm8DSH9cFDN92zgchBycFu5IZATJRjX%2F37Qo7AgxQqRebHeHxEy7j90eD7Lyj%2BQ6wOIFeyRjSSkmRONNJ7sOYV6dEDuflQ7o39vSQn66RpGqjg4lxgKEbI8Bik5rMx93xt%2F2N8osbpOi%2FTjQVrPeWTEAOTw%2FFLj9QK6i337nWofDWuqUTudqdkc4rCXPIcXhtd0vW5c0rNkbOH5wmp6gQTXpzn%2BpGWO6%2BnZt3Ckfx%2FCCKVy98cFicRp0%2FNaYKnJaXw3SoMS%2BYKU8JT5bQMwTzlHz2TmmM6KlYhyKJox60uAUbcMKfAhc4GOqUBjx25FA2FhmQ9jAh3FKTKevRQPb5%2F1EUu16QihQdw%2F%2B0w7nKBRC1j%2Bh%2Bdq6Ck%2ByYsYq%2Bk1uR3hfPolIWQagLUCXv0VsLAA7uoQb%2F9pxkE3al8sL6UzlQqRi1Bo42M66SVc53cozqI4%2B07vAr2RdEaRghqmEEXIcwGI43s3p8lyJYzWhEGU%2FZemS1GthBquqLSBIjZbXCM%2BzohhZonB99r8jGOawue&X-Amz-Signature=00fce38ab0176a01a4ed04f88593a51df17e6d731b6dc725d7488763e5127a56&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466YFKIKH43%2F20260323%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260323T190335Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIAuaZfmQXcldJCIeK%2F5BQ2b07jPGSTVdyUI4CY6wQV%2FgAiEA5AlQmpab12qKMJxQd9JASfpegSsTew937LQ163MnsFEqiAQIg%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDEEPUuxEDvcmwR84oircA3HMAue0c6P4tWPJ%2BpImVfNtyfSc5n%2BCkpszbGtZjncgmnZTat1LhqQT%2F9OIK9NGhxK0qWdAtME%2FJLbIz8oyv25piblyGtCzM0ahApjY%2B21SGDa8MDzaz%2BPwNmK4K4KK8DGTHKhZk%2FoBwAcStc%2BbweokTZJvjDmwqJrXprqDUhr%2BH2vGzTwZtVnZJJDEczs9ur%2FIYpJfg9prtz6bT%2FRH%2Fw%2FLqzMVrdUhEZEi4iT65nxG6b9bl85Z73%2FSRt2d52sI575c69BIbmGVPO%2FpQABvdBDSyslTkBfSL4Di%2Foyyn0OPcZlxjJaPd5232jXcfny%2FOiHd6LZUSBqXOYV34G08FO7sXAHuFL8oPGxpXRhaUaFCF%2F8HakNQxk%2Bj1fZTV4N4UdDfWektIFMB0PeQK%2F6q%2F9exUGxYqTWzj%2BIlDBI42qYCOOSeRxqcRpbEZ8TgDiepbKjP0zyt40WDYz6%2FbrrBHTQ4o5tI97OuahwX%2BlSmDrSJTcOBv0sby5iBz0LamgLleu5NBFUe6XU4f5D2rNpk9aYh8XhCZy6V281a1eMfcFthwI87N%2BeK2dT66mWvORMsdrqZ4lQjxGBuz75%2B%2BzZSFDOSdWTewKUDTXUelcgsbsCqtKiyX80H79TjIj5KMNb1hc4GOqUBT24MHmQ1BjD2kUoMSQwI%2FcRVhi2jnzW7Uz%2FvYOKsrGS0yLsMhMEWF4GCneZFEfi%2BMNxrsoAMyJuuB0flgYovaeWNuw9uRq67nAi68fE7VHCojtaCEImXfCy477WBpo2s1yvM6oj%2Bk0SYfQ8Qh%2FVnLLP8kD8Mmj%2BZfRyned%2Buh4s0Wu3H9QMuVwkaDVwARYbTJUujotojmiKuo189Vm76v4O75Ojs&X-Amz-Signature=0a2377687f29a7d82d5afcb178b482b8db918ce80b59457640eabb3685ee8340&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -295,7 +294,7 @@
           "編輯精選",
           "INDIE & ALTERNATIVE"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46644IY3HGD%2F20260323%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260323T170034Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCiNjoYcgGzWUwmUbO4iT%2BnZgU2ZhuIH2%2Fm7gnLM9iN6AIgex7rZNjJcfvIaNeOzd0CqcPVOAOii3kvJkMDtQttrbgqiAQIgf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDAFuvZSX6Nb2kBjScCrcA6AqPalXpP0k2UBh2xScw7ivVuEjDgTugmJH0vrNkC0e8FWQyLbebIhisvbZ%2BHly7rmV87b7TO%2BM0%2BJ3wNRAYBLBXGKqIbrt4JkDDY479xnrYh4auVkCXlixC1d4YJ3Bxwysdyu%2BYJqbq7JHlS5AM0fKcun4FhdwGAC0fZ7WvCFx3LUVHRj9hI1BFIlxcG6w9MvfYEATkZ0yzaTmXXm%2BDnTv63j%2BMnhrEkXYQ%2FHiAw2IhjGw28xWVh6E9BCfujMgrGPpM6W8TUunimp8a2c81Lgm0UgRTT13J8xd8YPOn0BjJXEBHM84TqrdIejtoQ2xsEwTULaG%2Bnda4qvm8DSH9cFDN92zgchBycFu5IZATJRjX%2F37Qo7AgxQqRebHeHxEy7j90eD7Lyj%2BQ6wOIFeyRjSSkmRONNJ7sOYV6dEDuflQ7o39vSQn66RpGqjg4lxgKEbI8Bik5rMx93xt%2F2N8osbpOi%2FTjQVrPeWTEAOTw%2FFLj9QK6i337nWofDWuqUTudqdkc4rCXPIcXhtd0vW5c0rNkbOH5wmp6gQTXpzn%2BpGWO6%2BnZt3Ckfx%2FCCKVy98cFicRp0%2FNaYKnJaXw3SoMS%2BYKU8JT5bQMwTzlHz2TmmM6KlYhyKJox60uAUbcMKfAhc4GOqUBjx25FA2FhmQ9jAh3FKTKevRQPb5%2F1EUu16QihQdw%2F%2B0w7nKBRC1j%2Bh%2Bdq6Ck%2ByYsYq%2Bk1uR3hfPolIWQagLUCXv0VsLAA7uoQb%2F9pxkE3al8sL6UzlQqRi1Bo42M66SVc53cozqI4%2B07vAr2RdEaRghqmEEXIcwGI43s3p8lyJYzWhEGU%2FZemS1GthBquqLSBIjZbXCM%2BzohhZonB99r8jGOawue&X-Amz-Signature=89aaea1dcb69cb7ed01c5e0ccbc32275817bf2f26942593fca5a7138807bf52b&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466YFKIKH43%2F20260323%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260323T190335Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIAuaZfmQXcldJCIeK%2F5BQ2b07jPGSTVdyUI4CY6wQV%2FgAiEA5AlQmpab12qKMJxQd9JASfpegSsTew937LQ163MnsFEqiAQIg%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDEEPUuxEDvcmwR84oircA3HMAue0c6P4tWPJ%2BpImVfNtyfSc5n%2BCkpszbGtZjncgmnZTat1LhqQT%2F9OIK9NGhxK0qWdAtME%2FJLbIz8oyv25piblyGtCzM0ahApjY%2B21SGDa8MDzaz%2BPwNmK4K4KK8DGTHKhZk%2FoBwAcStc%2BbweokTZJvjDmwqJrXprqDUhr%2BH2vGzTwZtVnZJJDEczs9ur%2FIYpJfg9prtz6bT%2FRH%2Fw%2FLqzMVrdUhEZEi4iT65nxG6b9bl85Z73%2FSRt2d52sI575c69BIbmGVPO%2FpQABvdBDSyslTkBfSL4Di%2Foyyn0OPcZlxjJaPd5232jXcfny%2FOiHd6LZUSBqXOYV34G08FO7sXAHuFL8oPGxpXRhaUaFCF%2F8HakNQxk%2Bj1fZTV4N4UdDfWektIFMB0PeQK%2F6q%2F9exUGxYqTWzj%2BIlDBI42qYCOOSeRxqcRpbEZ8TgDiepbKjP0zyt40WDYz6%2FbrrBHTQ4o5tI97OuahwX%2BlSmDrSJTcOBv0sby5iBz0LamgLleu5NBFUe6XU4f5D2rNpk9aYh8XhCZy6V281a1eMfcFthwI87N%2BeK2dT66mWvORMsdrqZ4lQjxGBuz75%2B%2BzZSFDOSdWTewKUDTXUelcgsbsCqtKiyX80H79TjIj5KMNb1hc4GOqUBT24MHmQ1BjD2kUoMSQwI%2FcRVhi2jnzW7Uz%2FvYOKsrGS0yLsMhMEWF4GCneZFEfi%2BMNxrsoAMyJuuB0flgYovaeWNuw9uRq67nAi68fE7VHCojtaCEImXfCy477WBpo2s1yvM6oj%2Bk0SYfQ8Qh%2FVnLLP8kD8Mmj%2BZfRyned%2Buh4s0Wu3H9QMuVwkaDVwARYbTJUujotojmiKuo189Vm76v4O75Ojs&X-Amz-Signature=6c9ad84a1bb90a1b5c590127facafa6ba04b9b1fc0390f3596923b3da2276054&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "https://music.douban.com/review/17506038/",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -337,7 +336,7 @@
           "PUNK & HARDCORE",
           "樂評"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB46644IY3HGD%2F20260323%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260323T170034Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQCiNjoYcgGzWUwmUbO4iT%2BnZgU2ZhuIH2%2Fm7gnLM9iN6AIgex7rZNjJcfvIaNeOzd0CqcPVOAOii3kvJkMDtQttrbgqiAQIgf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDAFuvZSX6Nb2kBjScCrcA6AqPalXpP0k2UBh2xScw7ivVuEjDgTugmJH0vrNkC0e8FWQyLbebIhisvbZ%2BHly7rmV87b7TO%2BM0%2BJ3wNRAYBLBXGKqIbrt4JkDDY479xnrYh4auVkCXlixC1d4YJ3Bxwysdyu%2BYJqbq7JHlS5AM0fKcun4FhdwGAC0fZ7WvCFx3LUVHRj9hI1BFIlxcG6w9MvfYEATkZ0yzaTmXXm%2BDnTv63j%2BMnhrEkXYQ%2FHiAw2IhjGw28xWVh6E9BCfujMgrGPpM6W8TUunimp8a2c81Lgm0UgRTT13J8xd8YPOn0BjJXEBHM84TqrdIejtoQ2xsEwTULaG%2Bnda4qvm8DSH9cFDN92zgchBycFu5IZATJRjX%2F37Qo7AgxQqRebHeHxEy7j90eD7Lyj%2BQ6wOIFeyRjSSkmRONNJ7sOYV6dEDuflQ7o39vSQn66RpGqjg4lxgKEbI8Bik5rMx93xt%2F2N8osbpOi%2FTjQVrPeWTEAOTw%2FFLj9QK6i337nWofDWuqUTudqdkc4rCXPIcXhtd0vW5c0rNkbOH5wmp6gQTXpzn%2BpGWO6%2BnZt3Ckfx%2FCCKVy98cFicRp0%2FNaYKnJaXw3SoMS%2BYKU8JT5bQMwTzlHz2TmmM6KlYhyKJox60uAUbcMKfAhc4GOqUBjx25FA2FhmQ9jAh3FKTKevRQPb5%2F1EUu16QihQdw%2F%2B0w7nKBRC1j%2Bh%2Bdq6Ck%2ByYsYq%2Bk1uR3hfPolIWQagLUCXv0VsLAA7uoQb%2F9pxkE3al8sL6UzlQqRi1Bo42M66SVc53cozqI4%2B07vAr2RdEaRghqmEEXIcwGI43s3p8lyJYzWhEGU%2FZemS1GthBquqLSBIjZbXCM%2BzohhZonB99r8jGOawue&X-Amz-Signature=b5be124bb41f2baa8eb3aa51ecf1d62baa8017c92bf6d0ea3a9e0b03e11138a8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466YFKIKH43%2F20260323%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260323T190335Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjELr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIAuaZfmQXcldJCIeK%2F5BQ2b07jPGSTVdyUI4CY6wQV%2FgAiEA5AlQmpab12qKMJxQd9JASfpegSsTew937LQ163MnsFEqiAQIg%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDEEPUuxEDvcmwR84oircA3HMAue0c6P4tWPJ%2BpImVfNtyfSc5n%2BCkpszbGtZjncgmnZTat1LhqQT%2F9OIK9NGhxK0qWdAtME%2FJLbIz8oyv25piblyGtCzM0ahApjY%2B21SGDa8MDzaz%2BPwNmK4K4KK8DGTHKhZk%2FoBwAcStc%2BbweokTZJvjDmwqJrXprqDUhr%2BH2vGzTwZtVnZJJDEczs9ur%2FIYpJfg9prtz6bT%2FRH%2Fw%2FLqzMVrdUhEZEi4iT65nxG6b9bl85Z73%2FSRt2d52sI575c69BIbmGVPO%2FpQABvdBDSyslTkBfSL4Di%2Foyyn0OPcZlxjJaPd5232jXcfny%2FOiHd6LZUSBqXOYV34G08FO7sXAHuFL8oPGxpXRhaUaFCF%2F8HakNQxk%2Bj1fZTV4N4UdDfWektIFMB0PeQK%2F6q%2F9exUGxYqTWzj%2BIlDBI42qYCOOSeRxqcRpbEZ8TgDiepbKjP0zyt40WDYz6%2FbrrBHTQ4o5tI97OuahwX%2BlSmDrSJTcOBv0sby5iBz0LamgLleu5NBFUe6XU4f5D2rNpk9aYh8XhCZy6V281a1eMfcFthwI87N%2BeK2dT66mWvORMsdrqZ4lQjxGBuz75%2B%2BzZSFDOSdWTewKUDTXUelcgsbsCqtKiyX80H79TjIj5KMNb1hc4GOqUBT24MHmQ1BjD2kUoMSQwI%2FcRVhi2jnzW7Uz%2FvYOKsrGS0yLsMhMEWF4GCneZFEfi%2BMNxrsoAMyJuuB0flgYovaeWNuw9uRq67nAi68fE7VHCojtaCEImXfCy477WBpo2s1yvM6oj%2Bk0SYfQ8Qh%2FVnLLP8kD8Mmj%2BZfRyned%2Buh4s0Wu3H9QMuVwkaDVwARYbTJUujotojmiKuo189Vm76v4O75Ojs&X-Amz-Signature=0e136f6a6cf1cd229881ada5c2b9ef362fa81097200860f68db92dc7789ac05f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -350,26 +349,25 @@
     ],
     "latest": [
       {
-        "id": "32c9f945-80b7-81ab-ae90-e9b6f62ce851",
-        "title": "TLC, Salt-N-Pepa, and En Vogue Unite for Tour",
-        "content": "這場聲勢浩大的北美巡演將於八月拉開序幕。",
+        "id": "32c9f945-80b7-81b3-8020-c2b3a3f673d3",
+        "title": "Courtney Love shares update on her “blossoming appreciation” of Geese – and running into their “gatekeeper elder millennial troll fans”: “I’m a cool o",
+        "content": "她形容樂團主唱 Cameron Winter 的嗓音聽起來“像個600歲的老頭”，同時也是一位“功力深厚的作詞人”。這篇題為《Courtney Love 分享對 Geese 樂隊“日益萌發的喜愛”——並吐槽偶遇了該樂隊那些“把持話語權的千禧一代巨魔粉絲”：“我只是個喜歡一支樂隊的酷老太太——別再來煩我了””的文章，首發於 NME 網站。",
         "category": "國際",
         "tags": [
           "新聞",
-          "Pitchfork",
+          "NME",
           "國際",
-          "現場",
-          "演出"
+          "樂評"
         ],
-        "cover_image": "https://media.pitchfork.com/photos/69c142d1aedc70c09b0622e2/master/pass/tlc-salt-n-pepa-tour.jpeg",
-        "source_url": "https://pitchfork.com/news/tlc-salt-n-pepa-and-en-vogue-unite-for-tour/",
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/03/courtney-cameron@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans-3936217?utm_source=rss&utm_medium=rss&utm_campaign=courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans",
         "published_date": "2026-03-23",
         "is_premium": false,
         "featured": false,
         "homeFeatured": true,
         "displayOrder": 1,
-        "created_time": "2026-03-23T14:54:00.000Z",
-        "last_edited_time": "2026-03-23T15:10:00.000Z"
+        "created_time": "2026-03-23T17:06:00.000Z",
+        "last_edited_time": "2026-03-23T17:11:00.000Z"
       },
       {
         "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
