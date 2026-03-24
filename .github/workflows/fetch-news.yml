@@ -1,16 +1,18 @@
-name: Fetch News v11 - 智能去重增强版
+name: Fetch News v12 - 国内源修复+国际去重增强版
 
 on:
   schedule:
-    # 中国新闻：每天 3 次（增加频次）
-    # 北京时间 12:00, 18:00, 22:00 (UTC 4:00, 10:00, 14:00)
-    - cron: '0 4,10,14 * * *'
+    # v12: 国内新闻增加到每天 4 次（更频繁）
+    # 北京时间 10:00, 14:00, 18:00, 22:00 (UTC 2:00, 6:00, 10:00, 14:00)
+    - cron: '0 2,6,10,14 * * *'
 
-    # 国际新闻：每週三、六 12:00 (UTC 4:00) - 每源1条
-    - cron: '0 4 * * 3,6'
+    # v12: 国际新闻减少到每周 1 次（减少重复）
+    # 每周六 12:00 (UTC 4:00) - 每源1条
+    - cron: '0 4 * * 6'
 
-    # 港台新聞：每週二、五 12:00 (UTC 4:00) - 每源2条
-    - cron: '0 4 * * 2,5'
+    # v12: 港台新闻减少到每周 1 次（平衡内容量）
+    # 每周三 12:00 (UTC 4:00) - 每源3条
+    - cron: '0 4 * * 3'
 
   workflow_dispatch:
     inputs:
@@ -20,15 +22,15 @@ on:
         default: 'test'
         type: choice
         options:
-          - china          # 中國搖滾新聞 (每源8条，v11增加)
-          - taiwan         # 台灣獨立音樂 (每源3条)
+          - china          # 中國搖滾新聞 (每源10条，v12增加)
+          - taiwan         # 台灣獨立音樂 (每源5条)
           - hongkong       # 香港搖滾新聞 (每源3条)
-          - international  # 國際搖滾新聞 (每源2条，v11增加)
+          - international  # 國際搖滾新聞 (每源1条，v12减少)
           - test           # 測試模式 (3條)
       days_limit:
         description: '日期限制(天) - 只抓取近N天內的新聞'
         required: false
-        default: '15'
+        default: '30'
         type: string
 
 jobs:
@@ -46,22 +48,22 @@ jobs:
       run: |
         pip install feedparser requests notion-client beautifulsoup4 python-dateutil cloudinary
 
-    - name: Fetch Rock News v11
+    - name: Fetch Rock News v12
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
         CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
         CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
         CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-        DAYS_LIMIT: ${{ github.event.inputs.days_limit || '15' }}
+        DAYS_LIMIT: ${{ github.event.inputs.days_limit || '30' }}
       run: |
         MODE="${{ github.event.inputs.mode }}"
 
         # 定時任務自動判斷
         if [ -z "$MODE" ]; then
           echo "=========================================="
-          echo "🎸 ChineseRocks 搖滾新聞抓取 v11.0 (智能去重增强版)"
-          echo "优化：88%相似度阈值 + 持久化去重 + 更多国内源"
+          echo "🎸 ChineseRocks 搖滾新聞抓取 v12.0"
+          echo "修复：移除不可靠RSSHub源，增强国际源间去重"
           echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
@@ -70,55 +72,56 @@ jobs:
 
           echo "當前 UTC 時間: $HOUR:00, 星期$DOW"
 
-          # 國際新聞：每週三、六 12:00 (UTC 4:00)
-          if [ "$HOUR" == "04" ] && ([ "$DOW" == "3" ] || [ "$DOW" == "6" ]); then
-            echo "🌍 國際搖滾新聞 (每源2条，v11增加，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v11.py --source international --limit 2
+          # v12: 国际新闻减少到每周六 1次
+          if [ "$HOUR" == "04" ] && [ "$DOW" == "6" ]; then
+            echo "🌍 國際搖滾新聞 (每源1条，减少重复，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news_v12.py --source international --limit 1
 
-          # 港台新聞：每週二、五 12:00 (UTC 4:00)
-          elif [ "$HOUR" == "04" ] && ([ "$DOW" == "2" ] || [ "$DOW" == "5" ]); then
-            echo "🇭🇰 港台搖滾新聞 (每源3条，v11增加，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v11.py --source taiwan --limit 3
-            python scripts/fetch_news_v11.py --source hongkong --limit 3
+          # v12: 港台新闻减少到每周三 1次
+          elif [ "$HOUR" == "04" ] && [ "$DOW" == "3" ]; then
+            echo "🇭🇰 港台搖滾新聞 (每源5条，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news_v12.py --source taiwan --limit 5
+            python scripts/fetch_news_v12.py --source hongkong --limit 3
 
-          # 中國新聞：每天 3 次
+          # v12: 中國新聞增加到每天 4 次
           else
-            echo "🇨🇳 中國搖滾新聞 (每源8条，v11增加，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v11.py --source china --limit 8
+            echo "🇨🇳 中國搖滾新聞 (每源10条，v12增加，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news_v12.py --source china --limit 10
           fi
 
         else
           # 手動觸發
           echo "=========================================="
-          echo "🎸 ChineseRocks 搖滾新聞抓取 v11.0 (手動)"
+          echo "🎸 ChineseRocks 搖滾新聞抓取 v12.0 (手動)"
           echo "模式: $MODE"
           echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
           case "$MODE" in
             china)
-              echo "🇨🇳 中國搖滾新聞 (每源8条，v11增加，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v11.py --source china --limit 8
+              echo "🇨🇳 中國搖滾新聞 (每源10条，v12增加，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v12.py --source china --limit 10
               ;;
             taiwan)
-              echo "🇹🇼 台灣獨立音樂 (每源3条，v11增加，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v11.py --source taiwan --limit 3
+              echo "🇹🇼 台灣獨立音樂 (每源5条，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v12.py --source taiwan --limit 5
               ;;
             hongkong)
-              echo "🇭🇰 香港搖滾新聞 (每源3条，v11增加，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v11.py --source hongkong --limit 3
+              echo "🇭🇰 香港搖滾新聞 (每源3条，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v12.py --source hongkong --limit 3
               ;;
             international)
-              echo "🌍 國際搖滾新聞 (每源2条，v11增加，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v11.py --source international --limit 2
+              echo "🌍 國際搖滾新聞 (每源1条，v12减少重复，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news_v12.py --source international --limit 1
               ;;
             test)
               echo "🧪 測試模式 (3條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v11.py --source test --limit 3
+              python scripts/fetch_news_v12.py --source test --limit 3
               ;;
           esac
         fi
 
         echo "=========================================="
-        echo "🤘 搖滾新聞抓取完成 (v11: 88%阈值去重 + 持久化去重)"
+        echo "🤘 搖滾新聞抓取完成 v12.0"
+        echo "修复：国内源更稳定，国际源间去重增强"
         echo "=========================================="
