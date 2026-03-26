@@ -27,7 +27,9 @@ html {
         * { margin:0;padding:0;box-sizing:border-box;}
 
         body {
-            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#0a0a0a;color:#c0c0c0;overflow-x:hidden;margin:0;padding:0;}
+            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#0a0a0a;color:#c0c0c0;overflow-x:hidden;margin:0;padding:0;;
+    padding-top: 70px;
+}
 
         .hero-vote-card {
             width:420px;background:rgba(10,10,10,0.9);border:1px solid rgba(255,0,102,0.3);border-radius:16px;padding:2rem;position:absolute;right:10%;top:50%;transform:translateY(-50%);z-index:10;}
@@ -146,9 +148,14 @@ html {
             color:#FFD700;font-weight:800;font-size:1.1rem;}
 
         .free-quota-btn {
-            background:white;color:#FF0066;padding:0.5rem 1.25rem;border-radius:20px;font-weight:800;font-size:0.85rem;text-decoration:none;white-space:nowrap;transition:all 0.3s;cursor:pointer;border:none;}
+            background:white;color:#FF0066;padding:0.5rem 1.25rem;border-radius:20px;font-weight:800;font-size:0.85rem;text-decoration:none;white-space:nowrap;transition:all 0.3s;}
 
         .free-quota-btn:hover {
+            /* 移动端全局盒模型保护 */
+            * {
+                box-sizing: border-box !important;
+            }
+            
             transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 
         @media (max-width:768px) {
@@ -245,10 +252,10 @@ html {
             background:#FF0066;color:white;}
 
         .invite-float {
-            position:fixed;bottom:30px;right:30px;z-index:999;pointer-events:auto;}
+            position:fixed;bottom:30px;right:30px;z-index:999;}
 
         .invite-btn {
-            width:64px;height:64px;background:radial-gradient(circle at 30% 30%,#FFF8DC,#FFD700,#FFA500,#B8860B);border:3px solid #DAA520;color:#8B0000;font-size:0.75rem;font-weight:900;cursor:pointer;box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,215,0,0.5),0 0 60px rgba(255,165,0,0.3),inset 0 0 15px rgba(255,255,255,0.6),inset -3px -3px 10px rgba(184,134,11,0.5);transition:all 0.3s;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);animation:coinShine 1.5s ease-in-out infinite alternate, coinFloat 3s ease-in-out infinite;position:relative;overflow:hidden;pointer-events:auto;}
+            width:64px;height:64px;background:radial-gradient(circle at 30% 30%,#FFF8DC,#FFD700,#FFA500,#B8860B);border:3px solid #DAA520;color:#8B0000;font-size:0.75rem;font-weight:900;cursor:pointer;box-shadow:0 0 20px rgba(255,215,0,0.9),0 0 40px rgba(255,215,0,0.5),0 0 60px rgba(255,165,0,0.3),inset 0 0 15px rgba(255,255,255,0.6),inset -3px -3px 10px rgba(184,134,11,0.5);transition:all 0.3s;clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;text-shadow:0 2px 4px rgba(0,0,0,0.5),0 0 10px rgba(255,215,0,1),0 0 20px rgba(255,165,0,0.8);animation:coinShine 1.5s ease-in-out infinite alternate, coinFloat 3s ease-in-out infinite;position:relative;overflow:hidden;}
 
         .invite-btn::before {
             content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.8) 50%,transparent 60%);animation:coinFlash 2s linear infinite;}
@@ -281,7 +288,7 @@ html {
         .btn-line2{font-size:0.65rem;}
 
         .invite-tooltip {
-            position:absolute;bottom:65px;right:0;background:white;color:#0a0a0a;padding:0.75rem;border-radius:10px;width:280px;font-size:0.8rem;box-shadow:0 4px 15px rgba(0,0,0,0.2);opacity:0;visibility:hidden;transition:all 0.3s;pointer-events:none;}
+            position:absolute;bottom:65px;right:0;background:white;color:#0a0a0a;padding:0.75rem;border-radius:10px;width:280px;font-size:0.8rem;box-shadow:0 4px 15px rgba(0,0,0,0.2);opacity:0;visibility:hidden;transition:all 0.3s;}
 
         .invite-float:hover .invite-tooltip {
             opacity:1;visibility:visible;}
@@ -305,20 +312,20 @@ html {
         .nav-links { display:flex;align-items:center;gap:1.5rem;}
 
         .nav-links a {
-            color:var(--silver-text);text-decoration:none;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;transition:color 0.3s;padding:0.5rem 1.5rem;pointer-events:auto;cursor:pointer;}
+            color:var(--silver-text);text-decoration:none;font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;transition:color 0.3s;padding:0.5rem 1.5rem;}
 
         .nav-links a:hover,.nav-links a.active { color:var(--pink-primary);}
 
         .nav-separator { color:var(--pink-primary);font-size:0.7rem;}
 
         .login-btn {
-            border:1.5px solid var(--pink-primary);padding:0.4rem 1rem;color:var(--pink-primary) !important;font-size:0.8rem;border-radius:4px;border-bottom:1.5px solid var(--pink-primary);transition:all 0.3s ease;cursor:pointer;background:transparent;pointer-events:auto;}
+            border:1.5px solid var(--pink-primary);padding:0.4rem 1rem;color:var(--pink-primary) !important;font-size:0.8rem;border-radius:4px;border-bottom:1.5px solid var(--pink-primary);transition:all 0.3s ease;}
 
         .login-btn:hover {
             background:var(--pink-primary);color:white !important;transform:translateY(-1px);box-shadow:0 4px 12px rgba(255,0,102,0.3);}
 
         .mobile-menu-btn {
-            display:none;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;z-index:1002;pointer-events:auto;}
+            display:none;background:none;border:none;color:white;font-size:1.5rem;cursor:pointer;z-index:1002;}
 
         .hero-section {
             position:relative;width:100%;aspect-ratio:1280 / 672;margin:0;overflow:hidden;background-color:#0a0a0a;z-index:1;}
@@ -609,10 +616,7 @@ html {
             position:absolute;top:1rem;right:1rem;background:var(--pink-primary);color:white;padding:0.3rem 0.8rem;font-weight:800;font-size:0.8rem;}
 
         .livetv-section {
-            background:#c0c0c0;padding:4rem 0;text-align:center;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a;cursor:pointer;transition:all 0.3s;}
-        
-        .livetv-section:hover {
-            background:#d0d0d0;}
+            background:#c0c0c0;padding:4rem 0;text-align:center;border-top:1px solid #0a0a0a;border-bottom:1px solid #0a0a0a;}
 
         .livetv-section .livetv-title,.livetv-section .livetv-subtitle {
             color:#0a0a0a;}
@@ -708,7 +712,7 @@ html {
             .nav-links.active { display:flex;}
 
             .nav-links a {
-                color:var(--silver-text);padding:1rem 2rem;border-bottom:1px solid rgba(255,255,255,0.1);display:block;width:100%;text-align:center;pointer-events:auto;}
+                color:var(--silver-text);padding:1rem 2rem;border-bottom:1px solid rgba(255,255,255,0.1);display:block;width:100%;text-align:center;}
 
             .nav-links a:hover,.nav-links a.active {
                 color:var(--pink-primary);background:rgba(255,0,102,0.1);}
@@ -1407,86 +1411,7 @@ html {
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        
-        /* LIVE TV 弹窗样式 */
-        .livetv-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-        }
-        .livetv-modal.active {
-            display: flex;
-        }
-        .livetv-modal-content {
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-            border: 2px solid #FF0066;
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            text-align: center;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-        }
-        .livetv-modal-close {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #888;
-            font-size: 2rem;
-            cursor: pointer;
-        }
-        .livetv-modal-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-        }
-        .livetv-modal-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: white;
-            margin-bottom: 1rem;
-        }
-        .livetv-modal-text {
-            color: #888;
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        .livetv-modal-features {
-            text-align: left;
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            padding-left: 2rem;
-        }
-        .livetv-modal-features li {
-            margin-bottom: 0.5rem;
-        }
-        .livetv-modal-btn {
-            background: #FF0066;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-weight: 800;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .livetv-modal-btn:hover {
-            background: #CC0052;
-            transform: translateY(-2px);
-        }
         </style>
-
     <!-- Google Sign-In SDK -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
@@ -1509,6 +1434,87 @@ html {
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
     </script>
+
+    <!-- 统一会员系统 -->
+    <script>
+    (function() {
+        if (window.CRMemberSystem) return;
+
+        const MemberSystem = {
+            DAILY_QUOTA: 3,
+
+            getTodayReads: function() {
+                const today = new Date().toDateString();
+                const stored = localStorage.getItem('cr_readHistory');
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    if (data.date === today) return data.count || 0;
+                }
+                return 0;
+            },
+
+            recordRead: function(isMembersOnly) {
+                // 如果不是会员专享，不记录也不限制
+                if (!isMembersOnly) return true;
+
+                // 如果是会员，不限制
+                if (this.isMember()) return true;
+
+                const today = new Date().toDateString();
+                const current = this.getTodayReads();
+
+                // 检查是否还有额度
+                if (current >= this.DAILY_QUOTA) {
+                    return false; // 额度已用完
+                }
+
+                localStorage.setItem('cr_readHistory', JSON.stringify({
+                    date: today,
+                    count: current + 1
+                }));
+                return true;
+            },
+
+            isMember: function() {
+                return localStorage.getItem('userLoggedIn') === 'true' || 
+                       localStorage.getItem('cr_member') === 'true';
+            },
+
+            getRemaining: function() {
+                if (this.isMember()) return Infinity;
+                return Math.max(0, this.DAILY_QUOTA - this.getTodayReads());
+            },
+
+            canRead: function(isMembersOnly) {
+                if (this.isMember()) return true;
+                if (!isMembersOnly) return true; // 非会员专享内容始终可阅读
+                return this.getRemaining() > 0;
+            }
+        };
+
+        window.CRMemberSystem = MemberSystem;
+        window.MemberSystem = MemberSystem;
+
+        // 更新额度显示
+        window.updateQuotaDisplay = function() {
+            const remaining = MemberSystem.getRemaining();
+            const el = document.getElementById('remainingReads');
+            const quotaBar = document.querySelector('.free-quota-bar');
+
+            if (el) el.textContent = remaining === Infinity ? '無限' : remaining;
+
+            // 會員登入後隱藏額度提示欄
+            if (MemberSystem.isMember() && quotaBar) {
+                quotaBar.style.display = 'none';
+            } else if (quotaBar) {
+                quotaBar.style.display = 'flex';
+            }
+        };
+
+        // 页面加载时更新
+        document.addEventListener('DOMContentLoaded', window.updateQuotaDisplay);
+    })();
+    </script>
 </head>
 <body>
 
@@ -1518,7 +1524,7 @@ html {
             <a href="index.html" class="logo">
                 <img src="./image/chineserockslogo.png" alt="ChineseRocks">
             </a>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             <div class="nav-links" id="navLinks">
                 <a href="./news.html">NEWS</a>
                 <span class="nav-separator">★</span>
@@ -1528,8 +1534,8 @@ html {
                 <span class="nav-separator">★</span>
                 <a href="#shows-section">SHOWS</a>
                 <span class="nav-separator">★</span>
-                <a href="#livetv" class="live-tv-link" id="liveTvLink">LIVE TV</a>
-                <button class="login-btn" id="userMenuBtn">LOGIN</button>
+                <a href="#livetv" class="live-tv-link" onclick="showLiveTVComingSoon(); return false;">LIVE TV</a>
+                <a href="#" class="login-btn" id="userMenuBtn" onclick="handleUserMenuClick(); return false;">LOGIN</a>
             </div>
         </div>
     </nav>
@@ -1543,7 +1549,7 @@ html {
 
     <div class="magazine-display-wrapper">
         <!-- 左翻页按钮 -->
-        <button class="page-btn prev" id="prevBtn"></button>
+        <button class="page-btn prev" id="prevBtn" onclick="prevPage()"></button>
 
         <!-- 杂志容器 -->
         <div class="book-container" id="bookContainer">
@@ -1551,7 +1557,7 @@ html {
         </div>
 
         <!-- 右翻页按钮 -->
-        <button class="page-btn next" id="nextBtn"></button>
+        <button class="page-btn next" id="nextBtn" onclick="nextPage()"></button>
 
         <!-- 页码指示器 -->
         <div class="page-indicator" id="pageIndicator">封面</div>
@@ -1568,10 +1574,15 @@ html {
 .magazine-fullscreen {
     position: relative;
     width: 100%;
-    aspect-ratio: 1280 / 672;
+    min-height: 600px;
+    height: calc(100vh - 70px);
+    max-height: 800px;
     margin: 0;
     overflow: hidden;
     background-color: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .magazine-bg-wrapper {
@@ -1598,7 +1609,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px 100px 80px;
+    padding: 20px 80px 60px;
     box-sizing: border-box;
 }
 
@@ -1613,7 +1624,6 @@ html {
     z-index: 100;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0.8;
-    pointer-events: auto;
 }
 
 .page-btn:hover {
@@ -1647,13 +1657,17 @@ html {
     width: 900px;
     height: 600px;
     perspective: 2000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 页面通用 */
 .page {
     position: absolute;
     top: 0;
-    height: 600px;
+    height: 100%;
+    max-height: 600px;
     transform-style: preserve-3d;
     transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1682,6 +1696,13 @@ html {
     top: 0;
     display: flex;
     flex-wrap: nowrap;
+    gap: 0;
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    border: none;
+    justify-content: flex-start;
+    align-items: stretch;
 }
 
 .spread-half {
@@ -1691,18 +1712,25 @@ html {
     flex-grow: 0;
     position: relative;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .spread-half.right {
     transform-origin: left center;
 }
 
-/* 页面内容 - 修复底部截取问题 */
+/* 页面内容 */
 .page-content {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000;
+    background: transparent;
     line-height: 0;
     font-size: 0;
     display: flex;
@@ -1713,13 +1741,14 @@ html {
 .page-content img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: fill;
     object-position: center center;
     display: block;
     border: none;
     outline: none;
     margin: 0;
     padding: 0;
+    background: transparent;
 }
 
 /* 左右翻页效果 */
@@ -1785,7 +1814,6 @@ html {
     transition: all 0.3s;
     text-align: center;
     line-height: 1.3;
-    pointer-events: auto;
 }
 
 .issue-btn:last-child {
@@ -1798,164 +1826,44 @@ html {
     color: white;
 }
 
-/* 会员升级弹窗 */
-.member-upgrade-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.9);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-}
-.member-upgrade-modal.active {
-    display: flex;
-}
-.member-upgrade-content {
-    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-    border: 2px solid #FF0066;
-    border-radius: 20px;
-    padding: 2.5rem;
-    text-align: center;
-    max-width: 420px;
-    width: 90%;
-    position: relative;
-}
-.member-upgrade-close {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    background: none;
-    border: none;
-    color: #888;
-    font-size: 2rem;
-    cursor: pointer;
-}
-.member-upgrade-icon {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-}
-.member-upgrade-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: white;
-    margin-bottom: 0.5rem;
-}
-.member-upgrade-text {
-    color: #888;
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-}
-.member-upgrade-current {
-    background: rgba(255,0,102,0.1);
-    border: 1px solid rgba(255,0,102,0.3);
-    border-radius: 10px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-}
-.member-upgrade-current-title {
-    color: #FF0066;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-.member-upgrade-current-text {
-    color: #aaa;
-    font-size: 0.9rem;
-}
-.member-upgrade-btn {
-    display: inline-block;
-    background: #FF0066;
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    font-weight: 800;
-    font-size: 1rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-decoration: none;
-}
-.member-upgrade-btn:hover {
-    background: #CC0052;
-    transform: translateY(-2px);
-}
-.member-upgrade-skip {
-    color: #666;
-    font-size: 0.85rem;
-    margin-top: 1rem;
-    cursor: pointer;
-    text-decoration: underline;
-    background: none;
-    border: none;
-}
-
-/* 响应式适配 - 电脑端 */
+/* 响应式适配 */
 @media (max-width: 1320px) {
     .magazine-fullscreen {
-        aspect-ratio: 1280/800;
+        min-height: 550px;
+        height: calc(100vh - 80px);
+        max-height: 750px;
     }
     .magazine-display-wrapper {
-        padding: 50px 90px 70px;
+        padding: 40px 80px 60px;
     }
-    .page-btn { width: 65px; height: 65px; }
-    .page-btn.prev { left: 50px; }
-    .page-btn.next { right: 50px; }
-    .book-container { width: 80%; height: 85%; }
-    .page { height: 100%; }
+    .page-btn { width: 60px; height: 60px; }
+    .page-btn.prev { left: 40px; }
+    .page-btn.next { right: 40px; }
+    .book-container { 
+        width: 90%; 
+        height: 100%;
+        max-height: 550px;
+    }
+    .page { 
+        height: 100%;
+        max-height: 550px;
+    }
     .page.single, .spread-half { width: 50%; }
     .page.spread { width: 100%; }
 }
 
 @media (max-width: 1024px) {
     .magazine-fullscreen {
-        aspect-ratio: 1280/672 !important;
-        min-height: auto !important;
-        height: auto !important;
+        min-height: 500px;
+        height: calc(100vh - 70px);
+        max-height: 650px;
     }
     .magazine-display-wrapper {
-        padding: 40px 80px 60px;
+        padding: 35px 70px 50px;
     }
-    .page-btn { width: 55px; height: 55px; }
-    .page-btn.prev { left: 40px; }
-    .page-btn.next { right: 40px; }
-    .page-indicator { 
-        font-size: 12px; 
-        padding: 6px 15px;
-        bottom: 15px;
-    }
-    .book-container {
-        width: 80%;
-        height: 80%;
-    }
-    .issue-btn { 
-        padding: 1rem 0.3rem;
-        font-size: 0.7rem;
-    }
-}
-
-/* 移动端适配 - 修复显示问题 */
-@media (max-width: 768px) {
-    .magazine-fullscreen {
-        aspect-ratio: auto !important;
-        min-height: 500px !important;
-        height: 500px !important;
-    }
-    .magazine-display-wrapper {
-        padding: 80px 50px 50px;
-    }
-    .page-btn { 
-        width: 45px; 
-        height: 45px; 
-        opacity: 0.7;
-        z-index: 100;
-    }
-    .page-btn.prev { left: 10px; }
-    .page-btn.next { right: 10px; }
+    .page-btn { width: 50px; height: 50px; }
+    .page-btn.prev { left: 35px; }
+    .page-btn.next { right: 35px; }
     .page-indicator { 
         font-size: 11px; 
         padding: 5px 12px;
@@ -1963,16 +1871,52 @@ html {
     }
     .book-container {
         width: 85%;
-        height: 380px;
-        min-height: 380px;
+        height: 100%;
+        max-height: 500px;
     }
-    .page { height: 100%; }
+    .page {
+        max-height: 500px;
+    }
+    .issue-btn { 
+        padding: 0.9rem 0.3rem;
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px;
+    }
+    .magazine-fullscreen {
+        min-height: 500px !important;
+        height: calc(100vh - 150px) !important;
+        max-height: 650px !important;
+        margin-top: 0 !important;
+    }
+    .magazine-display-wrapper {
+        padding: 20px 50px 40px;
+    }
+    .page-btn { 
+        width: 40px; 
+        height: 40px; 
+        opacity: 0.8;
+        z-index: 100;
+    }
+    .page-btn.prev { left: 10px; }
+    .page-btn.next { right: 10px; }
+    .page-indicator { 
+        font-size: 10px; 
+        padding: 4px 10px;
+        bottom: 10px;
+    }
+    .book-container {
+        width: 100%;
+        height: 100%;
+        max-height: 450px;
+    }
+    .page { height: 100%; max-height: 450px; }
     .page.single, .spread-half { width: 50%; }
     .page.spread { width: 100%; }
-    .page-content img {
-        object-fit: contain;
-        object-position: center center;
-    }
     .issue-btn { 
         flex: 0 0 calc(20% - 1px);
         min-width: 50px;
@@ -1989,29 +1933,37 @@ html {
 }
 
 @media (max-width: 480px) {
+    body {
+        padding-top: 70px;
+    }
     .magazine-fullscreen {
         min-height: 450px !important;
-        height: 450px !important;
+        height: calc(100vh - 140px) !important;
+        max-height: 550px !important;
+        margin-top: 0 !important;
     }
     .magazine-display-wrapper {
-        padding: 70px 40px 40px;
+        padding: 15px 40px 35px;
     }
     .page-btn { 
-        width: 40px; 
-        height: 40px; 
+        width: 35px; 
+        height: 35px; 
         z-index: 100;
     }
     .page-btn.prev { left: 8px; }
     .page-btn.next { right: 8px; }
     .page-indicator { 
-        font-size: 10px; 
-        padding: 4px 10px;
-        bottom: 10px;
+        font-size: 9px; 
+        padding: 3px 8px;
+        bottom: 8px;
     }
     .book-container {
-        width: 90%;
-        height: 340px;
-        min-height: 340px;
+        width: 100%;
+        height: 100%;
+        max-height: 380px;
+    }
+    .page {
+        max-height: 380px;
     }
     .issue-btn { 
         flex: 0 0 calc(25% - 1px) !important;
@@ -2042,107 +1994,24 @@ html {
 
 @media (max-width: 380px) {
     .magazine-fullscreen {
-        min-height: 400px !important;
-        height: 400px !important;
+        min-height: 550px !important;
+        height: 550px !important;
     }
     .magazine-display-wrapper {
-        padding: 65px 35px 35px;
+        padding: 120px 45px 40px;
     }
     .page-btn { 
         width: 35px; 
         height: 35px; 
         z-index: 100;
     }
-    .page-btn.prev { left: 5px; }
-    .page-btn.next { right: 5px; }
-    .book-container {
-        width: 92%;
-        height: 300px;
-        min-height: 300px;
-    }
+    .page-btn.prev { left: 8px; }
+    .page-btn.next { right: 8px; }
 }
 </style>
 
-
 <script>
-// ==================== 统一会员系统 ====================
-const MemberSystem = {
-    // 会员等级定义
-    TIERS: {
-        GUEST: { level: 0, name: '游客', maxIssue: 2, canReadPages: false },
-        TRIAL: { level: 1, name: '体验卡', maxIssue: 2, canReadPages: true },
-        WEEKLY: { level: 2, name: '周卡', maxIssue: 3, canReadPages: true },
-        MONTHLY: { level: 3, name: '月卡', maxIssue: 4, canReadPages: true },
-        QUARTERLY: { level: 4, name: '季卡', maxIssue: 6, canReadPages: true },
-        YEARLY: { level: 5, name: '年卡', maxIssue: 999, canReadPages: true }
-    },
-
-    // 获取当前会员等级
-    getCurrentTier() {
-        const memberType = localStorage.getItem('memberType');
-        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-        
-        if (!isLoggedIn) return this.TIERS.GUEST;
-        
-        switch(memberType) {
-            case '体验卡':
-            case 'trial':
-                return this.TIERS.TRIAL;
-            case '周卡':
-            case 'weekly':
-                return this.TIERS.WEEKLY;
-            case '月卡':
-            case 'monthly':
-                return this.TIERS.MONTHLY;
-            case '季卡':
-            case 'quarterly':
-                return this.TIERS.QUARTERLY;
-            case '年卡':
-            case 'yearly':
-                return this.TIERS.YEARLY;
-            default:
-                // 已登录但没有会员类型，默认为体验卡
-                return this.TIERS.TRIAL;
-        }
-    },
-
-    // 检查是否可以查看某期杂志
-    canViewIssue(issueNum) {
-        const tier = this.getCurrentTier();
-        return issueNum <= tier.maxIssue;
-    },
-
-    // 检查是否可以翻页阅读
-    canReadPages(issueNum) {
-        const tier = this.getCurrentTier();
-        // 游客只能看封面
-        if (tier.level === 0) return false;
-        // 体验卡及以上可以看完整内容
-        return tier.canReadPages && issueNum <= tier.maxIssue;
-    },
-
-    // 获取需要升级到的等级
-    getRequiredTier(issueNum) {
-        if (issueNum <= 2) return null;
-        if (issueNum <= 4) return this.TIERS.MONTHLY;
-        if (issueNum <= 6) return this.TIERS.QUARTERLY;
-        return this.TIERS.YEARLY;
-    },
-
-    // 设置会员类型
-    setMemberType(type) {
-        localStorage.setItem('memberType', type);
-        localStorage.setItem('cr_member', 'true');
-    },
-
-    // 清除会员
-    clearMember() {
-        localStorage.removeItem('memberType');
-        localStorage.removeItem('cr_member');
-    }
-};
-
-// ==================== 杂志数据管理 ====================
+// 杂志数据管理
 const magazineData = {
     currentIssue: 1,
     currentPage: 0,
@@ -2153,16 +2022,9 @@ const magazineData = {
     },
 
     pageExists(issueNum, pageNum) {
-        // 所有期数都有封面
+        if (issueNum === 1) return true;
         if (pageNum === 0) return true;
-        // 根据期数返回不同的页数
-        // #1, #2: 完整页面 (P1-P15)
-        // #3开始: 大于P14
-        if (issueNum <= 2) {
-            return pageNum <= 15;
-        }
-        // #3及以上有更多页面
-        return pageNum <= 20;
+        return false;
     },
 
     getPages(issueNum) {
@@ -2173,36 +2035,35 @@ const magazineData = {
             right: { num: 0, src: this.getImagePath(issueNum, 0), name: '封面' }
         });
 
-        // 根据会员等级决定是否添加内页
-        const canRead = MemberSystem.canReadPages(issueNum);
-        
-        if (canRead) {
-            const maxPage = issueNum <= 2 ? 15 : 20;
-            for (let i = 1; i <= maxPage - 2; i += 2) {
-                pages.push({
-                    type: 'spread',
-                    left: { 
-                        num: i, 
-                        src: this.getImagePath(issueNum, i), 
-                        name: `P${i}`
-                    },
-                    right: { 
-                        num: i + 1, 
-                        src: this.getImagePath(issueNum, i + 1), 
-                        name: `P${i + 1}`
-                    }
-                });
-            }
+        for (let i = 1; i <= 13; i += 2) {
+            const leftExists = this.pageExists(issueNum, i);
+            const rightExists = this.pageExists(issueNum, i + 1);
+
+            pages.push({
+                type: 'spread',
+                left: { 
+                    num: i, 
+                    src: leftExists ? this.getImagePath(issueNum, i) : '', 
+                    name: `P${i}`,
+                    empty: !leftExists
+                },
+                right: { 
+                    num: i + 1, 
+                    src: rightExists ? this.getImagePath(issueNum, i + 1) : '', 
+                    name: `P${i + 1}`,
+                    empty: !rightExists
+                }
+            });
         }
 
-        // 封底
-        const backPageNum = issueNum <= 2 ? 15 : 20;
+        const backExists = this.pageExists(issueNum, 15);
         pages.push({
             type: 'backcover',
             left: { 
-                num: backPageNum, 
-                src: this.getImagePath(issueNum, backPageNum), 
-                name: '封底'
+                num: 15, 
+                src: backExists ? this.getImagePath(issueNum, 15) : '', 
+                name: '封底',
+                empty: !backExists
             }
         });
 
@@ -2210,7 +2071,6 @@ const magazineData = {
     }
 };
 
-// ==================== 杂志功能 ====================
 function initMagazine() {
     renderIssueButtons();
     renderBook();
@@ -2223,17 +2083,9 @@ function renderIssueButtons() {
     let html = '';
     for (let i = magazineData.totalIssues; i >= 1; i--) {
         const isActive = i === magazineData.currentIssue ? 'active' : '';
-        html += `<button class="issue-btn ${isActive}" data-issue="${i}">#${i}</button>`;
+        html += `<button class="issue-btn ${isActive}" onclick="switchIssue(${i})">#${i}</button>`;
     }
     container.innerHTML = html;
-    
-    // 绑定事件
-    container.querySelectorAll('.issue-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const issueNum = parseInt(this.dataset.issue);
-            switchIssue(issueNum);
-        });
-    });
 }
 
 function renderBook() {
@@ -2262,8 +2114,8 @@ function renderBook() {
                      data-index="${index}"
                      style="z-index: ${zIndex}; opacity: ${isActive ? 1 : 0};">
                     <div class="page-content">
-                        <img src="${page.left.src}" alt="封底" 
-                             onerror="this.src='${page.left.src.replace('%23', '#')}'">
+                        ${page.left.empty ? '' : `<img src="${page.left.src}" alt="封底" 
+                             onerror="this.src='${page.left.src.replace('%23', '#')}'">`}
                     </div>
                 </div>
             `;
@@ -2274,14 +2126,14 @@ function renderBook() {
                      style="z-index: ${zIndex}; opacity: ${isActive ? 1 : 0};">
                     <div class="spread-half left">
                         <div class="page-content">
-                            <img src="${page.left.src}" alt="P${page.left.num}" 
-                                 onerror="this.src='${page.left.src.replace('%23', '#')}'">
+                            ${page.left.empty ? '' : `<img src="${page.left.src}" alt="P${page.left.num}" 
+                                 onerror="this.src='${page.left.src.replace('%23', '#')}'">`}
                         </div>
                     </div>
                     <div class="spread-half right">
                         <div class="page-content">
-                            <img src="${page.right.src}" alt="P${page.right.num}" 
-                                 onerror="this.src='${page.right.src.replace('%23', '#')}'">
+                            ${page.right.empty ? '' : `<img src="${page.right.src}" alt="P${page.right.num}" 
+                                 onerror="this.src='${page.right.src.replace('%23', '#')}'">`}
                         </div>
                     </div>
                 </div>
@@ -2314,14 +2166,6 @@ function updateButtons() {
 }
 
 function nextPage() {
-    // 检查是否有权限翻页
-    const canRead = MemberSystem.canReadPages(magazineData.currentIssue);
-    if (!canRead && magazineData.currentPage === 0) {
-        // 游客或无权阅读，显示升级弹窗
-        showMemberUpgradeModal(magazineData.currentIssue);
-        return;
-    }
-
     const pages = magazineData.getPages(magazineData.currentIssue);
     if (magazineData.currentPage < pages.length - 1) {
         const currentPageEl = document.querySelector(`[data-index="${magazineData.currentPage}"]`);
@@ -2366,18 +2210,12 @@ function prevPage() {
 }
 
 function switchIssue(issueNum) {
-    // 检查是否有权限查看该期
-    if (!MemberSystem.canViewIssue(issueNum)) {
-        showMemberUpgradeModal(issueNum);
-        return;
-    }
-
     magazineData.currentIssue = issueNum;
     magazineData.currentPage = 0;
 
     document.querySelectorAll('.issue-btn').forEach(btn => {
         btn.classList.remove('active');
-        if (parseInt(btn.dataset.issue) === issueNum) btn.classList.add('active');
+        if (btn.textContent === `#${issueNum}`) btn.classList.add('active');
     });
 
     renderBook();
@@ -2401,514 +2239,37 @@ function updateIndicator() {
     document.getElementById('pageIndicator').textContent = text;
 }
 
-// ==================== 会员升级弹窗 ====================
-function showMemberUpgradeModal(issueNum) {
-    const tier = MemberSystem.getCurrentTier();
-    const requiredTier = MemberSystem.getRequiredTier(issueNum);
-    
-    // 创建弹窗
-    let modal = document.getElementById('memberUpgradeModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'memberUpgradeModal';
-        modal.className = 'member-upgrade-modal';
-        document.body.appendChild(modal);
-    }
-    
-    const tierName = requiredTier ? requiredTier.name : '月卡';
-    
-    modal.innerHTML = `
-        <div class="member-upgrade-content">
-            <button class="member-upgrade-close" onclick="closeMemberUpgradeModal()">×</button>
-            <div class="member-upgrade-icon">🔒</div>
-            <h3 class="member-upgrade-title">需要升级会员</h3>
-            <p class="member-upgrade-text">
-                您当前是 <strong style="color: #FF0066;">${tier.name}</strong><br>
-                查看 #${issueNum} 需要 <strong style="color: #FFD700;">${tierName}</strong> 或更高级别
-            </p>
-            <div class="member-upgrade-current">
-                <div class="member-upgrade-current-title">当前权限</div>
-                <div class="member-upgrade-current-text">
-                    ${tier.name === '游客' ? '只能浏览 #1、#2 封面' : 
-                      tier.name === '体验卡' ? '可浏览 #1、#2 完整内容' :
-                      tier.name === '月卡' ? '可浏览 #1-#4 完整内容' :
-                      tier.name === '季卡' ? '可浏览 #1-#6 完整内容' : 
-                      '可浏览所有杂志内容'}
-                </div>
-            </div>
-            <button class="member-upgrade-btn" onclick="location.href='#pricing'">升级会员</button>
-            <button class="member-upgrade-skip" onclick="closeMemberUpgradeModal()">暂不升级</button>
-        </div>
-    `;
-    
-    modal.classList.add('active');
-}
-
-function closeMemberUpgradeModal() {
-    const modal = document.getElementById('memberUpgradeModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// ==================== LIVE TV 弹窗 ====================
-function showLiveTVModal() {
-    let modal = document.getElementById('liveTvModal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'liveTvModal';
-        modal.className = 'livetv-modal';
-        document.body.appendChild(modal);
-    }
-    
-    modal.innerHTML = `
-        <div class="livetv-modal-content">
-            <button class="livetv-modal-close" onclick="closeLiveTVModal()">×</button>
-            <div class="livetv-modal-icon">📺</div>
-            <h3 class="livetv-modal-title">LIVE TV</h3>
-            <p class="livetv-modal-text">
-                24小時搖滾音樂直播 · 現場演出 · 獨家訪談 · 經典回放<br><br>
-                <strong style="color: #FF0066;">即將上線，敬請期待</strong>
-            </p>
-            <ul class="livetv-modal-features">
-                <li>🎸 24小时不间断摇滚音乐直播</li>
-                <li>🎤 独家乐队访谈节目</li>
-                <li>🎵 经典演出现场回放</li>
-                <li>⭐ 会员专享高清画质</li>
-            </ul>
-            <button class="livetv-modal-btn" onclick="closeLiveTVModal()">我知道了</button>
-        </div>
-    `;
-    
-    modal.classList.add('active');
-}
-
-function closeLiveTVModal() {
-    const modal = document.getElementById('liveTvModal');
-    if (modal) {
-        modal.classList.remove('active');
-    }
-}
-
-// ==================== 导航功能 ====================
-function toggleMobileMenu() {
-    document.getElementById('navLinks').classList.toggle('active');
-}
-
-// ==================== 登录弹窗功能 ====================
-function openLoginModal() {
-    document.getElementById('loginModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeLoginModal() {
-    document.getElementById('loginModal').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// ==================== 用户侧边栏功能 ====================
-function openUserSidebar() {
-    const sidebar = document.getElementById('userSidebar');
-    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-
-    if (isLoggedIn) {
-        document.getElementById('sidebarNotLoggedIn').style.display = 'none';
-        document.getElementById('sidebarLoggedIn').style.display = 'block';
-        loadUserData();
-    } else {
-        document.getElementById('sidebarNotLoggedIn').style.display = 'block';
-        document.getElementById('sidebarLoggedIn').style.display = 'none';
-    }
-
-    sidebar.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeUserSidebar() {
-    const sidebar = document.getElementById('userSidebar');
-    sidebar.classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-function loadUserData() {
-    const nickname = localStorage.getItem('userNickname') || '摇滚用户';
-    const avatar = localStorage.getItem('userAvatar') || '';
-    const phone = localStorage.getItem('userPhone') || '';
-    const email = localStorage.getItem('userEmail') || '';
-
-    document.getElementById('sidebarNickname').textContent = nickname;
-
-    if (avatar) {
-        document.getElementById('sidebarAvatar').src = avatar;
-    } else {
-        document.getElementById('sidebarAvatar').src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23FF0066"/><text x="50" y="65" font-size="40" fill="white" text-anchor="middle">🎸</text></svg>';
-    }
-
-    // 更新会员徽章
-    const tier = MemberSystem.getCurrentTier();
-    document.getElementById('sidebarMemberBadge').textContent = tier.name;
-}
-
-// ==================== 邀请功能 ====================
-function scrollToTopAndInvite() {
-    window.scrollTo({top: 0, behavior: 'smooth'});
-    // 显示邀请提示
-    alert('🎁 邀请好友赚现金\n\n复制专属邀请链接分享给好友，好友付费后你得30%现金返利！');
-}
-
-// ==================== 事件绑定 ====================
-document.addEventListener('DOMContentLoaded', function() {
-    // 初始化杂志
-    initMagazine();
-    
-    // 绑定导航事件
-    document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
-    document.getElementById('userMenuBtn').addEventListener('click', function() {
-        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-        if (isLoggedIn) {
-            openUserSidebar();
-        } else {
-            openLoginModal();
-        }
-    });
-    
-    // 绑定LIVE TV事件
-    document.getElementById('liveTvLink').addEventListener('click', function(e) {
-        e.preventDefault();
-        showLiveTVModal();
-    });
-    
-    // 绑定翻页按钮事件
-    document.getElementById('prevBtn').addEventListener('click', prevPage);
-    document.getElementById('nextBtn').addEventListener('click', nextPage);
-    
-    // 键盘导航
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') prevPage();
-        if (e.key === 'ArrowRight') nextPage();
-        if (e.key === 'Escape') {
-            closeLoginModal();
-            closeUserSidebar();
-            closeLiveTVModal();
-            closeMemberUpgradeModal();
-        }
-    });
-    
-    // 点击空白处关闭导航
-    document.addEventListener('click', function(e) {
-        const navLinks = document.getElementById('navLinks');
-        const menuBtn = document.getElementById('mobileMenuBtn');
-
-        if (navLinks.classList.contains('active')) {
-            if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
-                navLinks.classList.remove('active');
-            }
-        }
-    });
-    
-    // 更新登录UI
-    updateLoginUI();
+// 键盘导航
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevPage();
+    if (e.key === 'ArrowRight') nextPage();
 });
 
-// ==================== 登录相关功能 ====================
-function updateLoginUI() {
-    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-    const nickname = localStorage.getItem('userNickname');
-    const loginBtn = document.getElementById('userMenuBtn');
-
-    if (isLoggedIn && loginBtn) {
-        loginBtn.textContent = nickname || '我的账号';
-    } else if (loginBtn) {
-        loginBtn.textContent = 'LOGIN';
-    }
-}
-
-function handleUserMenuClick() {
-    const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
-    if (isLoggedIn) {
-        openUserSidebar();
-    } else {
-        openLoginModal();
-    }
-}
-
-function openLoginModalFromSidebar() {
-    closeUserSidebar();
-    setTimeout(() => {
-        openLoginModal();
-    }, 300);
-}
-
-function logout() {
-    if (confirm('确定要退出登录吗？')) {
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userNickname');
-        localStorage.removeItem('userAvatar');
-        localStorage.removeItem('userPhone');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('userAccountType');
-        localStorage.removeItem('memberType');
-        localStorage.removeItem('cr_member');
-
-        updateLoginUI();
-        closeUserSidebar();
-
-        alert('已安全退出登录');
-    }
-}
-
-// ==================== 社交登录功能 ====================
-function loginWithWechat() {
-    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
-
-    if (!isWechat) {
-        showWechatGuide();
-        return;
-    }
-
-    const appId = 'wx019d141a63482cd8';
-    const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
-    const scope = 'snsapi_base';
-    const state = Math.random().toString(36).substring(2, 15);
-
-    sessionStorage.setItem('wechat_state', state);
-
-    const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
-    window.location.href = authUrl;
-}
-
-function showWechatGuide() {
-    alert('请在微信APP内使用扫一扫访问本站，或使用其他登录方式');
-}
-
-function loginWithGoogle() {
-    const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
-    const redirectUri = encodeURIComponent('https://chineserocks.vercel.app');
-    const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
-    const state = Math.random().toString(36).substring(2);
-
-    sessionStorage.setItem('google_state', state);
-
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
-}
-
-function loginWithFacebook() {
-    FB.login(function(response) {
-        if (response.authResponse) {
-            FB.api('/me', {fields: 'name,email,picture'}, function(userInfo) {
-                completeLogin({
-                    type: 'facebook',
-                    id: userInfo.id,
-                    name: userInfo.name || 'Facebook用户',
-                    email: userInfo.email || '',
-                    avatar: userInfo.picture?.data?.url || ''
-                });
-            });
-        } else {
-            alert('Facebook登录被取消');
-        }
-    }, {scope: 'public_profile,email'});
-}
-
-function completeLogin(loginData) {
-    localStorage.setItem('userLoggedIn', 'true');
-    localStorage.setItem('userId', loginData.id);
-    localStorage.setItem('userNickname', loginData.name);
-    localStorage.setItem('userAccountType', loginData.type);
-    localStorage.setItem('userAvatar', loginData.avatar || '');
-    
-    // 默认设置为体验卡会员
-    if (!localStorage.getItem('memberType')) {
-        localStorage.setItem('memberType', 'trial');
-    }
-
-    if (loginData.email) {
-        localStorage.setItem('userEmail', loginData.email);
-    }
-
-    updateLoginUI();
-    closeLoginModal();
-    
-    // 重新渲染杂志以应用会员权限
-    renderBook();
-    updateButtons();
-}
-
-// ==================== 手机/邮箱登录 ====================
-function switchLoginTab(tab) {
-    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-
-    if (tab === 'phone') {
-        document.getElementById('phoneFormModal').style.display = 'block';
-        document.getElementById('emailFormModal').style.display = 'none';
-    } else {
-        document.getElementById('phoneFormModal').style.display = 'none';
-        document.getElementById('emailFormModal').style.display = 'block';
-    }
-}
-
-let countdownModal = 0;
-function sendCodeModal() {
-    if (countdownModal > 0) return;
-
-    const phone = document.getElementById('phoneInputModal').value;
-    if (!phone || phone.length !== 11) {
-        showErrorModal('请输入正确的11位手机号');
-        return;
-    }
-
-    const btn = document.getElementById('verifyBtnModal');
-    countdownModal = 60;
-    btn.disabled = true;
-    btn.textContent = countdownModal + 's';
-
-    const timer = setInterval(() => {
-        countdownModal--;
-        if (countdownModal <= 0) {
-            clearInterval(timer);
-            btn.disabled = false;
-            btn.textContent = '获取验证码';
-        } else {
-            btn.textContent = countdownModal + 's';
-        }
-    }, 1000);
-
-    alert('验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
-}
-
-function loginWithPhoneModal(e) {
-    e.preventDefault();
-    const phone = document.getElementById('phoneInputModal').value;
-    const code = document.getElementById('codeInputModal').value;
-
-    if (!phone || !code) {
-        showErrorModal('请填写手机号和验证码');
-        return false;
-    }
-
-    if (code === '123456') {
-        completeLogin({
-            type: 'phone',
-            id: 'phone_' + phone,
-            name: '手机用户',
-            email: '',
-            avatar: ''
-        });
-        localStorage.setItem('userPhone', phone);
-        alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
-    } else {
-        showErrorModal('验证码错误，演示模式请输入 123456');
-    }
-    return false;
-}
-
-function loginWithEmailModal(e) {
-    e.preventDefault();
-    const email = document.getElementById('emailInputModal').value;
-    const password = document.getElementById('passwordInputModal').value;
-
-    if (!email || !password) {
-        showErrorModal('请填写邮箱和密码');
-        return false;
-    }
-
-    completeLogin({
-        type: 'email',
-        id: 'email_' + email,
-        name: email.split('@')[0],
-        email: email,
-        avatar: ''
-    });
-    localStorage.setItem('userEmail', email);
-    alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
-    return false;
-}
-
-function showErrorModal(msg) {
-    const errorEl = document.getElementById('errorMsg');
-    errorEl.textContent = msg;
-    errorEl.classList.add('show');
-    setTimeout(() => errorEl.classList.remove('show'), 3000);
-}
-
-function switchToRegister() {
-    document.getElementById('phoneFormModal').style.display = 'none';
-    document.getElementById('emailFormModal').style.display = 'none';
-    document.getElementById('registerFormModal').style.display = 'block';
-    document.querySelector('.login-tabs').style.display = 'none';
-    document.querySelector('.divider').style.display = 'none';
-    document.querySelector('.social-login').style.display = 'none';
-    document.querySelector('.login-footer').innerHTML = '<p id="backToLogin" style="cursor:pointer;color:#FF0066;" onclick="switchToLogin()">← 返回登录</p>';
-    document.querySelector('.login-subtitle').textContent = '创建你的摇滚身份';
-}
-
-function switchToLogin() {
-    document.getElementById('phoneFormModal').style.display = 'block';
-    document.getElementById('emailFormModal').style.display = 'none';
-    document.getElementById('registerFormModal').style.display = 'none';
-    document.querySelector('.login-tabs').style.display = 'flex';
-    document.querySelector('.divider').style.display = 'flex';
-    document.querySelector('.social-login').style.display = 'grid';
-    document.querySelector('.login-footer').innerHTML = '<a href="#" onclick="showForgotPassword();return false;">忘记密码？</a><p>还没有账号？<a href="#" onclick="switchToRegister();return false;">立即注册</a></p>';
-    document.querySelector('.login-subtitle').textContent = '登录以解锁完整摇滚体验';
-    document.querySelectorAll('.login-tab')[0].classList.add('active');
-    document.querySelectorAll('.login-tab')[1].classList.remove('active');
-}
-
-function showForgotPassword() {
-    alert('密码重置功能\n请输入注册邮箱，我们将发送重置链接');
-}
-
-function showMyVotes() {
-    alert('我的投票功能即将上线');
-}
-
-function showMyReads() {
-    alert('阅读历史功能即将上线');
-}
-
-function showMyFavs() {
-    alert('我的收藏功能即将上线');
-}
-
-function showAccountSettings() {
-    alert('账号设置功能即将上线');
-}
-
-function showSyncStatus() {
-    alert('同步状态：已同步');
-}
-
-function showInvite() {
-    alert('🎁 邀请好友赚现金\n\n复制专属邀请链接分享给好友，好友付费后你得30%现金返利！');
-}
-
-function bindPhone() {
-    alert('绑定手机功能即将上线');
-}
-
-function bindEmail() {
-    alert('绑定邮箱功能即将上线');
-}
-
-function saveSettings() {
-    alert('设置已保存');
-}
+// 初始化
+document.addEventListener('DOMContentLoaded', initMagazine);
 </script>
-
-
-    <!-- 免费额度提示 -->
+<!-- 免费额度提示 -->
     <div class="free-quota-bar">
         <div class="free-quota-text">
             ★ 今日會員專享阅读额度:仅剩<strong id="remainingReads">3</strong>篇(升級會員暢讀無限）
         </div>
-        <button class="free-quota-btn" onclick="location.href='#pricing'">升级月卡会员 ￥66/月</button>
+        <a href="#pricing" class="free-quota-btn">升级月卡会员 ￥66/月</a>
     </div>
 
+    <!-- 移动端会员弹窗 -->
+    <div id="mobilePaywallModal" class="mobile-paywall-modal">
+        <div class="mobile-paywall-content">
+            <button class="mobile-paywall-close" onclick="closeMobilePaywall()">×</button>
+            <div class="mobile-paywall-icon">★</div>
+            <h3 class="mobile-paywall-title">今日免費閱讀額度已用完</h3>
+            <p class="mobile-paywall-text">升級會員解鎖無限暢讀</p>
+            <a href="#pricing" class="mobile-paywall-btn" onclick="closeMobilePaywall()">升級會員</a>
+        </div>
+    </div>
+
+    <!-- 榜单区 -->
     <!-- LIVE TV -->
-    <section id="livetv" class="livetv-section">
+    <section id="livetv" class="livetv-section" onclick="showLiveTVComingSoon()" style="cursor: pointer;">
         <div class="livetv-badge">COMING SOON</div>
         <h2 class="livetv-title">LIVE TV</h2>
         <p class="livetv-subtitle">24小時搖滾音樂直播 · 現場演出 · 獨家訪談 · 經典回放</p>
@@ -2986,7 +2347,6 @@ function saveSettings() {
                     <div class="pricing-daily">限時體驗</div>
                     <ul class="pricing-features">
                         <li>3天體驗會員權益</li>
-                        <li>可浏览 #1、#2 完整内容</li>
                         <li>投票權重 ×0.5</li>
                         <li>每日3次新聞閱讀</li>
                         <li>480P LIVE TV</li>
@@ -3001,14 +2361,14 @@ function saveSettings() {
                     <div class="pricing-daily">¥2.84/天</div>
                     <ul class="pricing-features">
                         <li>7天完整會員權益</li>
-                        <li>可浏览 #1-#3 完整内容</li>
                         <li>投票權重 ×1.0</li>
                         <li>每天7次新聞閱讀</li>
                         <li>720P LIVE TV</li>
                         <li>演出優先購票</li>
                         <li>獨家雜誌內容預覽</li>
+                        <li>廣告彈窗優化</li>
                     </ul>
-                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('weekly'); alert('已升级周卡会员！'); updateLoginUI();">升級周卡會員</button>
+                    <button class="pricing-btn">升級周卡會員</button>
                 </div>
 
                 <!-- 月卡 - 主推 -->
@@ -3019,15 +2379,16 @@ function saveSettings() {
                     <div class="pricing-daily">¥2.20/天 · 省¥13</div>
                     <ul class="pricing-features">
                         <li>30天完整會員權益</li>
-                        <li>可浏览 #1-#4 完整内容</li>
                         <li>投票權重 ×2.0</li>
                         <li>每天30次新聞閱讀</li>
                         <li>1080P LIVE TV</li>
                         <li>演出優先購票及95折優惠</li>
                         <li>獨家雜誌內容</li>
                         <li>廣告彈窗優化</li>
+                        <li>特享會員名稱效果</li>
+                        <li>線下活動入場抽獎資格</li>
                     </ul>
-                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('monthly'); alert('已升级月卡会员！'); updateLoginUI();">升級月卡會員</button>
+                    <button class="pricing-btn">升級月卡會員</button>
                 </div>
 
                 <!-- 季卡 - 新增 -->
@@ -3037,15 +2398,17 @@ function saveSettings() {
                     <div class="pricing-daily">¥1.76/天 · 省¥40</div>
                     <ul class="pricing-features">
                         <li>90天完整會員權益</li>
-                        <li>可浏览 #1-#6 完整内容</li>
                         <li>投票權重 ×3.0</li>
                         <li>每天100次新聞閱讀</li>
                         <li>1080P LIVE TV</li>
                         <li>演出優先購票及85折優惠</li>
                         <li>獨家雜誌內容+實體年刊預購資格</li>
                         <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎資格</li>
                     </ul>
-                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('quarterly'); alert('已升级季卡会员！'); updateLoginUI();">升級季卡會員</button>
+                    <button class="pricing-btn">升級季卡會員</button>
                 </div>
 
                 <!-- 年卡 - 最大受益 -->
@@ -3056,15 +2419,18 @@ function saveSettings() {
                     <div class="pricing-daily">¥1.00/天 · 省¥427</div>
                     <ul class="pricing-features">
                         <li>365天完整會員權益</li>
-                        <li>可浏览所有杂志内容</li>
                         <li>投票權重 ×5.0 [最高]</li>
                         <li>無限新聞閱讀</li>
                         <li>2K+ LIVE TV [獨享]</li>
-                        <li>演出提前48小時購票 [獨享]</li>
+                        <li>演出提前48小時購票 [獨享]及75折優惠</li>
                         <li>獨家雜誌內容+實體年刊禮品</li>
                         <li>無廣告體驗</li>
+                        <li>特享會員名稱效果+專屬會員徽章</li>
+                        <li>線下活動免費邀請入場1+次/年</li>
+                        <li>周邊抽獎必中1次/年+折扣權益</li>
+                        <li>VIP專屬客服</li>
                     </ul>
-                    <button class="pricing-btn" onclick="MemberSystem.setMemberType('yearly'); alert('已升级年卡会员！'); updateLoginUI();">升級年卡會員</button>
+                    <button class="pricing-btn">升級年卡會員</button>
                 </div>
             </div>
         </div>
@@ -3122,17 +2488,1362 @@ function saveSettings() {
             3. 你得30%現金返利（可提現或轉會員時長1.5倍增值）<br><br>
             <em>示例：好友購買年卡¥365，你得¥109.5現金或季卡會員！</em>
         </div>
-        <button class="invite-btn" id="inviteBtn">
+        <button class="invite-btn" onclick="scrollToTopAndInvite()">
             <span class="btn-line1">邀請</span>
             <span class="btn-line2">賺現金</span>
         </button>
     </div>
 
     <script>
-        // 绑定邀请按钮事件
-        document.getElementById('inviteBtn').addEventListener('click', scrollToTopAndInvite);
-    </script>
 
+
+        // 投票标题滚播（只播一轮）
+        let voteRotateIntervals = {};
+
+        function startVoteRotate(cardId) {
+            const card = document.querySelector('[data-genre="' + cardId + '"] .hero-vote-card');
+            if (!card) return;
+
+            const titleGroups = card.querySelectorAll('.vote-title-group');
+            const optionGroups = card.querySelectorAll('.vote-options-group');
+            let currentIndex = 0;
+
+            // 清除之前的定时器
+            if (voteRotateIntervals[cardId]) {
+                clearInterval(voteRotateIntervals[cardId]);
+            }
+
+            // 重置到第一组（标题和选项）
+            titleGroups.forEach((g, i) => {
+                g.style.display = i === 0 ? 'block' : 'none';
+                g.classList.toggle('active', i === 0);
+            });
+            optionGroups.forEach((g, i) => {
+                g.style.display = i === 0 ? 'block' : 'none';
+                g.classList.toggle('active', i === 0);
+            });
+
+            // 启动滚播，每2秒切换，只播一轮（3次）
+            let rotateCount = 0;
+            voteRotateIntervals[cardId] = setInterval(() => {
+                rotateCount++;
+                if (rotateCount >= 3) {
+                    clearInterval(voteRotateIntervals[cardId]);
+                    return;
+                }
+
+                // 隐藏当前标题和选项
+                titleGroups[currentIndex].style.display = 'none';
+                titleGroups[currentIndex].classList.remove('active');
+                optionGroups[currentIndex].style.display = 'none';
+                optionGroups[currentIndex].classList.remove('active');
+
+                currentIndex = (currentIndex + 1) % 3;
+
+                // 显示下一个标题和选项
+                titleGroups[currentIndex].style.display = 'block';
+                titleGroups[currentIndex].classList.add('active');
+                optionGroups[currentIndex].style.display = 'block';
+                optionGroups[currentIndex].classList.add('active');
+            }, 2000);
+        }
+
+                autoSlideInterval = setInterval(autoSlide, 8000);
+
+        // 投票选择
+        function selectVote(element) {
+            document.querySelectorAll('.hero-vote-option').forEach(opt => {
+                opt.style.borderColor = 'transparent';
+                opt.style.background = 'rgba(255,255,255,0.05)';
+            });
+            element.style.borderColor = '#FF0066';
+            element.style.background = 'rgba(255,0,102,0.1)';
+        }
+
+        function switchChart(type, btn) {
+            document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.chart-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(type + 'Chart').classList.add('active');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        // 点击空白处关闭导航栏
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('navLinks');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+
+            if (navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            }
+        });
+
+        // LIVE TV点击提示
+        function showLiveTVComingSoon() {
+            alert('COMING SOON / 即將上線，敬請期待');
+        }
+
+        
+
+        // 回到顶部
+        function scrollToTopAndInvite() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // 切换登录标签
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'phone') {
+                document.getElementById('phoneFormModal').style.display = 'block';
+                document.getElementById('emailFormModal').style.display = 'none';
+            } else {
+                document.getElementById('phoneFormModal').style.display = 'none';
+                document.getElementById('emailFormModal').style.display = 'block';
+            }
+        }
+
+        // 发送验证码
+        let countdownModal = 0;
+        function sendCodeModal() {
+            if (countdownModal > 0) return;
+
+            const phone = document.getElementById('phoneInputModal').value;
+            if (!phone || phone.length !== 11) {
+                showErrorModal('请输入正确的11位手机号');
+                return;
+            }
+
+            const btn = document.getElementById('verifyBtnModal');
+            countdownModal = 60;
+            btn.disabled = true;
+            btn.textContent = countdownModal + 's';
+
+            const timer = setInterval(() => {
+                countdownModal--;
+                if (countdownModal <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = countdownModal + 's';
+                }
+            }, 1000);
+
+            alert('验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
+        }
+
+        // 登录函数
+        function loginWithPhoneModal(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phoneInputModal').value;
+            const code = document.getElementById('codeInputModal').value;
+
+            if (!phone || !code) {
+                showErrorModal('请填写手机号和验证码');
+                return false;
+            }
+
+            if (code === '123456') {
+                // 直接完成登录，因为手机号就是账号
+                completeLogin({
+                    type: 'phone',
+                    id: 'phone_' + phone,
+                    name: '手机用户',
+                    email: '',
+                    avatar: ''
+                });
+                localStorage.setItem('userPhone', phone);
+                closeLoginModal();
+                alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
+            } else {
+                showErrorModal('验证码错误，演示模式请输入 123456');
+            }
+            return false;
+        }
+
+        function loginWithEmailModal(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInputModal').value;
+            const password = document.getElementById('passwordInputModal').value;
+
+            if (!email || !password) {
+                showErrorModal('请填写邮箱和密码');
+                return false;
+            }
+
+            // 直接完成登录
+            completeLogin({
+                type: 'email',
+                id: 'email_' + email,
+                name: email.split('@')[0],
+                email: email,
+                avatar: ''
+            });
+            localStorage.setItem('userEmail', email);
+            closeLoginModal();
+            alert('🎸 登录成功！\n欢迎回到 ChineseRocks');
+            return false;
+        }
+
+        // 社交登录
+        function loginWithWechat() {
+            // 检查是否在微信内
+            const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+
+            if (!isWechat) {
+                // 非微信环境，显示引导弹窗
+                showWechatGuide();
+                return;
+            }
+
+            // 在微信内，使用静默登录模式（snsapi_base），只获取OpenID
+            const appId = 'wx019d141a63482cd8';
+            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app/wechat-callback.html');
+            const scope = 'snsapi_base'; // 静默登录，只获取OpenID
+            const state = generateRandomState();
+
+            // 保存state用于验证
+            sessionStorage.setItem('wechat_state', state);
+
+            const authUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&state=${state}#wechat_redirect`;
+
+            // 在微信内置浏览器中打开
+            window.location.href = authUrl;
+        }
+
+        // 显示微信外引导弹窗
+        function showWechatGuide() {
+            const guideHtml = `
+                <div id="wechatGuideModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.9);
+                    z-index: 30000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                " onclick="closeWechatGuide()">
+                    <div style="
+                        background: #1a1a1a;
+                        border: 1px solid #FF0066;
+                        border-radius: 16px;
+                        padding: 2rem;
+                        max-width: 360px;
+                        width: 100%;
+                        text-align: center;
+                        position: relative;
+                    " onclick="event.stopPropagation()">
+                        <button onclick="closeWechatGuide()" style="
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            background: none;
+                            border: none;
+                            color: #888;
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                        ">×</button>
+
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+                        <h3 style="color: white; margin-bottom: 1rem; font-size: 1.2rem;">请在微信中打开</h3>
+                        <p style="color: #888; font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.5rem;">
+                            微信登录需要在微信APP内使用<br>
+                            请使用微信扫一扫访问本站
+                        </p>
+
+                        <div style="
+                            background: rgba(255,255,255,0.05);
+                            border-radius: 8px;
+                            padding: 1rem;
+                            margin-bottom: 1.5rem;
+                            word-break: break-all;
+                            font-size: 0.8rem;
+                            color: #FF0066;
+                        ">
+                            https://chineserocks.vercel.app
+                        </div>
+
+                        <button onclick="closeWechatGuide()" style="
+                            width: 100%;
+                            padding: 0.875rem;
+                            background: #FF0066;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            font-size: 0.95rem;
+                            font-weight: 700;
+                            cursor: pointer;
+                        ">我知道了</button>
+
+                        <p style="color: #666; font-size: 0.75rem; margin-top: 1rem;">
+                            或使用 Google / Facebook / 邮箱 登录
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            const existing = document.getElementById('wechatGuideModal');
+            if (existing) existing.remove();
+            document.body.insertAdjacentHTML('beforeend', guideHtml);
+        }
+
+        function closeWechatGuide() {
+            const modal = document.getElementById('wechatGuideModal');
+            if (modal) modal.remove();
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        function showWechatQRCode() {
+            // 非微信环境，提示用户使用微信扫码
+            const qrModal = document.createElement('div');
+            qrModal.id = 'wechatQRModal';
+            qrModal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 20000; display: flex; align-items: center; justify-content: center;" onclick="closeWechatQR()">
+                    <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 320px;" onclick="event.stopPropagation()">
+                        <h3 style="color: #333; margin-bottom: 1rem;">微信登录</h3>
+                        <div style="width: 200px; height: 200px; background: #f0f0f0; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                            <span style="color: #999; font-size: 0.9rem;">请使用微信扫一扫</span>
+                        </div>
+                        <p style="color: #666; font-size: 0.85rem; margin-bottom: 1rem;">请使用微信扫描二维码登录</p>
+                        <button onclick="closeWechatQR()" style="background: #07C160; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 6px; cursor: pointer;">关闭</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(qrModal);
+        }
+
+        function closeWechatQR() {
+            const modal = document.getElementById('wechatQRModal');
+            if (modal) modal.remove();
+        }
+
+        // 处理微信回调（需要在wechat-callback.html中调用）
+        function handleWechatCallback(code, state) {
+            const savedState = sessionStorage.getItem('wechat_state');
+            if (state !== savedState) {
+                showErrorModal('安全验证失败，请重试');
+                return;
+            }
+
+            // 使用code换取OpenID（这里需要后端支持，先用模拟数据演示）
+            // 实际应该调用: https://api.weixin.qq.com/sns/oauth2/access_token
+
+            // 模拟获取到OpenID
+            const mockOpenId = 'wechat_' + Math.random().toString(36).substring(2, 15);
+
+            console.log('微信登录成功，OpenID:', mockOpenId);
+
+            // 检查是否需要绑定
+            checkAndShowBindingModal({
+                type: 'wechat',
+                id: mockOpenId,
+                name: '微信用户',
+                email: '',
+                avatar: ''
+            });
+        }
+
+        function loginWithGoogle() {
+            const clientId = '354874357906-se7m4i42vp2qls9l2aipnc6iira94r8i.apps.googleusercontent.com';
+            const redirectUri = encodeURIComponent('https://chineserocks.vercel.app');
+            const scope = encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email');
+            const state = Math.random().toString(36).substring(2);
+
+            sessionStorage.setItem('google_state', state);
+
+            window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}&state=${state}`;
+        }
+
+        function handleGoogleResponse(tokenResponse) {
+            if (tokenResponse.error) {
+                console.error('Google授权错误:', tokenResponse);
+                showErrorModal('Google授权失败: ' + tokenResponse.error);
+                return;
+            }
+
+            fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: {
+                    'Authorization': 'Bearer ' + tokenResponse.access_token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('获取用户信息失败: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Google登录成功:', data);
+
+                // 检查是否需要绑定手机/邮箱
+                checkAndShowBindingModal({
+                    type: 'google',
+                    id: data.sub,
+                    name: data.name || 'Google用户',
+                    email: data.email,
+                    avatar: data.picture || ''
+                });
+            })
+            .catch(error => {
+                console.error('Google登录失败:', error);
+                showErrorModal('Google登录失败: ' + error.message);
+            });
+        }
+
+        function loginWithFacebook() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    FB.api('/me', {fields: 'name,email,picture'}, function(userInfo) {
+                        console.log('Facebook登录成功:', userInfo);
+
+                        checkAndShowBindingModal({
+                            type: 'facebook',
+                            id: userInfo.id,
+                            name: userInfo.name || 'Facebook用户',
+                            email: userInfo.email || '',
+                            avatar: userInfo.picture?.data?.url || ''
+                        });
+                    });
+                } else {
+                    console.log('Facebook登录被取消');
+                    showErrorModal('Facebook登录被取消');
+                }
+            }, {scope: 'public_profile,email'});
+        }
+
+        // 显示错误
+        function showErrorModal(msg) {
+            const errorEl = document.getElementById('errorMsg');
+            errorEl.textContent = msg;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 3000);
+        }
+
+        // 切换到注册
+        function switchToRegister() {
+            document.getElementById('phoneFormModal').style.display = 'none';
+            document.getElementById('emailFormModal').style.display = 'none';
+            document.getElementById('registerFormModal').style.display = 'block';
+            document.querySelector('.login-tabs').style.display = 'none';
+            document.querySelector('.divider').style.display = 'none';
+            document.querySelector('.social-login').style.display = 'none';
+            document.querySelector('.login-footer').innerHTML = '<p id="backToLogin" style="cursor:pointer;color:#FF0066;" onclick="switchToLogin()">← 返回登录</p>';
+            document.querySelector('.login-subtitle').textContent = '创建你的摇滚身份';
+        }
+
+        // 返回登录
+        function switchToLogin() {
+            document.getElementById('phoneFormModal').style.display = 'block';
+            document.getElementById('emailFormModal').style.display = 'none';
+            document.getElementById('registerFormModal').style.display = 'none';
+            document.querySelector('.login-tabs').style.display = 'flex';
+            document.querySelector('.divider').style.display = 'flex';
+            document.querySelector('.social-login').style.display = 'grid';
+            document.querySelector('.login-footer').innerHTML = '<a href="#" onclick="showForgotPassword();return false;">忘记密码？</a><p>还没有账号？<a href="#" onclick="switchToRegister();return false;">立即注册</a></p>';
+            document.querySelector('.login-subtitle').textContent = '登录以解锁完整摇滚体验';
+            document.querySelectorAll('.login-tab')[0].classList.add('active');
+            document.querySelectorAll('.login-tab')[1].classList.remove('active');
+        }
+
+        // 发送注册验证码
+        let regCountdown = 0;
+        function sendRegCode() {
+            if (regCountdown > 0) return;
+
+            const phone = document.getElementById('regPhone').value;
+            if (!phone || phone.length !== 11) {
+                showErrorModal('请输入正确的11位手机号');
+                return;
+            }
+
+            const btn = document.getElementById('regVerifyBtn');
+            regCountdown = 60;
+            btn.disabled = true;
+            btn.textContent = regCountdown + 's';
+
+            const timer = setInterval(() => {
+                regCountdown--;
+                if (regCountdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = regCountdown + 's';
+                }
+            }, 1000);
+
+            alert('注册验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
+        }
+
+        // 切换注册方式
+        let currentRegTab = 'phone';
+        function switchRegTab(tab) {
+            currentRegTab = tab;
+            document.getElementById('regTabPhone').classList.toggle('active', tab === 'phone');
+            document.getElementById('regTabEmail').classList.toggle('active', tab === 'email');
+            document.getElementById('regPhoneSection').style.display = tab === 'phone' ? 'block' : 'none';
+            document.getElementById('regEmailSection').style.display = tab === 'email' ? 'block' : 'none';
+        }
+
+        // 发送邮箱注册验证码
+        let regEmailCountdown = 0;
+        function sendRegEmailCode() {
+            if (regEmailCountdown > 0) return;
+
+            const email = document.getElementById('regEmail').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showErrorModal('请输入正确的邮箱地址');
+                return;
+            }
+
+            const btn = document.getElementById('regEmailVerifyBtn');
+            regEmailCountdown = 60;
+            btn.disabled = true;
+            btn.textContent = regEmailCountdown + 's';
+
+            const timer = setInterval(() => {
+                regEmailCountdown--;
+                if (regEmailCountdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = regEmailCountdown + 's';
+                }
+            }, 1000);
+
+            alert('注册验证码已发送至 ' + email + '\n（演示模式：验证码是 123456）');
+        }
+
+        // 用户注册
+        function registerUser(e) {
+            e.preventDefault();
+
+            const isPhoneReg = currentRegTab === 'phone';
+            let account, code;
+
+            if (isPhoneReg) {
+                account = document.getElementById('regPhone').value;
+                code = document.getElementById('regCode').value;
+                if (!account || account.length !== 11) {
+                    showErrorModal('请输入正确的11位手机号');
+                    return false;
+                }
+            } else {
+                account = document.getElementById('regEmail').value;
+                code = document.getElementById('regEmailCode').value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!account || !emailRegex.test(account)) {
+                    showErrorModal('请输入正确的邮箱地址');
+                    return false;
+                }
+            }
+
+            const password = document.getElementById('regPassword').value;
+            const password2 = document.getElementById('regPassword2').value;
+            const nickname = document.getElementById('regNickname').value;
+
+            if (!code || code.length !== 6) {
+                showErrorModal('请输入6位验证码');
+                return false;
+            }
+
+            if (!password || password.length < 6) {
+                showErrorModal('密码至少6位');
+                return false;
+            }
+
+            if (password !== password2) {
+                showErrorModal('两次密码输入不一致');
+                return false;
+            }
+
+            if (!nickname) {
+                showErrorModal('请输入昵称');
+                return false;
+            }
+
+            if (code !== '123456') {
+                showErrorModal('验证码错误，演示模式请输入 123456');
+                return false;
+            }
+
+            const accountLabel = isPhoneReg ? '手机号' : '邮箱';
+            alert('🎸 注册成功！\n\n欢迎加入 ChineseRocks，' + nickname + '！\n\n' + accountLabel + ': ' + account + '\n\n您已获得：\n✓ 3天会员体验\n✓ 投票权重 ×1.0\n✓ 无限新闻阅读');
+            closeLoginModal();
+
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('userNickname', nickname);
+            localStorage.setItem('userAccount', account);
+            localStorage.setItem('userAccountType', isPhoneReg ? 'phone' : 'email');
+
+            return false;
+        }
+
+        // 忘记密码
+        function showForgotPassword() {
+            alert('密码重置功能\n请输入注册邮箱，我们将发送重置链接');
+        }
+
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLoginModal();
+        });
+
+
+        // 存储临时登录数据
+        let tempLoginData = null;
+
+        // 检查并显示绑定弹窗
+        function checkAndShowBindingModal(loginData) {
+            tempLoginData = loginData;
+
+            // 检查是否已绑定
+            const hasPhone = localStorage.getItem('userPhone');
+            const hasEmail = localStorage.getItem('userEmail');
+
+            if (!hasPhone && !hasEmail) {
+                // 未绑定，显示绑定弹窗
+                showBindingModal();
+            } else {
+                // 已绑定，直接完成登录
+                completeLogin(loginData);
+            }
+        }
+
+        function showBindingModal() {
+            document.getElementById('bindingModal').classList.add('active');
+            // 预填充如果有的话
+            if (tempLoginData.email) {
+                document.getElementById('bindEmail').value = tempLoginData.email;
+            }
+        }
+
+        function closeBindingModal() {
+            document.getElementById('bindingModal').classList.remove('active');
+        }
+
+        function switchBindingTab(tab) {
+            document.querySelectorAll('#bindingModal .login-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (tab === 'phone') {
+                document.getElementById('bindingPhoneForm').style.display = 'block';
+                document.getElementById('bindingEmailForm').style.display = 'none';
+            } else {
+                document.getElementById('bindingPhoneForm').style.display = 'none';
+                document.getElementById('bindingEmailForm').style.display = 'block';
+            }
+        }
+
+        // 发送绑定验证码
+        let bindCountdown = 0;
+        function sendBindCode() {
+            if (bindCountdown > 0) return;
+
+            const phone = document.getElementById('bindPhone').value;
+            if (!phone || phone.length !== 11) {
+                showBindingError('请输入正确的11位手机号');
+                return;
+            }
+
+            const btn = document.getElementById('bindVerifyBtn');
+            bindCountdown = 60;
+            btn.disabled = true;
+            btn.textContent = bindCountdown + 's';
+
+            const timer = setInterval(() => {
+                bindCountdown--;
+                if (bindCountdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = bindCountdown + 's';
+                }
+            }, 1000);
+
+            alert('验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
+        }
+
+        let bindEmailCountdown = 0;
+        function sendBindEmailCode() {
+            if (bindEmailCountdown > 0) return;
+
+            const email = document.getElementById('bindEmail').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                showBindingError('请输入正确的邮箱地址');
+                return;
+            }
+
+            const btn = document.getElementById('bindEmailVerifyBtn');
+            bindEmailCountdown = 60;
+            btn.disabled = true;
+            btn.textContent = bindEmailCountdown + 's';
+
+            const timer = setInterval(() => {
+                bindEmailCountdown--;
+                if (bindEmailCountdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = '获取验证码';
+                } else {
+                    btn.textContent = bindEmailCountdown + 's';
+                }
+            }, 1000);
+
+            alert('验证码已发送至 ' + email + '\n（演示模式：验证码是 123456）');
+        }
+
+        // 提交绑定
+        function submitBinding(e, type) {
+            e.preventDefault();
+
+            let account, code;
+
+            if (type === 'phone') {
+                account = document.getElementById('bindPhone').value;
+                code = document.getElementById('bindCode').value;
+
+                if (!account || account.length !== 11) {
+                    showBindingError('请输入正确的11位手机号');
+                    return false;
+                }
+            } else {
+                account = document.getElementById('bindEmail').value;
+                code = document.getElementById('bindEmailCode').value;
+
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!account || !emailRegex.test(account)) {
+                    showBindingError('请输入正确的邮箱地址');
+                    return false;
+                }
+            }
+
+            if (!code || code !== '123456') {
+                showBindingError('验证码错误，演示模式请输入 123456');
+                return false;
+            }
+
+            // 保存绑定信息
+            if (type === 'phone') {
+                localStorage.setItem('userPhone', account);
+            } else {
+                localStorage.setItem('userEmail', account);
+            }
+
+            // 完成登录
+            completeLogin(tempLoginData);
+            closeBindingModal();
+            closeLoginModal();
+
+            alert('🎸 绑定成功！\n欢迎加入 ChineseRocks！');
+
+            return false;
+        }
+
+        // 跳过绑定
+        function skipBinding() {
+            if (confirm('跳过后部分功能（如找回账号）将受限，确定跳过吗？')) {
+                completeLogin(tempLoginData);
+                closeBindingModal();
+                closeLoginModal();
+            }
+        }
+
+        // 完成登录
+        function completeLogin(loginData) {
+            localStorage.setItem('userLoggedIn', 'true');
+            localStorage.setItem('userId', loginData.id);
+            localStorage.setItem('userNickname', loginData.name);
+            localStorage.setItem('userAccountType', loginData.type);
+            localStorage.setItem('userAvatar', loginData.avatar || '');
+
+            if (loginData.email) {
+                localStorage.setItem('userEmail', loginData.email);
+            }
+
+            updateLoginUI();
+            updateQuotaDisplay(); // 更新额度显示（会员隐藏额度栏）
+        }
+
+        function showBindingError(msg) {
+            const errorEl = document.getElementById('bindingErrorMsg');
+            errorEl.textContent = msg;
+            errorEl.classList.add('show');
+            setTimeout(() => errorEl.classList.remove('show'), 3000);
+        }
+
+        // 更新登录UI
+        function handleUserMenuClick() {
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            if (isLoggedIn) {
+                openUserSidebar();
+            } else {
+                openLoginModal();
+            }
+        }
+
+        // 打开用户侧边栏
+        function openUserSidebar() {
+            const sidebar = document.getElementById('userSidebar');
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+
+            if (isLoggedIn) {
+                document.getElementById('sidebarNotLoggedIn').style.display = 'none';
+                document.getElementById('sidebarLoggedIn').style.display = 'block';
+                loadUserData();
+            } else {
+                document.getElementById('sidebarNotLoggedIn').style.display = 'block';
+                document.getElementById('sidebarLoggedIn').style.display = 'none';
+            }
+
+            sidebar.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭用户侧边栏
+        function closeUserSidebar() {
+            const sidebar = document.getElementById('userSidebar');
+            sidebar.classList.remove('active');
+            document.body.style.overflow = '';
+
+            // 重置到主页面
+            setTimeout(() => {
+                backToMainSidebar();
+            }, 300);
+        }
+
+        // 从侧边栏打开登录弹窗
+        function openLoginModalFromSidebar() {
+            closeUserSidebar();
+            setTimeout(() => {
+                openLoginModal();
+            }, 300);
+        }
+
+        // 加载用户数据
+        function loadUserData() {
+            const nickname = localStorage.getItem('userNickname') || '摇滚用户';
+            const avatar = localStorage.getItem('userAvatar') || '';
+            const phone = localStorage.getItem('userPhone') || '';
+            const email = localStorage.getItem('userEmail') || '';
+
+            document.getElementById('sidebarNickname').textContent = nickname;
+
+            if (avatar) {
+                document.getElementById('sidebarAvatar').src = avatar;
+            } else {
+                document.getElementById('sidebarAvatar').src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23FF0066"/><text x="50" y="65" font-size="40" fill="white" text-anchor="middle">🎸</text></svg>';
+            }
+
+            // 更新会员徽章
+            const memberType = localStorage.getItem('memberType') || '体验会员';
+            document.getElementById('sidebarMemberBadge').textContent = memberType;
+
+            // 加载统计数据
+            loadUserStats();
+
+            // 更新设置页面
+            document.getElementById('settingNickname').value = nickname;
+            document.getElementById('settingPhone').textContent = phone || '未绑定';
+            document.getElementById('settingEmail').textContent = email || '未绑定';
+        }
+
+        // 加载用户统计数据
+        function loadUserStats() {
+            const votes = JSON.parse(localStorage.getItem('userVotes') || '[]');
+            const reads = JSON.parse(localStorage.getItem('userReads') || '[]');
+            const favs = JSON.parse(localStorage.getItem('userFavs') || '[]');
+
+            document.getElementById('statVotes').textContent = votes.length;
+            document.getElementById('statReads').textContent = reads.length;
+            document.getElementById('statFavs').textContent = favs.length;
+
+            document.getElementById('menuVoteCount').textContent = votes.length;
+            document.getElementById('menuReadCount').textContent = reads.length;
+            document.getElementById('menuFavCount').textContent = favs.length;
+        }
+
+        // 显示子页面
+        function showSidebarPage(pageId) {
+            document.getElementById('sidebarNotLoggedIn').style.display = 'none';
+            document.getElementById('sidebarLoggedIn').style.display = 'none';
+            document.querySelectorAll('.sidebar-page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
+        }
+
+        // 返回主页面
+        function backToMainSidebar() {
+            document.querySelectorAll('.sidebar-page').forEach(page => {
+                page.style.display = 'none';
+            });
+
+            const isLoggedIn = localStorage.getItem('userLoggedIn');
+            if (isLoggedIn) {
+                document.getElementById('sidebarLoggedIn').style.display = 'block';
+                loadUserStats();
+            } else {
+                document.getElementById('sidebarNotLoggedIn').style.display = 'block';
+            }
+        }
+
+        // 显示我的投票
+        function showMyVotes() {
+            const votes = JSON.parse(localStorage.getItem('userVotes') || '[]');
+            const listContainer = document.getElementById('votesList');
+
+            if (votes.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">暂无投票记录</div>';
+            } else {
+                listContainer.innerHTML = votes.map(vote => `
+                    <div class="activity-item">
+                        <div class="activity-type">投票</div>
+                        <div class="activity-title">${vote.title || '未知投票'}</div>
+                        <div class="activity-meta">${new Date(vote.time).toLocaleString()} · ${vote.option || ''}</div>
+                    </div>
+                `).reverse().join('');
+            }
+
+            showSidebarPage('sidebarPageVotes');
+        }
+
+        // 显示阅读历史
+        function showMyReads() {
+            const reads = JSON.parse(localStorage.getItem('userReads') || '[]');
+            const listContainer = document.getElementById('readsList');
+
+            if (reads.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">暂无阅读记录</div>';
+            } else {
+                listContainer.innerHTML = reads.map(read => `
+                    <div class="activity-item">
+                        <div class="activity-type">阅读</div>
+                        <div class="activity-title">${read.title || '未知文章'}</div>
+                        <div class="activity-meta">${new Date(read.time).toLocaleString()}</div>
+                    </div>
+                `).reverse().join('');
+            }
+
+            showSidebarPage('sidebarPageReads');
+        }
+
+        // 显示收藏
+        function showMyFavs() {
+            const favs = JSON.parse(localStorage.getItem('userFavs') || '[]');
+            const listContainer = document.getElementById('favsList');
+
+            if (favs.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">暂无收藏</div>';
+            } else {
+                listContainer.innerHTML = favs.map(fav => `
+                    <div class="activity-item">
+                        <div class="activity-type">收藏</div>
+                        <div class="activity-title">${fav.title || '未知内容'}</div>
+                        <div class="activity-meta">${new Date(fav.time).toLocaleString()}</div>
+                    </div>
+                `).reverse().join('');
+            }
+
+            showSidebarPage('sidebarPageFavs');
+        }
+
+        // 显示账号设置
+        function showAccountSettings() {
+            showSidebarPage('sidebarPageSettings');
+        }
+
+        // 显示同步状态
+        function showSyncStatus() {
+            const lastSync = localStorage.getItem('lastSyncTime');
+            const pending = JSON.parse(localStorage.getItem('pendingSync') || '[]');
+
+            let statusMsg = '同步状态：';
+            if (pending.length > 0) {
+                statusMsg += `有 ${pending.length} 条记录待同步`;
+            } else if (lastSync) {
+                statusMsg += `上次同步 ${new Date(lastSync).toLocaleString()}`;
+            } else {
+                statusMsg += '从未同步';
+            }
+
+            alert(statusMsg + '\n\n后台使用 Notion 数据库记录：\n- 投票行为\n- 阅读历史\n- 收藏内容\n- 用户活动统计');
+        }
+
+        // 绑定手机
+        function bindPhone() {
+            alert('绑定手机功能\n请输入手机号获取验证码');
+        }
+
+        // 绑定邮箱
+        function bindEmail() {
+            alert('绑定邮箱功能\n请输入邮箱获取验证码');
+        }
+
+        // 保存设置
+        function saveSettings() {
+            const nickname = document.getElementById('settingNickname').value;
+            if (nickname) {
+                localStorage.setItem('userNickname', nickname);
+                document.getElementById('sidebarNickname').textContent = nickname;
+                alert('昵称已保存');
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                // 先同步数据
+                syncUserData();
+
+                // 清除登录状态
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('userNickname');
+                localStorage.removeItem('userAvatar');
+                localStorage.removeItem('userPhone');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userAccountType');
+
+                // 更新UI
+                updateLoginUI();
+                closeUserSidebar();
+
+                alert('已安全退出登录\n您的数据已同步到云端');
+            }
+        }
+
+        // ===== 用户行为记录功能 =====
+
+        // 记录投票
+        function recordVote(voteData) {
+            const votes = JSON.parse(localStorage.getItem('userVotes') || '[]');
+            votes.push({
+                id: Date.now(),
+                title: voteData.title || '投票活动',
+                option: voteData.option || '',
+                time: new Date().toISOString(),
+                synced: false
+            });
+            localStorage.setItem('userVotes', JSON.stringify(votes));
+
+            // 添加到待同步队列
+            addToPendingSync('vote', voteData);
+
+            // 尝试立即同步
+            syncUserData();
+        }
+
+        // 记录阅读
+        function recordRead(articleData) {
+            const reads = JSON.parse(localStorage.getItem('userReads') || '[]');
+            reads.push({
+                id: Date.now(),
+                title: articleData.title || '文章',
+                url: articleData.url || window.location.href,
+                time: new Date().toISOString(),
+                synced: false
+            });
+            localStorage.setItem('userReads', JSON.stringify(reads));
+
+            addToPendingSync('read', articleData);
+        }
+
+        // 记录收藏
+        function recordFav(itemData) {
+            const favs = JSON.parse(localStorage.getItem('userFavs') || '[]');
+            favs.push({
+                id: Date.now(),
+                title: itemData.title || '收藏内容',
+                type: itemData.type || 'article',
+                time: new Date().toISOString(),
+                synced: false
+            });
+            localStorage.setItem('userFavs', JSON.stringify(favs));
+
+            addToPendingSync('fav', itemData);
+        }
+
+        // 添加到待同步队列
+        function addToPendingSync(type, data) {
+            const pending = JSON.parse(localStorage.getItem('pendingSync') || '[]');
+            pending.push({
+                type: type,
+                data: data,
+                time: new Date().toISOString(),
+                userId: localStorage.getItem('userId') || 'anonymous'
+            });
+            localStorage.setItem('pendingSync', JSON.stringify(pending));
+
+            // 更新同步状态显示
+            updateSyncBadge('pending');
+        }
+
+        // 更新同步状态徽章
+        function updateSyncBadge(status) {
+            const badge = document.getElementById('syncStatusBadge');
+            if (badge) {
+                if (status === 'pending') {
+                    badge.textContent = '待同步';
+                    badge.classList.add('pending');
+                } else {
+                    badge.textContent = '已同步';
+                    badge.classList.remove('pending');
+                }
+            }
+        }
+
+        // 同步用户数据到后端
+        async function syncUserData() {
+            const pending = JSON.parse(localStorage.getItem('pendingSync') || '[]');
+            if (pending.length === 0) return;
+
+            // 检查是否在本地文件环境（file://协议）
+            if (window.location.protocol === 'file:') {
+                console.log('本地文件环境，跳过API同步');
+                // 本地环境直接标记为已同步
+                localStorage.setItem('pendingSync', '[]');
+                localStorage.setItem('lastSyncTime', new Date().toISOString());
+                updateSyncBadge('synced');
+                return;
+            }
+
+            // 这里调用 Vercel API 将数据发送到 Notion
+            try {
+                const response = await fetch('/api/track', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: localStorage.getItem('userId') || 'anonymous',
+                        actions: pending
+                    })
+                });
+
+                if (response.ok) {
+                    // 同步成功，清空待同步队列
+                    localStorage.setItem('pendingSync', '[]');
+                    localStorage.setItem('lastSyncTime', new Date().toISOString());
+                    updateSyncBadge('synced');
+                    console.log('用户数据已同步到 Notion');
+                }
+            } catch (error) {
+                console.error('同步失败:', error);
+                // 保留在队列中，下次再试
+            }
+        }
+
+        // 定期同步（每30秒）
+        setInterval(syncUserData, 30000);
+
+        // 页面关闭前同步
+        window.addEventListener('beforeunload', () => {
+            syncUserData();
+        });
+
+        // 更新登录按钮UI
+        function updateLoginUI() {
+            const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+            const nickname = localStorage.getItem('userNickname');
+            const loginBtn = document.getElementById('userMenuBtn');
+
+            if (isLoggedIn && loginBtn) {
+                loginBtn.textContent = nickname || '我的账号';
+                loginBtn.onclick = function() {
+                    openUserSidebar();
+                    return false;
+                };
+            } else if (loginBtn) {
+                loginBtn.textContent = 'LOGIN';
+                loginBtn.onclick = function() {
+                    openLoginModal();
+                    return false;
+                };
+            }
+        }
+
+        // 点击文章时记录阅读
+        document.addEventListener('click', function(e) {
+            const article = e.target.closest('.sidebar-item, .featured-main, .top5-item');
+            if (article) {
+                const title = article.querySelector('h3, h4')?.textContent || '文章';
+                recordRead({ title: title });
+            }
+        });
+
+        // ESC键关闭侧边栏
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const sidebar = document.getElementById('userSidebar');
+                if (sidebar && sidebar.classList.contains('active')) {
+                    closeUserSidebar();
+                }
+            }
+        });
+
+        // 页面加载时启动第一个slide的滚播
+        document.addEventListener('DOMContentLoaded', () => {
+            startVoteRotate('all');
+            updateLoginUI();
+            updateChartsQuarter();
+
+            // 检查是否从小程序传入用户数据
+            handleMiniAppLogin();
+
+            // 检查 Google 登录回调
+            handleGoogleCallback();
+
+            // 启动数据同步
+            syncUserData();
+        });
+
+        // 处理 Google OAuth 回调
+        function handleGoogleCallback() {
+            const hash = window.location.hash;
+            if (hash.includes('access_token')) {
+                const params = new URLSearchParams(hash.substring(1));
+                const accessToken = params.get('access_token');
+                const state = params.get('state');
+                const savedState = sessionStorage.getItem('google_state');
+
+                // 清除 URL hash
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                if (accessToken) {
+                    // 获取用户信息
+                    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        headers: { 'Authorization': 'Bearer ' + accessToken }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log('Google登录成功:', data);
+                        checkAndShowBindingModal({
+                            type: 'google',
+                            id: data.sub,
+                            name: data.name || 'Google用户',
+                            email: data.email || '',
+                            avatar: data.picture || ''
+                        });
+                    })
+                    .catch(err => {
+                        console.error('获取用户信息失败:', err);
+                        showErrorModal('获取用户信息失败');
+                    });
+                }
+            }
+        }
+
+        // 更新榜单季度显示
+        function updateChartsQuarter() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1; // 1-12
+
+            let quarterText = '';
+
+            // 判断季度
+            if (month >= 1 && month <= 3) {
+                quarterText = year + '年第一季度榜单';
+            } else if (month >= 4 && month <= 6) {
+                quarterText = year + '年第二季度榜单';
+            } else if (month >= 7 && month <= 9) {
+                quarterText = year + '年第三季度榜单';
+            } else {
+                quarterText = year + '年第四季度榜单';
+            }
+
+            const quarterEl = document.getElementById('chartsQuarter');
+            if (quarterEl) {
+                quarterEl.textContent = quarterText;
+            }
+        }
+
+        // 处理小程序传入的登录数据
+        function handleMiniAppLogin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const openid = urlParams.get('openid');
+            const nickname = urlParams.get('nickname');
+            const avatar = urlParams.get('avatar');
+            const source = urlParams.get('source');
+
+            if (openid && source === 'livegigs_miniapp') {
+                console.log('从小程序获取用户:', { openid, nickname, avatar });
+
+                // 自动登录，显示绑定弹窗
+                setTimeout(() => {
+                    checkAndShowBindingModal({
+                        type: 'wechat_miniapp',
+                        id: openid,
+                        name: nickname ? decodeURIComponent(nickname) : '微信用户',
+                        email: '',
+                        avatar: avatar ? decodeURIComponent(avatar) : ''
+                    });
+                }, 1000);
+
+                // 清除 URL 参数，避免刷新重复登录
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+    
+
+        // 處理文章點擊 - 與 NEWS 頁面保持一致
+        function initQuotaSystem() {
+    const today = new Date().toDateString();
+    const lastResetDate = localStorage.getItem('lastResetDate');
+
+    if (lastResetDate !== today) {
+        localStorage.setItem('remainingReads', '3');
+        localStorage.setItem('lastResetDate', today);
+    } else if (!localStorage.getItem('remainingReads')) {
+        localStorage.setItem('remainingReads', '3');
+    }
+
+    updateQuotaDisplay();
+}
+
+initQuotaSystem();
+        
+        updateQuotaDisplay();
+
+        // 關閉移動端付費牆
+        function closeMobilePaywall() {
+            const modal = document.getElementById('mobilePaywallModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+
+</script>
 
     <!-- 登录弹窗 -->
     <div id="loginModal" class="login-modal">
@@ -3288,6 +3999,76 @@ function saveSettings() {
                 <p>还没有账号？<a href="#" onclick="switchToRegister();return false;">立即注册</a></p>
             </div>
         </div>
+
+    <!-- 绑定手机/邮箱弹窗 -->
+    <div id="bindingModal" class="login-modal">
+        <div class="login-modal-overlay" onclick="closeBindingModal()"></div>
+        <div class="login-modal-content">
+            <button class="login-modal-close" onclick="closeBindingModal()">×</button>
+
+            <div class="login-modal-header">
+                <div class="login-logo-main">CHINESE ROCKS</div>
+                <div class="login-logo-sub">NEWS ★ CHARTS ★ MAGAZINE <span class="login-logo-highlight">搖滾萬歲</span></div>
+            </div>
+
+            <p class="login-subtitle">完善你的摇滚身份</p>
+            <p style="text-align: center; color: #888; font-size: 0.8rem; margin-bottom: 1.5rem;">请至少绑定手机号或邮箱，用于找回账号和接收通知</p>
+
+            <div class="error-message" id="bindingErrorMsg"></div>
+
+            <div class="login-tabs">
+                <button class="login-tab active" onclick="switchBindingTab('phone')">绑定手机</button>
+                <button class="login-tab" onclick="switchBindingTab('email')">绑定邮箱</button>
+            </div>
+
+            <form id="bindingPhoneForm" onsubmit="return submitBinding(event, 'phone')">
+                <div class="form-group">
+                    <label class="form-label">手机号 <span style="color: #FF0066;">*</span></label>
+                    <div class="phone-input-group">
+                        <select class="country-code" id="bindCountryCode">
+                            <option value="+86">+86</option>
+                            <option value="+852">+852</option>
+                            <option value="+853">+853</option>
+                            <option value="+886">+886</option>
+                        </select>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="bindPhone" style="flex: 1;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="bindCode" maxlength="6">
+                        <button type="button" class="verify-btn" id="bindVerifyBtn" onclick="sendBindCode()">获取验证码</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn-submit">完成绑定</button>
+            </form>
+
+            <form id="bindingEmailForm" style="display: none;" onsubmit="return submitBinding(event, 'email')">
+                <div class="form-group">
+                    <label class="form-label">邮箱 <span style="color: #FF0066;">*</span></label>
+                    <input type="email" class="form-input" placeholder="your@email.com" id="bindEmail">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="phone-input-group">
+                        <input type="text" class="form-input" placeholder="6位验证码" id="bindEmailCode" maxlength="6">
+                        <button type="button" class="verify-btn" id="bindEmailVerifyBtn" onclick="sendBindEmailCode()">获取验证码</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-btn-submit">完成绑定</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 1rem;">
+                <button onclick="skipBinding()" style="background: none; border: none; color: #666; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">暂时跳过（部分功能受限）</button>
+            </div>
+        </div>
+    </div>
+
     </div>
 
     <!-- 个人中心侧边栏 -->
@@ -3441,162 +4222,476 @@ function saveSettings() {
         </div>
     </div>
 
-    <!-- 注册相关函数 -->
+    <script src="js/news-loader.js"></script>
     <script>
-    let currentRegTab = 'phone';
-    function switchRegTab(tab) {
-        currentRegTab = tab;
-        document.getElementById('regTabPhone').classList.toggle('active', tab === 'phone');
-        document.getElementById('regTabEmail').classList.toggle('active', tab === 'email');
-        document.getElementById('regPhoneSection').style.display = tab === 'phone' ? 'block' : 'none';
-        document.getElementById('regEmailSection').style.display = tab === 'email' ? 'block' : 'none';
-    }
-
-    let regCountdown = 0;
-    function sendRegCode() {
-        if (regCountdown > 0) return;
-
-        const phone = document.getElementById('regPhone').value;
-        if (!phone || phone.length !== 11) {
-            showErrorModal('请输入正确的11位手机号');
-            return;
-        }
-
-        const btn = document.getElementById('regVerifyBtn');
-        regCountdown = 60;
-        btn.disabled = true;
-        btn.textContent = regCountdown + 's';
-
-        const timer = setInterval(() => {
-            regCountdown--;
-            if (regCountdown <= 0) {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.textContent = '获取验证码';
-            } else {
-                btn.textContent = regCountdown + 's';
+        // 首页新闻初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof loadNews === 'function') {
+                loadNews('home');
             }
-        }, 1000);
-
-        alert('注册验证码已发送至 ' + phone + '\n（演示模式：验证码是 123456）');
-    }
-
-    let regEmailCountdown = 0;
-    function sendRegEmailCode() {
-        if (regEmailCountdown > 0) return;
-
-        const email = document.getElementById('regEmail').value;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-            showErrorModal('请输入正确的邮箱地址');
-            return;
-        }
-
-        const btn = document.getElementById('regEmailVerifyBtn');
-        regEmailCountdown = 60;
-        btn.disabled = true;
-        btn.textContent = regEmailCountdown + 's';
-
-        const timer = setInterval(() => {
-            regEmailCountdown--;
-            if (regEmailCountdown <= 0) {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.textContent = '获取验证码';
-            } else {
-                btn.textContent = regEmailCountdown + 's';
-            }
-        }, 1000);
-
-        alert('注册验证码已发送至 ' + email + '\n（演示模式：验证码是 123456）');
-    }
-
-    function registerUser(e) {
-        e.preventDefault();
-
-        const isPhoneReg = currentRegTab === 'phone';
-        let account, code;
-
-        if (isPhoneReg) {
-            account = document.getElementById('regPhone').value;
-            code = document.getElementById('regCode').value;
-            if (!account || account.length !== 11) {
-                showErrorModal('请输入正确的11位手机号');
-                return false;
-            }
-        } else {
-            account = document.getElementById('regEmail').value;
-            code = document.getElementById('regEmailCode').value;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!account || !emailRegex.test(account)) {
-                showErrorModal('请输入正确的邮箱地址');
-                return false;
-            }
-        }
-
-        const password = document.getElementById('regPassword').value;
-        const password2 = document.getElementById('regPassword2').value;
-        const nickname = document.getElementById('regNickname').value;
-
-        if (!code || code.length !== 6) {
-            showErrorModal('请输入6位验证码');
-            return false;
-        }
-
-        if (!password || password.length < 6) {
-            showErrorModal('密码至少6位');
-            return false;
-        }
-
-        if (password !== password2) {
-            showErrorModal('两次密码输入不一致');
-            return false;
-        }
-
-        if (!nickname) {
-            showErrorModal('请输入昵称');
-            return false;
-        }
-
-        if (code !== '123456') {
-            showErrorModal('验证码错误，演示模式请输入 123456');
-            return false;
-        }
-
-        const accountLabel = isPhoneReg ? '手机号' : '邮箱';
-        alert('🎸 注册成功！\n\n欢迎加入 ChineseRocks，' + nickname + '！\n\n' + accountLabel + ': ' + account + '\n\n您已获得：\n✓ 3天会员体验\n✓ 投票权重 ×1.0\n✓ 无限新闻阅读');
-        closeLoginModal();
-
-        localStorage.setItem('userLoggedIn', 'true');
-        localStorage.setItem('userNickname', nickname);
-        localStorage.setItem('userAccount', account);
-        localStorage.setItem('userAccountType', isPhoneReg ? 'phone' : 'email');
-        localStorage.setItem('memberType', 'trial');
-
-        completeLogin({
-            type: isPhoneReg ? 'phone' : 'email',
-            id: (isPhoneReg ? 'phone_' : 'email_') + account,
-            name: nickname,
-            email: isPhoneReg ? '' : account,
-            avatar: ''
         });
-
-        return false;
-    }
-
-    function backToMainSidebar() {
-        document.querySelectorAll('.sidebar-page').forEach(page => {
-            page.style.display = 'none';
-        });
-
-        const isLoggedIn = localStorage.getItem('userLoggedIn');
-        if (isLoggedIn) {
-            document.getElementById('sidebarLoggedIn').style.display = 'block';
-        } else {
-            document.getElementById('sidebarNotLoggedIn').style.display = 'block';
-        }
-    }
     </script>
+
+<!-- Notion 新聞加載系統 -->
+<script>
+// Notion API 配置
+const NOTION_CONFIG = {
+    databaseId: '3229f94580b78029ba1bf49e33e7e46c', // 請替換為實際的 Database ID
+    apiKey: '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' // 請替換為實際的 API Key
+};
+
+// 從 Notion 加載首頁新聞
+async function loadHomeNewsFromNotion() {
+    const container = document.getElementById('home-news-container');
+    const mainImg = document.getElementById('featured-main-img');
+    const mainTag = document.getElementById('featured-main-tag');
+    const mainTitle = document.getElementById('featured-main-title');
+    const mainExcerpt = document.getElementById('featured-main-excerpt');
+    const sidebar = document.getElementById('featured-sidebar');
+
+    try {
+        console.log('🚀 開始從 Notion 加載新聞...');
+        console.log('📊 Database ID:', NOTION_CONFIG.databaseId);
+
+        // 使用 Notion API 查詢數據庫
+        // 篩選條件：Home Featured = true，按 Display Order 排序
+        // 使用本地代理避免 CORS 問題
+        const response = await fetch('/api/notion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                databaseId: NOTION_CONFIG.databaseId,
+                filter: {
+                    property: 'Home Featured',
+                    checkbox: {
+                        equals: true
+                    }
+                },
+                sorts: [
+                    {
+                        property: 'Display Order',
+                        direction: 'ascending'
+                    }
+                ]
+            })
+        });
+
+        console.log('📡 API 響應狀態:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ API 錯誤:', response.status, errorText);
+            throw new Error('Notion API 請求失敗: ' + response.status);
+        }
+
+        const data = await response.json();
+        const articles = data.results || [];
+
+        if (articles.length === 0) {
+            // 如果沒有數據，顯示默認內容
+            showDefaultNews();
+            return;
+        }
+
+        // 第一個是老闆大（主圖）
+        const mainArticle = articles[0];
+        const mainProps = mainArticle.properties;
+
+        let mainImgUrl = getNotionImageUrl(mainArticle);
+        // 備用圖片獲取邏輯
+        if (!mainImgUrl && mainProps) {
+            const possibleFields = ['圖片', '图片', 'Image', '封面圖', 'Cover Image', 'cover'];
+            for (const field of possibleFields) {
+                if (mainProps[field] && mainProps[field].files && mainProps[field].files[0]) {
+                    const file = mainProps[field].files[0];
+                    mainImgUrl = file.external ? file.external.url : (file.file ? file.file.url : null);
+                    if (mainImgUrl) break;
+                }
+            }
+        }
+        mainImg.src = mainImgUrl || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=500&fit=crop';
+        mainImg.alt = getPropertyValue(mainProps, '標題', '新聞標題');
+        // 獲取主新聞分類（從 Notion"類型"欄位）
+        let mainCategory = getPropertyValue(mainProps, '類型', '');
+        if (!mainCategory) mainCategory = getPropertyValue(mainProps, 'Type', '');
+        if (!mainCategory) mainCategory = getPropertyValue(mainProps, '分類', '');
+        if (!mainCategory) mainCategory = getPropertyValue(mainProps, 'Category', '獨家');
+        
+        mainTag.textContent = translateCategory(mainCategory);
+        
+        mainTitle.textContent = getPropertyValue(mainProps, '標題', '新聞標題');
+        mainExcerpt.textContent = getPropertyValue(mainProps, '摘要', '點擊閱讀更多...');
+        mainImg.parentElement.setAttribute('data-article-id', mainArticle.id);
+        let mainRawCategory = getPropertyValue(mainProps, '類型', '') || getPropertyValue(mainProps, 'Type', '') || getPropertyValue(mainProps, '分類', '') || getPropertyValue(mainProps, 'Category', '新聞');
+        mainImg.parentElement.setAttribute('data-category', mainRawCategory);
+        const mainExternalUrl = getPropertyValue(mainProps, '來源', '') || getPropertyValue(mainProps, 'Link', '');
+        if (mainExternalUrl) mainImg.parentElement.setAttribute('data-external-url', mainExternalUrl);
+
+        // 接下來4個是編輯精選（小圖）
+        sidebar.innerHTML = '';
+        for (let i = 1; i < Math.min(5, articles.length); i++) {
+            const article = articles[i];
+            const props = article.properties;
+            const sidebarItem = createSidebarItem(article, props);
+            sidebar.appendChild(sidebarItem);
+        }
+
+    } catch (error) {
+        console.error('❌ 加載新聞失敗:', error);
+        console.log('⚠️ 顯示默認新聞作為備份');
+        showDefaultNews();
+    }
+}
+
+// 創建側邊欄小卡片
+function createSidebarItem(article, props) {
+    const div = document.createElement('div');
+    div.className = 'sidebar-item';
+    div.setAttribute('data-article-id', article.id);
+
+    // 獲取分類（從 Notion"類型"欄位）
+    let rawCategory = getPropertyValue(props, '類型', '');
+    if (!rawCategory) rawCategory = getPropertyValue(props, 'Type', '');
+    if (!rawCategory) rawCategory = getPropertyValue(props, '分類', '');
+    if (!rawCategory) rawCategory = getPropertyValue(props, 'Category', '新聞');
+
+    // 轉換為雙語顯示
+    const displayCategory = translateCategory(rawCategory);
+    const externalUrl = getPropertyValue(props, '來源', '') || getPropertyValue(props, 'Link', '');
+
+    div.setAttribute('data-category', rawCategory);
+    
+    if (externalUrl) div.setAttribute('data-external-url', externalUrl);
+
+    div.onclick = function() { handleNewsClick(this); };
+
+    let imgUrl = getNotionImageUrl(article);
+    // 如果沒有找到圖片，嘗試從屬性中直接提取
+    if (!imgUrl && props) {
+        // 嘗試所有可能的圖片字段
+        const possibleFields = ['圖片', '图片', 'Image', '封面圖', 'Cover Image', 'cover'];
+        for (const field of possibleFields) {
+            if (props[field] && props[field].files && props[field].files[0]) {
+                const file = props[field].files[0];
+                imgUrl = file.external ? file.external.url : (file.file ? file.file.url : null);
+                if (imgUrl) break;
+            }
+        }
+    }
+    imgUrl = imgUrl || 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop';
+    const title = getPropertyValue(props, '標題', '新聞標題');
+    const date = formatNotionDate(getPropertyValue(props, '發布日期', new Date().toISOString()));
+
+    div.innerHTML = `
+        <img src="${imgUrl}" alt="${title}" class="sidebar-thumb" onerror="this.src='https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop'">
+        <div class="sidebar-content">
+            <span class="side-tag">${displayCategory}</span>
+            <h4>${title}</h4>
+            <p class="meta">${date}</p>
+        </div>
+    `;
+
+    return div;
+}
+
+// 獲取 Notion 圖片 URL - 修復版
+function getNotionImageUrl(article) {
+    if (!article) return null;
+
+    // 優先從封面獲取 (cover 字段)
+    if (article.cover) {
+        if (article.cover.type === 'external' && article.cover.external) {
+            return article.cover.external.url;
+        } else if (article.cover.type === 'file' && article.cover.file) {
+            return article.cover.file.url;
+        }
+    }
+
+    // 從屬性中獲取 (支持多種字段名)
+    const props = article.properties || {};
+
+    // 嘗試不同可能的圖片字段名
+    const imageFields = ['圖片', '图片', 'Image', '封面', 'Cover Image', 'cover_image'];
+
+    for (const field of imageFields) {
+        const imgProp = props[field];
+        if (imgProp && imgProp.files && imgProp.files.length > 0) {
+            const file = imgProp.files[0];
+            if (file.external && file.external.url) {
+                return file.external.url;
+            } else if (file.file && file.file.url) {
+                return file.file.url;
+            }
+        }
+    }
+
+    // 嘗試從 page 對象的 cover 字段獲取 (有時在 properties 外)
+    if (article.icon && article.icon.type === 'external') {
+        return article.icon.external.url;
+    } else if (article.icon && article.icon.type === 'file') {
+        return article.icon.file.url;
+    }
+
+    return null;
+}
+
+// 獲取屬性值 - 修復版：支持多種字段名
+function getPropertyValue(props, key, defaultValue = '') {
+    // 嘗試直接獲取
+    let prop = props[key];
+
+    // 如果沒有找到，嘗試常見變體
+    if (!prop) {
+        const variants = {
+            '分類': ['分類', '類型', 'Type', 'Category', '分类'],
+            '標題': ['標題', '標题', 'Title', 'Name', '标题'],
+            '發布日期': ['發布日期', '發布時間', '日期', 'Date', 'Publish Date', '发布日期'],
+            '來源': ['來源', '来源', 'Link', 'URL', 'Source']
+        };
+
+        const possibleKeys = variants[key] || [key];
+        for (const k of possibleKeys) {
+            if (props[k]) {
+                prop = props[k];
+                break;
+            }
+        }
+    }
+
+    if (!prop) return defaultValue;
+
+    switch (prop.type) {
+        case 'title':
+            return prop.title.length > 0 ? prop.title[0].plain_text : defaultValue;
+        case 'rich_text':
+            return prop.rich_text.length > 0 ? prop.rich_text[0].plain_text : defaultValue;
+        case 'select':
+            return prop.select ? prop.select.name : defaultValue;
+        case 'multi_select':
+            return prop.multi_select.length > 0 ? prop.multi_select[0].name : defaultValue;
+        case 'date':
+            return prop.date ? prop.date.start : defaultValue;
+        case 'checkbox':
+            return prop.checkbox;
+        case 'number':
+            return prop.number;
+        case 'url':
+            return prop.url || defaultValue;
+        default:
+            return defaultValue;
+    }
+}
+
+// 格式化日期
+function formatNotionDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (days === 0) return '今天';
+    if (days === 1) return '昨天';
+    if (days < 7) return `${days}天前`;
+    if (days < 30) return `${Math.floor(days / 7)}週前`;
+
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+}
+
+// 分類翻譯 - 最終修復版：防止任何重複
+function translateCategory(category) {
+    if (!category) return '新聞 NEWS';
+
+    // 轉為字符串並清理
+    let cat = String(category).trim();
+
+    // 如果已經是雙語格式（包含空格和大寫英文），直接返回不再處理
+    if (cat.indexOf(' ') > 0 && /[A-Z]{2,}/.test(cat)) {
+        
+        return cat;
+    }
+
+    // 6個主要分類映射
+    if (cat === '獨家' || cat === 'EXCLUSIVE') return '獨家 EXCLUSIVE';
+    if (cat === '現場' || cat === 'LIVE') return '現場 LIVE';
+    if (cat === '專題' || cat === 'FEATURE') return '專題 FEATURE';
+    if (cat === '國際' || cat === 'INTERNATIONAL') return '國際 INTERNATIONAL';
+    if (cat === '新發行' || cat === 'RELEASES') return '新發行 RELEASES';
+    if (cat === '新聞' || cat === 'NEWS') return '新聞 NEWS';
+
+    // 擴展分類
+    if (cat === '音樂' || cat === 'MUSIC') return '音樂 MUSIC';
+    if (cat === '評論' || cat === 'REVIEW') return '評論 REVIEW';
+    if (cat === '人物' || cat === 'PEOPLE') return '人物 PEOPLE';
+    if (cat === '設備' || cat === 'GEAR') return '設備 GEAR';
+    if (cat === '影片' || cat === 'VIDEO') return '影片 VIDEO';
+    if (cat === '播客' || cat === 'PODCAST') return '播客 PODCAST';
+    if (cat === '活動' || cat === 'EVENT') return '活動 EVENT';
+    if (cat === '榜單' || cat === 'CHARTS') return '榜單 CHARTS';
+    if (cat === '雜誌' || cat === 'MAGAZINE') return '雜誌 MAGAZINE';
+    if (cat === '演出' || cat === 'SHOWS') return '演出 SHOWS';
+    if (cat === '會員專享') return '會員專享 MEMBERS ONLY';
+    if (cat === '編輯精選') return '編輯精選 EDITORS PICK';
+
+    // 默認：原樣返回 + NEWS（僅當沒有英文時）
+    return cat + ' NEWS';
+}
+
+// 顯示空狀態（當 API 失敗時，不顯示假新聞）
+function showDefaultNews() {
+    const mainImg = document.getElementById('featured-main-img');
+    const mainTag = document.getElementById('featured-main-tag');
+    const mainTitle = document.getElementById('featured-main-title');
+    const mainExcerpt = document.getElementById('featured-main-excerpt');
+    const sidebar = document.getElementById('featured-sidebar');
+
+    // 顯示空狀態提示，而不是假新聞
+    mainImg.style.display = 'none';
+    mainTag.textContent = '暫無數據';
+    mainTitle.textContent = '正在連接新聞數據庫...';
+    mainExcerpt.textContent = '請稍後刷新，或檢查 Notion 數據庫連接設置。';
+
+    sidebar.innerHTML = '<div style="padding: 2rem; text-align: center; color: #888;">暫無編輯精選內容<br>請在 Notion 中勾選 Home Featured</div>';
+
+    console.log('⚠️ 顯示空狀態（無假新聞）');
+}
+
+// 處理新聞點擊 - 跳轉到對應分類頁面
+function handleNewsClick(element) {
+    const articleId = element.getAttribute('data-article-id');
+    const category = element.getAttribute('data-category') || '';
+    const externalUrl = element.getAttribute('data-external-url');
+    const isMembersOnly = element.getAttribute('data-members-only') === 'true' || 
+                          element.classList.contains('premium') ||
+                          category === '會員專享' || 
+                          category === 'MEMBERS_ONLY';
+
+    if (!articleId) return;
+
+    // 檢查權限：只有會員專享才需要檢查
+    if (isMembersOnly && !MemberSystem.canRead(true)) {
+        // 顯示付費牆
+        const modal = document.getElementById('mobilePaywallModal');
+        if (modal) {
+            modal.classList.add('active');
+        }
+        return;
+    }
+
+    // 記錄閱讀（只有會員專享才記錄）
+    if (isMembersOnly) {
+        MemberSystem.recordRead(true);
+        updateQuotaDisplay();
+    }
+
+    // 如果有外部鏈接，直接打開
+    if (externalUrl && externalUrl !== 'null' && externalUrl !== '' && externalUrl !== 'undefined') {
+        window.open(externalUrl, '_blank');
+        return;
+    }
+
+    // 根據分類跳轉到對應頁面
+    const cat = category.trim();
+
+    switch(cat) {
+        case '獨家':
+        case 'EXCLUSIVE':
+            window.location.href = `./news.html?cat=exclusive`;
+            break;
+        case '現場':
+        case 'LIVE':
+            window.location.href = `./news.html?cat=live`;
+            break;
+        case '專題':
+        case 'FEATURE':
+            window.location.href = `./news.html?cat=feature`;
+            break;
+        case '國際':
+        case 'INTERNATIONAL':
+            window.location.href = `./news.html?cat=international`;
+            break;
+        case '新發行':
+        case 'RELEASES':
+            window.location.href = `./news.html?cat=releases`;
+            break;
+        case '新聞':
+        case 'NEWS':
+        default:
+            // NEWS 和默認都跳轉到 ALL（全部新聞）
+            window.location.href = `./news.html`;
+            break;
+    }
+}
+
+// 頁面加載時執行
+document.addEventListener('DOMContentLoaded', function() {
+    // 加載首頁新聞
+    loadHomeNewsFromNotion();
+});
+</script>
+
+
+<!-- 動態投票數據生成 -->
+<script>
+// 生成隨機但穩定的投票數據（基於日期種子）
+function generateVoteData() {
+    const today = new Date();
+    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+
+    // 偽隨機數生成器
+    function random(seed) {
+        const x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+    }
+
+    // 生成本周投票數（50-200之間）
+    const weeklyVotes = Math.floor(random(seed) * 150) + 50;
+    const weeklyVotes2 = Math.floor(random(seed + 1) * 150) + 50;
+
+    // 生成月累計（2000-3000之間）
+    const monthlyTotal = Math.floor(random(seed + 2) * 1000) + 2000;
+
+    // 生成總累計（10000-20000之間）
+    const grandTotal = Math.floor(random(seed + 3) * 10000) + 10000;
+
+    return {
+        weekly1: weeklyVotes,
+        weekly2: weeklyVotes2,
+        monthly: monthlyTotal,
+        total: grandTotal
+    };
+}
+
+// 更新頁面上的投票數據
+function updateVoteDisplay() {
+    const data = generateVoteData();
+
+    // 更新所有投票數字元素
+    document.querySelectorAll('.vote-num').forEach((el, index) => {
+        if (index % 2 === 0) {
+            el.textContent = '+' + data.weekly1;
+        } else {
+            el.textContent = '+' + data.weekly2;
+        }
+    });
+
+    // 更新月累計
+    document.querySelectorAll('.month-num').forEach(el => {
+        el.textContent = (new Date().getMonth() + 1);
+    });
+
+    // 更新總數（如果有對應的元素）
+    document.querySelectorAll('.total-num').forEach(el => {
+        el.textContent = data.total.toLocaleString();
+    });
+}
+
+// 頁面加載時更新
+document.addEventListener('DOMContentLoaded', updateVoteDisplay);
+</script>
 
 </body>
 </html>
+</script>
