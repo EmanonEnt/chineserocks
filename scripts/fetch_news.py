@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v13 - RSS源排查修复版
+ChineseRocks 新闻抓取脚本 v13 - 增加国内源版
+- 新增：豆瓣同城音乐活动 (北京/上海/广州/深圳/成都)
+- 新增：B站音乐区热门
 - 修复：移除不可用的独立音乐资讯和街声中国源
-- 修复：Notion API query方法改为databases.query
-- 新增：Unite Asia (亚洲朋克/硬核/金属专业媒体)
+- 修复：Notion API调用
 """
 
 import os
@@ -70,7 +71,7 @@ MUSIC_GENRES = {
         "weight": 6
     },
     "ROCK 通用": {
-        "keywords": ["rock", "搖滾", "band", "樂隊", "guitar", "吉他", "bass", "drum", "live", "演出", "concert", "tour"],
+        "keywords": ["rock", "搖滾", "band", "樂隊", "guitar", "吉他", "bass", "drum", "live", "演出", "concert", "tour", "音乐节", "巡演"],
         "weight": 5
     }
 }
@@ -86,9 +87,10 @@ EXCLUDE_GENRES = [
     "acoustic pop", "folk pop", "indie pop"
 ]
 
-# v13 RSS 源配置 - 已排查可用性
+# v13 RSS 源配置
 SOURCES = {
     "china": [
+        # ✅ 核心源1：Live China Music
         {
             "name": "Live China Music", 
             "url": "https://livechinamusic.com/feed", 
@@ -97,6 +99,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10
         },
+        # ✅ 核心源2：Wooozy
         {
             "name": "Wooozy-地下音樂", 
             "url": "https://wooozy.cn/feed", 
@@ -105,6 +108,57 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
+        # 🆕 新增：豆瓣同城-北京音乐活动
+        {
+            "name": "豆瓣同城-北京音乐", 
+            "url": "https://rsshub.app/douban/event/beijing/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 2,
+            "quality_score": 7,
+            "description": "北京音乐演出活动"
+        },
+        # 🆕 新增：豆瓣同城-上海音乐活动
+        {
+            "name": "豆瓣同城-上海音乐", 
+            "url": "https://rsshub.app/douban/event/shanghai/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 2,
+            "quality_score": 7,
+            "description": "上海音乐演出活动"
+        },
+        # 🆕 新增：豆瓣同城-广州音乐活动
+        {
+            "name": "豆瓣同城-广州音乐", 
+            "url": "https://rsshub.app/douban/event/guangzhou/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 2,
+            "quality_score": 7,
+            "description": "广州音乐演出活动"
+        },
+        # 🆕 新增：豆瓣同城-深圳音乐活动
+        {
+            "name": "豆瓣同城-深圳音乐", 
+            "url": "https://rsshub.app/douban/event/shenzhen/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 2,
+            "quality_score": 7,
+            "description": "深圳音乐演出活动"
+        },
+        # 🆕 新增：豆瓣同城-成都音乐活动
+        {
+            "name": "豆瓣同城-成都音乐", 
+            "url": "https://rsshub.app/douban/event/chengdu/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 2,
+            "quality_score": 7,
+            "description": "成都音乐演出活动"
+        },
+        # ❌ 禁用：独立音乐资讯
         {
             "name": "独立音樂資訊", 
             "url": "https://www.indie-music.com/feed", 
@@ -114,6 +168,7 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：网站无法访问"
         },
+        # ❌ 禁用：街声中国
         {
             "name": "街聲-中國", 
             "url": "https://streetvoice.cn/feed/", 
@@ -121,8 +176,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：RSS返回HTML页面而非XML"
+            "reason": "v13禁用：RSS返回HTML页面"
         },
+        # ❌ 禁用：网易云原创音乐
         {
             "name": "網易雲-原創音樂", 
             "url": "https://rsshub.app/ncm/playlist/2884035", 
@@ -130,8 +186,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：RSSHub公共实例不稳定"
+            "reason": "v13禁用：RSSHub不稳定"
         },
+        # ❌ 禁用：知乎话题
         {
             "name": "知乎-搖滾樂話題", 
             "url": "https://rsshub.app/zhihu/topic/19550718", 
@@ -150,6 +207,7 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub限制20条"
         },
+        # ❌ 禁用：豆瓣音乐
         {
             "name": "豆瓣音樂-樂評", 
             "url": "https://rsshub.app/douban/music/latest", 
@@ -157,8 +215,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：RSSHub公共实例反爬严重"
+            "reason": "v13禁用：RSSHub反爬严重"
         },
+        # ❌ 禁用：摩登天空
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
@@ -168,6 +227,7 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：网易号反爬机制"
         },
+        # ❌ 禁用：Solidot
         {
             "name": "Solidot-文化", 
             "url": "https://rsshub.app/solidot/culture", 
@@ -175,7 +235,7 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：摇滚相关内容极少"
+            "reason": "v13禁用：摇滚内容极少"
         },
     ],
 
@@ -234,7 +294,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10,
             "inter_source_key": True,
-            "description": "亚洲朋克、硬核、金属音乐专业媒体"
+            "description": "亚洲朋克、硬核、金属音乐"
         },
         {
             "name": "Pitchfork", 
@@ -279,7 +339,7 @@ SOURCES = {
             "category": "國際",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：与Pitchfork/NME重复率过高"
+            "reason": "v13禁用：重复率过高"
         },
     ],
 
@@ -374,7 +434,6 @@ class ContentDeduplicator:
         try:
             cutoff = (datetime.now() - timedelta(days=days)).isoformat()
 
-            # 修复：使用正确的Notion API调用方式
             response = notion_client.databases.query(
                 database_id=db_id,
                 filter={
@@ -422,12 +481,12 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v13 - RSS源排查修复版")
+        print("ChineseRocks 新闻抓取系统 v13 - 增加国内源版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
-        print(f"日期限制: 近{DAYS_LIMIT}天內 (截止: {self.cutoff_date.strftime('%Y-%m-%d')})")
-        print(f"相似度阈值: {SIMILARITY_THRESHOLD:.0%} (源内) / {INTER_SOURCE_THRESHOLD:.0%} (国际源间)")
+        print(f"日期限制: 近{DAYS_LIMIT}天內")
+        print(f"相似度阈值: {SIMILARITY_THRESHOLD:.0%} / {INTER_SOURCE_THRESHOLD:.0%}")
         print(f"Cloudinary: {'已啟用' if self.cloudinary_enabled else '未啟用'}")
         print("="*70)
 
@@ -438,7 +497,7 @@ class NewsFetcher:
         enabled_sources = [s for s in sources if s["enabled"]]
         enabled_sources.sort(key=lambda x: x.get("priority", 99))
 
-        print(f"\n抓取 {len(enabled_sources)} 个源 (已按优先级排序)")
+        print(f"\n抓取 {len(enabled_sources)} 个源")
         print("-"*50)
 
         for source in sources:
@@ -449,12 +508,6 @@ class NewsFetcher:
             self._fetch_source(source)
 
         print(f"\n抓取完成: 共 {len(self.articles)} 条")
-        print(f"  - 内容去重过滤: {self.stats['duplicate_content']} 条")
-        print(f"  - 国际源间去重: {self.stats['inter_source_dup']} 条")
-        print(f"  - Notion已存在: {self.stats['notion_duplicate']} 条")
-        print(f"  - 低质量过滤: {self.stats['low_quality']} 条")
-        print(f"  - 非搖滾过滤: {self.stats['filtered']} 条")
-        print(f"  - 過期文章(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
         return self.articles
 
     def _fetch_source(self, source):
@@ -464,7 +517,7 @@ class NewsFetcher:
             limit = source.get("limit_override", self.limit)
             desc = source.get("description", "")
 
-            print(f"[{source['name']}] (优先级:{priority}, 质量分:{quality}, 限制:{limit})")
+            print(f"[{source['name']}] (优先级:{priority}, 质量分:{quality})")
             if desc:
                 print(f"  ℹ️ {desc}")
 
@@ -484,7 +537,7 @@ class NewsFetcher:
                         raise
 
             if not feed or not feed.entries:
-                print(f"  ⚠️ 無法獲取 RSS 內容或源無效")
+                print(f"  ⚠️ 無法獲取 RSS 內容")
                 return
 
             count = 0
@@ -529,7 +582,7 @@ class NewsFetcher:
                         inter_dup_count += 1
                     else:
                         duplicate_count += 1
-                    print(f"    🔄 跳过: {dup_reason} - {title[:30]}...")
+                    print(f"    🔄 跳过: {dup_reason}")
                     continue
 
                 genres = self._detect_genres(entry)
@@ -548,7 +601,7 @@ class NewsFetcher:
                     self.articles.append(article)
                     count += 1
 
-            print(f"  ✅ 成功 {count} 条 (去重{duplicate_count}, 源间去重{inter_dup_count}, Noton已存在{notion_dup_count}, 低质量{low_quality_count}, 风格过滤{filtered_count}, 过期{too_old_count})")
+            print(f"  ✅ 成功 {count} 条")
             self.stats["duplicate_content"] += duplicate_count
             self.stats["inter_source_dup"] += inter_dup_count
             self.stats["notion_duplicate"] += notion_dup_count
@@ -609,7 +662,7 @@ class NewsFetcher:
                 "genres": genres
             }
         except Exception as e:
-            print(f"    解析條目失敗: {e}")
+            print(f"    解析失敗: {e}")
             return None
 
     def _extract_image_improved(self, entry, source):
@@ -714,13 +767,13 @@ class NewsFetcher:
             result = self._add_to_notion(article)
             if result == "added":
                 added += 1
-                print(f"  ✅ {article['title'][:40]}... [{', '.join(article['genres'][:2])}]")
+                print(f"  ✅ {article['title'][:40]}...")
             elif result == "exists":
                 exists += 1
-                print(f"  ⏭️ 已存在: {article['title'][:30]}...")
+                print(f"  ⏭️ 已存在")
             else:
                 failed += 1
-                print(f"  ❌ 失敗: {article['title'][:30]}...")
+                print(f"  ❌ 失敗")
 
         self.stats["added"] = added
         self.stats["exists"] = exists
@@ -740,6 +793,8 @@ class NewsFetcher:
 
             if article['category'] == "國際":
                 tags.append({"name": "國際"})
+            elif article['category'] == "演出":
+                tags.append({"name": "演出"})
 
             properties = {
                 "標題": {"title": [{"text": {"content": article['title'][:150]}}]},
@@ -767,7 +822,7 @@ class NewsFetcher:
         except Exception as e:
             error_msg = str(e)
             if "token" in error_msg.lower() or "unauthorized" in error_msg.lower():
-                print(f"    🔴 Notion API Token 無效，請檢查 Secrets 設置")
+                print(f"    🔴 Notion API Token 無效")
             else:
                 print(f"    錯誤: {e}")
             return "failed"
@@ -805,17 +860,8 @@ class NewsFetcher:
         print(f"  - Notion已存在: {self.stats['notion_duplicate']} 条")
         print(f"  - 低质量: {self.stats['low_quality']} 条")
         print(f"  - 非搖滾: {self.stats['filtered']} 条")
-        print(f"  - 過期(>{DAYS_LIMIT}天): {self.stats['too_old']} 条")
+        print(f"  - 過期: {self.stats['too_old']} 条")
         print("="*70)
-
-        if self.articles:
-            print("\n風格分佈:")
-            genre_count = {}
-            for article in self.articles:
-                for genre in article.get('genres', []):
-                    genre_count[genre] = genre_count.get(genre, 0) + 1
-            for genre, count in sorted(genre_count.items(), key=lambda x: x[1], reverse=True):
-                print(f"  {genre}: {count} 条")
 
 
 def main():
@@ -827,7 +873,6 @@ def main():
 
     if not NOTION_TOKEN:
         print("🔴 錯誤: NOTION_TOKEN 未設置")
-        print("請在 GitHub Secrets 中設置 NOTION_TOKEN")
         sys.exit(1)
 
     fetcher = NewsFetcher(source_type=args.source, limit=args.limit)
