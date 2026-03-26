@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v12.0.0-stable - 国内源修复+国际去重增强版
+ChineseRocks 新闻抓取脚本 v12.0.0 - 国内源修复+国际去重增强版
 - 修复：移除不可靠的RSSHub源，添加更稳定的国内源
 - 修复：国际源间去重，同一事件只保留一个报道
 - 修复：NME降级处理，减少重复内容
@@ -91,7 +91,7 @@ EXCLUDE_GENRES = [
     "acoustic pop", "folk pop", "indie pop"
 ]
 
-# v12.0.0-stable 修复版 RSS 源配置
+# v12.0.0 修复版 RSS 源配置
 SOURCES = {
     "china": [
         # ✅ 核心源1：Live China Music (最可靠)
@@ -451,7 +451,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v12.0.0-stable - 国内源修复+国际去重增强版")
+        print("ChineseRocks 新闻抓取系统 v12.0.0 - 国内源修复+国际去重增强版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -501,7 +501,7 @@ class NewsFetcher:
             feed = None
             for i in range(retries):
                 try:
-                    feed = feedparser.parse(source['url'], timeout=30)
+                    feed = feedparser.parse(source['url'])
                     if feed.entries:
                         break
                 except Exception as e:
