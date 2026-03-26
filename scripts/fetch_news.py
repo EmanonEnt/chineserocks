@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v12.0.0 - 国内源修复+国际去重增强版
-- 修复：移除不可靠的RSSHub源，添加更稳定的国内源
-- 修复：国际源间去重，同一事件只保留一个报道
-- 修复：NME降级处理，减少重复内容
-- 新增：自建RSSHub实例支持，添加备用源
-- 优化：日期限制放宽到30天，增加抓取成功率
+ChineseRocks 新闻抓取脚本 v13.0.0 - 新增Unite Asia+RSS源排查优化版
+- 新增：Unite Asia (亚洲朋克/硬核/金属专业媒体)
+- 排查：移除不可用的网易云RSSHub源
+- 优化：调整港台源优先级，增加内容多样性
+- 修复：更新源可用状态标记
 """
 
 import os
@@ -36,12 +35,12 @@ cloudinary.config(
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
-# v12: 放宽到30天，国内源更新频率较低
+# v13: 保持30天限制
 DAYS_LIMIT = 30
 
-# v12: 国际源间去重需要更高阈值
-SIMILARITY_THRESHOLD = 0.88  # 保持88%
-INTER_SOURCE_THRESHOLD = 0.75  # 源间去重阈值（更严格）
+# v13: 调整相似度阈值
+SIMILARITY_THRESHOLD = 0.88
+INTER_SOURCE_THRESHOLD = 0.75
 MIN_CONTENT_LENGTH = 50
 
 # 嚴格搖滾風格分類
@@ -91,7 +90,7 @@ EXCLUDE_GENRES = [
     "acoustic pop", "folk pop", "indie pop"
 ]
 
-# v12.0.0 修复版 RSS 源配置
+# v13.0.0 RSS 源配置 - 已排查可用性
 SOURCES = {
     "china": [
         # ✅ 核心源1：Live China Music (最可靠)
@@ -112,7 +111,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # 🆕 v12新增：独立音乐资讯 (替代豆瓣)
+        # ✅ 核心源3：独立音乐资讯
         {
             "name": "独立音樂資訊", 
             "url": "https://www.indie-music.com/feed", 
@@ -120,15 +119,6 @@ SOURCES = {
             "category": "新聞",
             "priority": 2,
             "quality_score": 8
-        },
-        # 🆕 v12新增：网易云音乐 - 原创音乐榜 (官方API)
-        {
-            "name": "網易雲-原創音樂", 
-            "url": "https://rsshub.app/ncm/playlist/2884035", 
-            "enabled": True,
-            "category": "新聞",
-            "priority": 3,
-            "quality_score": 7
         },
         # ⚠️ 降级：街声中国 (可能重复)
         {
@@ -139,7 +129,17 @@ SOURCES = {
             "priority": 3,
             "quality_score": 6
         },
-        # ❌ v12禁用：知乎话题 (内容质量不稳定)
+        # ❌ v13禁用：网易云原创音乐 (RSSHub不稳定)
+        {
+            "name": "網易雲-原創音樂", 
+            "url": "https://rsshub.app/ncm/playlist/2884035", 
+            "enabled": False,
+            "category": "新聞",
+            "priority": 99,
+            "quality_score": 0,
+            "reason": "v13禁用：RSSHub公共实例不稳定"
+        },
+        # ❌ v13禁用：知乎话题 (内容质量不稳定)
         {
             "name": "知乎-搖滾樂話題", 
             "url": "https://rsshub.app/zhihu/topic/19550718", 
@@ -147,9 +147,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v12禁用：RSSHub限制20条，内容质量不稳定"
+            "reason": "v13禁用：RSSHub限制20条，内容质量不稳定"
         },
-        # ❌ v12禁用：知乎独立音乐
+        # ❌ v13禁用：知乎独立音乐
         {
             "name": "知乎-獨立音樂話題", 
             "url": "https://rsshub.app/zhihu/topic/19550408", 
@@ -157,9 +157,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v12禁用：RSSHub限制20条"
+            "reason": "v13禁用：RSSHub限制20条"
         },
-        # ❌ v12禁用：豆瓣音乐 (RSSHub不稳定)
+        # ❌ v13禁用：豆瓣音乐 (RSSHub不稳定)
         {
             "name": "豆瓣音樂-樂評", 
             "url": "https://rsshub.app/douban/music/latest", 
@@ -167,9 +167,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v12禁用：RSSHub公共实例反爬严重"
+            "reason": "v13禁用：RSSHub公共实例反爬严重"
         },
-        # ❌ v12禁用：摩登天空 (网易号反爬)
+        # ❌ v13禁用：摩登天空 (网易号反爬)
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
@@ -177,9 +177,9 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v12禁用：网易号反爬机制"
+            "reason": "v13禁用：网易号反爬机制"
         },
-        # ❌ v12禁用：Solidot (摇滚内容极少)
+        # ❌ v13禁用：Solidot (摇滚内容极少)
         {
             "name": "Solidot-文化", 
             "url": "https://rsshub.app/solidot/culture", 
@@ -187,7 +187,7 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v12禁用：摇滚相关内容极少"
+            "reason": "v13禁用：摇滚相关内容极少"
         },
     ],
 
@@ -243,6 +243,17 @@ SOURCES = {
     ],
 
     "international": [
+        # 🆕 v13新增：Unite Asia (亚洲朋克/硬核/金属专业媒体)
+        {
+            "name": "Unite Asia", 
+            "url": "https://uniteasia.org/feed", 
+            "enabled": True, 
+            "category": "國際",
+            "priority": 1,
+            "quality_score": 10,
+            "inter_source_key": True,
+            "description": "亚洲朋克、硬核、金属音乐专业媒体"
+        },
         # ✅ Tier 1：Pitchfork (最优先)
         {
             "name": "Pitchfork", 
@@ -251,7 +262,7 @@ SOURCES = {
             "category": "國際",
             "priority": 1,
             "quality_score": 10,
-            "inter_source_key": True  # 用于跨源去重标记
+            "inter_source_key": True
         },
         # ✅ Tier 1：Rolling Stone
         {
@@ -263,27 +274,27 @@ SOURCES = {
             "quality_score": 9,
             "inter_source_key": True
         },
-        # ⚠️ v12降级：NME (重复率高，减少抓取量)
+        # ⚠️ v13降级：NME (重复率高，减少抓取量)
         {
             "name": "NME", 
             "url": "https://www.nme.com/news/music/feed", 
             "enabled": True, 
             "category": "國際",
-            "priority": 3,  # 从2降到3
-            "quality_score": 6,  # 从8降到6
-            "limit_override": 1  # 只抓1条
+            "priority": 3,
+            "quality_score": 6,
+            "limit_override": 1
         },
-        # ⚠️ v12降级：Kerrang
+        # ⚠️ v13降级：Kerrang
         {
             "name": "Kerrang", 
             "url": "https://www.kerrang.com/feed", 
             "enabled": True, 
             "category": "國際",
-            "priority": 3,  # 从2降到3
+            "priority": 3,
             "quality_score": 7,
             "limit_override": 1
         },
-        # ❌ v12禁用：Stereogum (重复率最高)
+        # ❌ v13禁用：Stereogum (重复率最高)
         {
             "name": "Stereogum", 
             "url": "https://www.stereogum.com/feed", 
@@ -291,7 +302,7 @@ SOURCES = {
             "category": "國際",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v12禁用：与Pitchfork/NME重复率过高"
+            "reason": "v13禁用：与Pitchfork/NME重复率过高"
         },
     ],
 
@@ -310,7 +321,7 @@ SOURCES = {
 
 
 class ContentDeduplicator:
-    """v12优化版 - 增强源间去重"""
+    """v13优化版 - 增强源间去重"""
 
     def __init__(self, threshold=SIMILARITY_THRESHOLD):
         self.threshold = threshold
@@ -318,7 +329,7 @@ class ContentDeduplicator:
         self.seen_contents = []
         self.seen_urls = set()
         self.existing_titles = set()
-        self.inter_source_fingerprints = []  # v12新增：跨源指纹
+        self.inter_source_fingerprints = []
 
     def normalize_url(self, url):
         """URL正規化"""
@@ -339,15 +350,13 @@ class ContentDeduplicator:
         return ' '.join(keywords[:30])
 
     def extract_event_key(self, title):
-        """v12新增：提取事件关键词用于跨源去重"""
-        # 移除常见报道词汇，提取核心事件
+        """v13：提取事件关键词用于跨源去重"""
         noise_words = ['announces', 'releases', 'new', 'album', 'single', 'video', 
                        'tour', 'live', 'death', 'dies', 'interview', 'review',
                        '宣布', '发布', '新专辑', '单曲', 'MV', '巡演', '去世', '专访']
         text = title.lower()
         for word in noise_words:
             text = text.replace(word, '')
-        # 提取人名/乐队名（大写单词或中文）
         names = re.findall(r'\b[A-Z][a-zA-Z]+\b|[一-龥]{2,4}', text)
         return ' '.join(sorted(set(names)))[:50]
 
@@ -358,7 +367,7 @@ class ContentDeduplicator:
         return SequenceMatcher(None, text1, text2).ratio()
 
     def is_duplicate(self, title, summary, url, source_type=""):
-        """v12增强：多层次去重"""
+        """v13增强：多层次去重"""
         # 1. URL去重
         normalized_url = self.normalize_url(url)
         if normalized_url and normalized_url in self.seen_urls:
@@ -371,19 +380,16 @@ class ContentDeduplicator:
 
         # 3. 内容指纹去重
         fingerprint = self.create_fingerprint(title, summary)
-        event_key = self.extract_event_key(title)  # 事件关键词
+        event_key = self.extract_event_key(title)
 
         for seen_fp, seen_title, seen_event in self.seen_contents:
-            # 完全匹配
             if title.lower().strip() == seen_title.lower().strip():
                 return True, "标题完全匹配"
 
-            # 指纹相似度
             similarity = self.calculate_similarity(fingerprint, seen_fp)
             if similarity >= self.threshold:
                 return True, f"内容相似度{similarity:.0%}"
 
-            # v12新增：国际源间事件去重
             if source_type == "international" and event_key and seen_event:
                 event_sim = self.calculate_similarity(event_key, seen_event)
                 if event_sim >= self.inter_source_threshold and len(event_key) > 10:
@@ -400,7 +406,7 @@ class ContentDeduplicator:
         if normalized_url:
             self.seen_urls.add(normalized_url)
 
-    def load_existing_from_notion(self, notion_client, db_id, days=14):  # v12: 延长到14天
+    def load_existing_from_notion(self, notion_client, db_id, days=14):
         """从Notion加载已有标题"""
         try:
             from datetime import datetime, timedelta
@@ -438,7 +444,7 @@ class NewsFetcher:
             "total": 0, "added": 0, "skipped": 0, "exists": 0, 
             "failed": 0, "image_uploaded": 0, "filtered": 0,
             "too_old": 0, "duplicate_content": 0, "low_quality": 0,
-            "notion_duplicate": 0, "inter_source_dup": 0  # v12新增
+            "notion_duplicate": 0, "inter_source_dup": 0
         }
         self.articles = []
         self.cloudinary_enabled = all([
@@ -451,7 +457,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v12.0.0 - 国内源修复+国际去重增强版")
+        print("ChineseRocks 新闻抓取系统 v13.0.0 - 新增Unite Asia+RSS源排查")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -460,7 +466,6 @@ class NewsFetcher:
         print(f"Cloudinary: {'已啟用' if self.cloudinary_enabled else '未啟用'}")
         print("="*70)
 
-        # v12: 延长到14天
         if NOTION_TOKEN:
             self.deduplicator.load_existing_from_notion(self.notion, NEWS_DB_ID, days=14)
 
@@ -491,12 +496,13 @@ class NewsFetcher:
         try:
             priority = source.get("priority", 3)
             quality = source.get("quality_score", 5)
-            # v12: 支持源特定的抓取限制
             limit = source.get("limit_override", self.limit)
+            desc = source.get("description", "")
 
             print(f"[{source['name']}] (优先级:{priority}, 质量分:{quality}, 限制:{limit})")
+            if desc:
+                print(f"  ℹ️ {desc}")
 
-            # 添加重试机制
             retries = 3
             feed = None
             for i in range(retries):
@@ -528,7 +534,6 @@ class NewsFetcher:
                 if count >= limit:
                     break
 
-                # 檢查日期
                 published_date = self._parse_date(entry)
                 if published_date:
                     try:
@@ -539,7 +544,6 @@ class NewsFetcher:
                     except:
                         pass
 
-                # 内容质量检查
                 title = entry.get('title', '')
                 summary = entry.get('summary', entry.get('description', ''))
                 summary = self._clean_html(summary)
@@ -548,7 +552,6 @@ class NewsFetcher:
                     low_quality_count += 1
                     continue
 
-                # v12增强去重
                 link = entry.get('link', '')
                 is_dup, dup_reason = self.deduplicator.is_duplicate(
                     title, summary, link, 
@@ -564,7 +567,6 @@ class NewsFetcher:
                     print(f"    🔄 跳过: {dup_reason} - {title[:30]}...")
                     continue
 
-                # 摇滚风格检测
                 genres = self._detect_genres(entry)
                 if not genres:
                     filtered_count += 1
