@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-03-26T02:53:00.313914",
-  "total_count": 16,
+  "last_updated": "2026-03-26T05:44:02.344036",
+  "total_count": 17,
   "data": {
     "all": [
       {
@@ -23,6 +23,29 @@
         "displayOrder": 1,
         "created_time": "2026-03-23T17:06:00.000Z",
         "last_edited_time": "2026-03-23T17:11:00.000Z"
+      },
+      {
+        "id": "32f9f945-80b7-814e-8a17-d46d500c8658",
+        "title": "Thai Death Metal Band G6PD Return With New Lineup and First Single [Thailand]",
+        "content": "快来欣赏泰国死亡金属乐队 G6PD 的最新单曲《Black Sun》。这首作品同时也作为该乐队即将推出的新作的先声…… 本文《泰国死亡金属乐队 G6PD 携全新阵容及首支单曲回归 [泰国]》首发于 Unite Asia。",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "Unite Asia",
+          "HEAVY & METAL",
+          "國際",
+          "獨家",
+          "泰国"
+        ],
+        "cover_image": "",
+        "source_url": "https://uniteasia.org/thai-death-metal-band-g6pd-return-with-new-lineup-and-first-single-thailand/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-26T05:19:00.000Z",
+        "last_edited_time": "2026-03-26T05:26:00.000Z"
       },
       {
         "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
@@ -128,28 +151,6 @@
         "displayOrder": 999,
         "created_time": "2026-03-21T04:20:00.000Z",
         "last_edited_time": "2026-03-21T06:28:00.000Z"
-      },
-      {
-        "id": "32a9f945-80b7-81a3-940a-fd1493d2e17c",
-        "title": "雞蛋蒸肉餅3/29台北專場 打造「2222號列車」沉浸式音樂旅程",
-        "content": "曾獲金音創作獎「海外創作音樂獎」肯定、並入圍金曲獎最佳樂團的香港女子樂團 GDJYB 雞蛋蒸肉餅，正式啟動全新專輯巡演計畫 < = P:r0J3CT 2222 / > 。「2222 號列車」將於 3 月 29 日抵達台北站，選址閱讀全文 \"雞蛋蒸肉餅3/29台北專場 打造「2222號列車」沉浸式音樂旅程\" The post 雞蛋蒸肉餅3/29台北專場 打造「2222號列車」沉浸式音樂旅程 appeared first on Blow 吹音樂.",
-        "category": "現場",
-        "tags": [
-          "新聞",
-          "Blow吹音樂",
-          "PUNK & HARDCORE",
-          "演出",
-          "現場"
-        ],
-        "cover_image": "https://blow.streetvoice.com/wp-content/uploads/2026/03/04-12.jpg",
-        "source_url": "https://blow.streetvoice.com/86719/",
-        "published_date": "2026-03-20",
-        "is_premium": false,
-        "featured": false,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-21T04:19:00.000Z",
-        "last_edited_time": "2026-03-21T15:58:00.000Z"
       },
       {
         "id": "3269f945-80b7-80b4-8757-c6e414aeac17",
@@ -227,7 +228,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466YGTJ3I2V%2F20260326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260326T025300Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDAwjZGqF2xJarho8Avfqg0N%2Bg4eZec4bf1AgYJI7LH6QIhAJyR6NR9t7M2MiOrv%2FFRVuh4maQqu0cLOaZ8iv7VlQhyKogECLj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgxlsnAimkyY3rSOyRoq3AM4SDqzf4t9x1caqOBa4inVxpoAeAi5wSYEBLpE4YZQyhIDkibcBjfalr14a3TzaWg%2BNyckh1RzjeG9ayv6flpUsd7ffYYpMUxBNn6EbTpJezucZJn0EB9IGgtcJSXqJKNdl5lU%2BpvjC7GD3rol%2FEOPTdAjTikrfX%2Fs79jDLOn9SEdfQbII%2BQ%2FKmYD1BiD8p9jZswKhL7gDFsgVZUSDZiTT2%2Fg%2F4v2BFTMLzmShkmvxGaRirQWPTkytjge8X22wC3tjIImpvr5AJv310N82YKO3oxL99P77M7FwkQukfk%2BzfuDe2v9s3ijFrcdWSU1sbfEhUbRFUySq2j%2BCjtUrSNL%2Ffz%2F6Wm%2BtiXU0wxZTwjevifui9IO8VZ92%2FmA1%2FMomKIipnUQKrycDttyk%2B7b9e0VnPWBKtpoMaGkfYg559chNVvtvwPB4%2FaJGRYS%2BDg0g91dtU1KIHAALRTsFQZ4pNczlAzQDBxIA9kvQMjuMWV7LHWumxlqEBdT%2FISHDFtFO7A2DJd8vGcaYWfaaTTEgkGqH7dhdnKMun9jbOdhe1MYY%2FcBETWdvBdznLGEndTut1c3CbbC693V%2B4xzMHf5tm3p5Tarek6emBxJ3Mwr8cPsPakgkLSWMcmvMwEDDTTC70JHOBjqkAZ28Hd%2F3mnk7mFF9hHxyOkXVzUXQrWP0z%2FtQrcHzeXD4%2BXfZI%2BAYf3J8S112EgZIKgnFq8rNNfuPp0ltv0wA3EQLyD302t3A7mRjCS%2FZPOMyWTlnbYdbf%2Bc9NNAuedajXyZ9%2F3iyeIN60BmFxrJvik8%2BR6qdeDKt92rG8yIDIp3R4D%2FbeVfofgDjXaV5tHD76bmClaIhgS7XVBXBDBBbe2HLyRVO&X-Amz-Signature=7f302663a960045084d422bdb85200b76e2897e668ddc6d97ece4c8403196b3b&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4662TK2CA4H%2F20260326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260326T054402Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICAt5A9p05DFQoYeZbHKlOUhqolMJLakIvB9McotKI55AiA8ygm8ACBmXr3EJb9kVQWcxO3Ad%2FDjDxTJvIROxye3QyqIBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMbYgGXPTVRP1Bxqp1KtwDGHkDc%2F4tSUWBI9vS36UBVs0tVuiegEySxjHpMWebX%2FRvztOYfwr4AksaYhlPdzwv2PJC2vIs1Tyey1WPWcQAYoAnXxym0FEJr0kQSSmQZqw5aDFM%2BAkxaUhHEzGm1B7uMbl7hANzOpdDwu%2FI1Ae1GCXh6HBNSOFto2LGuTyjSdEqRl4DVI4x1S5bwK57r%2BgEiFHxh7KvFz4VjR065FKkmZGqpnhd1egaw99jW21UBhDeC1l9PA%2B%2FW5VTkXXwNUz%2Fpqq80IF%2FPlQXkma8ZI6WM4YLkFetzOiYIP4j33m3LCkm8e5Rz4d7n7oZDDvLtbdEptRxCx%2BIHmS4I9XPQutpKO7w8mpvA9r9rmtQAfhQSnm0sq2XuYpllO2x%2F2%2FbdOBDP2%2FO%2BcY%2F7w0Glq%2FIyYMb5V%2Bf%2F%2FCnTg%2BbpaZiiwdTiSDZg7xjOhi82MIyP59vUVVEAlvr7PI6YzpdvKcAcngVelTJAamI6NC%2B4IvVz4eGusTU5t%2Bcm7KiuyXZLYs3wnqZuI85DYvdSbLfpJcM1ydEdmgfexweBy9ORdY%2B5293GsVC50RFiegQVbVQqzX5c1YreqPjmFo0zIIG5HY9Ud7aj%2BqZ0xiq7kcx3M3bRL3cc84GbnWXyxtG5iWzEtkw4fySzgY6pgG3P9HJa%2FdrKI6f7cyC%2BdPK5fS0z232p9SuoFGdTXdp2EEjtfrLOVLz8Ijm7qCM%2FWTXj6%2FZT67vcxYxuBvZ6Y8mxBN1WrfYxlc%2F5kZnKgiJx%2F9SvZ%2F1e7lm%2FbgfuplY7VWXxY4Db83C4Idgu0E38ZXDP86BnheYHQmVRwlm9UeyHjbo6998tDKxiGyKaJ1njzMhRv0VwChCyR2sNbPvr9zYGWjpGpKe&X-Amz-Signature=d0adda134ef08c46695c68fb297b23c5a92bb66b14dc7393c14f90fc934766ee&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -294,7 +295,7 @@
           "編輯精選",
           "INDIE & ALTERNATIVE"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466YGTJ3I2V%2F20260326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260326T025300Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDAwjZGqF2xJarho8Avfqg0N%2Bg4eZec4bf1AgYJI7LH6QIhAJyR6NR9t7M2MiOrv%2FFRVuh4maQqu0cLOaZ8iv7VlQhyKogECLj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgxlsnAimkyY3rSOyRoq3AM4SDqzf4t9x1caqOBa4inVxpoAeAi5wSYEBLpE4YZQyhIDkibcBjfalr14a3TzaWg%2BNyckh1RzjeG9ayv6flpUsd7ffYYpMUxBNn6EbTpJezucZJn0EB9IGgtcJSXqJKNdl5lU%2BpvjC7GD3rol%2FEOPTdAjTikrfX%2Fs79jDLOn9SEdfQbII%2BQ%2FKmYD1BiD8p9jZswKhL7gDFsgVZUSDZiTT2%2Fg%2F4v2BFTMLzmShkmvxGaRirQWPTkytjge8X22wC3tjIImpvr5AJv310N82YKO3oxL99P77M7FwkQukfk%2BzfuDe2v9s3ijFrcdWSU1sbfEhUbRFUySq2j%2BCjtUrSNL%2Ffz%2F6Wm%2BtiXU0wxZTwjevifui9IO8VZ92%2FmA1%2FMomKIipnUQKrycDttyk%2B7b9e0VnPWBKtpoMaGkfYg559chNVvtvwPB4%2FaJGRYS%2BDg0g91dtU1KIHAALRTsFQZ4pNczlAzQDBxIA9kvQMjuMWV7LHWumxlqEBdT%2FISHDFtFO7A2DJd8vGcaYWfaaTTEgkGqH7dhdnKMun9jbOdhe1MYY%2FcBETWdvBdznLGEndTut1c3CbbC693V%2B4xzMHf5tm3p5Tarek6emBxJ3Mwr8cPsPakgkLSWMcmvMwEDDTTC70JHOBjqkAZ28Hd%2F3mnk7mFF9hHxyOkXVzUXQrWP0z%2FtQrcHzeXD4%2BXfZI%2BAYf3J8S112EgZIKgnFq8rNNfuPp0ltv0wA3EQLyD302t3A7mRjCS%2FZPOMyWTlnbYdbf%2Bc9NNAuedajXyZ9%2F3iyeIN60BmFxrJvik8%2BR6qdeDKt92rG8yIDIp3R4D%2FbeVfofgDjXaV5tHD76bmClaIhgS7XVBXBDBBbe2HLyRVO&X-Amz-Signature=df2441067e9775c766f09c8c46dae59ae8034847045884a61158da2051f2df86&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4662TK2CA4H%2F20260326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260326T054402Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICAt5A9p05DFQoYeZbHKlOUhqolMJLakIvB9McotKI55AiA8ygm8ACBmXr3EJb9kVQWcxO3Ad%2FDjDxTJvIROxye3QyqIBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMbYgGXPTVRP1Bxqp1KtwDGHkDc%2F4tSUWBI9vS36UBVs0tVuiegEySxjHpMWebX%2FRvztOYfwr4AksaYhlPdzwv2PJC2vIs1Tyey1WPWcQAYoAnXxym0FEJr0kQSSmQZqw5aDFM%2BAkxaUhHEzGm1B7uMbl7hANzOpdDwu%2FI1Ae1GCXh6HBNSOFto2LGuTyjSdEqRl4DVI4x1S5bwK57r%2BgEiFHxh7KvFz4VjR065FKkmZGqpnhd1egaw99jW21UBhDeC1l9PA%2B%2FW5VTkXXwNUz%2Fpqq80IF%2FPlQXkma8ZI6WM4YLkFetzOiYIP4j33m3LCkm8e5Rz4d7n7oZDDvLtbdEptRxCx%2BIHmS4I9XPQutpKO7w8mpvA9r9rmtQAfhQSnm0sq2XuYpllO2x%2F2%2FbdOBDP2%2FO%2BcY%2F7w0Glq%2FIyYMb5V%2Bf%2F%2FCnTg%2BbpaZiiwdTiSDZg7xjOhi82MIyP59vUVVEAlvr7PI6YzpdvKcAcngVelTJAamI6NC%2B4IvVz4eGusTU5t%2Bcm7KiuyXZLYs3wnqZuI85DYvdSbLfpJcM1ydEdmgfexweBy9ORdY%2B5293GsVC50RFiegQVbVQqzX5c1YreqPjmFo0zIIG5HY9Ud7aj%2BqZ0xiq7kcx3M3bRL3cc84GbnWXyxtG5iWzEtkw4fySzgY6pgG3P9HJa%2FdrKI6f7cyC%2BdPK5fS0z232p9SuoFGdTXdp2EEjtfrLOVLz8Ijm7qCM%2FWTXj6%2FZT67vcxYxuBvZ6Y8mxBN1WrfYxlc%2F5kZnKgiJx%2F9SvZ%2F1e7lm%2FbgfuplY7VWXxY4Db83C4Idgu0E38ZXDP86BnheYHQmVRwlm9UeyHjbo6998tDKxiGyKaJ1njzMhRv0VwChCyR2sNbPvr9zYGWjpGpKe&X-Amz-Signature=cb0b74797b50519eb1e87231ca8f2105261581a40f0a794bb5788fb91a2283dc&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "https://music.douban.com/review/17506038/",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -336,7 +337,7 @@
           "PUNK & HARDCORE",
           "樂評"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466YGTJ3I2V%2F20260326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260326T025300Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDAwjZGqF2xJarho8Avfqg0N%2Bg4eZec4bf1AgYJI7LH6QIhAJyR6NR9t7M2MiOrv%2FFRVuh4maQqu0cLOaZ8iv7VlQhyKogECLj%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgxlsnAimkyY3rSOyRoq3AM4SDqzf4t9x1caqOBa4inVxpoAeAi5wSYEBLpE4YZQyhIDkibcBjfalr14a3TzaWg%2BNyckh1RzjeG9ayv6flpUsd7ffYYpMUxBNn6EbTpJezucZJn0EB9IGgtcJSXqJKNdl5lU%2BpvjC7GD3rol%2FEOPTdAjTikrfX%2Fs79jDLOn9SEdfQbII%2BQ%2FKmYD1BiD8p9jZswKhL7gDFsgVZUSDZiTT2%2Fg%2F4v2BFTMLzmShkmvxGaRirQWPTkytjge8X22wC3tjIImpvr5AJv310N82YKO3oxL99P77M7FwkQukfk%2BzfuDe2v9s3ijFrcdWSU1sbfEhUbRFUySq2j%2BCjtUrSNL%2Ffz%2F6Wm%2BtiXU0wxZTwjevifui9IO8VZ92%2FmA1%2FMomKIipnUQKrycDttyk%2B7b9e0VnPWBKtpoMaGkfYg559chNVvtvwPB4%2FaJGRYS%2BDg0g91dtU1KIHAALRTsFQZ4pNczlAzQDBxIA9kvQMjuMWV7LHWumxlqEBdT%2FISHDFtFO7A2DJd8vGcaYWfaaTTEgkGqH7dhdnKMun9jbOdhe1MYY%2FcBETWdvBdznLGEndTut1c3CbbC693V%2B4xzMHf5tm3p5Tarek6emBxJ3Mwr8cPsPakgkLSWMcmvMwEDDTTC70JHOBjqkAZ28Hd%2F3mnk7mFF9hHxyOkXVzUXQrWP0z%2FtQrcHzeXD4%2BXfZI%2BAYf3J8S112EgZIKgnFq8rNNfuPp0ltv0wA3EQLyD302t3A7mRjCS%2FZPOMyWTlnbYdbf%2Bc9NNAuedajXyZ9%2F3iyeIN60BmFxrJvik8%2BR6qdeDKt92rG8yIDIp3R4D%2FbeVfofgDjXaV5tHD76bmClaIhgS7XVBXBDBBbe2HLyRVO&X-Amz-Signature=fb12f9bf51f93c5d370bc248825165a875d64738255f345bcac916d40e709d6c&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4662TK2CA4H%2F20260326%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260326T054402Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEPX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCICAt5A9p05DFQoYeZbHKlOUhqolMJLakIvB9McotKI55AiA8ygm8ACBmXr3EJb9kVQWcxO3Ad%2FDjDxTJvIROxye3QyqIBAi%2B%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDYzNzQyMzE4MzgwNSIMbYgGXPTVRP1Bxqp1KtwDGHkDc%2F4tSUWBI9vS36UBVs0tVuiegEySxjHpMWebX%2FRvztOYfwr4AksaYhlPdzwv2PJC2vIs1Tyey1WPWcQAYoAnXxym0FEJr0kQSSmQZqw5aDFM%2BAkxaUhHEzGm1B7uMbl7hANzOpdDwu%2FI1Ae1GCXh6HBNSOFto2LGuTyjSdEqRl4DVI4x1S5bwK57r%2BgEiFHxh7KvFz4VjR065FKkmZGqpnhd1egaw99jW21UBhDeC1l9PA%2B%2FW5VTkXXwNUz%2Fpqq80IF%2FPlQXkma8ZI6WM4YLkFetzOiYIP4j33m3LCkm8e5Rz4d7n7oZDDvLtbdEptRxCx%2BIHmS4I9XPQutpKO7w8mpvA9r9rmtQAfhQSnm0sq2XuYpllO2x%2F2%2FbdOBDP2%2FO%2BcY%2F7w0Glq%2FIyYMb5V%2Bf%2F%2FCnTg%2BbpaZiiwdTiSDZg7xjOhi82MIyP59vUVVEAlvr7PI6YzpdvKcAcngVelTJAamI6NC%2B4IvVz4eGusTU5t%2Bcm7KiuyXZLYs3wnqZuI85DYvdSbLfpJcM1ydEdmgfexweBy9ORdY%2B5293GsVC50RFiegQVbVQqzX5c1YreqPjmFo0zIIG5HY9Ud7aj%2BqZ0xiq7kcx3M3bRL3cc84GbnWXyxtG5iWzEtkw4fySzgY6pgG3P9HJa%2FdrKI6f7cyC%2BdPK5fS0z232p9SuoFGdTXdp2EEjtfrLOVLz8Ijm7qCM%2FWTXj6%2FZT67vcxYxuBvZ6Y8mxBN1WrfYxlc%2F5kZnKgiJx%2F9SvZ%2F1e7lm%2FbgfuplY7VWXxY4Db83C4Idgu0E38ZXDP86BnheYHQmVRwlm9UeyHjbo6998tDKxiGyKaJ1njzMhRv0VwChCyR2sNbPvr9zYGWjpGpKe&X-Amz-Signature=076bb5555caabfc3f30c873231bdd4d01692ba135e5e0270b4eb7790678682ed&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -345,6 +346,28 @@
         "displayOrder": 999,
         "created_time": "2026-03-13T09:15:00.000Z",
         "last_edited_time": "2026-03-19T09:07:00.000Z"
+      },
+      {
+        "id": "32f9f945-80b7-813c-b284-e2cd039ff20a",
+        "title": "【吹專訪】That’s My SHHH 主腦 LEO37：玩音樂？一切都是因為傻！",
+        "content": "採訪、撰稿／許瞳 初春三月的海風才剛吹起，大港開唱便祭出了去年掀起滔天巨浪的 That’s My SHHH（TMS）。這回他們要在小港祭強勢插旗，與高雄在地最生猛的饒舌基地 COCCO&CO. 輪番轟炸。陣容除了 LEO37、Laz閱讀全文 \"【吹專訪】That’s My SHHH 主腦 LEO37：玩音樂？一切都是因為傻！\" The post 【吹專訪】That’s My SHHH 主腦 LEO37：玩音樂？一切都是因為傻！ appeared first on Blow 吹音樂.",
+        "category": "新聞",
+        "tags": [
+          "新聞",
+          "Blow吹音樂-議題",
+          "PUNK & HARDCORE",
+          "樂評",
+          "台湾"
+        ],
+        "cover_image": "https://blow.streetvoice.com/wp-content/uploads/2026/03/megaleo372603.jpg",
+        "source_url": "https://blow.streetvoice.com/86468/",
+        "published_date": "2026-03-08",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 999,
+        "created_time": "2026-03-26T04:51:00.000Z",
+        "last_edited_time": "2026-03-26T05:35:00.000Z"
       }
     ],
     "latest": [
@@ -368,6 +391,29 @@
         "displayOrder": 1,
         "created_time": "2026-03-23T17:06:00.000Z",
         "last_edited_time": "2026-03-23T17:11:00.000Z"
+      },
+      {
+        "id": "32f9f945-80b7-814e-8a17-d46d500c8658",
+        "title": "Thai Death Metal Band G6PD Return With New Lineup and First Single [Thailand]",
+        "content": "快来欣赏泰国死亡金属乐队 G6PD 的最新单曲《Black Sun》。这首作品同时也作为该乐队即将推出的新作的先声…… 本文《泰国死亡金属乐队 G6PD 携全新阵容及首支单曲回归 [泰国]》首发于 Unite Asia。",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "Unite Asia",
+          "HEAVY & METAL",
+          "國際",
+          "獨家",
+          "泰国"
+        ],
+        "cover_image": "",
+        "source_url": "https://uniteasia.org/thai-death-metal-band-g6pd-return-with-new-lineup-and-first-single-thailand/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-26T05:19:00.000Z",
+        "last_edited_time": "2026-03-26T05:26:00.000Z"
       },
       {
         "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
@@ -473,28 +519,6 @@
         "displayOrder": 999,
         "created_time": "2026-03-21T04:20:00.000Z",
         "last_edited_time": "2026-03-21T06:28:00.000Z"
-      },
-      {
-        "id": "32a9f945-80b7-81a3-940a-fd1493d2e17c",
-        "title": "雞蛋蒸肉餅3/29台北專場 打造「2222號列車」沉浸式音樂旅程",
-        "content": "曾獲金音創作獎「海外創作音樂獎」肯定、並入圍金曲獎最佳樂團的香港女子樂團 GDJYB 雞蛋蒸肉餅，正式啟動全新專輯巡演計畫 < = P:r0J3CT 2222 / > 。「2222 號列車」將於 3 月 29 日抵達台北站，選址閱讀全文 \"雞蛋蒸肉餅3/29台北專場 打造「2222號列車」沉浸式音樂旅程\" The post 雞蛋蒸肉餅3/29台北專場 打造「2222號列車」沉浸式音樂旅程 appeared first on Blow 吹音樂.",
-        "category": "現場",
-        "tags": [
-          "新聞",
-          "Blow吹音樂",
-          "PUNK & HARDCORE",
-          "演出",
-          "現場"
-        ],
-        "cover_image": "https://blow.streetvoice.com/wp-content/uploads/2026/03/04-12.jpg",
-        "source_url": "https://blow.streetvoice.com/86719/",
-        "published_date": "2026-03-20",
-        "is_premium": false,
-        "featured": false,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-21T04:19:00.000Z",
-        "last_edited_time": "2026-03-21T15:58:00.000Z"
       },
       {
         "id": "3269f945-80b7-80b4-8757-c6e414aeac17",
