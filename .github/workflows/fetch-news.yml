@@ -75,18 +75,18 @@ jobs:
           # v12: 国际新闻减少到每周六 1次
           if [ "$HOUR" == "04" ] && [ "$DOW" == "6" ]; then
             echo "🌍 國際搖滾新聞 (每源1条，减少重复，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v12.py --source international --limit 1
+            python scripts/fetch_news.py --source international --limit 1
 
           # v12: 港台新闻减少到每周三 1次
           elif [ "$HOUR" == "04" ] && [ "$DOW" == "3" ]; then
             echo "🇭🇰 港台搖滾新聞 (每源5条，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v12.py --source taiwan --limit 5
-            python scripts/fetch_news_v12.py --source hongkong --limit 3
+            python scripts/fetch_news.py --source taiwan --limit 5
+            python scripts/fetch_news.py --source hongkong --limit 3
 
           # v12: 中國新聞增加到每天 4 次
           else
             echo "🇨🇳 中國搖滾新聞 (每源10条，v12增加，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news_v12.py --source china --limit 10
+            python scripts/fetch_news.py --source china --limit 10
           fi
 
         else
@@ -100,23 +100,23 @@ jobs:
           case "$MODE" in
             china)
               echo "🇨🇳 中國搖滾新聞 (每源10条，v12增加，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v12.py --source china --limit 10
+              python scripts/fetch_news.py --source china --limit 10
               ;;
             taiwan)
               echo "🇹🇼 台灣獨立音樂 (每源5条，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v12.py --source taiwan --limit 5
+              python scripts/fetch_news.py --source taiwan --limit 5
               ;;
             hongkong)
               echo "🇭🇰 香港搖滾新聞 (每源3条，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v12.py --source hongkong --limit 3
+              python scripts/fetch_news.py --source hongkong --limit 3
               ;;
             international)
               echo "🌍 國際搖滾新聞 (每源1条，v12减少重复，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v12.py --source international --limit 1
+              python scripts/fetch_news.py --source international --limit 1
               ;;
             test)
               echo "🧪 測試模式 (3條，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news_v12.py --source test --limit 3
+              python scripts/fetch_news.py --source test --limit 3
               ;;
           esac
         fi
