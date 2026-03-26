@@ -1,17 +1,17 @@
-name: Fetch News v12 - 国内源修复+国际去重增强版
+name: Fetch News v13 - 新增Unite Asia+RSS源排查优化版
 
 on:
   schedule:
-    # v12: 国内新闻增加到每天 4 次（更频繁）
+    # v13: 国内新闻保持每天 4 次
     # 北京时间 10:00, 14:00, 18:00, 22:00 (UTC 2:00, 6:00, 10:00, 14:00)
     - cron: '0 2,6,10,14 * * *'
 
-    # v12: 国际新闻减少到每周 1 次（减少重复）
-    # 每周六 12:00 (UTC 4:00) - 每源1条
+    # v13: 国际新闻保持每周 1 次（包含Unite Asia）
+    # 每周六 12:00 (UTC 4:00) - 每源2条（Unite Asia + Pitchfork/Rolling Stone）
     - cron: '0 4 * * 6'
 
-    # v12: 港台新闻减少到每周 1 次（平衡内容量）
-    # 每周三 12:00 (UTC 4:00) - 每源3条
+    # v13: 港台新闻保持每周 1 次
+    # 每周三 12:00 (UTC 4:00) - 每源5条
     - cron: '0 4 * * 3'
 
   workflow_dispatch:
@@ -22,10 +22,10 @@ on:
         default: 'test'
         type: choice
         options:
-          - china          # 中國搖滾新聞 (每源10条，v12增加)
+          - china          # 中國搖滾新聞 (每源10条)
           - taiwan         # 台灣獨立音樂 (每源5条)
           - hongkong       # 香港搖滾新聞 (每源3条)
-          - international  # 國際搖滾新聞 (每源1条，v12减少)
+          - international  # 國際搖滾新聞 (每源2条，包含Unite Asia)
           - test           # 測試模式 (3條)
       days_limit:
         description: '日期限制(天) - 只抓取近N天內的新聞'
@@ -48,7 +48,7 @@ jobs:
       run: |
         pip install feedparser requests notion-client beautifulsoup4 python-dateutil cloudinary
 
-    - name: Fetch Rock News v12
+    - name: Fetch Rock News v13
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NEWS_DB_ID: ${{ secrets.NEWS_DB_ID }}
@@ -62,8 +62,9 @@ jobs:
         # 定時任務自動判斷
         if [ -z "$MODE" ]; then
           echo "=========================================="
-          echo "🎸 ChineseRocks 搖滾新聞抓取 v12.0"
-          echo "修复：移除不可靠RSSHub源，增强国际源间去重"
+          echo "🎸 ChineseRocks 搖滾新聞抓取 v13.0"
+          echo "新增：Unite Asia (亚洲朋克/硬核/金属)"
+          echo "排查：移除不可用RSSHub源，优化源配置"
           echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
@@ -72,34 +73,34 @@ jobs:
 
           echo "當前 UTC 時間: $HOUR:00, 星期$DOW"
 
-          # v12: 国际新闻减少到每周六 1次
+          # v13: 国际新闻每周六 1次（包含Unite Asia）
           if [ "$HOUR" == "04" ] && [ "$DOW" == "6" ]; then
-            echo "🌍 國際搖滾新聞 (每源1条，减少重复，近${DAYS_LIMIT}天內)"
-            python scripts/fetch_news.py --source international --limit 1
+            echo "🌍 國際搖滾新聞 (每源2条，新增Unite Asia，近${DAYS_LIMIT}天內)"
+            python scripts/fetch_news.py --source international --limit 2
 
-          # v12: 港台新闻减少到每周三 1次
+          # v13: 港台新闻每周三 1次
           elif [ "$HOUR" == "04" ] && [ "$DOW" == "3" ]; then
             echo "🇭🇰 港台搖滾新聞 (每源5条，近${DAYS_LIMIT}天內)"
             python scripts/fetch_news.py --source taiwan --limit 5
             python scripts/fetch_news.py --source hongkong --limit 3
 
-          # v12: 中國新聞增加到每天 4 次
+          # v13: 中國新聞每天 4 次
           else
-            echo "🇨🇳 中國搖滾新聞 (每源10条，v12增加，近${DAYS_LIMIT}天內)"
+            echo "🇨🇳 中國搖滾新聞 (每源10条，近${DAYS_LIMIT}天內)"
             python scripts/fetch_news.py --source china --limit 10
           fi
 
         else
           # 手動觸發
           echo "=========================================="
-          echo "🎸 ChineseRocks 搖滾新聞抓取 v12.0 (手動)"
+          echo "🎸 ChineseRocks 搖滾新聞抓取 v13.0 (手動)"
           echo "模式: $MODE"
           echo "日期限制: 近${DAYS_LIMIT}天內"
           echo "=========================================="
 
           case "$MODE" in
             china)
-              echo "🇨🇳 中國搖滾新聞 (每源10条，v12增加，近${DAYS_LIMIT}天內)"
+              echo "🇨🇳 中國搖滾新聞 (每源10条，近${DAYS_LIMIT}天內)"
               python scripts/fetch_news.py --source china --limit 10
               ;;
             taiwan)
@@ -111,8 +112,8 @@ jobs:
               python scripts/fetch_news.py --source hongkong --limit 3
               ;;
             international)
-              echo "🌍 國際搖滾新聞 (每源1条，v12减少重复，近${DAYS_LIMIT}天內)"
-              python scripts/fetch_news.py --source international --limit 1
+              echo "🌍 國際搖滾新聞 (每源2条，新增Unite Asia，近${DAYS_LIMIT}天內)"
+              python scripts/fetch_news.py --source international --limit 2
               ;;
             test)
               echo "🧪 測試模式 (3條，近${DAYS_LIMIT}天內)"
@@ -122,6 +123,6 @@ jobs:
         fi
 
         echo "=========================================="
-        echo "🤘 搖滾新聞抓取完成 v12.0"
-        echo "修复：国内源更稳定，国际源间去重增强"
+        echo "🤘 搖滾新聞抓取完成 v13.0"
+        echo "新增：Unite Asia 亚洲朋克/硬核/金属新闻"
         echo "=========================================="
