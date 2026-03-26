@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v13.0.0 - 新增Unite Asia+RSS源排查优化版
+ChineseRocks 新闻抓取脚本 v13 - RSS源排查修复版
+- 修复：移除不可用的独立音乐资讯和街声中国源
+- 修复：Notion API query方法改为databases.query
 - 新增：Unite Asia (亚洲朋克/硬核/金属专业媒体)
-- 排查：移除不可用的网易云RSSHub源
-- 优化：调整港台源优先级，增加内容多样性
-- 修复：更新源可用状态标记
 """
 
 import os
@@ -35,10 +34,7 @@ cloudinary.config(
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
-# v13: 保持30天限制
 DAYS_LIMIT = 30
-
-# v13: 调整相似度阈值
 SIMILARITY_THRESHOLD = 0.88
 INTER_SOURCE_THRESHOLD = 0.75
 MIN_CONTENT_LENGTH = 50
@@ -90,10 +86,9 @@ EXCLUDE_GENRES = [
     "acoustic pop", "folk pop", "indie pop"
 ]
 
-# v13.0.0 RSS 源配置 - 已排查可用性
+# v13 RSS 源配置 - 已排查可用性
 SOURCES = {
     "china": [
-        # ✅ 核心源1：Live China Music (最可靠)
         {
             "name": "Live China Music", 
             "url": "https://livechinamusic.com/feed", 
@@ -102,7 +97,6 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10
         },
-        # ✅ 核心源2：Wooozy (地下音乐)
         {
             "name": "Wooozy-地下音樂", 
             "url": "https://wooozy.cn/feed", 
@@ -111,25 +105,24 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # ✅ 核心源3：独立音乐资讯
         {
             "name": "独立音樂資訊", 
             "url": "https://www.indie-music.com/feed", 
-            "enabled": True,
+            "enabled": False,
             "category": "新聞",
-            "priority": 2,
-            "quality_score": 8
+            "priority": 99,
+            "quality_score": 0,
+            "reason": "v13禁用：网站无法访问"
         },
-        # ⚠️ 降级：街声中国 (可能重复)
         {
             "name": "街聲-中國", 
             "url": "https://streetvoice.cn/feed/", 
-            "enabled": True,
+            "enabled": False,
             "category": "新聞",
-            "priority": 3,
-            "quality_score": 6
+            "priority": 99,
+            "quality_score": 0,
+            "reason": "v13禁用：RSS返回HTML页面而非XML"
         },
-        # ❌ v13禁用：网易云原创音乐 (RSSHub不稳定)
         {
             "name": "網易雲-原創音樂", 
             "url": "https://rsshub.app/ncm/playlist/2884035", 
@@ -139,7 +132,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub公共实例不稳定"
         },
-        # ❌ v13禁用：知乎话题 (内容质量不稳定)
         {
             "name": "知乎-搖滾樂話題", 
             "url": "https://rsshub.app/zhihu/topic/19550718", 
@@ -147,9 +139,8 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：RSSHub限制20条，内容质量不稳定"
+            "reason": "v13禁用：RSSHub限制20条"
         },
-        # ❌ v13禁用：知乎独立音乐
         {
             "name": "知乎-獨立音樂話題", 
             "url": "https://rsshub.app/zhihu/topic/19550408", 
@@ -159,7 +150,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub限制20条"
         },
-        # ❌ v13禁用：豆瓣音乐 (RSSHub不稳定)
         {
             "name": "豆瓣音樂-樂評", 
             "url": "https://rsshub.app/douban/music/latest", 
@@ -169,7 +159,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub公共实例反爬严重"
         },
-        # ❌ v13禁用：摩登天空 (网易号反爬)
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
@@ -179,7 +168,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：网易号反爬机制"
         },
-        # ❌ v13禁用：Solidot (摇滚内容极少)
         {
             "name": "Solidot-文化", 
             "url": "https://rsshub.app/solidot/culture", 
@@ -192,7 +180,6 @@ SOURCES = {
     ],
 
     "taiwan": [
-        # ✅ 核心源1：深晨 DOPM
         {
             "name": "深晨DOPM", 
             "url": "https://deepperfectmorning.com/blog?format=rss", 
@@ -201,7 +188,6 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10
         },
-        # ✅ 核心源2：Blow 吹音樂-人物
         {
             "name": "Blow吹音樂-人物", 
             "url": "https://blow.streetvoice.com/c/people/feed/", 
@@ -210,7 +196,6 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # ✅ 核心源3：Blow 吹音樂-議題
         {
             "name": "Blow吹音樂-議題", 
             "url": "https://blow.streetvoice.com/c/issue/feed/", 
@@ -219,7 +204,6 @@ SOURCES = {
             "priority": 2,
             "quality_score": 8
         },
-        # ⚠️ 降级：小明拆台
         {
             "name": "小明拆台MingStrike", 
             "url": "https://mingstrike.com/feed/audio.xml", 
@@ -231,7 +215,6 @@ SOURCES = {
     ],
 
     "hongkong": [
-        # 香港源较少
         {
             "name": "HKFP-文化", 
             "url": "https://hongkongfp.com/culture/feed/", 
@@ -243,7 +226,6 @@ SOURCES = {
     ],
 
     "international": [
-        # 🆕 v13新增：Unite Asia (亚洲朋克/硬核/金属专业媒体)
         {
             "name": "Unite Asia", 
             "url": "https://uniteasia.org/feed", 
@@ -254,7 +236,6 @@ SOURCES = {
             "inter_source_key": True,
             "description": "亚洲朋克、硬核、金属音乐专业媒体"
         },
-        # ✅ Tier 1：Pitchfork (最优先)
         {
             "name": "Pitchfork", 
             "url": "https://pitchfork.com/rss/news", 
@@ -264,7 +245,6 @@ SOURCES = {
             "quality_score": 10,
             "inter_source_key": True
         },
-        # ✅ Tier 1：Rolling Stone
         {
             "name": "Rolling Stone", 
             "url": "https://www.rollingstone.com/music/feed/", 
@@ -274,7 +254,6 @@ SOURCES = {
             "quality_score": 9,
             "inter_source_key": True
         },
-        # ⚠️ v13降级：NME (重复率高，减少抓取量)
         {
             "name": "NME", 
             "url": "https://www.nme.com/news/music/feed", 
@@ -284,7 +263,6 @@ SOURCES = {
             "quality_score": 6,
             "limit_override": 1
         },
-        # ⚠️ v13降级：Kerrang
         {
             "name": "Kerrang", 
             "url": "https://www.kerrang.com/feed", 
@@ -294,7 +272,6 @@ SOURCES = {
             "quality_score": 7,
             "limit_override": 1
         },
-        # ❌ v13禁用：Stereogum (重复率最高)
         {
             "name": "Stereogum", 
             "url": "https://www.stereogum.com/feed", 
@@ -307,7 +284,6 @@ SOURCES = {
     ],
 
     "test": [
-        # 測試模式使用獨立源
         {
             "name": "深晨DOPM-測試", 
             "url": "https://deepperfectmorning.com/blog?format=rss", 
@@ -321,18 +297,14 @@ SOURCES = {
 
 
 class ContentDeduplicator:
-    """v13优化版 - 增强源间去重"""
-
     def __init__(self, threshold=SIMILARITY_THRESHOLD):
         self.threshold = threshold
         self.inter_source_threshold = INTER_SOURCE_THRESHOLD
         self.seen_contents = []
         self.seen_urls = set()
         self.existing_titles = set()
-        self.inter_source_fingerprints = []
 
     def normalize_url(self, url):
-        """URL正規化"""
         if not url:
             return ""
         url = re.sub(r'[?&](utm_source|utm_medium|utm_campaign|utm_content|fbclid|gclid)=[^&]*', '', url)
@@ -342,7 +314,6 @@ class ContentDeduplicator:
         return url.lower().strip()
 
     def create_fingerprint(self, title, summary):
-        """提取关键词指纹"""
         text = f"{title} {summary}".lower()
         chinese_words = re.findall(r'[一-龥]{2,6}', text)
         english_words = re.findall(r'\b[a-z]{4,}\b', text)
@@ -350,7 +321,6 @@ class ContentDeduplicator:
         return ' '.join(keywords[:30])
 
     def extract_event_key(self, title):
-        """v13：提取事件关键词用于跨源去重"""
         noise_words = ['announces', 'releases', 'new', 'album', 'single', 'video', 
                        'tour', 'live', 'death', 'dies', 'interview', 'review',
                        '宣布', '发布', '新专辑', '单曲', 'MV', '巡演', '去世', '专访']
@@ -361,24 +331,19 @@ class ContentDeduplicator:
         return ' '.join(sorted(set(names)))[:50]
 
     def calculate_similarity(self, text1, text2):
-        """计算相似度"""
         if not text1 or not text2:
             return 0.0
         return SequenceMatcher(None, text1, text2).ratio()
 
     def is_duplicate(self, title, summary, url, source_type=""):
-        """v13增强：多层次去重"""
-        # 1. URL去重
         normalized_url = self.normalize_url(url)
         if normalized_url and normalized_url in self.seen_urls:
             return True, "URL重复"
 
-        # 2. 标题快速匹配
         clean_title = re.sub(r'[^\w一-龥]', '', title.lower())
         if clean_title in self.existing_titles:
             return True, "Notion中已存在"
 
-        # 3. 内容指纹去重
         fingerprint = self.create_fingerprint(title, summary)
         event_key = self.extract_event_key(title)
 
@@ -398,7 +363,6 @@ class ContentDeduplicator:
         return False, None
 
     def add_content(self, title, summary, url, source_type=""):
-        """添加内容"""
         fingerprint = self.create_fingerprint(title, summary)
         event_key = self.extract_event_key(title)
         self.seen_contents.append((fingerprint, title, event_key))
@@ -407,11 +371,10 @@ class ContentDeduplicator:
             self.seen_urls.add(normalized_url)
 
     def load_existing_from_notion(self, notion_client, db_id, days=14):
-        """从Notion加载已有标题"""
         try:
-            from datetime import datetime, timedelta
             cutoff = (datetime.now() - timedelta(days=days)).isoformat()
 
+            # 修复：使用正确的Notion API调用方式
             response = notion_client.databases.query(
                 database_id=db_id,
                 filter={
@@ -420,11 +383,13 @@ class ContentDeduplicator:
                 }
             )
 
-            for page in response['results']:
+            for page in response.get('results', []):
                 try:
-                    title = page['properties']['標題']['title'][0]['text']['content']
-                    clean_title = re.sub(r'[^\w一-龥]', '', title.lower())
-                    self.existing_titles.add(clean_title)
+                    title_prop = page['properties'].get('標題', {})
+                    if title_prop and 'title' in title_prop and title_prop['title']:
+                        title = title_prop['title'][0]['text']['content']
+                        clean_title = re.sub(r'[^\w一-龥]', '', title.lower())
+                        self.existing_titles.add(clean_title)
                 except:
                     continue
 
@@ -457,7 +422,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v13.0.0 - 新增Unite Asia+RSS源排查")
+        print("ChineseRocks 新闻抓取系统 v13 - RSS源排查修复版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -596,7 +561,6 @@ class NewsFetcher:
             self.stats["failed"] += 1
 
     def _detect_genres(self, entry):
-        """嚴格檢測文章音樂風格"""
         title = entry.get('title', '').lower()
         summary = entry.get('summary', entry.get('description', '')).lower()
         text = f"{title} {summary}"
@@ -649,7 +613,6 @@ class NewsFetcher:
             return None
 
     def _extract_image_improved(self, entry, source):
-        """優化圖片提取邏輯"""
         try:
             if 'media_content' in entry:
                 for media in entry.media_content:
@@ -666,7 +629,7 @@ class NewsFetcher:
                     if enc.get('type', '').startswith('image/'):
                         return enc.get('href', '')
 
-            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else                       entry.get('summary', entry.get('description', ''))
+            content = entry.get('content', [{}])[0].get('value', '') if 'content' in entry else entry.get('summary', entry.get('description', ''))
 
             if content:
                 soup = BeautifulSoup(content, 'html.parser')
