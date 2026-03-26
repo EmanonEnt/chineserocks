@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v13 - 增加国内源版
-- 新增：豆瓣同城音乐活动 (北京/上海/广州/深圳/成都)
-- 新增：B站音乐区热门
-- 修复：移除不可用的独立音乐资讯和街声中国源
-- 修复：Notion API调用
+ChineseRocks 新闻抓取脚本 v13 - 国内源增强版
+- 新增：音乐节RSS微博 (国内最重要的音乐节信息源)
+- 新增：滚圈海底捞微博 (摇滚圈资讯)
+- 新增：豆瓣同城音乐活动 (5大城市)
+- 保留：Live China Music + Wooozy
+- 修复：移除不可用源
 """
 
 import os
@@ -90,7 +91,7 @@ EXCLUDE_GENRES = [
 # v13 RSS 源配置
 SOURCES = {
     "china": [
-        # ✅ 核心源1：Live China Music
+        # ✅ 核心新闻源
         {
             "name": "Live China Music", 
             "url": "https://livechinamusic.com/feed", 
@@ -99,7 +100,6 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10
         },
-        # ✅ 核心源2：Wooozy
         {
             "name": "Wooozy-地下音樂", 
             "url": "https://wooozy.cn/feed", 
@@ -108,7 +108,29 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # 🆕 新增：豆瓣同城-北京音乐活动
+        # 🆕 新增：音乐节RSS微博 (国内最重要的音乐节信息源)
+        {
+            "name": "音乐节RSS-微博", 
+            "url": "https://rsshub.app/weibo/user/3691972875", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 1,
+            "quality_score": 10,
+            "description": "国内最全的音乐节信息播报",
+            "limit_override": 15
+        },
+        # 🆕 新增：滚圈海底捞微博
+        {
+            "name": "滚圈海底捞-微博", 
+            "url": "https://rsshub.app/weibo/user/5147314197106298", 
+            "enabled": True, 
+            "category": "新聞",
+            "priority": 2,
+            "quality_score": 8,
+            "description": "摇滚圈资讯和演出信息",
+            "limit_override": 10
+        },
+        # 🆕 新增：豆瓣同城音乐活动
         {
             "name": "豆瓣同城-北京音乐", 
             "url": "https://rsshub.app/douban/event/beijing/music", 
@@ -118,7 +140,6 @@ SOURCES = {
             "quality_score": 7,
             "description": "北京音乐演出活动"
         },
-        # 🆕 新增：豆瓣同城-上海音乐活动
         {
             "name": "豆瓣同城-上海音乐", 
             "url": "https://rsshub.app/douban/event/shanghai/music", 
@@ -128,7 +149,6 @@ SOURCES = {
             "quality_score": 7,
             "description": "上海音乐演出活动"
         },
-        # 🆕 新增：豆瓣同城-广州音乐活动
         {
             "name": "豆瓣同城-广州音乐", 
             "url": "https://rsshub.app/douban/event/guangzhou/music", 
@@ -138,7 +158,6 @@ SOURCES = {
             "quality_score": 7,
             "description": "广州音乐演出活动"
         },
-        # 🆕 新增：豆瓣同城-深圳音乐活动
         {
             "name": "豆瓣同城-深圳音乐", 
             "url": "https://rsshub.app/douban/event/shenzhen/music", 
@@ -148,7 +167,6 @@ SOURCES = {
             "quality_score": 7,
             "description": "深圳音乐演出活动"
         },
-        # 🆕 新增：豆瓣同城-成都音乐活动
         {
             "name": "豆瓣同城-成都音乐", 
             "url": "https://rsshub.app/douban/event/chengdu/music", 
@@ -158,7 +176,35 @@ SOURCES = {
             "quality_score": 7,
             "description": "成都音乐演出活动"
         },
-        # ❌ 禁用：独立音乐资讯
+        # 🆕 新增：豆瓣同城-杭州/武汉/西安/南京/重庆
+        {
+            "name": "豆瓣同城-杭州音乐", 
+            "url": "https://rsshub.app/douban/event/hangzhou/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 3,
+            "quality_score": 6,
+            "description": "杭州音乐演出活动"
+        },
+        {
+            "name": "豆瓣同城-武汉音乐", 
+            "url": "https://rsshub.app/douban/event/wuhan/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 3,
+            "quality_score": 6,
+            "description": "武汉音乐演出活动"
+        },
+        {
+            "name": "豆瓣同城-西安音乐", 
+            "url": "https://rsshub.app/douban/event/xian/music", 
+            "enabled": True, 
+            "category": "演出",
+            "priority": 3,
+            "quality_score": 6,
+            "description": "西安音乐演出活动"
+        },
+        # ❌ 禁用：不稳定源
         {
             "name": "独立音樂資訊", 
             "url": "https://www.indie-music.com/feed", 
@@ -168,7 +214,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：网站无法访问"
         },
-        # ❌ 禁用：街声中国
         {
             "name": "街聲-中國", 
             "url": "https://streetvoice.cn/feed/", 
@@ -176,9 +221,8 @@ SOURCES = {
             "category": "新聞",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：RSS返回HTML页面"
+            "reason": "v13禁用：RSS返回HTML"
         },
-        # ❌ 禁用：网易云原创音乐
         {
             "name": "網易雲-原創音樂", 
             "url": "https://rsshub.app/ncm/playlist/2884035", 
@@ -188,7 +232,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub不稳定"
         },
-        # ❌ 禁用：知乎话题
         {
             "name": "知乎-搖滾樂話題", 
             "url": "https://rsshub.app/zhihu/topic/19550718", 
@@ -207,7 +250,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub限制20条"
         },
-        # ❌ 禁用：豆瓣音乐
         {
             "name": "豆瓣音樂-樂評", 
             "url": "https://rsshub.app/douban/music/latest", 
@@ -217,7 +259,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：RSSHub反爬严重"
         },
-        # ❌ 禁用：摩登天空
         {
             "name": "摩登天空-網易號", 
             "url": "https://rsshub.app/163/dy/T1509089140270", 
@@ -227,7 +268,6 @@ SOURCES = {
             "quality_score": 0,
             "reason": "v13禁用：网易号反爬机制"
         },
-        # ❌ 禁用：Solidot
         {
             "name": "Solidot-文化", 
             "url": "https://rsshub.app/solidot/culture", 
@@ -481,7 +521,7 @@ class NewsFetcher:
 
     def fetch_all(self):
         print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v13 - 增加国内源版")
+        print("ChineseRocks 新闻抓取系统 v13 - 国内源增强版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
