@@ -230,29 +230,30 @@
             .hero-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
-            
-        /* 修复移动端分类按钮显示 - 两行布局版 */
-        .category-container {
-            justify-content: center !important;
-            padding: 0.5rem !important;
-            overflow-x: visible !important;
-            flex-wrap: wrap !important;
-            gap: 0.3rem !important;
-        }
-        .category-btn {
-            padding: 0.5rem 0.6rem !important;
-            font-size: 0.65rem !important;
-            white-space: nowrap !important;
-            flex: 0 0 auto !important;
-            letter-spacing: 0.3px !important;
-            transform: none !important;
-            margin: 0.1rem !important;
-        }
-        .category-btn.active::after {
-            width: 70% !important;
-            height: 2px !important;
-        }
-}
+            }
+
+            /* 修复移动端分类按钮显示 - 两行布局版 */
+            .category-container {
+                justify-content: center !important;
+                padding: 0.5rem !important;
+                overflow-x: visible !important;
+                flex-wrap: wrap !important;
+                gap: 0.3rem !important;
+            }
+            .category-btn {
+                padding: 0.5rem 0.6rem !important;
+                font-size: 0.65rem !important;
+                white-space: nowrap !important;
+                flex: 0 0 auto !important;
+                letter-spacing: 0.3px !important;
+                transform: none !important;
+                margin: 0.1rem !important;
+            }
+            .category-btn.active::after {
+                width: 70% !important;
+                height: 2px !important;
+            }
+
             .hero-side {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -260,6 +261,49 @@
             }
             .side-card {
                 aspect-ratio: 16/10;
+            }
+
+            /* 修复侧边卡片文字显示 */
+            .side-overlay {
+                padding: 1rem !important;
+            }
+            .side-title {
+                font-size: 0.85rem !important;
+                line-height: 1.2 !important;
+            }
+            .side-tag {
+                font-size: 0.6rem !important;
+                padding: 0.15rem 0.4rem !important;
+                margin-bottom: 0.3rem !important;
+            }
+
+            /* 修复新闻卡片移动端样式 */
+            .news-card {
+                border-radius: 8px !important;
+            }
+            .news-thumb {
+                aspect-ratio: 16/9 !important;
+            }
+            .news-content {
+                padding: 0.75rem !important;
+            }
+            .news-category {
+                font-size: 0.65rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            .news-title {
+                font-size: 0.9rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 0.25rem !important;
+            }
+            .news-excerpt {
+                font-size: 0.75rem !important;
+                line-height: 1.4 !important;
+                margin-bottom: 0.5rem !important;
+                -webkit-line-clamp: 2 !important;
+            }
+            .news-footer {
+                font-size: 0.7rem !important;
             }
         }
         .hero-main {
@@ -359,23 +403,7 @@
             }
         }
 
-        .side-tag {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 0.2rem 0.6rem;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            border-radius: 4px;
-        }
-        .side-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1.3;
-        }
+        /* .side-tag 和 .side-title 已在上方 @media 块中定义，避免重复 */
         .main-content {
             max-width: 1400px;
             margin: 0 auto;
@@ -1082,7 +1110,7 @@
             }
         }
         @media (max-width: 480px) {
-            
+
             /* 超小屏幕分类按钮优化 */
             .category-btn {
                 padding: 0.4rem 0.5rem !important;
@@ -1092,12 +1120,62 @@
                 margin: 0.05rem !important;
             }
 
-.page-title h1 { font-size: 1.6rem; }
-            .category-btn {
-                padding: 0.75rem 1rem;
-                font-size: 0.75rem;
+            .page-title h1 { font-size: 1.6rem; }
+
+            /* 新闻卡片超小屏幕优化 */
+            .news-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
             }
-            .news-title { font-size: 1.1rem; }
+            .news-card {
+                border-radius: 6px !important;
+            }
+            .news-thumb {
+                aspect-ratio: 16/9 !important;
+            }
+            .news-content {
+                padding: 0.5rem !important;
+            }
+            .news-category {
+                font-size: 0.6rem !important;
+                margin-bottom: 0.2rem !important;
+            }
+            .news-title {
+                font-size: 0.8rem !important;
+                line-height: 1.25 !important;
+                margin-bottom: 0.2rem !important;
+            }
+            .news-excerpt {
+                font-size: 0.7rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 0.3rem !important;
+                -webkit-line-clamp: 2 !important;
+            }
+            .news-footer {
+                font-size: 0.65rem !important;
+            }
+
+            /* 侧边卡片超小屏幕优化 */
+            .hero-side {
+                gap: 0.75rem !important;
+            }
+            .side-card {
+                aspect-ratio: 16/10 !important;
+                border-radius: 8px !important;
+            }
+            .side-overlay {
+                padding: 0.75rem !important;
+            }
+            .side-title {
+                font-size: 0.75rem !important;
+                line-height: 1.15 !important;
+            }
+            .side-tag {
+                font-size: 0.55rem !important;
+                padding: 0.1rem 0.3rem !important;
+                margin-bottom: 0.2rem !important;
+            }
+
             .footer-content {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 1.5rem 1rem !important;
@@ -1112,10 +1190,6 @@
             .quota-btn {
                 font-size: 0.75rem;
                 padding: 0.3rem 0.8rem;
-            }
-            .news-list {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
             }
 
             .invite-float {
@@ -1289,6 +1363,7 @@
                 display: grid !important;
                 grid-template-columns: repeat(3, 1fr) !important;
                 gap: 1rem !important;
+                flex-wrap: nowrap !important;
             }
             .pricing-card {
                 padding: 1rem !important;
@@ -1306,17 +1381,21 @@
         @media (max-width: 768px) {
             .pricing-grid {
                 display: grid !important;
-                grid-template-columns: repeat(2, 1fr) !important;
+                grid-template-columns: repeat(6, 1fr) !important;
                 gap: 0.75rem !important;
                 max-width: 100% !important;
                 margin: 0 auto !important;
             }
             .pricing-card {
                 padding: 0.875rem !important;
-                grid-column: span 1 !important;
+                grid-column: span 2 !important;
                 width: auto !important;
             }
-            /* 768px下使用自然2列布局，不进行特殊定位 */
+            .pricing-card:nth-child(1) { grid-column: 1 / 3 !important; }
+            .pricing-card:nth-child(2) { grid-column: 3 / 5 !important; }
+            .pricing-card:nth-child(3) { grid-column: 5 / 7 !important; }
+            .pricing-card:nth-child(4) { grid-column: 2 / 4 !important; }
+            .pricing-card:nth-child(5) { grid-column: 4 / 6 !important; }
             .pricing-name {
                 font-size: 0.9rem !important;
             }
@@ -1350,7 +1429,6 @@
                 grid-column: span 1 !important;
                 width: auto !important;
             }
-            /* 480px下最后一个卡片居中 */
             .pricing-card:nth-child(5) {
                 grid-column: 1 / 3 !important;
                 max-width: 50% !important;
