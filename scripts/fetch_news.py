@@ -37,7 +37,7 @@ NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
 DAYS_LIMIT = 30
-SIMILARITY_THRESHOLD = 0.88
+SIMILARITY_THRESHOLD = 0.75  # v13-fix: 更严格的去重阈值
 INTER_SOURCE_THRESHOLD = 0.75
 MIN_CONTENT_LENGTH = 50
 
@@ -448,8 +448,17 @@ class ContentDeduplicator:
         event_key = self.extract_event_key(title)
 
         for seen_fp, seen_title, seen_event in self.seen_contents:
-            if title.lower().strip() == seen_title.lower().strip():
+            # 🆕 v13-fix: 更严格的标题匹配
+            title_lower = title.lower().strip()
+            seen_lower = seen_title.lower().strip()
+
+            if title_lower == seen_lower:
                 return True, "标题完全匹配"
+
+            # 🆕 v13-fix: 标题相似度检查（85%相似就认为是重复）
+            title_sim = self.calculate_similarity(title_lower, seen_lower)
+            if title_sim >= 0.85:
+                return True, f"标题相似度{title_sim:.0%}"
 
             similarity = self.calculate_similarity(fingerprint, seen_fp)
             if similarity >= self.threshold:
@@ -508,7 +517,7 @@ class NewsFetcher:
             "total": 0, "added": 0, "skipped": 0, "exists": 0, 
             "failed": 0, "image_uploaded": 0, "filtered": 0,
             "too_old": 0, "duplicate_content": 0, "low_quality": 0,
-            "notion_duplicate": 0, "inter_source_dup": 0
+            "notion_duplicate": 0, "inter_source_dup": 0, "no_image": 0
         }
         self.articles = []
         self.cloudinary_enabled = all([
@@ -679,6 +688,12 @@ class NewsFetcher:
 
             published = self._parse_date(entry)
             image = self._extract_image_improved(entry, source)
+
+            # 🆕 v13-fix: 严格过滤 - 没有图片直接丢弃
+            if not image:
+                print(f"    🚫 跳过: 无图片")
+                self.stats["no_image"] = self.stats.get("no_image", 0) + 1
+                return None
 
             if image and self.cloudinary_enabled:
                 print(f"    📤 上傳圖片...")
@@ -895,6 +910,7 @@ class NewsFetcher:
         print(f"失敗: {self.stats['failed']} 条")
         print("-"*70)
         print(f"过滤统计:")
+        print(f"  - 无图片丢弃: {self.stats.get('no_image', 0)} 条")
         print(f"  - 内容去重: {self.stats['duplicate_content']} 条")
         print(f"  - 国际源间去重: {self.stats['inter_source_dup']} 条")
         print(f"  - Notion已存在: {self.stats['notion_duplicate']} 条")
