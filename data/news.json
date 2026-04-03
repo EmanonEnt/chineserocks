@@ -1,8 +1,29 @@
 {
-  "last_updated": "2026-04-02T22:39:04.756512",
+  "last_updated": "2026-04-03T02:53:21.085532",
   "total_count": 17,
   "data": {
     "all": [
+      {
+        "id": "3369f945-80b7-815c-be38-f3971b63836c",
+        "title": "Fucked Up’s Damian Abraham Is Now Making Movies",
+        "content": "这位硬核乐队主唱正与一位CBC制作人联手，共同开发一系列影视项目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Pitchfork",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://media.pitchfork.com/photos/69cc00bd459055f6d45539f3/master/pass/fucked-up-damian-tv-film-company.jpg",
+        "source_url": "https://pitchfork.com/news/fucked-ups-damian-abraham-is-now-making-movies/",
+        "published_date": "2026-03-31",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 2,
+        "created_time": "2026-04-02T14:02:00.000Z",
+        "last_edited_time": "2026-04-03T02:29:00.000Z"
+      },
       {
         "id": "3309f945-80b7-810b-81b8-e33b05144d93",
         "title": "[Podcast] EP6：從工業搖滾到網路先鋒：大衛鮑伊的90年代重生",
@@ -225,7 +246,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466S6IAFPIW%2F20260402%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260402T223904Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBZqSoeg3roVqCfpMK99boDEe8oY9bdSyh%2BXWNsxO2DNAiAf2puMb2J%2B3k5z%2B4Al6nAYDH6KVvZzL4hJqWFXhpNhuyr%2FAwh3EAAaDDYzNzQyMzE4MzgwNSIMiW0z2DbvTOlDFpqhKtwDqJrMJkNoA%2FwE%2BYqj77TsTJVGYxtWwW8a2V5j7niN9h6J9GjvcZo3brz9qtJ%2FCMkk%2FEV03W3RDGkSvqfrAodnYpA8X3xSeBVnBaEiNVIscC7avgSCqOABshsC3KNkVDeS%2BQieLTjx0NNsPD0xyK3ZJ2zZjDFVcPbhuKy%2F18jfRKPNCHMPLeb5l7Rk273gZ%2BMG%2FLL%2FhrQziO2Yr9LUh4lWR5lRTHEIMpastN6inwtzhbRW%2BEFIo3NUMA825IcVJIVSV%2FSN%2FY%2BWoEc8pEtlvWkWPPbvYeIKvVsIvIck5ZJ9bmrrvaic5sKBpNn5HkOzQW12LQW764wu%2FaHauJWGAjnX8WT04nmoMLiOctcp7g7PiNH7DaYTVsj47b%2BQusPuAMioEPMDBm1l28f8Z2tjXMMI5zMW1NcEucUDHbCQq2Djnv%2FHjHG%2BHtCxS%2BuyzpJbIpInGx468dHG7u3PKl%2FBJFukzFZLqupCHr1dv8hKQBr%2BeJMbu06lwyB20l61tRnp8RaRl%2BedEFVdos3WphboVvQa5u%2BHc9m8gY4URn7Ky5B5x3Dcu6ZklKU9hwhILiwxSBNyYBejEIvrvJSjHK29%2F%2FDUh9s7brwDHb2Z4N3%2BwdJxyOOBZeIDKXOnNNub2Ykw7cW7zgY6pgECqTZlZ%2BPNfZA0ZZ8dZ%2BqmdgUfUHiWboHMhb57LslYXH6H3c0nqBQNsG8TCwZpc7vNSr1zVAFsqr59NecWBbEYOft%2B3LvYlxoqK8%2Fj703k55%2FJlOPGel8ydwum0GmQG1TUMDrNnx%2BHgVEfR%2FlMh39smS6SX2758k0latYGpj%2BNH%2FaiRz3egCjvBDRNp2iAx9ZBfZrTb3X%2BxAR8tmuwGySMpbhDiIrw&X-Amz-Signature=89471c23d71cbf9635df8f0ec058d38e7fb2a797f855706f18deba14037dde44&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4667YRROE33%2F20260403%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260403T025321Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDOQAs3WWcgiGTKKV84Z%2FR3XsdYBlv89VPDzjNYbU%2BcxgIgXvYeItah2e4s7%2Ff1617vme7wW%2FHl3NVLpfPwPHam0%2Foq%2FwMIdxAAGgw2Mzc0MjMxODM4MDUiDBpivUyK09whnq4q%2FircA29SJxKmciPyqjkmxp732rCIfjS6xhFk6SJSc3jsyDqoAkzbvCLp87twK2AoJ1WThD0OdQ7U4M8gO6GqLovHQStmtdyE7KruCaOu4PuICVzqk%2FZi5LbYuNn4eQQZFm37FvKqndwc%2FAqPp7CXdL8pHd0qY0DqQMmrdjO6iQbU6BfeF5CaklIj67cbhZkOqdwBPRCdRv%2FOo5RI8lYgi2O0tndG5WRkR8pF%2FFJPrW7aziJvNqZ2xROwX0TPFUAa44Gc3SUIfl9%2F%2FdR3AHoW2PvCPUb9laG7atlrZ5cuFEgAYl19E2ce0U2Ref2ZsT3yjlV3ukF7izhkAzj9d7tWokpLgFzCq6LXyHrpOK86a2vBW7PW%2FdDG9L%2BLCmDw1sQ1xxRGfibsAqjBh8CclcGVFOWLsed%2BNMBE%2BS6%2F7F57yPVlpegU8LqVcgYN14Nzar8bvkd%2BakusEmAQwXssDS33JkccGKFJ6JImQrEucoB1bFArZ9VYZB7YMlfnm8%2Fp2hUIqlCo%2F3NRMKXb4MsT48QTVT53maoguCZpkFyjtgQweTIlgCYgL2OH8pMCBxhM5c2jverbWsWMxaCn6XRcAZ0idOoPdjWgSYMzRI%2B2wL%2Fi4UM0Prs8RkI9%2B5IAHYTYq0jpMJHFu84GOqUBkyqT9xpv2erAJFnYR7EBpWn7o5Oi0EL%2Bg0Mkc0YbFM%2Bl%2BzaJ03Wiyqw%2BoSM2E64r%2FLiTyWHs%2B5iR8K%2BZiubCW8fSrvKsdpDe%2Bf7Gcq%2FifcK8acte8BmNVbKJEasUAz99dOsB%2FbWDVDwWA02s%2BvQG%2F2uuMuiJTBFgDfb5oRakt92SFZdqv57TMCvWTsvQ2%2BRiKTyvkGK8gjddj4taz92LJ2NCyuHC&X-Amz-Signature=7ecd17d5326029ceae4ee281dc232262252d92bf5f8d698f27824986cda4e08d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -292,7 +313,7 @@
           "編輯精選",
           "INDIE & ALTERNATIVE"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466S6IAFPIW%2F20260402%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260402T223904Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBZqSoeg3roVqCfpMK99boDEe8oY9bdSyh%2BXWNsxO2DNAiAf2puMb2J%2B3k5z%2B4Al6nAYDH6KVvZzL4hJqWFXhpNhuyr%2FAwh3EAAaDDYzNzQyMzE4MzgwNSIMiW0z2DbvTOlDFpqhKtwDqJrMJkNoA%2FwE%2BYqj77TsTJVGYxtWwW8a2V5j7niN9h6J9GjvcZo3brz9qtJ%2FCMkk%2FEV03W3RDGkSvqfrAodnYpA8X3xSeBVnBaEiNVIscC7avgSCqOABshsC3KNkVDeS%2BQieLTjx0NNsPD0xyK3ZJ2zZjDFVcPbhuKy%2F18jfRKPNCHMPLeb5l7Rk273gZ%2BMG%2FLL%2FhrQziO2Yr9LUh4lWR5lRTHEIMpastN6inwtzhbRW%2BEFIo3NUMA825IcVJIVSV%2FSN%2FY%2BWoEc8pEtlvWkWPPbvYeIKvVsIvIck5ZJ9bmrrvaic5sKBpNn5HkOzQW12LQW764wu%2FaHauJWGAjnX8WT04nmoMLiOctcp7g7PiNH7DaYTVsj47b%2BQusPuAMioEPMDBm1l28f8Z2tjXMMI5zMW1NcEucUDHbCQq2Djnv%2FHjHG%2BHtCxS%2BuyzpJbIpInGx468dHG7u3PKl%2FBJFukzFZLqupCHr1dv8hKQBr%2BeJMbu06lwyB20l61tRnp8RaRl%2BedEFVdos3WphboVvQa5u%2BHc9m8gY4URn7Ky5B5x3Dcu6ZklKU9hwhILiwxSBNyYBejEIvrvJSjHK29%2F%2FDUh9s7brwDHb2Z4N3%2BwdJxyOOBZeIDKXOnNNub2Ykw7cW7zgY6pgECqTZlZ%2BPNfZA0ZZ8dZ%2BqmdgUfUHiWboHMhb57LslYXH6H3c0nqBQNsG8TCwZpc7vNSr1zVAFsqr59NecWBbEYOft%2B3LvYlxoqK8%2Fj703k55%2FJlOPGel8ydwum0GmQG1TUMDrNnx%2BHgVEfR%2FlMh39smS6SX2758k0latYGpj%2BNH%2FaiRz3egCjvBDRNp2iAx9ZBfZrTb3X%2BxAR8tmuwGySMpbhDiIrw&X-Amz-Signature=333445f5a7929b742be6b38293f0fe10d35bccede61680cb8b916e986724a84a&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4667YRROE33%2F20260403%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260403T025321Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDOQAs3WWcgiGTKKV84Z%2FR3XsdYBlv89VPDzjNYbU%2BcxgIgXvYeItah2e4s7%2Ff1617vme7wW%2FHl3NVLpfPwPHam0%2Foq%2FwMIdxAAGgw2Mzc0MjMxODM4MDUiDBpivUyK09whnq4q%2FircA29SJxKmciPyqjkmxp732rCIfjS6xhFk6SJSc3jsyDqoAkzbvCLp87twK2AoJ1WThD0OdQ7U4M8gO6GqLovHQStmtdyE7KruCaOu4PuICVzqk%2FZi5LbYuNn4eQQZFm37FvKqndwc%2FAqPp7CXdL8pHd0qY0DqQMmrdjO6iQbU6BfeF5CaklIj67cbhZkOqdwBPRCdRv%2FOo5RI8lYgi2O0tndG5WRkR8pF%2FFJPrW7aziJvNqZ2xROwX0TPFUAa44Gc3SUIfl9%2F%2FdR3AHoW2PvCPUb9laG7atlrZ5cuFEgAYl19E2ce0U2Ref2ZsT3yjlV3ukF7izhkAzj9d7tWokpLgFzCq6LXyHrpOK86a2vBW7PW%2FdDG9L%2BLCmDw1sQ1xxRGfibsAqjBh8CclcGVFOWLsed%2BNMBE%2BS6%2F7F57yPVlpegU8LqVcgYN14Nzar8bvkd%2BakusEmAQwXssDS33JkccGKFJ6JImQrEucoB1bFArZ9VYZB7YMlfnm8%2Fp2hUIqlCo%2F3NRMKXb4MsT48QTVT53maoguCZpkFyjtgQweTIlgCYgL2OH8pMCBxhM5c2jverbWsWMxaCn6XRcAZ0idOoPdjWgSYMzRI%2B2wL%2Fi4UM0Prs8RkI9%2B5IAHYTYq0jpMJHFu84GOqUBkyqT9xpv2erAJFnYR7EBpWn7o5Oi0EL%2Bg0Mkc0YbFM%2Bl%2BzaJ03Wiyqw%2BoSM2E64r%2FLiTyWHs%2B5iR8K%2BZiubCW8fSrvKsdpDe%2Bf7Gcq%2FifcK8acte8BmNVbKJEasUAz99dOsB%2FbWDVDwWA02s%2BvQG%2F2uuMuiJTBFgDfb5oRakt92SFZdqv57TMCvWTsvQ2%2BRiKTyvkGK8gjddj4taz92LJ2NCyuHC&X-Amz-Signature=330a6baf49ed27bca7535dce5d4bc8030b538871299198ac9969110325e0d9db&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "https://music.douban.com/review/17506038/",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -300,28 +321,6 @@
         "homeFeatured": false,
         "displayOrder": 999,
         "created_time": "2026-03-16T20:59:00.000Z",
-        "last_edited_time": "2026-03-18T19:58:00.000Z"
-      },
-      {
-        "id": "3259f945-80b7-801d-856e-caf6088a3713",
-        "title": "重塑雕像的權利新專輯",
-        "content": "這是手動添加的測試文章內容…",
-        "category": "獨家",
-        "tags": [
-          "ART & EXPERIMENTAL",
-          "獨家",
-          "會員專享",
-          "編輯精選",
-          "重塑雕像的權利"
-        ],
-        "cover_image": "https://www.sinaimg.cn/ent/y/m/2009-04-13/U1819P28T3D2469854F326DT20090413182557.jpg",
-        "source_url": "",
-        "published_date": "2026-03-17",
-        "is_premium": true,
-        "featured": true,
-        "homeFeatured": true,
-        "displayOrder": 2,
-        "created_time": "2026-03-16T18:07:00.000Z",
         "last_edited_time": "2026-03-18T19:58:00.000Z"
       },
       {
@@ -334,7 +333,7 @@
           "PUNK & HARDCORE",
           "樂評"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466S6IAFPIW%2F20260402%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260402T223904Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJGMEQCIBZqSoeg3roVqCfpMK99boDEe8oY9bdSyh%2BXWNsxO2DNAiAf2puMb2J%2B3k5z%2B4Al6nAYDH6KVvZzL4hJqWFXhpNhuyr%2FAwh3EAAaDDYzNzQyMzE4MzgwNSIMiW0z2DbvTOlDFpqhKtwDqJrMJkNoA%2FwE%2BYqj77TsTJVGYxtWwW8a2V5j7niN9h6J9GjvcZo3brz9qtJ%2FCMkk%2FEV03W3RDGkSvqfrAodnYpA8X3xSeBVnBaEiNVIscC7avgSCqOABshsC3KNkVDeS%2BQieLTjx0NNsPD0xyK3ZJ2zZjDFVcPbhuKy%2F18jfRKPNCHMPLeb5l7Rk273gZ%2BMG%2FLL%2FhrQziO2Yr9LUh4lWR5lRTHEIMpastN6inwtzhbRW%2BEFIo3NUMA825IcVJIVSV%2FSN%2FY%2BWoEc8pEtlvWkWPPbvYeIKvVsIvIck5ZJ9bmrrvaic5sKBpNn5HkOzQW12LQW764wu%2FaHauJWGAjnX8WT04nmoMLiOctcp7g7PiNH7DaYTVsj47b%2BQusPuAMioEPMDBm1l28f8Z2tjXMMI5zMW1NcEucUDHbCQq2Djnv%2FHjHG%2BHtCxS%2BuyzpJbIpInGx468dHG7u3PKl%2FBJFukzFZLqupCHr1dv8hKQBr%2BeJMbu06lwyB20l61tRnp8RaRl%2BedEFVdos3WphboVvQa5u%2BHc9m8gY4URn7Ky5B5x3Dcu6ZklKU9hwhILiwxSBNyYBejEIvrvJSjHK29%2F%2FDUh9s7brwDHb2Z4N3%2BwdJxyOOBZeIDKXOnNNub2Ykw7cW7zgY6pgECqTZlZ%2BPNfZA0ZZ8dZ%2BqmdgUfUHiWboHMhb57LslYXH6H3c0nqBQNsG8TCwZpc7vNSr1zVAFsqr59NecWBbEYOft%2B3LvYlxoqK8%2Fj703k55%2FJlOPGel8ydwum0GmQG1TUMDrNnx%2BHgVEfR%2FlMh39smS6SX2758k0latYGpj%2BNH%2FaiRz3egCjvBDRNp2iAx9ZBfZrTb3X%2BxAR8tmuwGySMpbhDiIrw&X-Amz-Signature=96e61603e96fd9c1d0b0d0f4d129b5d818ac4526efd6df876402861dbba8cf29&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4667YRROE33%2F20260403%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260403T025321Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDOQAs3WWcgiGTKKV84Z%2FR3XsdYBlv89VPDzjNYbU%2BcxgIgXvYeItah2e4s7%2Ff1617vme7wW%2FHl3NVLpfPwPHam0%2Foq%2FwMIdxAAGgw2Mzc0MjMxODM4MDUiDBpivUyK09whnq4q%2FircA29SJxKmciPyqjkmxp732rCIfjS6xhFk6SJSc3jsyDqoAkzbvCLp87twK2AoJ1WThD0OdQ7U4M8gO6GqLovHQStmtdyE7KruCaOu4PuICVzqk%2FZi5LbYuNn4eQQZFm37FvKqndwc%2FAqPp7CXdL8pHd0qY0DqQMmrdjO6iQbU6BfeF5CaklIj67cbhZkOqdwBPRCdRv%2FOo5RI8lYgi2O0tndG5WRkR8pF%2FFJPrW7aziJvNqZ2xROwX0TPFUAa44Gc3SUIfl9%2F%2FdR3AHoW2PvCPUb9laG7atlrZ5cuFEgAYl19E2ce0U2Ref2ZsT3yjlV3ukF7izhkAzj9d7tWokpLgFzCq6LXyHrpOK86a2vBW7PW%2FdDG9L%2BLCmDw1sQ1xxRGfibsAqjBh8CclcGVFOWLsed%2BNMBE%2BS6%2F7F57yPVlpegU8LqVcgYN14Nzar8bvkd%2BakusEmAQwXssDS33JkccGKFJ6JImQrEucoB1bFArZ9VYZB7YMlfnm8%2Fp2hUIqlCo%2F3NRMKXb4MsT48QTVT53maoguCZpkFyjtgQweTIlgCYgL2OH8pMCBxhM5c2jverbWsWMxaCn6XRcAZ0idOoPdjWgSYMzRI%2B2wL%2Fi4UM0Prs8RkI9%2B5IAHYTYq0jpMJHFu84GOqUBkyqT9xpv2erAJFnYR7EBpWn7o5Oi0EL%2Bg0Mkc0YbFM%2Bl%2BzaJ03Wiyqw%2BoSM2E64r%2FLiTyWHs%2B5iR8K%2BZiubCW8fSrvKsdpDe%2Bf7Gcq%2FifcK8acte8BmNVbKJEasUAz99dOsB%2FbWDVDwWA02s%2BvQG%2F2uuMuiJTBFgDfb5oRakt92SFZdqv57TMCvWTsvQ2%2BRiKTyvkGK8gjddj4taz92LJ2NCyuHC&X-Amz-Signature=14d97c543f913f17e4db251fa6f69b75abfa658925169a68922b250902ede3f8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -368,6 +367,27 @@
       }
     ],
     "latest": [
+      {
+        "id": "3369f945-80b7-815c-be38-f3971b63836c",
+        "title": "Fucked Up’s Damian Abraham Is Now Making Movies",
+        "content": "这位硬核乐队主唱正与一位CBC制作人联手，共同开发一系列影视项目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Pitchfork",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://media.pitchfork.com/photos/69cc00bd459055f6d45539f3/master/pass/fucked-up-damian-tv-film-company.jpg",
+        "source_url": "https://pitchfork.com/news/fucked-ups-damian-abraham-is-now-making-movies/",
+        "published_date": "2026-03-31",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 2,
+        "created_time": "2026-04-02T14:02:00.000Z",
+        "last_edited_time": "2026-04-03T02:29:00.000Z"
+      },
       {
         "id": "3309f945-80b7-810b-81b8-e33b05144d93",
         "title": "[Podcast] EP6：從工業搖滾到網路先鋒：大衛鮑伊的90年代重生",
@@ -556,28 +576,6 @@
         "displayOrder": 999,
         "created_time": "2026-03-18T18:33:00.000Z",
         "last_edited_time": "2026-03-21T13:53:00.000Z"
-      },
-      {
-        "id": "3269f945-80b7-81b3-9d41-eca7a877204b",
-        "title": "Dua Lipa hits out at Epstein files discourse for “doing such a disservice to all the victims” and “trying to mask what is happening”",
-        "content": "杜阿·利帕抨擊有關愛潑斯坦檔案的討論，稱其“對所有受害者極不公平”並且“試圖掩蓋正在發生的事情”。",
-        "category": "國際",
-        "tags": [
-          "新聞",
-          "NME",
-          "國際",
-          "專題",
-          "POP ROCK"
-        ],
-        "cover_image": "https://www.nme.com/wp-content/uploads/2024/01/Dua-Lipa.-Credit-Tyrone-Lebon.jpg",
-        "source_url": "https://www.nme.com/news/music/dua-lipa-hits-out-at-epstein-files-discourse-for-doing-such-a-disservice-to-all-the-victims-and-trying-to-mask-what-is-happening-3935001?utm_source=rss&utm_medium=rss&utm_campaign=dua-lipa-hits-out-at-epstein-files-discourse-for-doing-such-a-disservice-to-all-the-victims-and-trying-to-mask-what-is-happening",
-        "published_date": "2026-03-17",
-        "is_premium": false,
-        "featured": false,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-17T11:44:00.000Z",
-        "last_edited_time": "2026-03-23T15:09:00.000Z"
       }
     ]
   }
