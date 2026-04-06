@@ -1,8 +1,29 @@
 {
-  "last_updated": "2026-04-06T09:16:37.971858",
-  "total_count": 17,
+  "last_updated": "2026-04-06T11:03:24.999002",
+  "total_count": 18,
   "data": {
     "all": [
+      {
+        "id": "33a9f945-80b7-8166-9321-d22dfede903b",
+        "title": "Lifeguard get playful in exclusive ‘Rhymes With Lifeguard’ playlist to accompany The Cover",
+        "content": "这份歌单收录的歌曲，其标题均与这支来自芝加哥的三人乐队的团名押韵，其中包括 Lou Reed、SOPHIE 和 Pulp 的作品。文章《Lifeguard 乐队在独家歌单“Rhymes With Lifeguard”中大玩创意，以此呼应“The Cover”特辑》首发于 NME。",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "專題"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/04/NMEAR_NME-LIFEGUARD-THE-COVER-2026-1-CREDIT-ATIBA-JEFFERSON@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/lifeguard-the-cover-playlist-3938625?utm_source=rss&utm_medium=rss&utm_campaign=lifeguard-the-cover-playlist",
+        "published_date": "2026-04-06",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-04-06T08:52:00.000Z",
+        "last_edited_time": "2026-04-06T09:51:00.000Z"
+      },
       {
         "id": "3369f945-80b7-815c-be38-f3971b63836c",
         "title": "Fucked Up’s Damian Abraham Is Now Making Movies",
@@ -246,7 +267,7 @@
           "現場",
           "演出"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466646HQT22%2F20260406%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260406T091637Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAEaCXVzLXdlc3QtMiJHMEUCIGyfrLBoIg742TwPRL5912ethKAeKFHTWgZhLb8YmpCUAiEA%2FCrodcBwNyCMdIYxNZOoQJYRAWy2sauI0dDK8P6tUWkqiAQIyv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDHsPVkJO0ZAxCaIEnCrcA%2FQBCpD078fl%2FLkDEhaxfcUalshW5pfy5UQjZKPinXsYMD5yumHpy%2F5nMBGIovD7%2FdVDn2Zo30mUxuq56tJK5Fo%2BSEb6pDGiEW2WK04NnEyWO7j9sbTs%2FA7cxiysPqUGbW1gGEmfKvlKFvVQj9fkyN2a2RfDeZRPDq94T12zPBgadtBlgYs4NnEjyLowIZLDJFpotOvEj97onbvKByQowgD5KY4BEFboKUFdwfLHDA6ou5TpxucrMwZajuc3%2B5YF319Ig2dyCb0Qk2z6KSKCkqRGqLgb83ZSXW3yTlstnabq8mK4zTmQENIGf%2B6%2FfCuV2cLtI41mFBUvkAxld5JeSsr3SaCjDxFyoZS6fY0Zl6v8gxnexnYoElcGSrPkqZQizTxJKK8o3g0gcA6Qt54AZDgXnyPYJ53WncYxVSzI0VJDvjPvB%2Bd%2FH%2B0LDsKx4%2B1eGaClDcZn7krCoQW5A1Tij7fzdNVQBaXtjrHTM24DRalmZMMygI%2BmAZ6G4nGdxcaOsWNshf1uLteW8E0LmL9YCavRU4gziTChzwDGo8hYfJkjE%2FfXpaolxo4wkZ1bbLy26XFRhVD9lb3xlbVEM581WIqi8plm%2Bwf2Dxb61Vz9mv6%2FtC23gM4K45IBCyhXMLfhzc4GOqUBoZ6Uaz4%2FnCsaBvrRWpUevXvFT6XFdrYyjYM%2B57kJ%2B7uv35h91HfE%2FgYudxXox6a3nqAFi%2Bg6tS0iza5hDGv5uDrUEwMA9sqQeeIdbYk7iYYrbbWJQPptS6FSLfNZQHBDgZogC1zGXcAcZ7SUWZJRWy4QAFiLrGM9UwfdN0hvcP0vkx8sKpBfMTrMMoThunvAkrVnlgqeZjcXhMAr3gHjNK%2B78etZ&X-Amz-Signature=5ba15d6c319167e668af6705dc0b4eb68016b7e0a3fc507e7168089c9eacd4bf&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4662QPS5KLX%2F20260406%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260406T110324Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAIaCXVzLXdlc3QtMiJHMEUCIGSkCXy6QBp4VSMmwCck%2BZdcqYqDulXhZoiy6RJZv4DbAiEA%2F0q1jF5sZGdInAy0twYjfcNAaIjT4Xa5QiI%2BiTfojf4qiAQIy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDFSAaTWbubk64NfOZCrcA%2F6qFuF0e1YajuoPTgF%2Bd%2FKH5i8Fwvt4VuQBne%2FWatQ1cvt5LvRKdFe20XcQMdK8fK1MH1YONaS60xyI%2FXN2YMsC0e3FWg%2FTBCkWxjd59g2oD%2B0y9EKCmzpbWHr0wkQzuk1tDj4pjmM4ybxFo681aNz1lxY3SmhsKv5kxBcGlx4tUEqgc7MRfyqA0OzkRZgvzVf46sysYYXqY%2BN%2B19LmEZAfDCPm4svsqwjnGGR%2FLGSIEEveuzZHraP%2BdA1yE6c8D9XBamAoOSzouvK1HqXyv9dnfwM%2FqSEUOU9D0V409Cu7PouhoBr7jjxOcnKdkMkg%2FCjoLfJ58dKDyxjYReMjFcOYF0Lytqu2ZxfEO7e4cTasHbHvI3ALuhNvRBJbJfG3T2UZcAvRXbwcC1hMOEXiHdIZG3BzEMydnB%2BG%2BbG3rfCR2t2%2FHHUtQkzoi5YliKtlhui8aWHvmybJSFdzTZYdl0n5vs7JHMpdoSZzA9aO5wKKrmqX7VmM9HGybIoFocvAMUCk7KsF%2FjA4scTbGRH%2FYgFq3ChiABfpLSA6PDiIPTn6sdjDtyuYeLZcUCSVH1b%2BvqKpKjy7Ik7iYtIOmSH7tLadcnXwtsW5UexgpODh1gQTFSAK5oTm3XoqtZTeMJSHzs4GOqUB8V3O6CPZeHcFCg6jXDLfX7SaMHw919%2BUnILI2VxaiB72L9FbELemwtBegwPsrM6IkzYHRtIUS4TYV1nSBvBSwBf5aQLlpsvp5s0Qf0gadoI9NmsNW6XYZ7Xj9ljxWjrx0FlQVyMd5ZR8Ud2jMy01%2BUad8tslAHIslzVBd39bARsl0NpvF0ki6P0LrXt79DE5sWxCwhO%2BmHVaXLYrsXFtQYvjrHI9&X-Amz-Signature=e062eaa7690c49eaedb1d6fba53f230b46f2f3dbe58ffb3c4674c27f45de3ff3&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -313,7 +334,7 @@
           "編輯精選",
           "INDIE & ALTERNATIVE"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466646HQT22%2F20260406%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260406T091637Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAEaCXVzLXdlc3QtMiJHMEUCIGyfrLBoIg742TwPRL5912ethKAeKFHTWgZhLb8YmpCUAiEA%2FCrodcBwNyCMdIYxNZOoQJYRAWy2sauI0dDK8P6tUWkqiAQIyv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDHsPVkJO0ZAxCaIEnCrcA%2FQBCpD078fl%2FLkDEhaxfcUalshW5pfy5UQjZKPinXsYMD5yumHpy%2F5nMBGIovD7%2FdVDn2Zo30mUxuq56tJK5Fo%2BSEb6pDGiEW2WK04NnEyWO7j9sbTs%2FA7cxiysPqUGbW1gGEmfKvlKFvVQj9fkyN2a2RfDeZRPDq94T12zPBgadtBlgYs4NnEjyLowIZLDJFpotOvEj97onbvKByQowgD5KY4BEFboKUFdwfLHDA6ou5TpxucrMwZajuc3%2B5YF319Ig2dyCb0Qk2z6KSKCkqRGqLgb83ZSXW3yTlstnabq8mK4zTmQENIGf%2B6%2FfCuV2cLtI41mFBUvkAxld5JeSsr3SaCjDxFyoZS6fY0Zl6v8gxnexnYoElcGSrPkqZQizTxJKK8o3g0gcA6Qt54AZDgXnyPYJ53WncYxVSzI0VJDvjPvB%2Bd%2FH%2B0LDsKx4%2B1eGaClDcZn7krCoQW5A1Tij7fzdNVQBaXtjrHTM24DRalmZMMygI%2BmAZ6G4nGdxcaOsWNshf1uLteW8E0LmL9YCavRU4gziTChzwDGo8hYfJkjE%2FfXpaolxo4wkZ1bbLy26XFRhVD9lb3xlbVEM581WIqi8plm%2Bwf2Dxb61Vz9mv6%2FtC23gM4K45IBCyhXMLfhzc4GOqUBoZ6Uaz4%2FnCsaBvrRWpUevXvFT6XFdrYyjYM%2B57kJ%2B7uv35h91HfE%2FgYudxXox6a3nqAFi%2Bg6tS0iza5hDGv5uDrUEwMA9sqQeeIdbYk7iYYrbbWJQPptS6FSLfNZQHBDgZogC1zGXcAcZ7SUWZJRWy4QAFiLrGM9UwfdN0hvcP0vkx8sKpBfMTrMMoThunvAkrVnlgqeZjcXhMAr3gHjNK%2B78etZ&X-Amz-Signature=ed199e549614f65be051a553772d56046e15c9b62c87a46624be7de32715e51d&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4662QPS5KLX%2F20260406%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260406T110324Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAIaCXVzLXdlc3QtMiJHMEUCIGSkCXy6QBp4VSMmwCck%2BZdcqYqDulXhZoiy6RJZv4DbAiEA%2F0q1jF5sZGdInAy0twYjfcNAaIjT4Xa5QiI%2BiTfojf4qiAQIy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDFSAaTWbubk64NfOZCrcA%2F6qFuF0e1YajuoPTgF%2Bd%2FKH5i8Fwvt4VuQBne%2FWatQ1cvt5LvRKdFe20XcQMdK8fK1MH1YONaS60xyI%2FXN2YMsC0e3FWg%2FTBCkWxjd59g2oD%2B0y9EKCmzpbWHr0wkQzuk1tDj4pjmM4ybxFo681aNz1lxY3SmhsKv5kxBcGlx4tUEqgc7MRfyqA0OzkRZgvzVf46sysYYXqY%2BN%2B19LmEZAfDCPm4svsqwjnGGR%2FLGSIEEveuzZHraP%2BdA1yE6c8D9XBamAoOSzouvK1HqXyv9dnfwM%2FqSEUOU9D0V409Cu7PouhoBr7jjxOcnKdkMkg%2FCjoLfJ58dKDyxjYReMjFcOYF0Lytqu2ZxfEO7e4cTasHbHvI3ALuhNvRBJbJfG3T2UZcAvRXbwcC1hMOEXiHdIZG3BzEMydnB%2BG%2BbG3rfCR2t2%2FHHUtQkzoi5YliKtlhui8aWHvmybJSFdzTZYdl0n5vs7JHMpdoSZzA9aO5wKKrmqX7VmM9HGybIoFocvAMUCk7KsF%2FjA4scTbGRH%2FYgFq3ChiABfpLSA6PDiIPTn6sdjDtyuYeLZcUCSVH1b%2BvqKpKjy7Ik7iYtIOmSH7tLadcnXwtsW5UexgpODh1gQTFSAK5oTm3XoqtZTeMJSHzs4GOqUB8V3O6CPZeHcFCg6jXDLfX7SaMHw919%2BUnILI2VxaiB72L9FbELemwtBegwPsrM6IkzYHRtIUS4TYV1nSBvBSwBf5aQLlpsvp5s0Qf0gadoI9NmsNW6XYZ7Xj9ljxWjrx0FlQVyMd5ZR8Ud2jMy01%2BUad8tslAHIslzVBd39bARsl0NpvF0ki6P0LrXt79DE5sWxCwhO%2BmHVaXLYrsXFtQYvjrHI9&X-Amz-Signature=4c0a745a6981e8cf88d003c7659ffb7e1ea1d51de6fb584dbdec8b0f74ba3b6f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "https://music.douban.com/review/17506038/",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -333,7 +354,7 @@
           "PUNK & HARDCORE",
           "樂評"
         ],
-        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466646HQT22%2F20260406%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260406T091637Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAEaCXVzLXdlc3QtMiJHMEUCIGyfrLBoIg742TwPRL5912ethKAeKFHTWgZhLb8YmpCUAiEA%2FCrodcBwNyCMdIYxNZOoQJYRAWy2sauI0dDK8P6tUWkqiAQIyv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDHsPVkJO0ZAxCaIEnCrcA%2FQBCpD078fl%2FLkDEhaxfcUalshW5pfy5UQjZKPinXsYMD5yumHpy%2F5nMBGIovD7%2FdVDn2Zo30mUxuq56tJK5Fo%2BSEb6pDGiEW2WK04NnEyWO7j9sbTs%2FA7cxiysPqUGbW1gGEmfKvlKFvVQj9fkyN2a2RfDeZRPDq94T12zPBgadtBlgYs4NnEjyLowIZLDJFpotOvEj97onbvKByQowgD5KY4BEFboKUFdwfLHDA6ou5TpxucrMwZajuc3%2B5YF319Ig2dyCb0Qk2z6KSKCkqRGqLgb83ZSXW3yTlstnabq8mK4zTmQENIGf%2B6%2FfCuV2cLtI41mFBUvkAxld5JeSsr3SaCjDxFyoZS6fY0Zl6v8gxnexnYoElcGSrPkqZQizTxJKK8o3g0gcA6Qt54AZDgXnyPYJ53WncYxVSzI0VJDvjPvB%2Bd%2FH%2B0LDsKx4%2B1eGaClDcZn7krCoQW5A1Tij7fzdNVQBaXtjrHTM24DRalmZMMygI%2BmAZ6G4nGdxcaOsWNshf1uLteW8E0LmL9YCavRU4gziTChzwDGo8hYfJkjE%2FfXpaolxo4wkZ1bbLy26XFRhVD9lb3xlbVEM581WIqi8plm%2Bwf2Dxb61Vz9mv6%2FtC23gM4K45IBCyhXMLfhzc4GOqUBoZ6Uaz4%2FnCsaBvrRWpUevXvFT6XFdrYyjYM%2B57kJ%2B7uv35h91HfE%2FgYudxXox6a3nqAFi%2Bg6tS0iza5hDGv5uDrUEwMA9sqQeeIdbYk7iYYrbbWJQPptS6FSLfNZQHBDgZogC1zGXcAcZ7SUWZJRWy4QAFiLrGM9UwfdN0hvcP0vkx8sKpBfMTrMMoThunvAkrVnlgqeZjcXhMAr3gHjNK%2B78etZ&X-Amz-Signature=5bb41fb3ab0108ef84870a2423dbc84988840e367390572fc89c86088f59a7a8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB4662QPS5KLX%2F20260406%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260406T110324Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEAIaCXVzLXdlc3QtMiJHMEUCIGSkCXy6QBp4VSMmwCck%2BZdcqYqDulXhZoiy6RJZv4DbAiEA%2F0q1jF5sZGdInAy0twYjfcNAaIjT4Xa5QiI%2BiTfojf4qiAQIy%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDFSAaTWbubk64NfOZCrcA%2F6qFuF0e1YajuoPTgF%2Bd%2FKH5i8Fwvt4VuQBne%2FWatQ1cvt5LvRKdFe20XcQMdK8fK1MH1YONaS60xyI%2FXN2YMsC0e3FWg%2FTBCkWxjd59g2oD%2B0y9EKCmzpbWHr0wkQzuk1tDj4pjmM4ybxFo681aNz1lxY3SmhsKv5kxBcGlx4tUEqgc7MRfyqA0OzkRZgvzVf46sysYYXqY%2BN%2B19LmEZAfDCPm4svsqwjnGGR%2FLGSIEEveuzZHraP%2BdA1yE6c8D9XBamAoOSzouvK1HqXyv9dnfwM%2FqSEUOU9D0V409Cu7PouhoBr7jjxOcnKdkMkg%2FCjoLfJ58dKDyxjYReMjFcOYF0Lytqu2ZxfEO7e4cTasHbHvI3ALuhNvRBJbJfG3T2UZcAvRXbwcC1hMOEXiHdIZG3BzEMydnB%2BG%2BbG3rfCR2t2%2FHHUtQkzoi5YliKtlhui8aWHvmybJSFdzTZYdl0n5vs7JHMpdoSZzA9aO5wKKrmqX7VmM9HGybIoFocvAMUCk7KsF%2FjA4scTbGRH%2FYgFq3ChiABfpLSA6PDiIPTn6sdjDtyuYeLZcUCSVH1b%2BvqKpKjy7Ik7iYtIOmSH7tLadcnXwtsW5UexgpODh1gQTFSAK5oTm3XoqtZTeMJSHzs4GOqUB8V3O6CPZeHcFCg6jXDLfX7SaMHw919%2BUnILI2VxaiB72L9FbELemwtBegwPsrM6IkzYHRtIUS4TYV1nSBvBSwBf5aQLlpsvp5s0Qf0gadoI9NmsNW6XYZ7Xj9ljxWjrx0FlQVyMd5ZR8Ud2jMy01%2BUad8tslAHIslzVBd39bARsl0NpvF0ki6P0LrXt79DE5sWxCwhO%2BmHVaXLYrsXFtQYvjrHI9&X-Amz-Signature=bf383fcce219a710bf10a2c856c7a02e0cd921b2a68427b8ec4f3e95a5491ac1&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
         "source_url": "",
         "published_date": "2026-03-17",
         "is_premium": false,
@@ -367,6 +388,27 @@
       }
     ],
     "latest": [
+      {
+        "id": "33a9f945-80b7-8166-9321-d22dfede903b",
+        "title": "Lifeguard get playful in exclusive ‘Rhymes With Lifeguard’ playlist to accompany The Cover",
+        "content": "这份歌单收录的歌曲，其标题均与这支来自芝加哥的三人乐队的团名押韵，其中包括 Lou Reed、SOPHIE 和 Pulp 的作品。文章《Lifeguard 乐队在独家歌单“Rhymes With Lifeguard”中大玩创意，以此呼应“The Cover”特辑》首发于 NME。",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "專題"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/04/NMEAR_NME-LIFEGUARD-THE-COVER-2026-1-CREDIT-ATIBA-JEFFERSON@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/lifeguard-the-cover-playlist-3938625?utm_source=rss&utm_medium=rss&utm_campaign=lifeguard-the-cover-playlist",
+        "published_date": "2026-04-06",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-04-06T08:52:00.000Z",
+        "last_edited_time": "2026-04-06T09:51:00.000Z"
+      },
       {
         "id": "3369f945-80b7-815c-be38-f3971b63836c",
         "title": "Fucked Up’s Damian Abraham Is Now Making Movies",
@@ -554,28 +596,6 @@
         "displayOrder": 999,
         "created_time": "2026-03-17T17:15:00.000Z",
         "last_edited_time": "2026-03-18T21:12:00.000Z"
-      },
-      {
-        "id": "3279f945-80b7-813b-b609-fb7099937e79",
-        "title": "Paste杂志 ｜25周年回顾：《Discovery》预言了电子音乐的未来 (评论: Discovery)",
-        "content": "Vermont评论: Discovery (https://music.douban.com/subject/1395014/) 评价: 力荐 :\"25 年前，Daft Punk 第二张专辑中那极致主义且纯净的野心，成为了数字音乐制作领域的一个分水岭。",
-        "category": "專題",
-        "tags": [
-          "新聞",
-          "豆瓣音樂",
-          "ART & EXPERIMENTAL",
-          "樂評",
-          "編輯精選"
-        ],
-        "cover_image": "https://miro.medium.com/1*kySllKhtOrB7QoWHf1ZSdw.jpeg",
-        "source_url": "https://music.douban.com/review/17509359/",
-        "published_date": "2026-03-18",
-        "is_premium": false,
-        "featured": true,
-        "homeFeatured": false,
-        "displayOrder": 999,
-        "created_time": "2026-03-18T18:33:00.000Z",
-        "last_edited_time": "2026-03-21T13:53:00.000Z"
       }
     ]
   }
