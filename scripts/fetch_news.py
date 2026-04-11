@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ChineseRocks 新闻抓取脚本 v13 - 国内源增强版
-- 新增：音乐节RSS微博 (国内最重要的音乐节信息源)
-- 新增：滚圈海底捞微博 (摇滚圈资讯)
-- 新增：豆瓣同城音乐活动 (5大城市)
-- 保留：Live China Music + Wooozy
-- 修复：移除不可用源
+ChineseRocks 新闻抓取脚本 v14 - 国际源优化版
+- 修复：国际源重复问题，精简为高质量源
+- 新增：Consequence of Sound、Brooklyn Vegan、Metalsucks
+- 优化：移除不稳定RSSHub源，改用直接RSS
+- 改进：更严格的跨源去重逻辑
 """
 
 import os
@@ -37,8 +36,8 @@ NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 NEWS_DB_ID = os.getenv("NEWS_DB_ID", "3229f94580b78029ba1bf49e33e7e46c")
 
 DAYS_LIMIT = 30
-SIMILARITY_THRESHOLD = 0.75  # v13-fix: 更严格的去重阈值
-INTER_SOURCE_THRESHOLD = 0.75
+SIMILARITY_THRESHOLD = 0.72  # v14: 更严格的去重阈值
+INTER_SOURCE_THRESHOLD = 0.70  # v14: 跨源去重更严格
 MIN_CONTENT_LENGTH = 50
 
 # 嚴格搖滾風格分類
@@ -88,10 +87,9 @@ EXCLUDE_GENRES = [
     "acoustic pop", "folk pop", "indie pop"
 ]
 
-# v13 RSS 源配置
+# v14 RSS 源配置 - 国际源精简优化
 SOURCES = {
     "china": [
-        # ✅ 核心新闻源
         {
             "name": "Live China Music", 
             "url": "https://livechinamusic.com/feed", 
@@ -108,29 +106,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 9
         },
-        # 🆕 新增：音乐节RSS微博 (国内最重要的音乐节信息源)
-        {
-            "name": "音乐节RSS-微博", 
-            "url": "https://rsshub.app/weibo/user/3691972875", 
-            "enabled": True, 
-            "category": "演出",
-            "priority": 1,
-            "quality_score": 10,
-            "description": "国内最全的音乐节信息播报",
-            "limit_override": 15
-        },
-        # 🆕 新增：滚圈海底捞微博
-        {
-            "name": "滚圈海底捞-微博", 
-            "url": "https://rsshub.app/weibo/user/5147314197106298", 
-            "enabled": True, 
-            "category": "新聞",
-            "priority": 2,
-            "quality_score": 8,
-            "description": "摇滚圈资讯和演出信息",
-            "limit_override": 10
-        },
-        # 🆕 新增：豆瓣同城音乐活动
+        # v14: 豆瓣RSSHub源监控使用
         {
             "name": "豆瓣同城-北京音乐", 
             "url": "https://rsshub.app/douban/event/beijing/music", 
@@ -176,7 +152,6 @@ SOURCES = {
             "quality_score": 7,
             "description": "成都音乐演出活动"
         },
-        # 🆕 新增：豆瓣同城-杭州/武汉/西安/南京/重庆
         {
             "name": "豆瓣同城-杭州音乐", 
             "url": "https://rsshub.app/douban/event/hangzhou/music", 
@@ -203,79 +178,6 @@ SOURCES = {
             "priority": 3,
             "quality_score": 6,
             "description": "西安音乐演出活动"
-        },
-        # ❌ 禁用：不稳定源
-        {
-            "name": "独立音樂資訊", 
-            "url": "https://www.indie-music.com/feed", 
-            "enabled": False,
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：网站无法访问"
-        },
-        {
-            "name": "街聲-中國", 
-            "url": "https://streetvoice.cn/feed/", 
-            "enabled": False,
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：RSS返回HTML"
-        },
-        {
-            "name": "網易雲-原創音樂", 
-            "url": "https://rsshub.app/ncm/playlist/2884035", 
-            "enabled": False,
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：RSSHub不稳定"
-        },
-        {
-            "name": "知乎-搖滾樂話題", 
-            "url": "https://rsshub.app/zhihu/topic/19550718", 
-            "enabled": False,
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：RSSHub限制20条"
-        },
-        {
-            "name": "知乎-獨立音樂話題", 
-            "url": "https://rsshub.app/zhihu/topic/19550408", 
-            "enabled": False,
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：RSSHub限制20条"
-        },
-        {
-            "name": "豆瓣音樂-樂評", 
-            "url": "https://rsshub.app/douban/music/latest", 
-            "enabled": False, 
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：RSSHub反爬严重"
-        },
-        {
-            "name": "摩登天空-網易號", 
-            "url": "https://rsshub.app/163/dy/T1509089140270", 
-            "enabled": False, 
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：网易号反爬机制"
-        },
-        {
-            "name": "Solidot-文化", 
-            "url": "https://rsshub.app/solidot/culture", 
-            "enabled": False,
-            "category": "新聞",
-            "priority": 99,
-            "quality_score": 0,
-            "reason": "v13禁用：摇滚内容极少"
         },
     ],
 
@@ -326,6 +228,7 @@ SOURCES = {
     ],
 
     "international": [
+        # v14: 精简国际源，移除重复率高的NME和Kerrang
         {
             "name": "Unite Asia", 
             "url": "https://uniteasia.org/feed", 
@@ -334,7 +237,7 @@ SOURCES = {
             "priority": 1,
             "quality_score": 10,
             "inter_source_key": True,
-            "description": "亚洲朋克、硬核、金属音乐"
+            "description": "亚洲朋克、硬核、金属音乐 - 独特内容"
         },
         {
             "name": "Pitchfork", 
@@ -343,7 +246,8 @@ SOURCES = {
             "category": "國際",
             "priority": 1,
             "quality_score": 10,
-            "inter_source_key": True
+            "inter_source_key": True,
+            "description": "独立音乐权威 - 高质量内容"
         },
         {
             "name": "Rolling Stone", 
@@ -352,25 +256,61 @@ SOURCES = {
             "category": "國際",
             "priority": 1,
             "quality_score": 9,
-            "inter_source_key": True
+            "inter_source_key": True,
+            "description": "主流摇滚音乐新闻"
         },
+        # v14: 新增优质源
+        {
+            "name": "Consequence of Sound", 
+            "url": "https://consequenceofsound.net/feed", 
+            "enabled": True, 
+            "category": "國際",
+            "priority": 2,
+            "quality_score": 9,
+            "inter_source_key": True,
+            "description": "另类音乐文化 - 独特视角",
+            "limit_override": 3
+        },
+        {
+            "name": "Brooklyn Vegan", 
+            "url": "https://www.brooklynvegan.com/feed/", 
+            "enabled": True, 
+            "category": "國際",
+            "priority": 2,
+            "quality_score": 9,
+            "inter_source_key": True,
+            "description": "独立/朋克/金属 - 演出信息丰富",
+            "limit_override": 3
+        },
+        {
+            "name": "Metalsucks", 
+            "url": "https://www.metalsucks.net/feed/", 
+            "enabled": True, 
+            "category": "國際",
+            "priority": 2,
+            "quality_score": 8,
+            "inter_source_key": True,
+            "description": "金属音乐专业站 - 独特内容",
+            "limit_override": 3
+        },
+        # v14: 禁用重复率高的源
         {
             "name": "NME", 
             "url": "https://www.nme.com/news/music/feed", 
-            "enabled": True, 
+            "enabled": False, 
             "category": "國際",
-            "priority": 3,
-            "quality_score": 6,
-            "limit_override": 1
+            "priority": 99,
+            "quality_score": 0,
+            "reason": "v14禁用：与其他源重复率过高"
         },
         {
             "name": "Kerrang", 
             "url": "https://www.kerrang.com/feed", 
-            "enabled": True, 
+            "enabled": False, 
             "category": "國際",
-            "priority": 3,
-            "quality_score": 7,
-            "limit_override": 1
+            "priority": 99,
+            "quality_score": 0,
+            "reason": "v14禁用：与其他源重复率过高"
         },
         {
             "name": "Stereogum", 
@@ -379,7 +319,7 @@ SOURCES = {
             "category": "國際",
             "priority": 99,
             "quality_score": 0,
-            "reason": "v13禁用：重复率过高"
+            "reason": "v14禁用：重复率过高"
         },
     ],
 
@@ -397,12 +337,14 @@ SOURCES = {
 
 
 class ContentDeduplicator:
+    """v14: 增强去重器"""
     def __init__(self, threshold=SIMILARITY_THRESHOLD):
         self.threshold = threshold
         self.inter_source_threshold = INTER_SOURCE_THRESHOLD
-        self.seen_contents = []
+        self.seen_contents = []  # (fingerprint, title, event_key, source_name)
         self.seen_urls = set()
         self.existing_titles = set()
+        self.artist_news_tracker = {}  # v14: 追踪同一艺人的多条新闻
 
     def normalize_url(self, url):
         if not url:
@@ -414,28 +356,50 @@ class ContentDeduplicator:
         return url.lower().strip()
 
     def create_fingerprint(self, title, summary):
+        """v14: 改进的指纹生成"""
         text = f"{title} {summary}".lower()
+        # 提取中文词组
         chinese_words = re.findall(r'[一-龥]{2,6}', text)
-        english_words = re.findall(r'\b[a-z]{4,}\b', text)
-        keywords = list(dict.fromkeys(chinese_words + english_words))
-        return ' '.join(keywords[:30])
+        # 提取英文单词（4字符以上）
+        english_words = re.findall(r'[a-z]{4,}', text)
+        # 提取数字（可能是年份、日期）
+        numbers = re.findall(r'20\d{2}', text)
+        keywords = list(dict.fromkeys(chinese_words + english_words + numbers))
+        return ' '.join(keywords[:25])
 
     def extract_event_key(self, title):
+        """v14: 改进的事件关键信息提取"""
         noise_words = ['announces', 'releases', 'new', 'album', 'single', 'video', 
                        'tour', 'live', 'death', 'dies', 'interview', 'review',
-                       '宣布', '发布', '新专辑', '单曲', 'MV', '巡演', '去世', '专访']
+                       '宣布', '发布', '新专辑', '单曲', 'MV', '巡演', '去世', '专访',
+                       'shares', 'premieres', 'streams', 'listen', 'watch']
         text = title.lower()
         for word in noise_words:
-            text = text.replace(word, '')
-        names = re.findall(r'\b[A-Z][a-zA-Z]+\b|[一-龥]{2,4}', text)
-        return ' '.join(sorted(set(names)))[:50]
+            text = text.replace(word, ' ')
+        # 提取大写单词（艺人名）
+        names = re.findall(r'[A-Z][a-zA-Z]+|[一-龥]{2,4}', text)
+        return ' '.join(sorted(set(names)))[:50].strip()
+
+    def extract_artist_name(self, title):
+        """v14: 提取主要艺人名"""
+        # 常见模式: "Artist Name announces..." 或 "Artist Name releases..."
+        patterns = [
+            r'^([A-Z][a-zA-Z\s]+?)\s+(?:announces?|releases?|shares?|premieres?|drops?)',
+            r'^([一-龥]+?)\s*(?:宣布|发布|推出)',
+        ]
+        for pattern in patterns:
+            match = re.search(pattern, title, re.IGNORECASE)
+            if match:
+                return match.group(1).strip()
+        return None
 
     def calculate_similarity(self, text1, text2):
         if not text1 or not text2:
             return 0.0
         return SequenceMatcher(None, text1, text2).ratio()
 
-    def is_duplicate(self, title, summary, url, source_type=""):
+    def is_duplicate(self, title, summary, url, source_type="", source_name=""):
+        """v14: 增强去重逻辑"""
         normalized_url = self.normalize_url(url)
         if normalized_url and normalized_url in self.seen_urls:
             return True, "URL重复"
@@ -446,27 +410,44 @@ class ContentDeduplicator:
 
         fingerprint = self.create_fingerprint(title, summary)
         event_key = self.extract_event_key(title)
+        artist_name = self.extract_artist_name(title)
 
-        for seen_fp, seen_title, seen_event in self.seen_contents:
-            # 🆕 v13-fix: 更严格的标题匹配
+        # v14: 检查同一艺人的近期新闻（防止同一艺人多条新闻被误认为重复）
+        if artist_name and artist_name in self.artist_news_tracker:
+            last_seen = self.artist_news_tracker[artist_name]
+            # 如果同一艺人24小时内已有新闻，提高相似度阈值
+            time_diff = (datetime.now() - last_seen['time']).total_seconds() / 3600
+            if time_diff < 24:
+                artist_threshold = self.threshold + 0.1
+            else:
+                artist_threshold = self.threshold
+        else:
+            artist_threshold = self.threshold
+
+        for seen_fp, seen_title, seen_event, seen_source in self.seen_contents:
             title_lower = title.lower().strip()
             seen_lower = seen_title.lower().strip()
 
+            # 完全匹配
             if title_lower == seen_lower:
                 return True, "标题完全匹配"
 
-            # 🆕 v13-fix: 标题相似度检查（85%相似就认为是重复）
+            # v14: 标题相似度检查（80%相似就认为是重复）
             title_sim = self.calculate_similarity(title_lower, seen_lower)
-            if title_sim >= 0.85:
+            if title_sim >= 0.80:
                 return True, f"标题相似度{title_sim:.0%}"
 
+            # v14: 内容指纹相似度
             similarity = self.calculate_similarity(fingerprint, seen_fp)
-            if similarity >= self.threshold:
+            if similarity >= artist_threshold:
                 return True, f"内容相似度{similarity:.0%}"
 
+            # v14: 国际源间去重（更严格）
             if source_type == "international" and event_key and seen_event:
                 event_sim = self.calculate_similarity(event_key, seen_event)
-                if event_sim >= self.inter_source_threshold and len(event_key) > 10:
+                # 跨源去重更严格
+                threshold = self.inter_source_threshold
+                if event_sim >= threshold and len(event_key) > 8:
                     return True, f"国际源事件重复{event_sim:.0%}"
 
         return False, None
@@ -474,10 +455,18 @@ class ContentDeduplicator:
     def add_content(self, title, summary, url, source_type=""):
         fingerprint = self.create_fingerprint(title, summary)
         event_key = self.extract_event_key(title)
-        self.seen_contents.append((fingerprint, title, event_key))
+        self.seen_contents.append((fingerprint, title, event_key, source_type))
         normalized_url = self.normalize_url(url)
         if normalized_url:
             self.seen_urls.add(normalized_url)
+
+        # v14: 追踪艺人
+        artist_name = self.extract_artist_name(title)
+        if artist_name:
+            self.artist_news_tracker[artist_name] = {
+                'time': datetime.now(),
+                'title': title
+            }
 
     def load_existing_from_notion(self, notion_client, db_id, days=14):
         try:
@@ -529,8 +518,9 @@ class NewsFetcher:
         self.deduplicator = ContentDeduplicator()
 
     def fetch_all(self):
-        print("\n" + "="*70)
-        print("ChineseRocks 新闻抓取系统 v13 - 国内源增强版")
+        print("
+" + "="*70)
+        print("ChineseRocks 新闻抓取系统 v14 - 国际源优化版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
         print(f"每源限制: {self.limit} 条")
@@ -546,7 +536,8 @@ class NewsFetcher:
         enabled_sources = [s for s in sources if s["enabled"]]
         enabled_sources.sort(key=lambda x: x.get("priority", 99))
 
-        print(f"\n抓取 {len(enabled_sources)} 个源")
+        print(f"
+抓取 {len(enabled_sources)} 个源")
         print("-"*50)
 
         for source in sources:
@@ -556,7 +547,8 @@ class NewsFetcher:
                 continue
             self._fetch_source(source)
 
-        print(f"\n抓取完成: 共 {len(self.articles)} 条")
+        print(f"
+抓取完成: 共 {len(self.articles)} 条")
         return self.articles
 
     def _fetch_source(self, source):
@@ -622,12 +614,13 @@ class NewsFetcher:
                 link = entry.get('link', '')
                 is_dup, dup_reason = self.deduplicator.is_duplicate(
                     title, summary, link, 
-                    source_type=self.source_type
+                    source_type=self.source_type,
+                    source_name=source['name']
                 )
                 if is_dup:
                     if "Notion中已存在" in dup_reason:
                         notion_dup_count += 1
-                    elif "国际源" in dup_reason:
+                    elif "国际源" in dup_reason or "重复" in dup_reason:
                         inter_dup_count += 1
                     else:
                         duplicate_count += 1
@@ -689,7 +682,7 @@ class NewsFetcher:
             published = self._parse_date(entry)
             image = self._extract_image_improved(entry, source)
 
-            # 🆕 v13-fix: 严格过滤 - 没有图片直接丢弃
+            # v14: 严格过滤 - 没有图片直接丢弃
             if not image:
                 print(f"    🚫 跳过: 无图片")
                 self.stats["no_image"] = self.stats.get("no_image", 0) + 1
@@ -808,10 +801,12 @@ class NewsFetcher:
 
     def sync_to_notion(self):
         if not self.articles:
-            print("\n沒有文章需要同步")
+            print("
+沒有文章需要同步")
             return 0
 
-        print("\n同步到 Notion")
+        print("
+同步到 Notion")
         print("-"*50)
 
         added = 0
@@ -900,7 +895,8 @@ class NewsFetcher:
             return False
 
     def print_report(self):
-        print("\n" + "="*70)
+        print("
+" + "="*70)
         print("執行報告")
         print("="*70)
         print(f"總抓取: {len(self.articles)} 条")
