@@ -536,8 +536,8 @@ class NewsFetcher:
         enabled_sources = [s for s in sources if s["enabled"]]
         enabled_sources.sort(key=lambda x: x.get("priority", 99))
 
-        print(f"
-抓取 {len(enabled_sources)} 个源")
+        print(f"\n抓取 {len(enabled_sources)} 个源")
+
         print("-"*50)
 
         for source in sources:
@@ -547,8 +547,8 @@ class NewsFetcher:
                 continue
             self._fetch_source(source)
 
-        print(f"
-抓取完成: 共 {len(self.articles)} 条")
+        print(f"\n抓取完成: 共 {len(self.articles)} 条")
+
         return self.articles
 
     def _fetch_source(self, source):
@@ -801,11 +801,11 @@ class NewsFetcher:
 
     def sync_to_notion(self):
         if not self.articles:
-            print("沒有文章需要同步")
+            print("\n沒有文章需要同步")
 
             return 0
 
-        print("同步到 Notion")
+        print("\n同步到 Notion")
 
         print("-"*50)
 
