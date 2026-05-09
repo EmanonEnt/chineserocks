@@ -472,13 +472,23 @@ class ContentDeduplicator:
         try:
             cutoff = (datetime.now() - timedelta(days=days)).isoformat()
 
-            response = notion_client.databases.query(
-                database_id=db_id,
-                filter={
+            headers = {
+                "Authorization": f"Bearer {NOTION_TOKEN}",
+                "Content-Type": "application/json",
+                "Notion-Version": "2022-06-28"
+            }
+            data = {
+                "filter": {
                     "property": "發布時間",
                     "date": {"after": cutoff}
                 }
+            }
+            resp = requests.post(
+                f"https://api.notion.com/v1/databases/{db_id}/query",
+                headers=headers,
+                json=data
             )
+            response = resp.json()
 
             for page in response.get('results', []):
                 try:
@@ -518,8 +528,8 @@ class NewsFetcher:
         self.deduplicator = ContentDeduplicator()
 
     def fetch_all(self):
-        print("\n" + "="*70)
-
+        print("
+" + "="*70)
         print("ChineseRocks 新闻抓取系统 v14 - 国际源优化版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
@@ -536,8 +546,8 @@ class NewsFetcher:
         enabled_sources = [s for s in sources if s["enabled"]]
         enabled_sources.sort(key=lambda x: x.get("priority", 99))
 
-        print(f"\n抓取 {len(enabled_sources)} 个源")
-
+        print(f"
+抓取 {len(enabled_sources)} 个源")
         print("-"*50)
 
         for source in sources:
@@ -547,8 +557,8 @@ class NewsFetcher:
                 continue
             self._fetch_source(source)
 
-        print(f"\n抓取完成: 共 {len(self.articles)} 条")
-
+        print(f"
+抓取完成: 共 {len(self.articles)} 条")
         return self.articles
 
     def _fetch_source(self, source):
@@ -801,12 +811,12 @@ class NewsFetcher:
 
     def sync_to_notion(self):
         if not self.articles:
-            print("\n沒有文章需要同步")
-
+            print("
+沒有文章需要同步")
             return 0
 
-        print("\n同步到 Notion")
-
+        print("
+同步到 Notion")
         print("-"*50)
 
         added = 0
@@ -895,8 +905,8 @@ class NewsFetcher:
             return False
 
     def print_report(self):
-        print("\n" + "="*70)
-
+        print("
+" + "="*70)
         print("執行報告")
         print("="*70)
         print(f"總抓取: {len(self.articles)} 条")
