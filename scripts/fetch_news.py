@@ -518,8 +518,8 @@ class NewsFetcher:
         self.deduplicator = ContentDeduplicator()
 
     def fetch_all(self):
-        print("
-" + "="*70)
+        print("\n" + "="*70)
+
         print("ChineseRocks 新闻抓取系统 v14 - 国际源优化版")
         print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         print(f"模式: {self.source_type}")
@@ -801,12 +801,12 @@ class NewsFetcher:
 
     def sync_to_notion(self):
         if not self.articles:
-            print("
-沒有文章需要同步")
+            print("沒有文章需要同步")
+
             return 0
 
-        print("
-同步到 Notion")
+        print("同步到 Notion")
+
         print("-"*50)
 
         added = 0
@@ -895,8 +895,8 @@ class NewsFetcher:
             return False
 
     def print_report(self):
-        print("
-" + "="*70)
+        print("\n" + "="*70)
+
         print("執行報告")
         print("="*70)
         print(f"總抓取: {len(self.articles)} 条")
