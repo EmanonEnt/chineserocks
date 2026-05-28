@@ -1,8 +1,602 @@
 {
-  "last_updated": "2026-05-28T04:12:41.426099",
-  "total_count": 0,
+  "last_updated": "2026-05-28T10:15:14.104439",
+  "total_count": 18,
   "data": {
-    "all": [],
-    "latest": []
+    "all": [
+      {
+        "id": "33a9f945-80b7-8166-9321-d22dfede903b",
+        "title": "Lifeguard get playful in exclusive ‘Rhymes With Lifeguard’ playlist to accompany The Cover",
+        "content": "这份歌单收录的歌曲，其标题均与这支来自芝加哥的三人乐队的团名押韵，其中包括 Lou Reed、SOPHIE 和 Pulp 的作品。文章《Lifeguard 乐队在独家歌单“Rhymes With Lifeguard”中大玩创意，以此呼应“The Cover”特辑》首发于 NME。",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "專題"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/04/NMEAR_NME-LIFEGUARD-THE-COVER-2026-1-CREDIT-ATIBA-JEFFERSON@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/lifeguard-the-cover-playlist-3938625?utm_source=rss&utm_medium=rss&utm_campaign=lifeguard-the-cover-playlist",
+        "published_date": "2026-04-06",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-04-06T08:52:00.000Z",
+        "last_edited_time": "2026-04-06T09:51:00.000Z"
+      },
+      {
+        "id": "3369f945-80b7-815c-be38-f3971b63836c",
+        "title": "Fucked Up’s Damian Abraham Is Now Making Movies",
+        "content": "这位硬核乐队主唱正与一位CBC制作人联手，共同开发一系列影视项目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Pitchfork",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://media.pitchfork.com/photos/69cc00bd459055f6d45539f3/master/pass/fucked-up-damian-tv-film-company.jpg",
+        "source_url": "https://pitchfork.com/news/fucked-ups-damian-abraham-is-now-making-movies/",
+        "published_date": "2026-03-31",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 2,
+        "created_time": "2026-04-02T14:02:00.000Z",
+        "last_edited_time": "2026-04-03T02:29:00.000Z"
+      },
+      {
+        "id": "3309f945-80b7-810b-81b8-e33b05144d93",
+        "title": "[Podcast] EP6：從工業搖滾到網路先鋒：大衛鮑伊的90年代重生",
+        "content": "90年代的Bowie脫離了80年代唱片公司商業性考量的束縛，透過與舊雨新知的合作推出多樣化、深具實驗性的音樂作品，讓我們來回顧Bowie在1990年代發行的專輯。",
+        "category": "新聞",
+        "tags": [
+          "新聞",
+          "深晨DOPM",
+          "ART & EXPERIMENTAL"
+        ],
+        "cover_image": "https://images.squarespace-cdn.com/content/v1/502b92e6c4aa89223cd693d6/1774616409560-QXNUJWRF36EI864BA6C9/collage.jpg?format=1500w",
+        "source_url": "https://deepperfectmorning.com/blog/2026/3/27/podcast-ep690",
+        "published_date": "2026-03-27",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-27T13:04:00.000Z",
+        "last_edited_time": "2026-03-27T19:09:00.000Z"
+      },
+      {
+        "id": "32c9f945-80b7-81b3-8020-c2b3a3f673d3",
+        "title": "Courtney Love shares update on her “blossoming appreciation” of Geese – and running into their “gatekeeper elder millennial troll fans”: “I’m a cool o",
+        "content": "她形容樂團主唱 Cameron Winter 的嗓音聽起來“像個600歲的老頭”，同時也是一位“功力深厚的作詞人”。這篇題為《Courtney Love 分享對 Geese 樂隊“日益萌發的喜愛”——並吐槽偶遇了該樂隊那些“把持話語權的千禧一代巨魔粉絲”：“我只是個喜歡一支樂隊的酷老太太——別再來煩我了””的文章，首發於 NME 網站。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "樂評"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/03/courtney-cameron@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans-3936217?utm_source=rss&utm_medium=rss&utm_campaign=courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans",
+        "published_date": "2026-03-23",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 1,
+        "created_time": "2026-03-23T17:06:00.000Z",
+        "last_edited_time": "2026-04-02T13:40:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
+        "title": "Failure Unveil Grungy Gothic New Single “A Way Down”: Stream",
+        "content": "選自樂團即將發行的新專輯《Location Lost》的最新單曲。 Failure 樂團揭曉充滿 Grunge 與哥德色彩的新單曲《A Way Down》：試聽（Langdon Hickman 撰文）",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "Consequence of Sound",
+          "國際"
+        ],
+        "cover_image": "https://consequence.net/wp-content/uploads/2026/02/Failure.jpg?quality=80",
+        "source_url": "https://consequence.net/2026/03/failure-new-single-a-way-down/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 3,
+        "created_time": "2026-03-21T16:29:00.000Z",
+        "last_edited_time": "2026-04-02T13:40:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8148-9b2a-f2b2d0a8a0fc",
+        "title": "\"I started shooting up heroin when I was 13. I didn't want to be left out of all the fun.\" How a damaged teenage drug dealer channelled black days int",
+        "content": "我知道如何失敗，卻不知道如何獲勝。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/oiqQHXunpGdRz5VuEHUQHh-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/how-art-alexakis-channelled-black-days-into-platinum-records-with-everclear",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8182-b9a6-d9ce04c037a9",
+        "title": "\"If you ask me what it's like to be a woman in rock, I'll scream.\" Slipknot, snow fights and sexism: the summer that changed everything for Italy's bi",
+        "content": "繼2002年的《Comalies》之後，Lacuna Coil 正式讓義大利金屬樂在世界樂壇上佔有了一席之地。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "PUNK & HARDCORE",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/HFki8HRgxZipSJ5etwdzMN-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/music/albums/lacuna-coil-story-behind-karmacode-2006-interview",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81eb-8cd8-f0a252e62a6e",
+        "title": "The 12 best new metal songs you need to hear this week",
+        "content": "Alissa White-Gluz 分享她的新樂隊，Neurosis 震撼回歸，Ice Nine Kills 變身 Steel Panther——這就是《Metal Hammer》本週精選曲目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/uZ2g3YosgJSy5a6VaHJoJ5-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/live-performances/best-new-metal-songs-ice-nine-kills-blue-medusa-neurosis",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-23T15:09:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-812d-bdd2-d2acd84c456b",
+        "title": "\"It's probably the heaviest thing I've written in terms of lyrics.\" Ex-Arch Enemy singer Alissa White-Gluz’s new band Blue Medusa release debut single",
+        "content": "這位死亡金屬主唱開啟了全新的篇章，並透露這首厚重的新歌，竟是她新樂團目前正在創作的作品中「最輕盈」的一首。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/cmAq39mDtGcn6xxfQA6ftF-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/news/alissa-white-gluz-arch0enemy-blue-medusa-new-single-checkmate-2026",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:28:00.000Z"
+      },
+      {
+        "id": "3269f945-80b7-80b4-8757-c6e414aeac17",
+        "title": "我眼中2025年中国摇滚十大专辑",
+        "content": "中国摇滚有这些傻逼有救吗？",
+        "category": "獨家",
+        "tags": [
+          "專題",
+          "樂評",
+          "新聞",
+          "獨家"
+        ],
+        "cover_image": "https://picx.zhimg.com/v2-76523050f2d195882b213f63b831501d_1440w.jpg",
+        "source_url": "https://post.smzdm.com/p/aeo7nzn4/",
+        "published_date": "2026-03-19",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-17T17:15:00.000Z",
+        "last_edited_time": "2026-03-18T21:12:00.000Z"
+      },
+      {
+        "id": "3279f945-80b7-813b-b609-fb7099937e79",
+        "title": "Paste杂志 ｜25周年回顾：《Discovery》预言了电子音乐的未来 (评论: Discovery)",
+        "content": "Vermont评论: Discovery (https://music.douban.com/subject/1395014/) 评价: 力荐 :\"25 年前，Daft Punk 第二张专辑中那极致主义且纯净的野心，成为了数字音乐制作领域的一个分水岭。",
+        "category": "專題",
+        "tags": [
+          "新聞",
+          "豆瓣音樂",
+          "ART & EXPERIMENTAL",
+          "樂評",
+          "編輯精選"
+        ],
+        "cover_image": "https://miro.medium.com/1*kySllKhtOrB7QoWHf1ZSdw.jpeg",
+        "source_url": "https://music.douban.com/review/17509359/",
+        "published_date": "2026-03-18",
+        "is_premium": false,
+        "featured": true,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-18T18:33:00.000Z",
+        "last_edited_time": "2026-03-21T13:53:00.000Z"
+      },
+      {
+        "id": "3269f945-80b7-81b3-9d41-eca7a877204b",
+        "title": "Dua Lipa hits out at Epstein files discourse for “doing such a disservice to all the victims” and “trying to mask what is happening”",
+        "content": "杜阿·利帕抨擊有關愛潑斯坦檔案的討論，稱其“對所有受害者極不公平”並且“試圖掩蓋正在發生的事情”。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "專題",
+          "POP ROCK"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2024/01/Dua-Lipa.-Credit-Tyrone-Lebon.jpg",
+        "source_url": "https://www.nme.com/news/music/dua-lipa-hits-out-at-epstein-files-discourse-for-doing-such-a-disservice-to-all-the-victims-and-trying-to-mask-what-is-happening-3935001?utm_source=rss&utm_medium=rss&utm_campaign=dua-lipa-hits-out-at-epstein-files-discourse-for-doing-such-a-disservice-to-all-the-victims-and-trying-to-mask-what-is-happening",
+        "published_date": "2026-03-17",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-17T11:44:00.000Z",
+        "last_edited_time": "2026-03-23T15:09:00.000Z"
+      },
+      {
+        "id": "3269f945-80b7-809e-ad56-d575d8188ce9",
+        "title": "年后是否都没卡在那了？？",
+        "content": "你还是反对阿萨的？",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "HEAVY & METAL",
+          "現場",
+          "演出"
+        ],
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/8a785797-7d2b-44c5-b947-8039f926f793/maxresdefault.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466WEO5CNLX%2F20260528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260528T101514Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCiGahK6Jx2Zxf3QAO81FGuqzwG8S46teSV7ycIDG10xwIhAMMlZfIHOz8nR9ME%2FesT99KkWm37tOpiYF7VyCKOZHkVKogECKr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgyuRxGBycZax4bxC%2F0q3ANZTDd8dJsFgKSGhP40eO0wr8K%2B%2BpvaSp%2BS5N%2Bm9cIvrvazkLDqNt6s%2FjHiEgBUlNe0xausa48edKi1m8acOSnkD%2F4EkHgeckl%2FE0GgUfPq%2B%2FfMzUOwEJGHpZQf%2BDz8lQ9oIq6haI%2Bk8JTr7CHBdFyyXv%2BIdICGz6zr39oyvcFQOSw5UOrtEfFV%2B5W9HXn6eODmbdwfGPrpyf1MbazfF2i0pPFArnSc5oF%2FMQFQ6KGh7uP7Cm7NkH2fC856hE%2FinOC2AhHfyIaapkjqWkfBYAIco%2Bu7aOQWlofSLOof2RN5LaTbM6qQ0Fz4ITbQ2DUhtRU5WHE1F64b55Sl4KGCH2YllCek9Zltc%2BcQvxQzMWesFurR4BYOW2qL4VcsnIkkOQJl5oH2aC2emWhIiiYetw%2FUcOgyC0vWZnNDHv8OFT6NmE%2FAsvJ4oFRREia%2FvzQWgWpwzImP9Smd1Y1oXEhzFs%2BxkPz2q1X0SjRsZFYeoxc%2FrXfroprj7ryfU0XrKurdR171JpGUWz6hxIjmxITduPuRBZWCTUG0%2BMqObaizLZYR5w8jl0jq1McAhMAQLN4DNyFlzym0jaC5oMzanWbDMIYz0qCFoxDml%2FjvJdRBcnmdqfmegU7lRiEQVonvhTDwj%2BDQBjqkAcpv2jUjf%2FF6KPNr3%2F5Ywz2TCywcbMwGbh624aMSLUpIxM485Xqecwx3lW%2BbzI16GwQqUJYF19A5g7qLS%2Fd9skc83MnqOsXOvUwcFwknpCZxYakvXOCrdUnwPY5vv%2BSVVHEckhIWCz9%2BlwSrINwEHC%2ByYlsOv%2B2D%2BkRqqyEbiUK2mG%2FZCtOzp6XPcwkUoRUKqiDnfu5xQaDeAIVJ7lUrsOWIV%2B0F&X-Amz-Signature=06e0b579c530431cd5c033b736867487d4587d23fe4484c282e8599c01cade50&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "source_url": "",
+        "published_date": "2026-03-17",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-17T10:12:00.000Z",
+        "last_edited_time": "2026-04-02T13:40:00.000Z"
+      },
+      {
+        "id": "3269f945-80b7-8018-b14b-d9afa2a1b8af",
+        "title": "THE NONAME無名樂隊2026最新動態",
+        "content": "www.nonamepunks.com",
+        "category": "獨家",
+        "tags": [
+          "PUNK & HARDCORE",
+          "編輯精選",
+          "演出",
+          "樂評",
+          "獨家",
+          "TheNoname"
+        ],
+        "cover_image": "https://nonamepunks.com/image/hero1.webp",
+        "source_url": "https://nonamepunks.com",
+        "published_date": "2026-03-17",
+        "is_premium": true,
+        "featured": true,
+        "homeFeatured": true,
+        "displayOrder": 5,
+        "created_time": "2026-03-17T10:05:00.000Z",
+        "last_edited_time": "2026-03-17T21:26:00.000Z"
+      },
+      {
+        "id": "3269f945-80b7-805b-9501-f6e20c2eca09",
+        "title": "CHINESEROCKS搖滾萬歲",
+        "content": "内測中……",
+        "category": "國際",
+        "tags": [
+          "PUNK & HARDCORE",
+          "新聞",
+          "國際",
+          "搖滾萬歲",
+          "會員專享",
+          "ViveLeRock"
+        ],
+        "cover_image": "https://www.chineserocks.net/image/banner/bannerall.webp",
+        "source_url": "",
+        "published_date": "2026-03-17",
+        "is_premium": true,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 4,
+        "created_time": "2026-03-17T10:05:00.000Z",
+        "last_edited_time": "2026-03-17T21:26:00.000Z"
+      },
+      {
+        "id": "3259f945-80b7-81d7-ae83-f6e5fb10f3af",
+        "title": "让我们的爱爱爱带动世界 ",
+        "content": "montage_kiki评论: 爱爱爱 评价: 力荐 ",
+        "category": "專題",
+        "tags": [
+          "新聞",
+          "專題",
+          "編輯精選",
+          "INDIE & ALTERNATIVE"
+        ],
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/22760c73-a2bc-4c11-a653-f315813a4c5d/470177158_594274853177862_8265415821020482009_n.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466WEO5CNLX%2F20260528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260528T101514Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCiGahK6Jx2Zxf3QAO81FGuqzwG8S46teSV7ycIDG10xwIhAMMlZfIHOz8nR9ME%2FesT99KkWm37tOpiYF7VyCKOZHkVKogECKr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgyuRxGBycZax4bxC%2F0q3ANZTDd8dJsFgKSGhP40eO0wr8K%2B%2BpvaSp%2BS5N%2Bm9cIvrvazkLDqNt6s%2FjHiEgBUlNe0xausa48edKi1m8acOSnkD%2F4EkHgeckl%2FE0GgUfPq%2B%2FfMzUOwEJGHpZQf%2BDz8lQ9oIq6haI%2Bk8JTr7CHBdFyyXv%2BIdICGz6zr39oyvcFQOSw5UOrtEfFV%2B5W9HXn6eODmbdwfGPrpyf1MbazfF2i0pPFArnSc5oF%2FMQFQ6KGh7uP7Cm7NkH2fC856hE%2FinOC2AhHfyIaapkjqWkfBYAIco%2Bu7aOQWlofSLOof2RN5LaTbM6qQ0Fz4ITbQ2DUhtRU5WHE1F64b55Sl4KGCH2YllCek9Zltc%2BcQvxQzMWesFurR4BYOW2qL4VcsnIkkOQJl5oH2aC2emWhIiiYetw%2FUcOgyC0vWZnNDHv8OFT6NmE%2FAsvJ4oFRREia%2FvzQWgWpwzImP9Smd1Y1oXEhzFs%2BxkPz2q1X0SjRsZFYeoxc%2FrXfroprj7ryfU0XrKurdR171JpGUWz6hxIjmxITduPuRBZWCTUG0%2BMqObaizLZYR5w8jl0jq1McAhMAQLN4DNyFlzym0jaC5oMzanWbDMIYz0qCFoxDml%2FjvJdRBcnmdqfmegU7lRiEQVonvhTDwj%2BDQBjqkAcpv2jUjf%2FF6KPNr3%2F5Ywz2TCywcbMwGbh624aMSLUpIxM485Xqecwx3lW%2BbzI16GwQqUJYF19A5g7qLS%2Fd9skc83MnqOsXOvUwcFwknpCZxYakvXOCrdUnwPY5vv%2BSVVHEckhIWCz9%2BlwSrINwEHC%2ByYlsOv%2B2D%2BkRqqyEbiUK2mG%2FZCtOzp6XPcwkUoRUKqiDnfu5xQaDeAIVJ7lUrsOWIV%2B0F&X-Amz-Signature=5213d47969611324fd45f991ec3c8f2deef191526d1b1b515645d0c55879e42f&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "source_url": "https://music.douban.com/review/17506038/",
+        "published_date": "2026-03-17",
+        "is_premium": false,
+        "featured": true,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-16T20:59:00.000Z",
+        "last_edited_time": "2026-03-18T19:58:00.000Z"
+      },
+      {
+        "id": "3229f945-80b7-80de-be0c-f611f2cbf24d",
+        "title": "重朋就是假朋克聚会，你覺得呢？",
+        "content": "一个不是朋克的混圈比",
+        "category": "現場",
+        "tags": [
+          "現場",
+          "PUNK & HARDCORE",
+          "樂評"
+        ],
+        "cover_image": "https://prod-files-secure.s3.us-west-2.amazonaws.com/80f9f945-80b7-810e-b648-0003127b9f2a/48320aec-81a5-4713-8e13-a80d2908f54c/121212121.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466WEO5CNLX%2F20260528%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260528T101514Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEOH%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCiGahK6Jx2Zxf3QAO81FGuqzwG8S46teSV7ycIDG10xwIhAMMlZfIHOz8nR9ME%2FesT99KkWm37tOpiYF7VyCKOZHkVKogECKr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1IgyuRxGBycZax4bxC%2F0q3ANZTDd8dJsFgKSGhP40eO0wr8K%2B%2BpvaSp%2BS5N%2Bm9cIvrvazkLDqNt6s%2FjHiEgBUlNe0xausa48edKi1m8acOSnkD%2F4EkHgeckl%2FE0GgUfPq%2B%2FfMzUOwEJGHpZQf%2BDz8lQ9oIq6haI%2Bk8JTr7CHBdFyyXv%2BIdICGz6zr39oyvcFQOSw5UOrtEfFV%2B5W9HXn6eODmbdwfGPrpyf1MbazfF2i0pPFArnSc5oF%2FMQFQ6KGh7uP7Cm7NkH2fC856hE%2FinOC2AhHfyIaapkjqWkfBYAIco%2Bu7aOQWlofSLOof2RN5LaTbM6qQ0Fz4ITbQ2DUhtRU5WHE1F64b55Sl4KGCH2YllCek9Zltc%2BcQvxQzMWesFurR4BYOW2qL4VcsnIkkOQJl5oH2aC2emWhIiiYetw%2FUcOgyC0vWZnNDHv8OFT6NmE%2FAsvJ4oFRREia%2FvzQWgWpwzImP9Smd1Y1oXEhzFs%2BxkPz2q1X0SjRsZFYeoxc%2FrXfroprj7ryfU0XrKurdR171JpGUWz6hxIjmxITduPuRBZWCTUG0%2BMqObaizLZYR5w8jl0jq1McAhMAQLN4DNyFlzym0jaC5oMzanWbDMIYz0qCFoxDml%2FjvJdRBcnmdqfmegU7lRiEQVonvhTDwj%2BDQBjqkAcpv2jUjf%2FF6KPNr3%2F5Ywz2TCywcbMwGbh624aMSLUpIxM485Xqecwx3lW%2BbzI16GwQqUJYF19A5g7qLS%2Fd9skc83MnqOsXOvUwcFwknpCZxYakvXOCrdUnwPY5vv%2BSVVHEckhIWCz9%2BlwSrINwEHC%2ByYlsOv%2B2D%2BkRqqyEbiUK2mG%2FZCtOzp6XPcwkUoRUKqiDnfu5xQaDeAIVJ7lUrsOWIV%2B0F&X-Amz-Signature=bd97ce708621afb003eec856ffdd7e45ea7088709b022e44df2ef07386858470&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject",
+        "source_url": "",
+        "published_date": "2026-03-17",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-13T09:15:00.000Z",
+        "last_edited_time": "2026-03-19T09:07:00.000Z"
+      },
+      {
+        "id": "32f9f945-80b7-813c-b284-e2cd039ff20a",
+        "title": "【吹專訪】That’s My SHHH 主腦 LEO37：玩音樂？一切都是因為傻！",
+        "content": "採訪、撰稿／許瞳 初春三月的海風才剛吹起，大港開唱便祭出了去年掀起滔天巨浪的 That’s My SHHH（TMS）。這回他們要在小港祭強勢插旗，與高雄在地最生猛的饒舌基地 COCCO&CO. 輪番轟炸。陣容除了 LEO37、Laz閱讀全文 \"【吹專訪】That’s My SHHH 主腦 LEO37：玩音樂？一切都是因為傻！\" The post 【吹專訪】That’s My SHHH 主腦 LEO37：玩音樂？一切都是因為傻！ appeared first on Blow 吹音樂.",
+        "category": "新聞",
+        "tags": [
+          "新聞",
+          "Blow吹音樂-議題",
+          "PUNK & HARDCORE",
+          "樂評",
+          "台湾"
+        ],
+        "cover_image": "https://blow.streetvoice.com/wp-content/uploads/2026/03/megaleo372603.jpg",
+        "source_url": "https://blow.streetvoice.com/86468/",
+        "published_date": "2026-03-08",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 1,
+        "created_time": "2026-03-26T04:51:00.000Z",
+        "last_edited_time": "2026-04-02T13:40:00.000Z"
+      }
+    ],
+    "latest": [
+      {
+        "id": "33a9f945-80b7-8166-9321-d22dfede903b",
+        "title": "Lifeguard get playful in exclusive ‘Rhymes With Lifeguard’ playlist to accompany The Cover",
+        "content": "这份歌单收录的歌曲，其标题均与这支来自芝加哥的三人乐队的团名押韵，其中包括 Lou Reed、SOPHIE 和 Pulp 的作品。文章《Lifeguard 乐队在独家歌单“Rhymes With Lifeguard”中大玩创意，以此呼应“The Cover”特辑》首发于 NME。",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "專題"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/04/NMEAR_NME-LIFEGUARD-THE-COVER-2026-1-CREDIT-ATIBA-JEFFERSON@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/lifeguard-the-cover-playlist-3938625?utm_source=rss&utm_medium=rss&utm_campaign=lifeguard-the-cover-playlist",
+        "published_date": "2026-04-06",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-04-06T08:52:00.000Z",
+        "last_edited_time": "2026-04-06T09:51:00.000Z"
+      },
+      {
+        "id": "3369f945-80b7-815c-be38-f3971b63836c",
+        "title": "Fucked Up’s Damian Abraham Is Now Making Movies",
+        "content": "这位硬核乐队主唱正与一位CBC制作人联手，共同开发一系列影视项目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Pitchfork",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://media.pitchfork.com/photos/69cc00bd459055f6d45539f3/master/pass/fucked-up-damian-tv-film-company.jpg",
+        "source_url": "https://pitchfork.com/news/fucked-ups-damian-abraham-is-now-making-movies/",
+        "published_date": "2026-03-31",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 2,
+        "created_time": "2026-04-02T14:02:00.000Z",
+        "last_edited_time": "2026-04-03T02:29:00.000Z"
+      },
+      {
+        "id": "3309f945-80b7-810b-81b8-e33b05144d93",
+        "title": "[Podcast] EP6：從工業搖滾到網路先鋒：大衛鮑伊的90年代重生",
+        "content": "90年代的Bowie脫離了80年代唱片公司商業性考量的束縛，透過與舊雨新知的合作推出多樣化、深具實驗性的音樂作品，讓我們來回顧Bowie在1990年代發行的專輯。",
+        "category": "新聞",
+        "tags": [
+          "新聞",
+          "深晨DOPM",
+          "ART & EXPERIMENTAL"
+        ],
+        "cover_image": "https://images.squarespace-cdn.com/content/v1/502b92e6c4aa89223cd693d6/1774616409560-QXNUJWRF36EI864BA6C9/collage.jpg?format=1500w",
+        "source_url": "https://deepperfectmorning.com/blog/2026/3/27/podcast-ep690",
+        "published_date": "2026-03-27",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-27T13:04:00.000Z",
+        "last_edited_time": "2026-03-27T19:09:00.000Z"
+      },
+      {
+        "id": "32c9f945-80b7-81b3-8020-c2b3a3f673d3",
+        "title": "Courtney Love shares update on her “blossoming appreciation” of Geese – and running into their “gatekeeper elder millennial troll fans”: “I’m a cool o",
+        "content": "她形容樂團主唱 Cameron Winter 的嗓音聽起來“像個600歲的老頭”，同時也是一位“功力深厚的作詞人”。這篇題為《Courtney Love 分享對 Geese 樂隊“日益萌發的喜愛”——並吐槽偶遇了該樂隊那些“把持話語權的千禧一代巨魔粉絲”：“我只是個喜歡一支樂隊的酷老太太——別再來煩我了””的文章，首發於 NME 網站。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "NME",
+          "國際",
+          "樂評"
+        ],
+        "cover_image": "https://www.nme.com/wp-content/uploads/2026/03/courtney-cameron@2000x1270.jpg",
+        "source_url": "https://www.nme.com/news/music/courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans-3936217?utm_source=rss&utm_medium=rss&utm_campaign=courtney-love-appreciation-geese-gatekeeper-elder-millennial-troll-fans",
+        "published_date": "2026-03-23",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 1,
+        "created_time": "2026-03-23T17:06:00.000Z",
+        "last_edited_time": "2026-04-02T13:40:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81de-ac3b-e220a93e9535",
+        "title": "Failure Unveil Grungy Gothic New Single “A Way Down”: Stream",
+        "content": "選自樂團即將發行的新專輯《Location Lost》的最新單曲。 Failure 樂團揭曉充滿 Grunge 與哥德色彩的新單曲《A Way Down》：試聽（Langdon Hickman 撰文）",
+        "category": "新發行",
+        "tags": [
+          "新聞",
+          "Consequence of Sound",
+          "國際"
+        ],
+        "cover_image": "https://consequence.net/wp-content/uploads/2026/02/Failure.jpg?quality=80",
+        "source_url": "https://consequence.net/2026/03/failure-new-single-a-way-down/",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": true,
+        "displayOrder": 3,
+        "created_time": "2026-03-21T16:29:00.000Z",
+        "last_edited_time": "2026-04-02T13:40:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8148-9b2a-f2b2d0a8a0fc",
+        "title": "\"I started shooting up heroin when I was 13. I didn't want to be left out of all the fun.\" How a damaged teenage drug dealer channelled black days int",
+        "content": "我知道如何失敗，卻不知道如何獲勝。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "PUNK & HARDCORE",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/oiqQHXunpGdRz5VuEHUQHh-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/how-art-alexakis-channelled-black-days-into-platinum-records-with-everclear",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-8182-b9a6-d9ce04c037a9",
+        "title": "\"If you ask me what it's like to be a woman in rock, I'll scream.\" Slipknot, snow fights and sexism: the summer that changed everything for Italy's bi",
+        "content": "繼2002年的《Comalies》之後，Lacuna Coil 正式讓義大利金屬樂在世界樂壇上佔有了一席之地。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "PUNK & HARDCORE",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/HFki8HRgxZipSJ5etwdzMN-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/music/albums/lacuna-coil-story-behind-karmacode-2006-interview",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T05:26:00.000Z",
+        "last_edited_time": "2026-03-21T06:26:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-81eb-8cd8-f0a252e62a6e",
+        "title": "The 12 best new metal songs you need to hear this week",
+        "content": "Alissa White-Gluz 分享她的新樂隊，Neurosis 震撼回歸，Ice Nine Kills 變身 Steel Panther——這就是《Metal Hammer》本週精選曲目。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/uZ2g3YosgJSy5a6VaHJoJ5-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/bands-artists/live-performances/best-new-metal-songs-ice-nine-kills-blue-medusa-neurosis",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-23T15:09:00.000Z"
+      },
+      {
+        "id": "32a9f945-80b7-812d-bdd2-d2acd84c456b",
+        "title": "\"It's probably the heaviest thing I've written in terms of lyrics.\" Ex-Arch Enemy singer Alissa White-Gluz’s new band Blue Medusa release debut single",
+        "content": "這位死亡金屬主唱開啟了全新的篇章，並透露這首厚重的新歌，竟是她新樂團目前正在創作的作品中「最輕盈」的一首。",
+        "category": "國際",
+        "tags": [
+          "新聞",
+          "Louder Sound",
+          "HEAVY & METAL",
+          "國際"
+        ],
+        "cover_image": "https://cdn.mos.cms.futurecdn.net/cmAq39mDtGcn6xxfQA6ftF-1280-80.jpg",
+        "source_url": "https://www.loudersound.com/news/alissa-white-gluz-arch0enemy-blue-medusa-new-single-checkmate-2026",
+        "published_date": "2026-03-20",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-21T04:20:00.000Z",
+        "last_edited_time": "2026-03-21T06:28:00.000Z"
+      },
+      {
+        "id": "3269f945-80b7-80b4-8757-c6e414aeac17",
+        "title": "我眼中2025年中国摇滚十大专辑",
+        "content": "中国摇滚有这些傻逼有救吗？",
+        "category": "獨家",
+        "tags": [
+          "專題",
+          "樂評",
+          "新聞",
+          "獨家"
+        ],
+        "cover_image": "https://picx.zhimg.com/v2-76523050f2d195882b213f63b831501d_1440w.jpg",
+        "source_url": "https://post.smzdm.com/p/aeo7nzn4/",
+        "published_date": "2026-03-19",
+        "is_premium": false,
+        "featured": false,
+        "homeFeatured": false,
+        "displayOrder": 999,
+        "created_time": "2026-03-17T17:15:00.000Z",
+        "last_edited_time": "2026-03-18T21:12:00.000Z"
+      }
+    ]
   }
 }
